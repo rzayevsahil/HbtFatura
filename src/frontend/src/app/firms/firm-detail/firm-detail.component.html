@@ -36,3 +36,35 @@
     <p class="text-muted">Firma bilgileri henüz girilmedi. Düzenlemek için yukarıdaki butonu kullanın.</p>
   </section>
 }
+
+@if (firm && firmUsers.length > 0) {
+  <section class="firm-users card">
+    <h2 class="card-title">Çalışan hesapları</h2>
+    <p class="section-desc">Firma admin ve çalışan hesapları.</p>
+    <table class="users-table">
+      <thead>
+        <tr>
+          <th>Rol</th>
+          <th>E-posta</th>
+          <th>Ad Soyad</th>
+          <th>Oluşturulma</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (u of firmUsers; track u.id) {
+          <tr>
+            <td>{{ roleLabel(u.role) }}</td>
+            <td><a [href]="'mailto:' + u.email">{{ u.email }}</a></td>
+            <td>{{ u.fullName }}</td>
+            <td>{{ u.createdAt | date:'dd.MM.yyyy' }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </section>
+} @else if (firm) {
+  <section class="firm-users card">
+    <h2 class="card-title">Çalışan hesapları</h2>
+    <p class="text-muted">Bu firmaya ait kullanıcı hesabı bulunmuyor.</p>
+  </section>
+}

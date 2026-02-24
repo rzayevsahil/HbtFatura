@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { FirmService, FirmDto } from '../../services/firm.service';
+import { FirmService, FirmDto, FirmUserDto } from '../../services/firm.service';
 import { CompanyService, CompanySettingsDto } from '../../services/company.service';
 
 @Component({
@@ -14,6 +14,7 @@ import { CompanyService, CompanySettingsDto } from '../../services/company.servi
 export class FirmDetailComponent implements OnInit {
   firm: FirmDto | null = null;
   company: CompanySettingsDto | null = null;
+  firmUsers: FirmUserDto[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -30,7 +31,16 @@ export class FirmDetailComponent implements OnInit {
           next: c => (this.company = c),
           error: () => (this.company = null)
         });
+        this.firmApi.getFirmUsers(f.id).subscribe({
+          next: list => (this.firmUsers = list),
+          error: () => (this.firmUsers = [])
+        });
       });
     }
+  }
+
+  roleLabel(role: string): string {
+    const map: Record<string, string> = { FirmAdmin: 'Firma Admin', Employee: 'Çalışan' };
+    return map[role] ?? role;
   }
 }

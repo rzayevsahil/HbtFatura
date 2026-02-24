@@ -38,6 +38,28 @@ public class FirmService : IFirmService
         return firm == null ? null : new FirmDto { Id = firm.Id, Name = firm.Name, CreatedAt = firm.CreatedAt };
     }
 
+    public async Task<IReadOnlyList<FirmUserDto>> GetUsersByFirmIdAsync(Guid firmId, CancellationToken ct = default)
+    {
+        if (!_currentUser.IsSuperAdmin)
+            return Array.Empty<FirmUserDto>();
+
+        var query = from u in _db.Users
+                    where u.FirmId == firmId
+                    join ur in _db.UserRoles on u.Id equals ur.UserId
+                    join r in _db.Roles on ur.RoleId equals r.Id
+                    where r.Name == Roles.FirmAdmin || r.Name == Roles.Employee
+                    orderby r.Name descending, u.FullName
+                    select new FirmUserDto
+                    {
+                        Id = u.Id,
+                        Email = u.Email ?? "",
+                        FullName = u.FullName,
+                        Role = r.Name,
+                        CreatedAt = u.CreatedAt
+                    };
+        return await query.ToListAsync(ct);
+    }
+
     public async Task<FirmDto> CreateAsync(CreateFirmRequest request, CancellationToken ct = default)
     {
         if (!_currentUser.IsSuperAdmin)

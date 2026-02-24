@@ -19,3 +19,13 @@ public class UpdateFirmRequest
 {
     public string Name { get; set; } = string.Empty;
 }
+
+/// <summary>Firmaya bağlı kullanıcı (FirmAdmin + çalışanlar). SuperAdmin firma detayında listelenir.</summary>
+public class FirmUserDto
+{
+    public Guid Id { get; set; }
+    public string Email { get; set; } = string.Empty;
+    public string FullName { get; set; } = string.Empty;
+    public string Role { get; set; } = string.Empty;
+    public DateTime CreatedAt { get; set; }
+}

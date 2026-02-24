@@ -33,6 +33,13 @@ public class FirmsController : ControllerBase
         return Ok(dto);
     }
 
+    [HttpGet("{id:guid}/users")]
+    public async Task<ActionResult<IReadOnlyList<FirmUserDto>>> GetUsers(Guid id, CancellationToken ct)
+    {
+        var list = await _service.GetUsersByFirmIdAsync(id, ct);
+        return Ok(list);
+    }
+
     [HttpPost]
     public async Task<ActionResult<FirmDto>> Create([FromBody] CreateFirmRequest request, CancellationToken ct)
     {
