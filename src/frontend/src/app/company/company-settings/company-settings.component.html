@@ -1,0 +1,45 @@
+<div class="page-header">
+  <a (click)="goBack()" (keydown.enter)="goBack()" class="back-link" role="button" tabindex="0">← Geri</a>
+  <h1 class="page-title">Firma Bilgileri</h1>
+  <p class="page-subtitle">Fatura başlığında kullanılacak firma bilgileri.</p>
+</div>
+<div class="card">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="form-grid">
+      <div class="row">
+        <label>Firma Adı</label>
+        <input formControlName="companyName" placeholder="Firma unvanı" [readonly]="isReadOnly()" />
+      </div>
+      <div class="row">
+        <label>Vergi Dairesi</label>
+        <input formControlName="taxOffice" placeholder="Örn. Kadıköy" [readonly]="isReadOnly()" />
+      </div>
+      <div class="row">
+        <label>Vergi No</label>
+        <input formControlName="taxNumber" placeholder="10 haneli" [readonly]="isReadOnly()" />
+      </div>
+      <div class="row">
+        <label>Adres</label>
+        <input formControlName="address" placeholder="Tam adres" [readonly]="isReadOnly()" />
+      </div>
+      <div class="row">
+        <label>Telefon</label>
+        <input formControlName="phone" placeholder="0xxx xxx xx xx" [readonly]="isReadOnly()" />
+      </div>
+      <div class="row">
+        <label>E-posta</label>
+        <input type="email" formControlName="email" placeholder="firma@ornek.com" [readonly]="isReadOnly()" />
+      </div>
+      <div class="row">
+        <label>IBAN</label>
+        <input formControlName="iban" placeholder="TR00 0000 0000 0000 0000 0000 00" [readonly]="isReadOnly()" />
+      </div>
+      @if (error) { <p class="error-msg">{{ error }}</p> }
+    </div>
+    @if (!isReadOnly()) {
+      <div class="actions">
+        <button type="submit" [disabled]="form.invalid || saving">Kaydet</button>
+      </div>
+    }
+  </form>
+</div>

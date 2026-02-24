@@ -1,0 +1,51 @@
+.page-header {
+  margin-bottom: 1.5rem;
+}
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 0.75rem;
+  color: var(--color-primary);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.9375rem;
+  cursor: pointer;
+  border: none;
+  background: none;
+  padding: 0;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.form-grid {
+  display: grid;
+  gap: 1rem;
+  max-width: 520px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 1rem;
+  align-items: center;
+
+  label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-text);
+  }
+}
+
+.actions {
+  margin-top: 1.5rem;
+
+  button {
+    min-width: 120px;
+  }
+}
+
+.error-msg {
+  margin-top: 0.5rem;
+  grid-column: 1 / -1;
+}

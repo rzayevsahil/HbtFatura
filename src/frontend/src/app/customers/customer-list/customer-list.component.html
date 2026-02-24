@@ -1,0 +1,42 @@
+<div class="page-header">
+  <h1 class="page-title">Müşteriler</h1>
+</div>
+<div class="toolbar">
+  <input [(ngModel)]="search" placeholder="Unvan veya vergi no ile ara..." (keyup.enter)="load()" />
+  <button type="button" (click)="load()">Ara</button>
+  <a routerLink="/customers/new" class="btn btn-primary">Yeni Müşteri</a>
+</div>
+<div class="card table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Unvan</th>
+        <th>Vergi No</th>
+        <th>Adres</th>
+        <th>Telefon</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (c of items; track c.id) {
+        <tr>
+          <td>{{ c.title }}</td>
+          <td>{{ c.taxNumber }}</td>
+          <td>{{ c.address }}</td>
+          <td>{{ c.phone }}</td>
+          <td>
+            <div class="actions-cell">
+              <a [routerLink]="['/customers', c.id, 'edit']">Düzenle</a>
+              <button type="button" (click)="delete(c.id)">Sil</button>
+            </div>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
+<div class="pagination">
+  <span>Toplam: {{ totalCount }} kayıt</span>
+  <button type="button" [disabled]="page <= 1" (click)="prevPage()">Önceki</button>
+  <button type="button" [disabled]="items.length < pageSize" (click)="nextPage()">Sonraki</button>
+</div>

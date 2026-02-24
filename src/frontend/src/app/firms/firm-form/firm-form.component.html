@@ -1,0 +1,31 @@
+<div class="page-header">
+  <h1 class="page-title">Yeni Firma</h1>
+  <p class="page-subtitle">Firma ve ilk firma yöneticisi hesabını oluşturun.</p>
+</div>
+<div class="card">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="form-grid">
+      <div class="row">
+        <label>Firma Adı</label>
+        <input formControlName="name" placeholder="Firma unvanı" />
+      </div>
+      <div class="row">
+        <label>Yönetici E-posta</label>
+        <input type="email" formControlName="adminEmail" placeholder="admin&#64;firma.com" />
+      </div>
+      <div class="row">
+        <label>Yönetici Şifre</label>
+        <input type="password" formControlName="adminPassword" placeholder="En az 6 karakter" />
+      </div>
+      <div class="row">
+        <label>Yönetici Ad Soyad</label>
+        <input formControlName="adminFullName" placeholder="Ad Soyad" />
+      </div>
+      @if (error) { <p class="error-msg">{{ error }}</p> }
+    </div>
+    <div class="actions">
+      <button type="submit" [disabled]="form.invalid || saving">Oluştur</button>
+      <a routerLink="/firms">İptal</a>
+    </div>
+  </form>
+</div>

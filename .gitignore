@@ -1,0 +1,94 @@
+# ========== .NET / Backend ==========
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+[Dd]ebug/
+[Rr]elease/
+[Rr]elease_*/
+*.user
+*.userosscache
+*.sln.docstates
+.vs/
+*.suo
+*.cache
+*.dll
+*.exe
+*.pdb
+*.ncb
+*.opensdf
+*.sdf
+*.VC.db
+*.VC.VC.opendb
+packages/
+*.pfx
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# ========== Node / Angular / Frontend ==========
+node_modules/
+dist/
+.angular/
+/tmp
+/out-tsc
+/bazel-out
+*.tsbuildinfo
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm
+.eslintcache
+
+# Frontend build output (proje kökünden çalıştırılıyorsa)
+src/frontend/dist/
+src/frontend/node_modules/
+
+# ========== IDE ve editörler ==========
+.idea/
+*.iml
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+*.sublime-project
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/
+
+# ========== Ortam ve gizlilik ==========
+.env
+.env.local
+.env.*.local
+*.local
+
+# ========== Test / raporlar ==========
+coverage/
+*.lcov
+.nyc_output/
+TestResults/
+[Tt]est[Rr]esult*/
+*.trx
+*.coverage
+*.coveragexml
+
+# ========== Sistem dosyaları ==========
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# ========== Diğer ==========
+*.log
+*.tmp
+*.temp
+.sass-cache/
+connect.lock
+libpeerconnection.log
+testem.log
+typings/

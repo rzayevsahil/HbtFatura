@@ -1,0 +1,27 @@
+<div class="page-header">
+  <h1 class="page-title">Yeni Çalışan</h1>
+  <p class="page-subtitle">Firmanıza yeni çalışan hesabı ekleyin.</p>
+</div>
+<div class="card">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="form-grid">
+      <div class="row">
+        <label>E-posta</label>
+        <input type="email" formControlName="email" placeholder="calisan&#64;firma.com" />
+      </div>
+      <div class="row">
+        <label>Şifre</label>
+        <input type="password" formControlName="password" placeholder="En az 6 karakter" />
+      </div>
+      <div class="row">
+        <label>Ad Soyad</label>
+        <input formControlName="fullName" placeholder="Ad Soyad" />
+      </div>
+      @if (error) { <p class="error-msg">{{ error }}</p> }
+    </div>
+    <div class="actions">
+      <button type="submit" [disabled]="form.invalid || saving">Oluştur</button>
+      <a routerLink="/employees">İptal</a>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,38 @@
+<div class="page-header">
+  <a routerLink="/firms" class="back-link">← Firmalar</a>
+  @if (firm) {
+    <h1 class="page-title">{{ firm.name }}</h1>
+    <p class="page-subtitle">Oluşturulma: {{ firm.createdAt | date:'dd.MM.yyyy' }}</p>
+    <div class="actions">
+      <a [routerLink]="['/company']" [queryParams]="{ firmId: firm.id }" class="btn btn-primary">Firma bilgilerini düzenle</a>
+    </div>
+  } @else {
+    <p>Yükleniyor...</p>
+  }
+</div>
+
+@if (firm && company) {
+  <section class="company-info card">
+    <h2 class="card-title">Firma bilgileri</h2>
+    <dl class="info-list">
+      <dt>Firma adı</dt>
+      <dd>{{ company.companyName }}</dd>
+      <dt>Vergi dairesi</dt>
+      <dd>{{ company.taxOffice }}</dd>
+      <dt>Vergi numarası</dt>
+      <dd>{{ company.taxNumber }}</dd>
+      <dt>Adres</dt>
+      <dd>{{ company.address }}</dd>
+      <dt>Telefon</dt>
+      <dd>{{ company.phone }}</dd>
+      <dt>E-posta</dt>
+      <dd><a [href]="'mailto:' + company.email">{{ company.email }}</a></dd>
+      <dt>IBAN</dt>
+      <dd>{{ company.iban }}</dd>
+    </dl>
+  </section>
+} @else if (firm) {
+  <section class="company-info card">
+    <p class="text-muted">Firma bilgileri henüz girilmedi. Düzenlemek için yukarıdaki butonu kullanın.</p>
+  </section>
+}

@@ -1,0 +1,29 @@
+<div class="page-header">
+  <h1 class="page-title">Firmalar</h1>
+  <p class="page-subtitle">Tüm firmaları yönetin.</p>
+</div>
+<div class="toolbar">
+  <a routerLink="/firms/new" class="btn btn-primary">Yeni Firma</a>
+</div>
+<div class="card table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Firma Adı</th>
+        <th>Oluşturulma</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (f of items; track f.id) {
+        <tr>
+          <td>{{ f.name }}</td>
+          <td>{{ f.createdAt | date:'dd.MM.yyyy' }}</td>
+          <td>
+            <a [routerLink]="['/firms', f.id]">Detay</a>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

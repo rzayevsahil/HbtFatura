@@ -1,0 +1,17 @@
+<div class="auth-page">
+  <div class="auth-box">
+    <h1>Giriş</h1>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="field">
+        <label>E-posta</label>
+        <input type="email" formControlName="email" placeholder="ornek@firma.com" />
+      </div>
+      <div class="field">
+        <label>Şifre</label>
+        <input type="password" formControlName="password" placeholder="••••••••" />
+      </div>
+      @if (error) { <p class="error">{{ error }}</p> }
+      <button type="submit" [disabled]="form.invalid || loading">Giriş</button>
+    </form>
+  </div>
+</div>

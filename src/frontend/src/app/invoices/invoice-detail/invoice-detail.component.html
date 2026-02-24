@@ -1,0 +1,52 @@
+@if (invoice) {
+  <div class="page-header">
+    <h1 class="page-title">Fatura {{ invoice.invoiceNumber }}</h1>
+    <div class="meta">
+      <span>Tarih: {{ invoice.invoiceDate | date:'dd.MM.yyyy' }}</span>
+      <span class="status-badge" [class]="statusClass(invoice.status)">{{ statusLabel(invoice.status) }}</span>
+      <span>Müşteri: {{ invoice.customerTitle }}</span>
+    </div>
+  </div>
+  <div class="card table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Açıklama</th>
+          <th>Miktar</th>
+          <th>Birim Fiyat</th>
+          <th>KDV %</th>
+          <th>KDV Hariç</th>
+          <th>KDV</th>
+          <th>KDV Dahil</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of invoice.items; track item.sortOrder) {
+          <tr>
+            <td>{{ item.description }}</td>
+            <td>{{ item.quantity | number }}</td>
+            <td>{{ item.unitPrice | number:'1.2-2' }}</td>
+            <td>{{ item.vatRate }}</td>
+            <td>{{ item.lineTotalExclVat | number:'1.2-2' }}</td>
+            <td>{{ item.lineVatAmount | number:'1.2-2' }}</td>
+            <td>{{ item.lineTotalInclVat | number:'1.2-2' }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+    <div class="totals">
+      <p><span>Ara Toplam</span> <span>{{ invoice.subTotal | number:'1.2-2' }} {{ invoice.currency }}</span></p>
+      <p><span>Toplam KDV</span> <span>{{ invoice.totalVat | number:'1.2-2' }}</span></p>
+      <p class="grand-total"><span>Genel Toplam</span> <span>{{ invoice.grandTotal | number:'1.2-2' }} {{ invoice.currency }}</span></p>
+    </div>
+  </div>
+  <div class="actions">
+    @if (invoice.status === 0) {
+      <a [routerLink]="['/invoices', invoice.id, 'edit']">Düzenle</a>
+    }
+    <button type="button" (click)="downloadPdf()">PDF İndir</button>
+  </div>
+} @else {
+  <p class="loading">Yükleniyor...</p>
+}
+<a routerLink="/invoices" class="back-link">← Listeye dön</a>

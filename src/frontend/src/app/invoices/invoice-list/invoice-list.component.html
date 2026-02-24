@@ -1,0 +1,55 @@
+<div class="page-header">
+  <h1 class="page-title">Faturalar</h1>
+</div>
+<div class="toolbar">
+  <input [(ngModel)]="searchDateFrom" type="date" />
+  <input [(ngModel)]="searchDateTo" type="date" />
+  <select [(ngModel)]="searchStatus">
+    <option [ngValue]="null">Tümü</option>
+    <option [ngValue]="0">Taslak</option>
+    <option [ngValue]="1">Kesildi</option>
+    <option [ngValue]="2">Ödendi</option>
+    <option [ngValue]="3">İptal</option>
+  </select>
+  <button type="button" (click)="load()">Filtrele</button>
+  <a routerLink="/invoices/new" class="btn-primary">Yeni Fatura</a>
+</div>
+<div class="card table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>No</th>
+        <th>Tarih</th>
+        <th>Müşteri</th>
+        <th>Toplam</th>
+        <th>Durum</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (inv of items; track inv.id) {
+        <tr>
+          <td><strong>{{ inv.invoiceNumber }}</strong></td>
+          <td>{{ inv.invoiceDate | date:'dd.MM.yyyy' }}</td>
+          <td>{{ inv.customerTitle }}</td>
+          <td>{{ inv.grandTotal | number:'1.2-2' }} {{ inv.currency }}</td>
+          <td><span class="status" [class]="statusClass(inv.status)">{{ statusLabel(inv.status) }}</span></td>
+          <td>
+            <div class="actions-cell">
+              <a [routerLink]="['/invoices', inv.id]">Detay</a>
+              @if (inv.status === 0) {
+                <a [routerLink]="['/invoices', inv.id, 'edit']">Düzenle</a>
+              }
+              <a href="#" (click)="downloadPdf(inv.id); $event.preventDefault()">PDF</a>
+            </div>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
+<div class="pagination">
+  <span>Toplam: {{ totalCount }} kayıt — Sayfa {{ page }}</span>
+  <button type="button" [disabled]="page <= 1" (click)="prevPage()">Önceki</button>
+  <button type="button" [disabled]="items.length < pageSize" (click)="nextPage()">Sonraki</button>
+</div>

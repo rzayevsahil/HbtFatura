@@ -1,0 +1,34 @@
+<div class="page-header">
+  <h1 class="page-title">{{ id ? 'Müşteri Düzenle' : 'Yeni Müşteri' }}</h1>
+</div>
+<div class="card">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="form-grid">
+      <div class="row">
+        <label>Unvan</label>
+        <input formControlName="title" placeholder="Müşteri unvanı" />
+      </div>
+      <div class="row">
+        <label>Vergi No / TC</label>
+        <input formControlName="taxNumber" placeholder="10 veya 11 haneli" />
+      </div>
+      <div class="row">
+        <label>Adres</label>
+        <input formControlName="address" placeholder="Tam adres" />
+      </div>
+      <div class="row">
+        <label>Telefon</label>
+        <input formControlName="phone" placeholder="0xxx xxx xx xx" />
+      </div>
+      <div class="row">
+        <label>E-posta</label>
+        <input type="email" formControlName="email" placeholder="musteri@ornek.com" />
+      </div>
+      @if (error) { <p class="error-msg">{{ error }}</p> }
+    </div>
+    <div class="actions">
+      <button type="submit" [disabled]="form.invalid || saving">Kaydet</button>
+      <a routerLink="/customers">İptal</a>
+    </div>
+  </form>
+</div>
