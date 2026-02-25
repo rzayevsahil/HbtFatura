@@ -1,5 +1,40 @@
 .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
-.actions { display: flex; gap: 0.5rem; }
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+
+  .btn,
+  button {
+    padding: 0.625rem 1.25rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    border-radius: var(--radius-sm, 6px);
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+  }
+
+  .btn {
+    background: var(--color-primary);
+    color: #fff;
+
+    &:hover {
+      opacity: 0.9;
+    }
+  }
+
+  button {
+    background: var(--color-surface);
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+
+    &:hover {
+      background: var(--color-background);
+    }
+  }
+}
 .info-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; }
 .section-title { font-size: 1rem; margin: 1.5rem 0 0.5rem; }
 .filters { display: flex; gap: 0.5rem; align-items: center; margin-bottom: 1rem; }

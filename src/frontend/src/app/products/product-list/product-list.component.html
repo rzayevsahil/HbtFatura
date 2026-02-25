@@ -21,7 +21,7 @@
     <tbody>
       @for (p of items; track p.id) {
         <tr [class.low-stock]="lowStock(p)">
-          <td><a [routerLink]="['/products', p.id]">{{ p.code }}</a></td>
+          <td>{{ p.code }}</td>
           <td>{{ p.name }}</td>
           <td>{{ p.unit }}</td>
           <td class="amount">{{ p.stockQuantity | number:'1.2-2' }}</td>

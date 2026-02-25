@@ -23,7 +23,7 @@
       @for (c of items; track c.id) {
         <tr>
           <td>{{ c.code || '—' }}</td>
-          <td><a [routerLink]="['/customers', c.id]">{{ c.title }}</a></td>
+          <td>{{ c.title }}</td>
           <td>{{ cardTypeLabel(c.cardType) }}</td>
           <td class="amount">{{ c.totalDebit | number:'1.2-2' }} ₺</td>
           <td class="amount">{{ c.totalCredit | number:'1.2-2' }} ₺</td>
