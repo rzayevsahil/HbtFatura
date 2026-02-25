@@ -1,10 +1,31 @@
 .page-header {
   margin-bottom: 1.5rem;
+}
+
+.toolbar {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
   flex-wrap: wrap;
-  gap: 1rem;
+  align-items: center;
+
+  input {
+    max-width: 240px;
+  }
+
+  button {
+    padding: 0.625rem 1rem;
+    background: var(--color-surface);
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    font-weight: 500;
+    cursor: pointer;
+
+    &:hover:not(:disabled) {
+      background: var(--color-background);
+    }
+  }
 }
 
 .btn {
@@ -15,18 +36,90 @@
   font-size: 0.9375rem;
 }
 
-.card { overflow: hidden; padding: 0; }
-.table-wrap { overflow-x: auto; }
+.card {
+  overflow: hidden;
+  padding: 0;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
 
 table {
   width: 100%;
   border-collapse: collapse;
   font-size: 0.9375rem;
-  th, td { padding: 0.5rem 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
-  th { font-weight: 600; color: var(--color-text-muted); font-size: 0.8125rem; }
-  .amount { text-align: right; font-variant-numeric: tabular-nums; }
-  a { color: var(--color-primary); text-decoration: none; &:hover { text-decoration: underline; } }
+
+  th {
+    text-align: left;
+    padding: 0.75rem 1rem;
+    background: var(--color-background);
+    font-weight: 600;
+    color: var(--color-text);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--color-border);
+    color: var(--color-text);
+
+    &:last-child {
+      white-space: nowrap;
+    }
+  }
+
+  tbody tr:hover {
+    background: #f8fafc;
+  }
+
+  .amount {
+    /*text-align: right;*/
+    font-variant-numeric: tabular-nums;
+  }
+
+  > tbody a {
+    color: var(--color-primary);
+    text-decoration: none;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 }
 
-.actions-cell { display: flex; gap: 0.5rem; flex-wrap: wrap; }
-.text-muted { margin-top: 1rem; color: var(--color-text-muted); font-size: 0.9375rem; }
+.actions-cell {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+
+  a {
+    color: var(--color-primary);
+    font-weight: 500;
+    text-decoration: none;
+    font-size: 0.875rem;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  button {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.875rem;
+    background: var(--color-error-bg);
+    color: var(--color-error);
+    border: 1px solid transparent;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+
+    &:hover:not(:disabled) {
+      background: #fecaca;
+    }
+  }
+}
+
+.text-muted {
+  margin-top: 1rem;
+  color: var(--color-text-muted);
+  font-size: 0.9375rem;
+}

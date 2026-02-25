@@ -3,6 +3,8 @@
   <p class="page-subtitle">Firmanızdaki çalışan hesapları.</p>
 </div>
 <div class="toolbar">
+  <input [(ngModel)]="search" placeholder="Ad, e-posta ile ara..." (keyup.enter)="search = search" />
+  <button type="button">Ara</button>
   <a routerLink="/employees/new" class="btn btn-primary">Yeni Çalışan</a>
 </div>
 <div class="card table-wrap">
@@ -15,7 +17,7 @@
       </tr>
     </thead>
     <tbody>
-      @for (e of items; track e.id) {
+      @for (e of filteredItems; track e.id) {
         <tr>
           <td>{{ e.fullName }}</td>
           <td>{{ e.email }}</td>
@@ -25,3 +27,6 @@
     </tbody>
   </table>
 </div>
+@if (filteredItems.length === 0) {
+  <p class="text-muted">{{ search?.trim() ? 'Arama kriterine uygun çalışan bulunamadı.' : 'Henüz çalışan eklenmemiş.' }}</p>
+}

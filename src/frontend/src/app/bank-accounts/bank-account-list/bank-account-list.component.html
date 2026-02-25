@@ -1,8 +1,10 @@
 <div class="page-header">
   <h1 class="page-title">Banka</h1>
-  <div class="actions">
-    <a routerLink="/bank-accounts/new" class="btn btn-primary">Yeni Banka Hesabı</a>
-  </div>
+</div>
+<div class="toolbar">
+  <input [(ngModel)]="search" placeholder="Hesap adı, banka, IBAN ile ara..." (keyup.enter)="search = search" />
+  <button type="button">Ara</button>
+  <a routerLink="/bank-accounts/new" class="btn btn-primary">Yeni Banka Hesabı</a>
 </div>
 <div class="card table-wrap">
   <table>
@@ -17,7 +19,7 @@
       </tr>
     </thead>
     <tbody>
-      @for (b of items; track b.id) {
+      @for (b of filteredItems; track b.id) {
         <tr>
           <td><a [routerLink]="['/bank-accounts', b.id]">{{ b.name }}</a></td>
           <td>{{ b.bankName }}</td>
@@ -36,6 +38,6 @@
     </tbody>
   </table>
 </div>
-@if (items.length === 0) {
-  <p class="text-muted">Henüz banka hesabı tanımlanmamış.</p>
+@if (filteredItems.length === 0) {
+  <p class="text-muted">{{ search?.trim() ? 'Arama kriterine uygun hesap bulunamadı.' : 'Henüz banka hesabı tanımlanmamış.' }}</p>
 }

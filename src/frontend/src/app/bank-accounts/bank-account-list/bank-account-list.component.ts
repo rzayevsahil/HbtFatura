@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { BankAccountService, BankAccountDto } from '../../services/bank-account.service';
 import { AuthService } from '../../core/services/auth.service';
 import { ToastrService } from 'ngx-toastr';
@@ -8,13 +9,14 @@ import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-bank-account-list',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, FormsModule],
   templateUrl: './bank-account-list.component.html',
   styleUrls: ['./bank-account-list.component.scss']
 })
 export class BankAccountListComponent implements OnInit {
   items: BankAccountDto[] = [];
   firmId: string | undefined;
+  search = '';
 
   constructor(
     private api: BankAccountService,
@@ -31,6 +33,17 @@ export class BankAccountListComponent implements OnInit {
       next: list => (this.items = list),
       error: e => this.toastr.error(e.error?.message ?? 'Liste yüklenemedi.')
     });
+  }
+
+  get filteredItems(): BankAccountDto[] {
+    const q = this.search?.trim().toLowerCase() || '';
+    if (!q) return this.items;
+    return this.items.filter(
+      b =>
+        b.name?.toLowerCase().includes(q) ||
+        b.bankName?.toLowerCase().includes(q) ||
+        b.iban?.toLowerCase().includes(q)
+    );
   }
 
   delete(id: string, name: string): void {
