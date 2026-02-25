@@ -46,13 +46,13 @@ public class MainAccountCodeService : IMainAccountCodeService
         throw new UnauthorizedAccessException("Firma bilgisi gerekli.");
     }
 
+    /// <summary>Firma + sistem kodlarını döner. Liste Code alanına göre sıralıdır.</summary>
     public async Task<IReadOnlyList<MainAccountCodeDto>> GetByFirmAsync(Guid? firmId, CancellationToken ct = default)
     {
         var effectiveFirmId = EffectiveFirmIdForList(firmId);
         var query = _db.MainAccountCodes
             .Where(x => x.FirmId == null || x.FirmId == effectiveFirmId)
-            .OrderBy(x => x.SortOrder)
-            .ThenBy(x => x.Code)
+            .OrderBy(x => x.Code)
             .Select(x => new MainAccountCodeDto
             {
                 Id = x.Id,
