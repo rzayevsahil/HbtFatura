@@ -4,10 +4,18 @@ import { ApiService, PagedResult } from '../core/services/api.service';
 
 export interface CustomerDto {
   id: string;
+  mainAccountCode?: string;
+  code?: string;
   accountType: number;
   title: string;
+  taxPayerType: number;
+  cardType: number;
   taxNumber?: string;
   address?: string;
+  city?: string;
+  district?: string;
+  postalCode?: string;
+  country?: string;
   phone?: string;
   email?: string;
   balance: number;

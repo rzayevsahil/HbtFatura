@@ -39,6 +39,8 @@ public class CustomerService : ICustomerService
             var s = search.Trim().ToLower();
             query = query.Where(x =>
                 x.Title.ToLower().Contains(s) ||
+                (x.Code != null && x.Code.ToLower().Contains(s)) ||
+                (x.MainAccountCode != null && x.MainAccountCode.Contains(s)) ||
                 (x.TaxNumber != null && x.TaxNumber.Contains(s)) ||
                 (x.Email != null && x.Email.ToLower().Contains(s)));
         }
@@ -50,10 +52,18 @@ public class CustomerService : ICustomerService
             .Select(x => new CustomerListDto
             {
                 Id = x.Id,
+                MainAccountCode = x.MainAccountCode,
+                Code = x.Code,
                 AccountType = x.AccountType,
                 Title = x.Title,
+                TaxPayerType = x.TaxPayerType,
+                CardType = x.CardType,
                 TaxNumber = x.TaxNumber,
                 Address = x.Address,
+                City = x.City,
+                District = x.District,
+                PostalCode = x.PostalCode,
+                Country = x.Country,
                 Phone = x.Phone,
                 Email = x.Email,
                 CreatedAt = x.CreatedAt,
@@ -82,10 +92,18 @@ public class CustomerService : ICustomerService
             .Select(x => new CustomerDto
             {
                 Id = x.Id,
+                MainAccountCode = x.MainAccountCode,
+                Code = x.Code,
                 AccountType = x.AccountType,
                 Title = x.Title,
+                TaxPayerType = x.TaxPayerType,
+                CardType = x.CardType,
                 TaxNumber = x.TaxNumber,
                 Address = x.Address,
+                City = x.City,
+                District = x.District,
+                PostalCode = x.PostalCode,
+                Country = x.Country,
                 Phone = x.Phone,
                 Email = x.Email,
                 Balance = 0
@@ -169,10 +187,18 @@ public class CustomerService : ICustomerService
         {
             Id = Guid.NewGuid(),
             UserId = userId,
+            MainAccountCode = request.MainAccountCode?.Trim(),
+            Code = request.Code?.Trim(),
             AccountType = request.AccountType is Constants.AccountType.Tedarikci ? Constants.AccountType.Tedarikci : Constants.AccountType.Musteri,
             Title = request.Title.Trim(),
+            TaxPayerType = request.TaxPayerType,
+            CardType = request.CardType,
             TaxNumber = request.TaxNumber?.Trim(),
             Address = request.Address?.Trim(),
+            City = request.City?.Trim(),
+            District = request.District?.Trim(),
+            PostalCode = request.PostalCode?.Trim(),
+            Country = request.Country?.Trim(),
             Phone = request.Phone?.Trim(),
             Email = request.Email?.Trim(),
             CreatedAt = DateTime.UtcNow,
@@ -187,10 +213,18 @@ public class CustomerService : ICustomerService
     {
         var entity = await ScopeQuery().FirstOrDefaultAsync(x => x.Id == id, ct);
         if (entity == null) return null;
+        entity.MainAccountCode = request.MainAccountCode?.Trim();
+        entity.Code = request.Code?.Trim();
         entity.AccountType = request.AccountType is Constants.AccountType.Tedarikci ? Constants.AccountType.Tedarikci : Constants.AccountType.Musteri;
         entity.Title = request.Title.Trim();
+        entity.TaxPayerType = request.TaxPayerType;
+        entity.CardType = request.CardType;
         entity.TaxNumber = request.TaxNumber?.Trim();
         entity.Address = request.Address?.Trim();
+        entity.City = request.City?.Trim();
+        entity.District = request.District?.Trim();
+        entity.PostalCode = request.PostalCode?.Trim();
+        entity.Country = request.Country?.Trim();
         entity.Phone = request.Phone?.Trim();
         entity.Email = request.Email?.Trim();
         entity.UpdatedAt = DateTime.UtcNow;
@@ -212,10 +246,18 @@ public class CustomerService : ICustomerService
     private static CustomerDto MapToDto(Customer e) => new()
     {
         Id = e.Id,
+        MainAccountCode = e.MainAccountCode,
+        Code = e.Code,
         AccountType = e.AccountType,
         Title = e.Title,
+        TaxPayerType = e.TaxPayerType,
+        CardType = e.CardType,
         TaxNumber = e.TaxNumber,
         Address = e.Address,
+        City = e.City,
+        District = e.District,
+        PostalCode = e.PostalCode,
+        Country = e.Country,
         Phone = e.Phone,
         Email = e.Email,
         Balance = 0

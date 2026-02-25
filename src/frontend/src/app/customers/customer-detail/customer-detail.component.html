@@ -15,8 +15,20 @@
   <section class="card info-section">
     <h2 class="card-title">Cari bilgileri</h2>
     <dl class="info-list">
+      @if (customer.mainAccountCode) {
+        <dt>Ana cari kodu</dt>
+        <dd>{{ customer.mainAccountCode }}</dd>
+      }
+      @if (customer.code) {
+        <dt>Cari kodu</dt>
+        <dd>{{ customer.code }}</dd>
+      }
       <dt>Unvan</dt>
       <dd>{{ customer.title }}</dd>
+      <dt>Mükellef türü</dt>
+      <dd>{{ taxPayerTypeLabel(customer.taxPayerType) }}</dd>
+      <dt>Cari kart tipi</dt>
+      <dd>{{ cardTypeLabel(customer.cardType) }}</dd>
       @if (customer.taxNumber) {
         <dt>Vergi No / TC</dt>
         <dd>{{ customer.taxNumber }}</dd>
@@ -24,6 +36,18 @@
       @if (customer.address) {
         <dt>Adres</dt>
         <dd>{{ customer.address }}</dd>
+      }
+      @if (customer.city || customer.district) {
+        <dt>İl / İlçe</dt>
+        <dd>{{ [customer.city, customer.district].filter(Boolean).join(' / ') }}</dd>
+      }
+      @if (customer.postalCode) {
+        <dt>Posta kodu</dt>
+        <dd>{{ customer.postalCode }}</dd>
+      }
+      @if (customer.country) {
+        <dt>Ülke</dt>
+        <dd>{{ customer.country }}</dd>
       }
       @if (customer.phone) {
         <dt>Telefon</dt>

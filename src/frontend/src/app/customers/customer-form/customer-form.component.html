@@ -5,6 +5,14 @@
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <div class="form-grid">
       <div class="row">
+        <label>Ana cari kodu</label>
+        <input formControlName="mainAccountCode" placeholder="Örn. 120.01.001" />
+      </div>
+      <div class="row">
+        <label>Cari kodu</label>
+        <input formControlName="code" placeholder="Örn. A01, S01" />
+      </div>
+      <div class="row">
         <label>Cari tipi</label>
         <select formControlName="accountType">
           <option [ngValue]="1">Cari</option>
@@ -16,12 +24,43 @@
         <input formControlName="title" placeholder="Cari unvanı" />
       </div>
       <div class="row">
+        <label>Mükellef türü</label>
+        <select formControlName="taxPayerType">
+          <option [ngValue]="1">Gerçek kişi</option>
+          <option [ngValue]="2">Tüzel kişi</option>
+        </select>
+      </div>
+      <div class="row">
+        <label>Cari kart tipi</label>
+        <select formControlName="cardType">
+          <option [ngValue]="1">Alıcı</option>
+          <option [ngValue]="2">Satıcı</option>
+          <option [ngValue]="3">Alıcı + Satıcı</option>
+        </select>
+      </div>
+      <div class="row">
         <label>Vergi No / TC</label>
         <input formControlName="taxNumber" placeholder="10 veya 11 haneli" />
       </div>
-      <div class="row">
+      <div class="row full-width">
         <label>Adres</label>
         <input formControlName="address" placeholder="Tam adres" />
+      </div>
+      <div class="row">
+        <label>İl</label>
+        <input formControlName="city" placeholder="Şehir" />
+      </div>
+      <div class="row">
+        <label>İlçe</label>
+        <input formControlName="district" placeholder="İlçe" />
+      </div>
+      <div class="row">
+        <label>Posta kodu</label>
+        <input formControlName="postalCode" placeholder="Posta kodu" />
+      </div>
+      <div class="row">
+        <label>Ülke</label>
+        <input formControlName="country" placeholder="Ülke" />
       </div>
       <div class="row">
         <label>Telefon</label>

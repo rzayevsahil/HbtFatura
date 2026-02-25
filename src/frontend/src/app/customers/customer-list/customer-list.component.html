@@ -10,6 +10,7 @@
   <table>
     <thead>
       <tr>
+        <th>Cari kodu</th>
         <th>Tip</th>
         <th>Unvan</th>
         <th>Vergi No</th>
@@ -22,6 +23,7 @@
     <tbody>
       @for (c of items; track c.id) {
         <tr>
+          <td>{{ c.code || '—' }}</td>
           <td>{{ accountTypeLabel(c.accountType) }}</td>
           <td><a [routerLink]="['/customers', c.id]">{{ c.title }}</a></td>
           <td>{{ c.taxNumber }}</td>

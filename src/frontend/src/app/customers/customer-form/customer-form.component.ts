@@ -14,10 +14,18 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class CustomerFormComponent implements OnInit {
   form = this.fb.nonNullable.group({
+    mainAccountCode: [''],
+    code: [''],
     accountType: [1 as number],
     title: ['', Validators.required],
+    taxPayerType: [2 as number],
+    cardType: [1 as number],
     taxNumber: [''],
     address: [''],
+    city: [''],
+    district: [''],
+    postalCode: [''],
+    country: [''],
     phone: [''],
     email: ['']
   });
@@ -37,10 +45,18 @@ export class CustomerFormComponent implements OnInit {
     this.id = this.route.snapshot.paramMap.get('id');
     if (this.id) {
       this.api.getById(this.id).subscribe(c => this.form.patchValue({
+        mainAccountCode: c.mainAccountCode ?? '',
+        code: c.code ?? '',
         accountType: c.accountType ?? 1,
         title: c.title,
+        taxPayerType: c.taxPayerType ?? 2,
+        cardType: c.cardType ?? 1,
         taxNumber: c.taxNumber ?? '',
         address: c.address ?? '',
+        city: c.city ?? '',
+        district: c.district ?? '',
+        postalCode: c.postalCode ?? '',
+        country: c.country ?? '',
         phone: c.phone ?? '',
         email: c.email ?? ''
       }));

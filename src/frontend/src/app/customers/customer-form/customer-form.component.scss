@@ -19,6 +19,10 @@
     font-weight: 500;
     color: var(--color-text);
   }
+
+  &.full-width {
+    grid-column: 1 / -1;
+  }
 }
 
 .actions {

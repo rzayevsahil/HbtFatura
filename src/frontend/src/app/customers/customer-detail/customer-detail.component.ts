@@ -51,6 +51,14 @@ export class CustomerDetailComponent implements OnInit {
     return t === 2 ? 'Tedarikçi' : 'Cari';
   }
 
+  taxPayerTypeLabel(t: number): string {
+    return t === 1 ? 'Gerçek kişi' : 'Tüzel kişi';
+  }
+
+  cardTypeLabel(t: number): string {
+    return t === 1 ? 'Alıcı' : t === 2 ? 'Satıcı' : 'Alıcı + Satıcı';
+  }
+
   transactionTypeLabel(t: number): string {
     return t === 1 ? 'Borç' : 'Alacak';
   }
