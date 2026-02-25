@@ -56,7 +56,7 @@ export class CustomerDetailComponent implements OnInit {
   }
 
   cardTypeLabel(t: number): string {
-    return t === 1 ? 'Alıcı' : t === 2 ? 'Satıcı' : 'Alıcı + Satıcı';
+    return t === 1 ? 'Alıcı' : t === 2 ? 'Satıcı' : '—';
   }
 
   transactionTypeLabel(t: number): string {
