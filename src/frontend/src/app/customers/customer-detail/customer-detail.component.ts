@@ -47,10 +47,6 @@ export class CustomerDetailComponent implements OnInit {
     this.loadTransactions();
   }
 
-  accountTypeLabel(t: number): string {
-    return t === 2 ? 'Tedarikçi' : 'Cari';
-  }
-
   taxPayerTypeLabel(t: number): string {
     return t === 1 ? 'Gerçek kişi' : 'Tüzel kişi';
   }

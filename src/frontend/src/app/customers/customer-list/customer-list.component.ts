@@ -52,7 +52,7 @@ export class CustomerListComponent implements OnInit {
     this.page++; this.load();
   }
 
-  accountTypeLabel(t: number): string {
-    return t === 2 ? 'Tedarikçi' : 'Cari';
+  cardTypeLabel(t: number): string {
+    return t === 2 ? 'Satıcı' : 'Alıcı';
   }
 }

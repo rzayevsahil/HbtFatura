@@ -2,7 +2,7 @@
   <a routerLink="/customers" class="back-link">← Cariler</a>
   @if (customer) {
     <h1 class="page-title">{{ customer.title }}</h1>
-    <p class="page-subtitle">{{ accountTypeLabel(customer.accountType) }} · Bakiye: {{ customer.balance | number:'1.2-2' }} ₺</p>
+    <p class="page-subtitle">{{ cardTypeLabel(customer.cardType) }} · Bakiye: {{ customer.balance | number:'1.2-2' }} ₺</p>
     <div class="actions">
       <a [routerLink]="['/customers', customer.id, 'edit']" class="btn btn-primary">Düzenle</a>
     </div>
@@ -27,7 +27,7 @@
       <dd>{{ customer.title }}</dd>
       <dt>Mükellef türü</dt>
       <dd>{{ taxPayerTypeLabel(customer.taxPayerType) }}</dd>
-      <dt>Cari kart tipi</dt>
+      <dt>Cari tipi</dt>
       <dd>{{ cardTypeLabel(customer.cardType) }}</dd>
       @if (customer.taxNumber) {
         <dt>Vergi No / TC</dt>
