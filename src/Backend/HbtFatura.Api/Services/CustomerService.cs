@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using HbtFatura.Api.Constants;
 using HbtFatura.Api.Data;
 using HbtFatura.Api.DTOs.Customers;
 using HbtFatura.Api.Entities;
@@ -49,14 +50,28 @@ public class CustomerService : ICustomerService
             .Select(x => new CustomerListDto
             {
                 Id = x.Id,
+                AccountType = x.AccountType,
                 Title = x.Title,
                 TaxNumber = x.TaxNumber,
                 Address = x.Address,
                 Phone = x.Phone,
                 Email = x.Email,
-                CreatedAt = x.CreatedAt
+                CreatedAt = x.CreatedAt,
+                Balance = 0
             })
             .ToListAsync(ct);
+        if (items.Count > 0)
+        {
+            var ids = items.Select(x => x.Id).ToList();
+            var balances = await _db.AccountTransactions
+                .Where(t => ids.Contains(t.CustomerId))
+                .GroupBy(t => t.CustomerId)
+                .Select(g => new { CustomerId = g.Key, Balance = g.Sum(t => t.Type == AccountTransactionType.Alacak ? t.Amount : -t.Amount) })
+                .ToListAsync(ct);
+            var balanceDict = balances.ToDictionary(x => x.CustomerId, x => x.Balance);
+            foreach (var item in items)
+                item.Balance = balanceDict.GetValueOrDefault(item.Id, 0);
+        }
         return new PagedResult<CustomerListDto> { Items = items, TotalCount = total, Page = page, PageSize = pageSize };
     }
 
@@ -67,11 +82,13 @@ public class CustomerService : ICustomerService
             .Select(x => new CustomerDto
             {
                 Id = x.Id,
+                AccountType = x.AccountType,
                 Title = x.Title,
                 TaxNumber = x.TaxNumber,
                 Address = x.Address,
                 Phone = x.Phone,
-                Email = x.Email
+                Email = x.Email,
+                Balance = 0
             })
             .ToListAsync(ct);
     }
@@ -79,7 +96,70 @@ public class CustomerService : ICustomerService
     public async Task<CustomerDto?> GetByIdAsync(Guid id, CancellationToken ct = default)
     {
         var entity = await ScopeQuery().FirstOrDefaultAsync(x => x.Id == id, ct);
-        return entity == null ? null : MapToDto(entity);
+        if (entity == null) return null;
+        var dto = MapToDto(entity);
+        dto.Balance = await GetBalanceAsync(id, ct);
+        return dto;
+    }
+
+    public async Task<decimal> GetBalanceAsync(Guid customerId, CancellationToken ct = default)
+    {
+        var hasAccess = await ScopeQuery().AnyAsync(x => x.Id == customerId, ct);
+        if (!hasAccess) return 0;
+        var balance = await _db.AccountTransactions
+            .Where(t => t.CustomerId == customerId)
+            .SumAsync(t => t.Type == AccountTransactionType.Alacak ? t.Amount : -t.Amount, ct);
+        return balance;
+    }
+
+    public async Task<PagedResult<AccountTransactionDto>> GetTransactionsAsync(Guid customerId, int page, int pageSize, DateTime? dateFrom, DateTime? dateTo, CancellationToken ct = default)
+    {
+        var hasAccess = await ScopeQuery().AnyAsync(x => x.Id == customerId, ct);
+        if (!hasAccess)
+            return new PagedResult<AccountTransactionDto> { Items = new List<AccountTransactionDto>(), TotalCount = 0, Page = page, PageSize = pageSize };
+
+        var query = _db.AccountTransactions.Where(t => t.CustomerId == customerId);
+        if (dateFrom.HasValue) query = query.Where(t => t.Date >= dateFrom.Value.Date);
+        if (dateTo.HasValue) query = query.Where(t => t.Date <= dateTo.Value.Date);
+
+        var total = await query.CountAsync(ct);
+        var orderedQuery = query.OrderBy(t => t.Date).ThenBy(t => t.CreatedAt);
+        var list = await orderedQuery
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .Select(t => new { t.Id, t.Date, t.Description, t.Type, t.Amount, t.Currency, t.ReferenceType, t.ReferenceId, t.CreatedAt })
+            .ToListAsync(ct);
+
+        decimal openingBalance = 0;
+        if (dateFrom.HasValue)
+            openingBalance = await _db.AccountTransactions.Where(t => t.CustomerId == customerId && t.Date < dateFrom.Value.Date).SumAsync(t => t.Type == AccountTransactionType.Alacak ? t.Amount : -t.Amount, ct);
+        else if (list.Count > 0)
+        {
+            var first = list[0];
+            openingBalance = await _db.AccountTransactions
+                .Where(t => t.CustomerId == customerId && (t.Date < first.Date || (t.Date == first.Date && t.CreatedAt < first.CreatedAt)))
+                .SumAsync(t => t.Type == AccountTransactionType.Alacak ? t.Amount : -t.Amount, ct);
+        }
+
+        decimal running = openingBalance;
+        var items = new List<AccountTransactionDto>();
+        foreach (var t in list)
+        {
+            running += t.Type == AccountTransactionType.Alacak ? t.Amount : -t.Amount;
+            items.Add(new AccountTransactionDto
+            {
+                Id = t.Id,
+                Date = t.Date,
+                Description = t.Description,
+                Type = t.Type,
+                Amount = t.Amount,
+                Currency = t.Currency,
+                ReferenceType = t.ReferenceType,
+                ReferenceId = t.ReferenceId,
+                RunningBalance = running
+            });
+        }
+        return new PagedResult<AccountTransactionDto> { Items = items, TotalCount = total, Page = page, PageSize = pageSize };
     }
 
     public async Task<CustomerDto> CreateAsync(CreateCustomerRequest request, CancellationToken ct = default)
@@ -89,6 +169,7 @@ public class CustomerService : ICustomerService
         {
             Id = Guid.NewGuid(),
             UserId = userId,
+            AccountType = request.AccountType is Constants.AccountType.Tedarikci ? Constants.AccountType.Tedarikci : Constants.AccountType.Musteri,
             Title = request.Title.Trim(),
             TaxNumber = request.TaxNumber?.Trim(),
             Address = request.Address?.Trim(),
@@ -106,6 +187,7 @@ public class CustomerService : ICustomerService
     {
         var entity = await ScopeQuery().FirstOrDefaultAsync(x => x.Id == id, ct);
         if (entity == null) return null;
+        entity.AccountType = request.AccountType is Constants.AccountType.Tedarikci ? Constants.AccountType.Tedarikci : Constants.AccountType.Musteri;
         entity.Title = request.Title.Trim();
         entity.TaxNumber = request.TaxNumber?.Trim();
         entity.Address = request.Address?.Trim();
@@ -130,10 +212,12 @@ public class CustomerService : ICustomerService
     private static CustomerDto MapToDto(Customer e) => new()
     {
         Id = e.Id,
+        AccountType = e.AccountType,
         Title = e.Title,
         TaxNumber = e.TaxNumber,
         Address = e.Address,
         Phone = e.Phone,
-        Email = e.Email
+        Email = e.Email,
+        Balance = 0
     };
 }

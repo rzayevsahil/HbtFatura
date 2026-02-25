@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using HbtFatura.Api.Constants;
 using HbtFatura.Api.Data;
 using HbtFatura.Api.DTOs.Customers;
 using HbtFatura.Api.DTOs.Invoices;
@@ -32,12 +33,13 @@ public class InvoiceService : IInvoiceService
         return _db.Invoices.Where(i => i.UserId == _currentUser.UserId);
     }
 
-    public async Task<PagedResult<InvoiceListDto>> GetPagedAsync(int page, int pageSize, DateTime? dateFrom, DateTime? dateTo, InvoiceStatus? status, Guid? customerId, Guid? firmId, CancellationToken ct = default)
+    public async Task<PagedResult<InvoiceListDto>> GetPagedAsync(int page, int pageSize, DateTime? dateFrom, DateTime? dateTo, InvoiceStatus? status, InvoiceType? invoiceType, Guid? customerId, Guid? firmId, CancellationToken ct = default)
     {
         var query = ScopeQuery(firmId);
         if (dateFrom.HasValue) query = query.Where(x => x.InvoiceDate >= dateFrom.Value.Date);
         if (dateTo.HasValue) query = query.Where(x => x.InvoiceDate <= dateTo.Value.Date);
         if (status.HasValue) query = query.Where(x => x.Status == status.Value);
+        if (invoiceType.HasValue) query = query.Where(x => x.InvoiceType == invoiceType.Value);
         if (customerId.HasValue) query = query.Where(x => x.CustomerId == customerId.Value);
 
         var total = await query.CountAsync(ct);
@@ -52,6 +54,7 @@ public class InvoiceService : IInvoiceService
                 InvoiceNumber = x.InvoiceNumber,
                 InvoiceDate = x.InvoiceDate,
                 Status = x.Status,
+                InvoiceType = x.InvoiceType,
                 CustomerTitle = x.CustomerTitle,
                 GrandTotal = x.GrandTotal,
                 Currency = x.Currency
@@ -100,6 +103,7 @@ public class InvoiceService : IInvoiceService
             InvoiceNumber = invoiceNumber,
             InvoiceDate = request.InvoiceDate.Date,
             Status = InvoiceStatus.Draft,
+            InvoiceType = request.InvoiceType,
             CustomerId = customerId,
             CustomerTitle = customerTitle,
             CustomerTaxNumber = customerTaxNumber,
@@ -119,6 +123,7 @@ public class InvoiceService : IInvoiceService
             {
                 Id = Guid.NewGuid(),
                 InvoiceId = invoice.Id,
+                ProductId = item.ProductId,
                 Description = item.Description.Trim(),
                 Quantity = item.Quantity,
                 UnitPrice = item.UnitPrice,
@@ -162,6 +167,7 @@ public class InvoiceService : IInvoiceService
         var userId = _currentUser.UserId;
 
         invoice.InvoiceDate = request.InvoiceDate.Date;
+        invoice.InvoiceType = request.InvoiceType;
         invoice.CustomerTitle = request.CustomerTitle;
         invoice.CustomerTaxNumber = request.CustomerTaxNumber;
         invoice.CustomerAddress = request.CustomerAddress;
@@ -198,6 +204,7 @@ public class InvoiceService : IInvoiceService
             {
                 Id = Guid.NewGuid(),
                 InvoiceId = invoice.Id,
+                ProductId = item.ProductId,
                 Description = item.Description.Trim(),
                 Quantity = item.Quantity,
                 UnitPrice = item.UnitPrice,
@@ -231,10 +238,57 @@ public class InvoiceService : IInvoiceService
 
     public async Task<bool> SetStatusAsync(Guid id, InvoiceStatus status, CancellationToken ct = default)
     {
-        var invoice = await ScopeQuery().FirstOrDefaultAsync(x => x.Id == id, ct);
+        var invoice = await ScopeQuery().Include(x => x.Items).FirstOrDefaultAsync(x => x.Id == id, ct);
         if (invoice == null) return false;
         if (invoice.Status == InvoiceStatus.Cancelled) return false;
         if (invoice.Status == InvoiceStatus.Paid && status != InvoiceStatus.Paid) return false;
+
+        if ((status == InvoiceStatus.Issued || status == InvoiceStatus.Paid) && invoice.CustomerId.HasValue)
+        {
+            var alreadyCreated = await _db.AccountTransactions.AnyAsync(t => t.ReferenceType == ReferenceType.Fatura && t.ReferenceId == id, ct);
+            if (!alreadyCreated)
+            {
+                var cariType = invoice.InvoiceType == InvoiceType.Alis ? AccountTransactionType.Borc : AccountTransactionType.Alacak;
+                _db.AccountTransactions.Add(new AccountTransaction
+                {
+                    Id = Guid.NewGuid(),
+                    CustomerId = invoice.CustomerId.Value,
+                    UserId = invoice.UserId,
+                    Date = invoice.InvoiceDate,
+                    Type = cariType,
+                    Amount = invoice.GrandTotal,
+                    Currency = invoice.Currency,
+                    Description = $"Fatura {invoice.InvoiceNumber}",
+                    ReferenceType = ReferenceType.Fatura,
+                    ReferenceId = id,
+                    CreatedAt = DateTime.UtcNow
+                });
+            }
+        }
+
+if (status == InvoiceStatus.Issued || status == InvoiceStatus.Paid)
+            {
+                var stockAlreadyCreated = await _db.StockMovements.AnyAsync(m => m.ReferenceType == ReferenceType.Fatura && m.ReferenceId == id, ct);
+                if (!stockAlreadyCreated)
+                {
+                    var stockDirection = invoice.InvoiceType == InvoiceType.Alis ? StockMovementType.Giris : StockMovementType.Cikis;
+                    foreach (var item in invoice.Items.Where(i => i.ProductId.HasValue))
+                    {
+                        _db.StockMovements.Add(new StockMovement
+                        {
+                            Id = Guid.NewGuid(),
+                            ProductId = item.ProductId!.Value,
+                            Date = invoice.InvoiceDate,
+                            Type = stockDirection,
+                        Quantity = item.Quantity,
+                        ReferenceType = ReferenceType.Fatura,
+                        ReferenceId = id,
+                        CreatedAt = DateTime.UtcNow
+                    });
+                }
+            }
+        }
+
         invoice.Status = status;
         invoice.UpdatedAt = DateTime.UtcNow;
         await _db.SaveChangesAsync(ct);
@@ -262,6 +316,7 @@ public class InvoiceService : IInvoiceService
         InvoiceNumber = inv.InvoiceNumber,
         InvoiceDate = inv.InvoiceDate,
         Status = inv.Status,
+        InvoiceType = inv.InvoiceType,
         CustomerId = inv.CustomerId,
         CustomerTitle = inv.CustomerTitle,
         CustomerTaxNumber = inv.CustomerTaxNumber,
@@ -276,6 +331,7 @@ public class InvoiceService : IInvoiceService
         Items = inv.Items.OrderBy(x => x.SortOrder).Select(x => new InvoiceItemDto
         {
             Id = x.Id,
+            ProductId = x.ProductId,
             Description = x.Description,
             Quantity = x.Quantity,
             UnitPrice = x.UnitPrice,

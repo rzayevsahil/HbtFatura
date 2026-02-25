@@ -1,0 +1,77 @@
+<div class="page-header">
+  <a routerLink="/customers" class="back-link">← Cariler</a>
+  @if (customer) {
+    <h1 class="page-title">{{ customer.title }}</h1>
+    <p class="page-subtitle">{{ accountTypeLabel(customer.accountType) }} · Bakiye: {{ customer.balance | number:'1.2-2' }} ₺</p>
+    <div class="actions">
+      <a [routerLink]="['/customers', customer.id, 'edit']" class="btn btn-primary">Düzenle</a>
+    </div>
+  } @else {
+    <p>Yükleniyor...</p>
+  }
+</div>
+
+@if (customer) {
+  <section class="card info-section">
+    <h2 class="card-title">Cari bilgileri</h2>
+    <dl class="info-list">
+      <dt>Unvan</dt>
+      <dd>{{ customer.title }}</dd>
+      @if (customer.taxNumber) {
+        <dt>Vergi No / TC</dt>
+        <dd>{{ customer.taxNumber }}</dd>
+      }
+      @if (customer.address) {
+        <dt>Adres</dt>
+        <dd>{{ customer.address }}</dd>
+      }
+      @if (customer.phone) {
+        <dt>Telefon</dt>
+        <dd>{{ customer.phone }}</dd>
+      }
+      @if (customer.email) {
+        <dt>E-posta</dt>
+        <dd><a [href]="'mailto:' + customer.email">{{ customer.email }}</a></dd>
+      }
+    </dl>
+  </section>
+
+  <section class="card transactions-section">
+    <h2 class="card-title">Cari hareketler (ekstre)</h2>
+    <div class="filter-bar">
+      <input type="date" [(ngModel)]="dateFrom" placeholder="Başlangıç" />
+      <input type="date" [(ngModel)]="dateTo" placeholder="Bitiş" />
+      <button type="button" (click)="applyFilter()">Filtrele</button>
+    </div>
+    <table class="transactions-table">
+      <thead>
+        <tr>
+          <th>Tarih</th>
+          <th>Açıklama</th>
+          <th>Borç</th>
+          <th>Alacak</th>
+          <th>Bakiye</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (t of transactions; track t.id) {
+          <tr>
+            <td>{{ t.date | date:'dd.MM.yyyy' }}</td>
+            <td>{{ t.description }}</td>
+            <td class="amount">{{ t.type === 1 ? (t.amount | number:'1.2-2') : '' }}</td>
+            <td class="amount">{{ t.type === 2 ? (t.amount | number:'1.2-2') : '' }}</td>
+            <td class="amount">{{ t.runningBalance | number:'1.2-2' }} ₺</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+    @if (transactions.length === 0) {
+      <p class="text-muted">Bu dönemde hareket bulunmuyor.</p>
+    }
+    <div class="pagination">
+      <span>Toplam: {{ totalCount }} kayıt</span>
+      <button type="button" [disabled]="page <= 1" (click)="prevPage()">Önceki</button>
+      <button type="button" [disabled]="transactions.length < pageSize" (click)="nextPage()">Sonraki</button>
+    </div>
+  </section>
+}

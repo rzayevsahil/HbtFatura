@@ -1,0 +1,47 @@
+<div class="page-header">
+  <h1 class="page-title">{{ id ? 'Banka Hesabı Düzenle' : 'Yeni Banka Hesabı' }}</h1>
+</div>
+<div class="card">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="form-grid">
+      @if (auth.user()?.role === 'SuperAdmin' && !id) {
+        <div class="row">
+          <label>Firma</label>
+          <select formControlName="firmId" required>
+            <option [ngValue]="null">Firma seçin</option>
+            @for (f of firms; track f.id) {
+              <option [ngValue]="f.id">{{ f.name }}</option>
+            }
+          </select>
+        </div>
+      }
+      <div class="row">
+        <label>Hesap adı</label>
+        <input formControlName="name" placeholder="Örn. Ana hesap" />
+      </div>
+      <div class="row">
+        <label>Banka adı</label>
+        <input formControlName="bankName" placeholder="Banka adı" />
+      </div>
+      <div class="row">
+        <label>IBAN</label>
+        <input formControlName="iban" placeholder="TR00 0000 0000 0000 0000 0000 00" />
+      </div>
+      <div class="row">
+        <label>Para birimi</label>
+        <input formControlName="currency" placeholder="TRY" />
+      </div>
+      @if (id) {
+        <div class="row">
+          <label>Aktif</label>
+          <input type="checkbox" formControlName="isActive" />
+        </div>
+      }
+      @if (error) { <p class="error-msg">{{ error }}</p> }
+    </div>
+    <div class="actions">
+      <button type="submit" [disabled]="form.invalid || saving">Kaydet</button>
+      <a routerLink="/bank-accounts">İptal</a>
+    </div>
+  </form>
+</div>

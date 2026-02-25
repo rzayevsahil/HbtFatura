@@ -3,9 +3,11 @@ import { Observable } from 'rxjs';
 import { ApiService, PagedResult } from '../core/services/api.service';
 
 export type InvoiceStatus = 0 | 1 | 2 | 3; // Draft, Issued, Paid, Cancelled
+export type InvoiceType = 0 | 1; // Satis, Alis
 
 export interface InvoiceItemDto {
   id?: string;
+  productId?: string;
   description: string;
   quantity: number;
   unitPrice: number;
@@ -17,6 +19,7 @@ export interface InvoiceItemDto {
 }
 
 export interface InvoiceItemInputDto {
+  productId?: string;
   description: string;
   quantity: number;
   unitPrice: number;
@@ -29,6 +32,7 @@ export interface InvoiceDto {
   invoiceNumber: string;
   invoiceDate: string;
   status: InvoiceStatus;
+  invoiceType: InvoiceType;
   customerId?: string;
   customerTitle: string;
   customerTaxNumber?: string;
@@ -48,6 +52,7 @@ export interface InvoiceListDto {
   invoiceNumber: string;
   invoiceDate: string;
   status: InvoiceStatus;
+  invoiceType: InvoiceType;
   customerTitle: string;
   grandTotal: number;
   currency: string;
@@ -55,6 +60,7 @@ export interface InvoiceListDto {
 
 export interface CreateInvoiceRequest {
   invoiceDate: string;
+  invoiceType?: InvoiceType;
   customerId?: string;
   customerTitle: string;
   customerTaxNumber?: string;
@@ -71,11 +77,12 @@ export class InvoiceService {
   private base = '/api/invoices';
   constructor(private api: ApiService) {}
 
-  getPaged(params: { page: number; pageSize: number; dateFrom?: string; dateTo?: string; status?: number; customerId?: string }): Observable<PagedResult<InvoiceListDto>> {
+  getPaged(params: { page: number; pageSize: number; dateFrom?: string; dateTo?: string; status?: number; invoiceType?: number; customerId?: string }): Observable<PagedResult<InvoiceListDto>> {
     const p: Record<string, string | number> = { page: params.page, pageSize: params.pageSize };
     if (params.dateFrom) p['dateFrom'] = params.dateFrom;
     if (params.dateTo) p['dateTo'] = params.dateTo;
     if (params.status !== undefined) p['status'] = params.status;
+    if (params.invoiceType !== undefined) p['invoiceType'] = params.invoiceType;
     if (params.customerId) p['customerId'] = params.customerId;
     return this.api.get<PagedResult<InvoiceListDto>>(this.base, p);
   }

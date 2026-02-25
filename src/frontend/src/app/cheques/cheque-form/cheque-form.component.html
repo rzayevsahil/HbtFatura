@@ -1,0 +1,62 @@
+<div class="page-header">
+  <h1 class="page-title">{{ id ? 'Çek/Senet Düzenle' : 'Yeni Çek/Senet' }}</h1>
+</div>
+<div class="card">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="form-grid">
+      @if (auth.user()?.role === 'SuperAdmin' && !id) {
+        <div class="row">
+          <label>Firma</label>
+          <select formControlName="firmId" required>
+            <option [ngValue]="null">Firma seçin</option>
+            @for (f of firms; track f.id) {
+              <option [ngValue]="f.id">{{ f.name }}</option>
+            }
+          </select>
+        </div>
+      }
+      <div class="row">
+        <label>Tip</label>
+        <select formControlName="type">
+          <option [ngValue]="1">Çek</option>
+          <option [ngValue]="2">Senet</option>
+        </select>
+      </div>
+      <div class="row">
+        <label>Cari</label>
+        <select formControlName="customerId" required>
+          <option value="">Cari seçin</option>
+          @for (c of customers; track c.id) {
+            <option [ngValue]="c.id">{{ c.title }}</option>
+          }
+        </select>
+      </div>
+      <div class="row">
+        <label>Tutar</label>
+        <input type="number" formControlName="amount" step="0.01" min="0.01" />
+      </div>
+      <div class="row">
+        <label>Keşide tarihi</label>
+        <input type="date" formControlName="issueDate" />
+      </div>
+      <div class="row">
+        <label>Vade tarihi</label>
+        <input type="date" formControlName="dueDate" />
+      </div>
+      <div class="row">
+        <label>Banka hesabı</label>
+        <select formControlName="bankAccountId">
+          <option [ngValue]="null">—</option>
+          @for (b of bankAccounts; track b.id) {
+            <option [ngValue]="b.id">{{ b.name }}</option>
+          }
+        </select>
+      </div>
+      @if (error) { <p class="error-msg">{{ error }}</p> }
+    </div>
+    <div class="actions">
+      <button type="submit" [disabled]="form.invalid || saving">Kaydet</button>
+      <a routerLink="/cheques">İptal</a>
+    </div>
+  </form>
+</div>

@@ -6,7 +6,7 @@ namespace HbtFatura.Api.Services;
 
 public interface IInvoiceService
 {
-    Task<PagedResult<InvoiceListDto>> GetPagedAsync(int page, int pageSize, DateTime? dateFrom, DateTime? dateTo, InvoiceStatus? status, Guid? customerId, Guid? firmId, CancellationToken ct = default);
+    Task<PagedResult<InvoiceListDto>> GetPagedAsync(int page, int pageSize, DateTime? dateFrom, DateTime? dateTo, InvoiceStatus? status, InvoiceType? invoiceType, Guid? customerId, Guid? firmId, CancellationToken ct = default);
     Task<InvoiceDto?> GetByIdAsync(Guid id, CancellationToken ct = default);
     Task<InvoiceDto> CreateAsync(CreateInvoiceRequest request, CancellationToken ct = default);
     Task<InvoiceDto?> UpdateAsync(Guid id, UpdateInvoiceRequest request, byte[]? rowVersion, CancellationToken ct = default);

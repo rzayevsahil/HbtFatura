@@ -4,6 +4,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InvoiceService, CreateInvoiceRequest, InvoiceItemInputDto } from '../../services/invoice.service';
 import { CustomerService, CustomerDto } from '../../services/customer.service';
+import { ProductService, ProductDto } from '../../services/product.service';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -19,6 +20,7 @@ export class InvoiceFormComponent implements OnInit {
   form: FormGroup;
   id: string | null = null;
   customers: CustomerDto[] = [];
+  products: ProductDto[] = [];
   customerSearchText = '';
   customerDropdownOpen = false;
   error = '';
@@ -47,9 +49,11 @@ export class InvoiceFormComponent implements OnInit {
     private router: Router,
     private invoiceApi: InvoiceService,
     private customerApi: CustomerService,
+    private productApi: ProductService,
     private toastr: ToastrService
   ) {
     this.form = this.fb.nonNullable.group({
+      invoiceType: [0 as number, Validators.required], // 0=Satış, 1=Alış
       customerId: this.fb.control<string | null>(null),
       customerTitle: ['', Validators.required],
       customerTaxNumber: [''],
@@ -65,10 +69,12 @@ export class InvoiceFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.customerApi.getDropdown().subscribe(list => this.customers = list);
+    this.productApi.getDropdown().subscribe(list => this.products = list);
     this.id = this.route.snapshot.paramMap.get('id');
     if (this.id) {
       this.invoiceApi.getById(this.id).subscribe(inv => {
         this.form.patchValue({
+          invoiceType: inv.invoiceType ?? 0,
           customerId: inv.customerId ?? null,
           customerTitle: inv.customerTitle,
           customerTaxNumber: inv.customerTaxNumber ?? '',
@@ -81,6 +87,7 @@ export class InvoiceFormComponent implements OnInit {
         });
         this.items.clear();
         inv.items.forEach(it => this.items.push(this.fb.nonNullable.group({
+          productId: [it.productId ?? null],
           description: [it.description],
           quantity: [it.quantity],
           unitPrice: [it.unitPrice],
@@ -93,12 +100,21 @@ export class InvoiceFormComponent implements OnInit {
 
   createItemGroup(): FormGroup {
     return this.fb.nonNullable.group({
+      productId: [null as string | null],
       description: [''],
       quantity: [1],
       unitPrice: [0],
       vatRate: [18],
       sortOrder: [0]
     });
+  }
+
+  onProductSelect(i: number): void {
+    const g = this.items.at(i);
+    const productId = g.get('productId')?.value as string | null;
+    if (!productId) return;
+    const p = this.products.find((x: ProductDto) => x.id === productId);
+    if (p) g.patchValue({ description: p.name });
   }
 
   addItem(): void {
@@ -147,6 +163,7 @@ export class InvoiceFormComponent implements OnInit {
     const v = this.form.getRawValue();
     const req: CreateInvoiceRequest = {
       invoiceDate: v.invoiceDate,
+      invoiceType: v.invoiceType ?? 0,
       customerId: v.customerId ?? undefined,
       customerTitle: v.customerTitle,
       customerTaxNumber: v.customerTaxNumber || undefined,
@@ -156,6 +173,7 @@ export class InvoiceFormComponent implements OnInit {
       currency: v.currency,
       exchangeRate: v.exchangeRate,
       items: v.items.map((it: any, i: number) => ({
+        productId: it.productId ?? undefined,
         description: it.description,
         quantity: Number(it.quantity),
         unitPrice: Number(it.unitPrice),

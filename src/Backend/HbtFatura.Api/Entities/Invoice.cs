@@ -6,6 +6,7 @@ public class Invoice
     public string InvoiceNumber { get; set; } = string.Empty;
     public DateTime InvoiceDate { get; set; }
     public InvoiceStatus Status { get; set; }
+    public InvoiceType InvoiceType { get; set; } = InvoiceType.Satis;
     public Guid UserId { get; set; }
     public Guid? CustomerId { get; set; }
 

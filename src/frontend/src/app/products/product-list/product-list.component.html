@@ -1,0 +1,46 @@
+<div class="page-header">
+  <h1 class="page-title">Ürünler (Stok)</h1>
+  <div class="actions">
+    <input type="text" [(ngModel)]="search" placeholder="Kod, ad, barkod..." (keyup.enter)="applySearch()" />
+    <button type="button" (click)="applySearch()">Ara</button>
+    <a routerLink="/products/new" class="btn btn-primary">Yeni Ürün</a>
+  </div>
+</div>
+<div class="card table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Kod</th>
+        <th>Ad</th>
+        <th>Birim</th>
+        <th>Stok</th>
+        <th>Min / Max</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (p of items; track p.id) {
+        <tr [class.low-stock]="lowStock(p)">
+          <td><a [routerLink]="['/products', p.id]">{{ p.code }}</a></td>
+          <td>{{ p.name }}</td>
+          <td>{{ p.unit }}</td>
+          <td class="amount">{{ p.stockQuantity | number:'1.2-2' }}</td>
+          <td>{{ p.minStock | number:'1.2-2' }} / {{ p.maxStock | number:'1.2-2' }}</td>
+          <td>
+            <div class="actions-cell">
+              <a [routerLink]="['/products', p.id]">Detay</a>
+              <a [routerLink]="['/products', p.id, 'edit']">Düzenle</a>
+              <button type="button" (click)="delete(p.id, p.name)">Sil</button>
+            </div>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
+@if (totalCount > pageSize) {
+  <p class="text-muted">Toplam {{ totalCount }} kayıt. Sayfa {{ page }}.</p>
+}
+@if (items.length === 0) {
+  <p class="text-muted">Ürün bulunamadı veya henüz ürün tanımlanmamış.</p>
+}

@@ -5,6 +5,13 @@
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <div class="form-grid">
       <div class="row">
+        <label>Cari tipi</label>
+        <select formControlName="accountType">
+          <option [ngValue]="1">Müşteri</option>
+          <option [ngValue]="2">Tedarikçi</option>
+        </select>
+      </div>
+      <div class="row">
         <label>Unvan</label>
         <input formControlName="title" placeholder="Müşteri unvanı" />
       </div>

@@ -4,15 +4,29 @@ import { ApiService, PagedResult } from '../core/services/api.service';
 
 export interface CustomerDto {
   id: string;
+  accountType: number;
   title: string;
   taxNumber?: string;
   address?: string;
   phone?: string;
   email?: string;
+  balance: number;
 }
 
 export interface CustomerListDto extends CustomerDto {
   createdAt: string;
+}
+
+export interface AccountTransactionDto {
+  id: string;
+  date: string;
+  description: string;
+  type: number;
+  amount: number;
+  currency: string;
+  referenceType: string;
+  referenceId?: string;
+  runningBalance: number;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -32,11 +46,22 @@ export class CustomerService {
     return this.api.get<CustomerDto>(`${this.base}/${id}`);
   }
 
-  create(dto: Partial<CustomerDto>): Observable<CustomerDto> {
+  getBalance(id: string): Observable<number> {
+    return this.api.get<number>(`${this.base}/${id}/balance`);
+  }
+
+  getTransactions(id: string, page: number, pageSize: number, dateFrom?: string, dateTo?: string): Observable<PagedResult<AccountTransactionDto>> {
+    const params: Record<string, string | number> = { page, pageSize };
+    if (dateFrom) params['dateFrom'] = dateFrom;
+    if (dateTo) params['dateTo'] = dateTo;
+    return this.api.get<PagedResult<AccountTransactionDto>>(`${this.base}/${id}/transactions`, params);
+  }
+
+  create(dto: Partial<CustomerDto> & { accountType?: number }): Observable<CustomerDto> {
     return this.api.post<CustomerDto>(this.base, dto);
   }
 
-  update(id: string, dto: Partial<CustomerDto>): Observable<CustomerDto> {
+  update(id: string, dto: Partial<CustomerDto> & { accountType?: number }): Observable<CustomerDto> {
     return this.api.put<CustomerDto>(`${this.base}/${id}`, dto);
   }
 

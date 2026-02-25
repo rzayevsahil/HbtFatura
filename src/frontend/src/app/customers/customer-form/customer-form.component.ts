@@ -14,6 +14,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class CustomerFormComponent implements OnInit {
   form = this.fb.nonNullable.group({
+    accountType: [1 as number],
     title: ['', Validators.required],
     taxNumber: [''],
     address: [''],
@@ -36,6 +37,7 @@ export class CustomerFormComponent implements OnInit {
     this.id = this.route.snapshot.paramMap.get('id');
     if (this.id) {
       this.api.getById(this.id).subscribe(c => this.form.patchValue({
+        accountType: c.accountType ?? 1,
         title: c.title,
         taxNumber: c.taxNumber ?? '',
         address: c.address ?? '',

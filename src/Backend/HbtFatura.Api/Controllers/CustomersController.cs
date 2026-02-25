@@ -41,6 +41,22 @@ public class CustomersController : ControllerBase
         return Ok(dto);
     }
 
+    [HttpGet("{id:guid}/balance")]
+    public async Task<ActionResult<decimal>> GetBalance(Guid id, CancellationToken ct)
+    {
+        var balance = await _service.GetBalanceAsync(id, ct);
+        return Ok(balance);
+    }
+
+    [HttpGet("{id:guid}/transactions")]
+    public async Task<ActionResult<PagedResult<AccountTransactionDto>>> GetTransactions(Guid id, [FromQuery] int page = 1, [FromQuery] int pageSize = 20, [FromQuery] DateTime? dateFrom = null, [FromQuery] DateTime? dateTo = null, CancellationToken ct = default)
+    {
+        if (page < 1) page = 1;
+        if (pageSize < 1 || pageSize > 100) pageSize = 20;
+        var result = await _service.GetTransactionsAsync(id, page, pageSize, dateFrom, dateTo, ct);
+        return Ok(result);
+    }
+
     [HttpPost]
     public async Task<ActionResult<CustomerDto>> Create([FromBody] CreateCustomerRequest request, CancellationToken ct)
     {

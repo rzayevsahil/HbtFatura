@@ -1,0 +1,71 @@
+<div class="page-header">
+  <h1 class="page-title">Tahsilat / Ödeme Girişi</h1>
+</div>
+<div class="card">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="form-grid">
+      <div class="row">
+        <label>İşlem tipi</label>
+        <select formControlName="type">
+          <option value="Tahsilat">Tahsilat</option>
+          <option value="Odeme">Ödeme</option>
+        </select>
+      </div>
+      <div class="row">
+        <label>Cari</label>
+        <select formControlName="customerId" required>
+          <option value="">Cari seçin</option>
+          @for (c of customers; track c.id) {
+            <option [ngValue]="c.id">{{ c.title }}</option>
+          }
+        </select>
+      </div>
+      <div class="row">
+        <label>Tutar</label>
+        <input type="number" formControlName="amount" step="0.01" min="0.01" placeholder="0.00" />
+      </div>
+      <div class="row">
+        <label>Tarih</label>
+        <input type="date" formControlName="date" />
+      </div>
+      <div class="row">
+        <label>Ödeme yöntemi</label>
+        <select formControlName="paymentMethod">
+          <option value="Kasa">Kasa</option>
+          <option value="Banka">Banka</option>
+        </select>
+      </div>
+      @if (paymentMethod === 'Kasa') {
+        <div class="row">
+          <label>Kasa</label>
+          <select formControlName="cashRegisterId" required>
+            <option value="">Kasa seçin</option>
+            @for (r of cashRegisters; track r.id) {
+              <option [ngValue]="r.id">{{ r.name }}</option>
+            }
+          </select>
+        </div>
+      }
+      @if (paymentMethod === 'Banka') {
+        <div class="row">
+          <label>Banka hesabı</label>
+          <select formControlName="bankAccountId" required>
+            <option value="">Banka hesabı seçin</option>
+            @for (b of bankAccounts; track b.id) {
+              <option [ngValue]="b.id">{{ b.name }} ({{ b.bankName ?? '' }})</option>
+            }
+          </select>
+        </div>
+      }
+      <div class="row">
+        <label>Açıklama</label>
+        <input formControlName="description" placeholder="İsteğe bağlı" />
+      </div>
+      @if (error) { <p class="error-msg">{{ error }}</p> }
+    </div>
+    <div class="actions">
+      <button type="submit" [disabled]="form.invalid || saving">Kaydet</button>
+      <a routerLink="/customers">İptal</a>
+    </div>
+  </form>
+</div>

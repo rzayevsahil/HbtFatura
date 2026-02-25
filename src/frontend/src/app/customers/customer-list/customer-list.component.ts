@@ -51,4 +51,8 @@ export class CustomerListComponent implements OnInit {
   nextPage(): void {
     this.page++; this.load();
   }
+
+  accountTypeLabel(t: number): string {
+    return t === 2 ? 'Tedarikçi' : 'Müşteri';
+  }
 }

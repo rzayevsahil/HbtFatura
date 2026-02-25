@@ -1,0 +1,49 @@
+<div class="page-header">
+  <h1 class="page-title">{{ id ? 'Ürün Düzenle' : 'Yeni Ürün' }}</h1>
+</div>
+<div class="card">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="form-grid">
+      @if (auth.user()?.role === 'SuperAdmin' && !id) {
+        <div class="row">
+          <label>Firma</label>
+          <select formControlName="firmId" required>
+            <option [ngValue]="null">Firma seçin</option>
+            @for (f of firms; track f.id) {
+              <option [ngValue]="f.id">{{ f.name }}</option>
+            }
+          </select>
+        </div>
+      }
+      <div class="row">
+        <label>Kod</label>
+        <input formControlName="code" placeholder="Ürün kodu" />
+      </div>
+      <div class="row">
+        <label>Ad</label>
+        <input formControlName="name" placeholder="Ürün adı" />
+      </div>
+      <div class="row">
+        <label>Barkod</label>
+        <input formControlName="barcode" placeholder="İsteğe bağlı" />
+      </div>
+      <div class="row">
+        <label>Birim</label>
+        <input formControlName="unit" placeholder="Adet, Kg, vb." />
+      </div>
+      <div class="row">
+        <label>Min stok</label>
+        <input type="number" formControlName="minStock" step="0.01" min="0" />
+      </div>
+      <div class="row">
+        <label>Max stok</label>
+        <input type="number" formControlName="maxStock" step="0.01" min="0" />
+      </div>
+      @if (error) { <p class="error-msg">{{ error }}</p> }
+    </div>
+    <div class="actions">
+      <button type="submit" [disabled]="form.invalid || saving">Kaydet</button>
+      <a routerLink="/products">İptal</a>
+    </div>
+  </form>
+</div>

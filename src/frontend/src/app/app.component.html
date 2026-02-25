@@ -7,8 +7,18 @@
     @if (auth.user()?.role === 'FirmAdmin') {
       <a routerLink="/employees" routerLinkActive="active">Çalışanlar</a>
     }
+    @if (auth.user()?.role === 'FirmAdmin' || auth.user()?.role === 'SuperAdmin') {
+      <a routerLink="/cash-registers" routerLinkActive="active">Kasa</a>
+      <a routerLink="/bank-accounts" routerLinkActive="active">Banka</a>
+      <a routerLink="/account-payments" routerLinkActive="active">Tahsilat/Ödeme</a>
+    }
     <a routerLink="/invoices" routerLinkActive="active">Faturalar</a>
     <a routerLink="/customers" routerLinkActive="active">Müşteriler</a>
+    @if (auth.user()?.role === 'FirmAdmin' || auth.user()?.role === 'SuperAdmin') {
+      <a routerLink="/products" routerLinkActive="active">Stok</a>
+      <a routerLink="/reports" routerLinkActive="active">Raporlar</a>
+      <a routerLink="/cheques" routerLinkActive="active">Çek/Senet</a>
+    }
     @if (auth.user()?.role !== 'SuperAdmin') {
       <a routerLink="/company" routerLinkActive="active">Firma Bilgileri</a>
     }

@@ -1,0 +1,39 @@
+<div class="page-header">
+  <h1 class="page-title">{{ id ? 'Kasa Düzenle' : 'Yeni Kasa' }}</h1>
+</div>
+<div class="card">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="form-grid">
+      @if (auth.user()?.role === 'SuperAdmin' && !id) {
+        <div class="row">
+          <label>Firma</label>
+          <select formControlName="firmId" required>
+            <option [ngValue]="null">Firma seçin</option>
+            @for (f of firms; track f.id) {
+              <option [ngValue]="f.id">{{ f.name }}</option>
+            }
+          </select>
+        </div>
+      }
+      <div class="row">
+        <label>Kasa adı</label>
+        <input formControlName="name" placeholder="Örn. Ana Kasa" />
+      </div>
+      <div class="row">
+        <label>Para birimi</label>
+        <input formControlName="currency" placeholder="TRY" />
+      </div>
+      @if (id) {
+        <div class="row">
+          <label>Aktif</label>
+          <input type="checkbox" formControlName="isActive" />
+        </div>
+      }
+      @if (error) { <p class="error-msg">{{ error }}</p> }
+    </div>
+    <div class="actions">
+      <button type="submit" [disabled]="form.invalid || saving">Kaydet</button>
+      <a routerLink="/cash-registers">İptal</a>
+    </div>
+  </form>
+</div>

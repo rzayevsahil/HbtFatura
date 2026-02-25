@@ -4,6 +4,7 @@ public class Customer
 {
     public Guid Id { get; set; }
     public Guid UserId { get; set; }
+    public int AccountType { get; set; } = 1; // 1=Müşteri, 2=Tedarikçi
     public string Title { get; set; } = string.Empty;
     public string? TaxNumber { get; set; }
     public string? Address { get; set; }
@@ -19,4 +20,5 @@ public class Customer
 
     public ApplicationUser User { get; set; } = null!;
     public ICollection<Invoice> Invoices { get; set; } = new List<Invoice>();
+    public ICollection<AccountTransaction> AccountTransactions { get; set; } = new List<AccountTransaction>();
 }

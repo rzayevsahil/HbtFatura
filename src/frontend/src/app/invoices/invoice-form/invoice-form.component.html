@@ -5,8 +5,15 @@
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <div class="form-section">
       <div class="form-grid">
+        <div class="row">
+          <label>Fatura tipi</label>
+          <select formControlName="invoiceType">
+            <option [ngValue]="0">Satış</option>
+            <option [ngValue]="1">Alış</option>
+          </select>
+        </div>
         <div class="row" #customerDropdownWrap>
-          <label>Müşteri seç</label>
+          <label>Müşteri / Tedarikçi</label>
           <div class="customer-select">
             <button type="button" class="customer-select-trigger" (click)="toggleCustomerDropdown(); $event.stopPropagation()">
               {{ selectedCustomerTitle }}
@@ -48,6 +55,7 @@
     <div class="form-section items-section">
       <h3>Kalemler</h3>
       <div class="item-header">
+        <span class="item-col-product">Ürün</span>
         <span class="item-col-desc">Açıklama</span>
         <span class="item-col-qty">Miktar</span>
         <span class="item-col-price">Birim Fiyat</span>
@@ -57,6 +65,12 @@
       <div formArrayName="items">
         @for (item of items.controls; track item; let i = $index) {
           <div [formGroupName]="i" class="item-row">
+            <select formControlName="productId" (change)="onProductSelect(i)">
+              <option [ngValue]="null">—</option>
+              @for (p of products; track p.id) {
+                <option [ngValue]="p.id">{{ p.code }} - {{ p.name }}</option>
+              }
+            </select>
             <input formControlName="description" placeholder="Ürün/hizmet açıklaması" />
             <input type="number" formControlName="quantity" placeholder="Adet" min="0" step="1" />
             <input type="number" formControlName="unitPrice" placeholder="0" min="0" step="0.01" />

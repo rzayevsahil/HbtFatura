@@ -14,6 +14,8 @@ public class InvoiceItem
     public decimal LineVatAmount { get; set; }
     public decimal LineTotalInclVat { get; set; }
     public int SortOrder { get; set; }
+    public Guid? ProductId { get; set; }
 
     public Invoice Invoice { get; set; } = null!;
+    public Product? Product { get; set; }
 }

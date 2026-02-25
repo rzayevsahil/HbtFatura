@@ -8,6 +8,7 @@ public class InvoiceDto
     public string InvoiceNumber { get; set; } = string.Empty;
     public DateTime InvoiceDate { get; set; }
     public InvoiceStatus Status { get; set; }
+    public InvoiceType InvoiceType { get; set; }
     public Guid? CustomerId { get; set; }
     public string CustomerTitle { get; set; } = string.Empty;
     public string? CustomerTaxNumber { get; set; }
@@ -28,6 +29,7 @@ public class InvoiceListDto
     public string InvoiceNumber { get; set; } = string.Empty;
     public DateTime InvoiceDate { get; set; }
     public InvoiceStatus Status { get; set; }
+    public InvoiceType InvoiceType { get; set; }
     public string CustomerTitle { get; set; } = string.Empty;
     public decimal GrandTotal { get; set; }
     public string Currency { get; set; } = "TRY";
@@ -36,6 +38,7 @@ public class InvoiceListDto
 public class CreateInvoiceRequest
 {
     public DateTime InvoiceDate { get; set; }
+    public InvoiceType InvoiceType { get; set; } = InvoiceType.Satis;
     public Guid? CustomerId { get; set; }
     public string CustomerTitle { get; set; } = string.Empty;
     public string? CustomerTaxNumber { get; set; }

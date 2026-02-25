@@ -20,6 +20,7 @@ export class InvoiceListComponent implements OnInit {
   searchDateFrom = '';
   searchDateTo = '';
   searchStatus: InvoiceStatus | null = null;
+  searchInvoiceType: number | null = null;
 
   constructor(private api: InvoiceService, private toastr: ToastrService) {}
 
@@ -32,6 +33,7 @@ export class InvoiceListComponent implements OnInit {
     if (this.searchDateFrom) params.dateFrom = this.searchDateFrom;
     if (this.searchDateTo) params.dateTo = this.searchDateTo;
     if (this.searchStatus !== null) params.status = this.searchStatus;
+    if (this.searchInvoiceType !== null) params.invoiceType = this.searchInvoiceType;
     this.api.getPaged(params).subscribe(res => {
       this.items = res.items;
       this.totalCount = res.totalCount;
@@ -46,6 +48,10 @@ export class InvoiceListComponent implements OnInit {
   statusClass(s: InvoiceStatus): string {
     const map: Record<InvoiceStatus, string> = { 0: 'draft', 1: 'issued', 2: 'paid', 3: 'cancelled' };
     return map[s] ?? '';
+  }
+
+  typeLabel(t: number): string {
+    return t === 1 ? 'Alış' : 'Satış';
   }
 
   downloadPdf(id: string): void {

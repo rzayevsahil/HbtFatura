@@ -139,16 +139,17 @@
   font-weight: 600;
   color: var(--color-text-muted);
 
-  .item-col-desc { grid-column: 1; }
-  .item-col-qty { grid-column: 2; }
-  .item-col-price { grid-column: 3; }
-  .item-col-vat { grid-column: 4; }
-  .item-col-action { grid-column: 5; }
+  .item-col-product { grid-column: 1; }
+  .item-col-desc { grid-column: 2; }
+  .item-col-qty { grid-column: 3; }
+  .item-col-price { grid-column: 4; }
+  .item-col-vat { grid-column: 5; }
+  .item-col-action { grid-column: 6; }
 }
 
 .item-row {
   display: grid;
-  grid-template-columns: 1fr 100px 120px 80px auto;
+  grid-template-columns: 140px 1fr 100px 120px 80px auto;
   gap: 0.75rem;
   align-items: center;
   margin-bottom: 0.75rem;

@@ -1,0 +1,9 @@
+.page-header { margin-bottom: 1.5rem; }
+.report-section { margin-bottom: 1.5rem; }
+.report-section h2 { margin-top: 0; font-size: 1.1rem; }
+.filters { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; margin-bottom: 1rem; }
+.table-wrap { overflow-x: auto; margin-top: 0.5rem; }
+table { width: 100%; border-collapse: collapse; }
+th, td { padding: 0.5rem 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border, #eee); }
+.amount { text-align: right; font-variant-numeric: tabular-nums; }
+.low-stock { background: rgba(220, 53, 69, 0.08); }

@@ -1,0 +1,41 @@
+<div class="page-header">
+  <h1 class="page-title">Banka</h1>
+  <div class="actions">
+    <a routerLink="/bank-accounts/new" class="btn btn-primary">Yeni Banka Hesabı</a>
+  </div>
+</div>
+<div class="card table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Hesap adı</th>
+        <th>Banka</th>
+        <th>IBAN</th>
+        <th>Bakiye</th>
+        <th>Durum</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (b of items; track b.id) {
+        <tr>
+          <td><a [routerLink]="['/bank-accounts', b.id]">{{ b.name }}</a></td>
+          <td>{{ b.bankName }}</td>
+          <td>{{ b.iban }}</td>
+          <td class="amount">{{ b.balance | number:'1.2-2' }} ₺</td>
+          <td>{{ b.isActive ? 'Aktif' : 'Pasif' }}</td>
+          <td>
+            <div class="actions-cell">
+              <a [routerLink]="['/bank-accounts', b.id]">Detay</a>
+              <a [routerLink]="['/bank-accounts', b.id, 'edit']">Düzenle</a>
+              <button type="button" (click)="delete(b.id, b.name)">Sil</button>
+            </div>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
+@if (items.length === 0) {
+  <p class="text-muted">Henüz banka hesabı tanımlanmamış.</p>
+}

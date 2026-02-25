@@ -1,0 +1,28 @@
+<div class="page-header">
+  <h1 class="page-title">{{ item ? typeLabel(item.type) + ' - ' + item.customerTitle : 'Yükleniyor...' }}</h1>
+  <div class="actions">
+    <a [routerLink]="['/cheques', item?.id, 'edit']" class="btn">Düzenle</a>
+  </div>
+</div>
+@if (item) {
+  <div class="card info-grid">
+    <p><strong>Cari:</strong> {{ item.customerTitle }}</p>
+    <p><strong>Tutar:</strong> {{ item.amount | number:'1.2-2' }} ₺</p>
+    <p><strong>Keşide:</strong> {{ item.issueDate | date:'shortDate' }}</p>
+    <p><strong>Vade:</strong> {{ item.dueDate | date:'shortDate' }}</p>
+    <p><strong>Durum:</strong> {{ statusLabel(item.status) }}</p>
+    @if (item.bankAccountName) { <p><strong>Banka:</strong> {{ item.bankAccountName }}</p> }
+  </div>
+  <div class="card">
+    <h3>Durum güncelle</h3>
+    <div class="status-update">
+      <select [(ngModel)]="newStatus">
+        <option [ngValue]="0">Portföyde</option>
+        <option [ngValue]="1">Tahsil edildi</option>
+        <option [ngValue]="2">Ödendi</option>
+        <option [ngValue]="3">Reddedildi</option>
+      </select>
+      <button type="button" (click)="updateStatus()">Kaydet</button>
+    </div>
+  </div>
+}

@@ -10,8 +10,10 @@
   <table>
     <thead>
       <tr>
+        <th>Tip</th>
         <th>Unvan</th>
         <th>Vergi No</th>
+        <th>Bakiye</th>
         <th>Adres</th>
         <th>Telefon</th>
         <th></th>
@@ -20,12 +22,15 @@
     <tbody>
       @for (c of items; track c.id) {
         <tr>
-          <td>{{ c.title }}</td>
+          <td>{{ accountTypeLabel(c.accountType) }}</td>
+          <td><a [routerLink]="['/customers', c.id]">{{ c.title }}</a></td>
           <td>{{ c.taxNumber }}</td>
+          <td class="amount">{{ c.balance | number:'1.2-2' }} ₺</td>
           <td>{{ c.address }}</td>
           <td>{{ c.phone }}</td>
           <td>
             <div class="actions-cell">
+              <a [routerLink]="['/customers', c.id]">Detay</a>
               <a [routerLink]="['/customers', c.id, 'edit']">Düzenle</a>
               <button type="button" (click)="delete(c.id)">Sil</button>
             </div>

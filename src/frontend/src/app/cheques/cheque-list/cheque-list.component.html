@@ -1,0 +1,54 @@
+<div class="page-header">
+  <h1 class="page-title">Çek / Senet</h1>
+  <a routerLink="/cheques/new" class="btn btn-primary">Yeni kayıt</a>
+</div>
+<div class="card filters">
+  <select [(ngModel)]="filterType" (change)="applyFilter()">
+    <option value="">Tümü</option>
+    <option [value]="1">Çek</option>
+    <option [value]="2">Senet</option>
+  </select>
+  <select [(ngModel)]="filterStatus" (change)="applyFilter()">
+    <option value="">Tüm durumlar</option>
+    <option [value]="0">Portföyde</option>
+    <option [value]="1">Tahsil edildi</option>
+    <option [value]="2">Ödendi</option>
+    <option [value]="3">Reddedildi</option>
+  </select>
+  <input type="date" [(ngModel)]="filterDueFrom" (change)="applyFilter()" placeholder="Vade from" />
+  <input type="date" [(ngModel)]="filterDueTo" (change)="applyFilter()" placeholder="Vade to" />
+  <button type="button" (click)="applyFilter()">Filtrele</button>
+</div>
+<div class="card table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Tip</th>
+        <th>Cari</th>
+        <th class="amount">Tutar</th>
+        <th>Vade</th>
+        <th>Durum</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (c of items; track c.id) {
+        <tr>
+          <td>{{ typeLabel(c.type) }}</td>
+          <td><a [routerLink]="['/cheques', c.id]">{{ c.customerTitle }}</a></td>
+          <td class="amount">{{ c.amount | number:'1.2-2' }} ₺</td>
+          <td>{{ c.dueDate | date:'shortDate' }}</td>
+          <td>{{ statusLabel(c.status) }}</td>
+          <td>
+            <a [routerLink]="['/cheques', c.id]">Detay</a>
+            <a [routerLink]="['/cheques', c.id, 'edit']">Düzenle</a>
+            <button type="button" (click)="delete(c.id)">Sil</button>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
+@if (items.length === 0 && totalCount === 0) {
+  <p class="text-muted">Kayıt bulunamadı.</p>
+}
