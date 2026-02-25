@@ -61,6 +61,8 @@ public class MainAccountCodesController : ControllerBase
         }
         catch (InvalidOperationException ex)
         {
+            if (ex.Message.Contains("Sistem kodları"))
+                return StatusCode(403, new { message = ex.Message });
             return BadRequest(new { message = ex.Message });
         }
     }
@@ -68,8 +70,17 @@ public class MainAccountCodesController : ControllerBase
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> Delete(Guid id, CancellationToken ct = default)
     {
-        var ok = await _service.DeleteAsync(id, ct);
-        if (!ok) return NotFound();
-        return NoContent();
+        try
+        {
+            var ok = await _service.DeleteAsync(id, ct);
+            if (!ok) return NotFound();
+            return NoContent();
+        }
+        catch (InvalidOperationException ex)
+        {
+            if (ex.Message.Contains("Sistem kodları"))
+                return StatusCode(403, new { message = ex.Message });
+            return BadRequest(new { message = ex.Message });
+        }
     }
 }

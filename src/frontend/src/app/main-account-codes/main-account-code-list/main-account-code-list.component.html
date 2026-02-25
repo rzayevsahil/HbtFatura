@@ -21,10 +21,14 @@
           <td>{{ item.name }}</td>
           <td>{{ item.sortOrder }}</td>
           <td>
-            <div class="actions-cell">
-              <a [routerLink]="['/main-account-codes', item.id, 'edit']">Düzenle</a>
-              <button type="button" (click)="delete(item.id, item.code)">Sil</button>
-            </div>
+            @if (!item.isSystem) {
+              <div class="actions-cell">
+                <a [routerLink]="['/main-account-codes', item.id, 'edit']">Düzenle</a>
+                <button type="button" (click)="delete(item.id, item.code)">Sil</button>
+              </div>
+            } @else {
+              <span class="text-muted">Sistem kodu</span>
+            }
           </td>
         </tr>
       }

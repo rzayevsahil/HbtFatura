@@ -16,17 +16,25 @@ public class MainAccountCodeService : IMainAccountCodeService
         _currentUser = currentUser;
     }
 
+    /// <summary>Firma kapsamındaki kodlar (sistem kodları hariç). Update/Delete sadece bu kapsamdakilerde yapılabilir.</summary>
     private IQueryable<MainAccountCode> ScopeQuery(Guid? firmIdFilter = null)
     {
         if (_currentUser.IsSuperAdmin)
         {
             if (firmIdFilter.HasValue)
                 return _db.MainAccountCodes.Where(x => x.FirmId == firmIdFilter.Value);
-            return _db.MainAccountCodes.AsQueryable();
+            return _db.MainAccountCodes.Where(x => x.FirmId != null);
         }
         if (_currentUser.IsFirmAdmin && _currentUser.FirmId.HasValue)
             return _db.MainAccountCodes.Where(x => x.FirmId == _currentUser.FirmId.Value);
         return _db.MainAccountCodes.Where(x => false);
+    }
+
+    private Guid? EffectiveFirmIdForList(Guid? firmIdFilter)
+    {
+        if (firmIdFilter.HasValue && _currentUser.IsSuperAdmin)
+            return firmIdFilter.Value;
+        return _currentUser.FirmId;
     }
 
     private static Guid ResolveFirmId(CreateMainAccountCodeRequest request, ICurrentUserContext currentUser)
@@ -40,7 +48,9 @@ public class MainAccountCodeService : IMainAccountCodeService
 
     public async Task<IReadOnlyList<MainAccountCodeDto>> GetByFirmAsync(Guid? firmId, CancellationToken ct = default)
     {
-        return await ScopeQuery(firmId)
+        var effectiveFirmId = EffectiveFirmIdForList(firmId);
+        var query = _db.MainAccountCodes
+            .Where(x => x.FirmId == null || x.FirmId == effectiveFirmId)
             .OrderBy(x => x.SortOrder)
             .ThenBy(x => x.Code)
             .Select(x => new MainAccountCodeDto
@@ -50,22 +60,27 @@ public class MainAccountCodeService : IMainAccountCodeService
                 Code = x.Code,
                 Name = x.Name,
                 SortOrder = x.SortOrder,
-                CreatedAt = x.CreatedAt
-            })
-            .ToListAsync(ct);
+                CreatedAt = x.CreatedAt,
+                IsSystem = x.FirmId == null
+            });
+        return await query.ToListAsync(ct);
     }
 
     public async Task<MainAccountCodeDto?> GetByIdAsync(Guid id, CancellationToken ct = default)
     {
-        var entity = await ScopeQuery().FirstOrDefaultAsync(x => x.Id == id, ct);
-        return entity == null ? null : new MainAccountCodeDto
+        var entity = await _db.MainAccountCodes.FirstOrDefaultAsync(x => x.Id == id, ct);
+        if (entity == null) return null;
+        if (entity.FirmId != null && !await ScopeQuery().AnyAsync(x => x.Id == id, ct))
+            return null;
+        return new MainAccountCodeDto
         {
             Id = entity.Id,
             FirmId = entity.FirmId,
             Code = entity.Code,
             Name = entity.Name,
             SortOrder = entity.SortOrder,
-            CreatedAt = entity.CreatedAt
+            CreatedAt = entity.CreatedAt,
+            IsSystem = entity.FirmId == null
         };
     }
 
@@ -103,6 +118,8 @@ public class MainAccountCodeService : IMainAccountCodeService
     {
         var entity = await ScopeQuery().FirstOrDefaultAsync(x => x.Id == id, ct);
         if (entity == null) return null;
+        if (entity.FirmId == null)
+            throw new InvalidOperationException("Sistem kodları düzenlenemez.");
 
         var code = request.Code.Trim();
         var exists = await _db.MainAccountCodes.AnyAsync(x => x.FirmId == entity.FirmId && x.Code == code && x.Id != id, ct);
@@ -120,7 +137,8 @@ public class MainAccountCodeService : IMainAccountCodeService
             Code = entity.Code,
             Name = entity.Name,
             SortOrder = entity.SortOrder,
-            CreatedAt = entity.CreatedAt
+            CreatedAt = entity.CreatedAt,
+            IsSystem = false
         };
     }
 
@@ -128,6 +146,8 @@ public class MainAccountCodeService : IMainAccountCodeService
     {
         var entity = await ScopeQuery().FirstOrDefaultAsync(x => x.Id == id, ct);
         if (entity == null) return false;
+        if (entity.FirmId == null)
+            throw new InvalidOperationException("Sistem kodları silinemez.");
         _db.MainAccountCodes.Remove(entity);
         await _db.SaveChangesAsync(ct);
         return true;

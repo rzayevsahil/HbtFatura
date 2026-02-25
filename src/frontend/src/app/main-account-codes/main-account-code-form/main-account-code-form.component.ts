@@ -44,13 +44,21 @@ export class MainAccountCodeFormComponent implements OnInit {
       (this.form as FormGroup).removeControl('firmId');
     }
     if (this.id) {
-      this.api.getById(this.id).subscribe(item =>
-        this.form.patchValue({
-          code: item.code,
-          name: item.name,
-          sortOrder: item.sortOrder
-        })
-      );
+      this.api.getById(this.id).subscribe({
+        next: item => {
+          if (item.isSystem) {
+            this.toastr.warning('Sistem kodları düzenlenemez.');
+            this.router.navigate(['/main-account-codes']);
+            return;
+          }
+          this.form.patchValue({
+            code: item.code,
+            name: item.name,
+            sortOrder: item.sortOrder
+          });
+        },
+        error: () => this.router.navigate(['/main-account-codes'])
+      });
     }
   }
 

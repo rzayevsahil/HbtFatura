@@ -117,9 +117,10 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid
 
         modelBuilder.Entity<MainAccountCode>(e =>
         {
-            e.HasOne(x => x.Firm).WithMany(x => x.MainAccountCodes).HasForeignKey(x => x.FirmId).OnDelete(DeleteBehavior.Cascade);
+            e.HasOne(x => x.Firm).WithMany(x => x.MainAccountCodes).HasForeignKey(x => x.FirmId).OnDelete(DeleteBehavior.Cascade).IsRequired(false);
             e.HasIndex(x => x.FirmId);
-            e.HasIndex(x => new { x.FirmId, x.Code }).IsUnique();
+            e.HasIndex(x => new { x.FirmId, x.Code }).IsUnique().HasFilter("[FirmId] IS NOT NULL");
+            e.HasIndex(x => x.Code).IsUnique().HasFilter("[FirmId] IS NULL");
         });
 
         modelBuilder.Entity<ChequeOrPromissory>(e =>

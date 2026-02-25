@@ -4,11 +4,12 @@ import { ApiService } from '../core/services/api.service';
 
 export interface MainAccountCodeDto {
   id: string;
-  firmId: string;
+  firmId?: string | null;
   code: string;
   name: string;
   sortOrder: number;
   createdAt: string;
+  isSystem?: boolean;
 }
 
 export interface CreateMainAccountCodeRequest {
