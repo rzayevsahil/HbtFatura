@@ -54,10 +54,15 @@ export class MainAccountCodeFormComponent implements OnInit {
           this.form.patchValue({
             code: item.code,
             name: item.name,
-            sortOrder: item.sortOrder
+            sortOrder: item.sortOrder ?? 0
           });
         },
         error: () => this.router.navigate(['/main-account-codes'])
+      });
+    } else {
+      this.api.getByFirm(undefined).subscribe(list => {
+        const max = list.length ? Math.max(...list.map(x => x.sortOrder ?? 0)) : 0;
+        this.form.patchValue({ sortOrder: max + 1 });
       });
     }
   }

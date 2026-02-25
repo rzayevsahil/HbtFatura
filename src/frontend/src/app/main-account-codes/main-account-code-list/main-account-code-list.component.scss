@@ -5,6 +5,19 @@
   margin-bottom: 1.5rem;
 }
 
+.list-toolbar {
+  margin-bottom: 1rem;
+
+  .search-input {
+    width: 100%;
+    max-width: 320px;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    font-size: 0.9375rem;
+  }
+}
+
 .table-wrap {
   overflow-x: auto;
   max-height: 70vh;

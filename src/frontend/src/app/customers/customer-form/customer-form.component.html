@@ -2,17 +2,36 @@
   <h1 class="page-title">{{ id ? 'Cari Düzenle' : 'Yeni Cari' }}</h1>
 </div>
 <div class="card">
-  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" (click)="showMainAccountDropdown = false">
     <div class="form-grid">
       <div class="row">
         <label>Ana cari kodu</label>
-        <div class="input-with-link">
-          <select formControlName="mainAccountCode">
-            <option value="">Seçiniz</option>
-            @for (item of mainAccountCodes; track item.id) {
-              <option [value]="item.code">{{ item.code }} — {{ item.name }}</option>
+        <div class="input-with-link main-account-combo" (click)="$event.stopPropagation()">
+          <div class="combo-wrap">
+            @if (selectedMainAccount) {
+              <span class="selected-label">{{ selectedMainAccount.code }} — {{ selectedMainAccount.name }}</span>
+              <button type="button" class="btn-clear" (click)="clearMainAccountCode()" title="Seçimi temizle">×</button>
+            } @else {
+              <input
+                type="text"
+                [(ngModel)]="mainAccountCodeSearch"
+                [ngModelOptions]="{standalone: true}"
+                placeholder="Kod veya ad ile ara, listeden seçin"
+                (focus)="showMainAccountDropdown = true"
+                (keydown.escape)="showMainAccountDropdown = false"
+              />
             }
-          </select>
+          </div>
+          @if (showMainAccountDropdown && !selectedMainAccount) {
+            <ul class="combo-dropdown" (click)="$event.stopPropagation()">
+              @for (item of filteredMainAccountCodes; track item.id) {
+                <li (click)="selectMainAccountCode(item)">{{ item.code }} — {{ item.name }}</li>
+              }
+              @if (filteredMainAccountCodes.length === 0) {
+                <li class="no-results">Sonuç yok. Kod listesinden ekleyebilirsiniz.</li>
+              }
+            </ul>
+          }
           <a routerLink="/main-account-codes" class="link-small">Kod listesini düzenle</a>
         </div>
       </div>

@@ -23,10 +23,6 @@
         <label>Ad</label>
         <input formControlName="name" placeholder="Örn. Alıcılar" />
       </div>
-      <div class="row">
-        <label>Sıra</label>
-        <input type="number" formControlName="sortOrder" min="0" />
-      </div>
       @if (error) {
         <p class="error-msg">{{ error }}</p>
       }

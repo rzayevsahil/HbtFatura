@@ -4,6 +4,14 @@
     <a routerLink="/main-account-codes/new" class="btn btn-primary">Yeni kod</a>
   </div>
 </div>
+<div class="card list-toolbar">
+  <input
+    type="text"
+    class="search-input"
+    [(ngModel)]="searchText"
+    placeholder="Kod veya ad ile ara..."
+  />
+</div>
 <div class="card table-wrap">
   <table>
     <thead>
@@ -14,7 +22,7 @@
       </tr>
     </thead>
     <tbody>
-      @for (item of items; track item.id) {
+      @for (item of filteredItems; track item.id) {
         <tr>
           <td>{{ item.code }}</td>
           <td>{{ item.name }}</td>
@@ -35,4 +43,6 @@
 </div>
 @if (items.length === 0) {
   <p class="text-muted">Henüz ana cari kodu tanımlanmamış. Carilerde kullanmak için buradan kod ekleyebilirsiniz.</p>
+} @else if (filteredItems.length === 0) {
+  <p class="text-muted">Arama kriterine uygun kayıt bulunamadı.</p>
 }

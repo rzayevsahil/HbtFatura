@@ -38,6 +38,78 @@
         text-decoration: underline;
       }
     }
+
+    &.main-account-combo {
+      position: relative;
+
+      .combo-wrap {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        input {
+          flex: 1;
+          padding: 0.5rem 0.75rem;
+          border: 1px solid var(--color-border);
+          border-radius: var(--radius-sm);
+          font-size: 0.9375rem;
+        }
+
+        .selected-label {
+          flex: 1;
+          font-size: 0.9375rem;
+          color: var(--color-text);
+        }
+
+        .btn-clear {
+          padding: 0.25rem 0.5rem;
+          border: none;
+          background: transparent;
+          color: var(--color-text-muted);
+          font-size: 1.25rem;
+          line-height: 1;
+          cursor: pointer;
+          border-radius: var(--radius-sm);
+
+          &:hover {
+            color: var(--color-text);
+            background: var(--color-background);
+          }
+        }
+      }
+
+      .combo-dropdown {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        margin: 0;
+        padding: 0.25rem 0;
+        list-style: none;
+        max-height: 220px;
+        overflow-y: auto;
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-sm);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        z-index: 10;
+
+        li {
+          padding: 0.5rem 0.75rem;
+          font-size: 0.9375rem;
+          cursor: pointer;
+
+          &:hover {
+            background: var(--color-background);
+          }
+
+          &.no-results {
+            cursor: default;
+            color: var(--color-text-muted);
+          }
+        }
+      }
+    }
   }
 }
 
