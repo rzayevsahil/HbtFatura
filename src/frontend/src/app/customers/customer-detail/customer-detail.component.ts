@@ -63,6 +63,10 @@ export class CustomerDetailComponent implements OnInit {
     return t === 1 ? 'Borç' : 'Alacak';
   }
 
+  joinCityDistrict(city?: string | null, district?: string | null): string {
+    return [city ?? '', district ?? ''].filter(s => s.length > 0).join(' / ');
+  }
+
   prevPage(): void {
     if (this.page > 1) { this.page--; this.loadTransactions(); }
   }

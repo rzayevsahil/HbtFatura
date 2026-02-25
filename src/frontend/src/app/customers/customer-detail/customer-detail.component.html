@@ -39,7 +39,7 @@
       }
       @if (customer.city || customer.district) {
         <dt>İl / İlçe</dt>
-        <dd>{{ [customer.city, customer.district].filter(Boolean).join(' / ') }}</dd>
+        <dd>{{ joinCityDistrict(customer.city, customer.district) }}</dd>
       }
       @if (customer.postalCode) {
         <dt>Posta kodu</dt>
