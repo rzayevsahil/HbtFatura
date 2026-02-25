@@ -24,6 +24,52 @@
   overflow-y: auto;
 }
 
+.main-table {
+  table-layout: fixed;
+  width: 100%;
+  min-width: 400px;
+
+  .col-code {
+    width: 140px;
+  }
+
+  .col-name {
+    width: auto; /* kalan alan */
+  }
+
+  .col-actions {
+    width: 200px;
+  }
+
+  th,
+  td {
+    padding: 0.5rem 0.75rem;
+    vertical-align: middle;
+    text-align: left;
+  }
+
+  th:first-child,
+  td:first-child {
+    text-align: left;
+  }
+
+  td:first-child {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  td:nth-child(2) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+  }
+
+  td:last-child {
+    overflow: visible;
+    white-space: nowrap;
+  }
+}
+
 .actions-cell {
   display: flex;
   gap: 0.5rem;
