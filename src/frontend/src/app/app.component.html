@@ -3,8 +3,20 @@
     <header class="header">
       <span class="header-brand">HBT Fatura</span>
       <div class="header-right">
-        <span class="header-user">{{ auth.user()?.fullName }}</span>
-        <button type="button" class="header-logout" (click)="auth.logout()">Çıkış</button>
+        <button type="button" class="header-user-trigger" (click)="headerMenuOpen = !headerMenuOpen" aria-expanded="headerMenuOpen">
+          <span class="header-user-name">{{ auth.user()?.fullName }}</span>
+          <span class="header-user-chevron">{{ headerMenuOpen ? '▲' : '▼' }}</span>
+        </button>
+        @if (headerMenuOpen) {
+          <div class="header-menu-backdrop" (click)="closeHeaderMenu()"></div>
+          <div class="header-menu">
+            <div class="header-menu-item header-menu-user">
+              <span class="header-menu-label">Profil</span>
+              <span class="header-menu-value">{{ auth.user()?.fullName }}</span>
+            </div>
+            <button type="button" class="header-menu-item header-menu-logout" (click)="auth.logout(); closeHeaderMenu()">Çıkış</button>
+          </div>
+        }
       </div>
     </header>
     <aside class="sidebar">

@@ -11,5 +11,11 @@ import { AuthService } from './core/services/auth.service';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
+  headerMenuOpen = false;
+
   constructor(public auth: AuthService) {}
+
+  closeHeaderMenu(): void {
+    this.headerMenuOpen = false;
+  }
 }
