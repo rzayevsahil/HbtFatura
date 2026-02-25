@@ -1,7 +1,7 @@
 <div class="page-header">
   <h1 class="page-title">Hesap Planı Kodları</h1>
   <div class="actions">
-    <button type="button" class="btn btn-primary" (click)="openNew()">Yeni kod</button>
+    <button type="button" class="btn btn-primary" (click)="openNew()">Yeni Hesap Kodu</button>
   </div>
 </div>
 <div class="card list-toolbar">
@@ -53,8 +53,8 @@
 }
 
 @if (modalOpen) {
-  <div class="modal-overlay" (click)="closeModal()">
-    <div class="modal-content" (click)="$event.stopPropagation()">
+  <div class="modal-overlay">
+    <div class="modal-content">
       <app-main-account-code-form
         [isModal]="true"
         [editId]="editingId"
