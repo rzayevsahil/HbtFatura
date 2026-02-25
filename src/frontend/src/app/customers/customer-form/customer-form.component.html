@@ -92,7 +92,7 @@
       @if (error) { <p class="error-msg">{{ error }}</p> }
     </div>
     <div class="actions">
-      <button type="button" (click)="onSubmit()" [disabled]="saving">Kaydet</button>
+      <button class="btn btn-primary" type="button" (click)="onSubmit()" [disabled]="saving">Kaydet</button>
       <a routerLink="/customers">İptal</a>
     </div>
   </form>
