@@ -1,11 +1,14 @@
 @if (invoice) {
   <div class="page-header">
-    <h1 class="page-title">Fatura {{ invoice.invoiceNumber }}</h1>
-    <div class="meta">
-      <span>Tarih: {{ invoice.invoiceDate | date:'dd.MM.yyyy' }}</span>
-      <span class="status-badge" [class]="statusClass(invoice.status)">{{ statusLabel(invoice.status) }}</span>
-      <span>Cari: {{ invoice.customerTitle }}</span>
+    <div class="page-header-left">
+      <h1 class="page-title">Fatura {{ invoice.invoiceNumber }}</h1>
+      <div class="meta">
+        <span>Tarih: {{ invoice.invoiceDate | date:'dd.MM.yyyy' }}</span>
+        <span class="status-badge" [class]="statusClass(invoice.status)">{{ statusLabel(invoice.status) }}</span>
+        <span>Cari: {{ invoice.customerTitle }}</span>
+      </div>
     </div>
+    <a routerLink="/invoices" class="back-link">← Listeye dön</a>
   </div>
   <div class="card table-wrap">
     <table>
@@ -49,4 +52,3 @@
 } @else {
   <p class="loading">Yükleniyor...</p>
 }
-<a routerLink="/invoices" class="back-link">← Listeye dön</a>

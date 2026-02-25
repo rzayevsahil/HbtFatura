@@ -1,12 +1,22 @@
 .page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
   margin-bottom: 1.5rem;
+}
+
+.page-header-left {
+  flex: 1;
+  min-width: 0;
 }
 
 .meta {
   display: flex;
   gap: 1.5rem;
   flex-wrap: wrap;
-  margin-bottom: 1.5rem;
+  margin-top: 0.25rem;
+  margin-bottom: 0;
   font-size: 0.9375rem;
   color: var(--color-text-muted);
 }
@@ -134,14 +144,18 @@ table {
   color: var(--color-text-muted);
 }
 
-.back-link {
-  display: inline-block;
-  margin-top: 1rem;
+.page-header .back-link {
+  flex-shrink: 0;
+  margin-top: 0;
+  padding: 0.5rem 0.75rem;
   color: var(--color-text-muted);
   text-decoration: none;
   font-size: 0.9375rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
 
   &:hover {
     color: var(--color-primary);
+    background: var(--color-primary-light);
   }
 }
