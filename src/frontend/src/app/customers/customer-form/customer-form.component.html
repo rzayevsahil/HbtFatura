@@ -1,5 +1,5 @@
 <div class="page-header">
-  <h1 class="page-title">{{ id ? 'Müşteri Düzenle' : 'Yeni Müşteri' }}</h1>
+  <h1 class="page-title">{{ id ? 'Cari Düzenle' : 'Yeni Cari' }}</h1>
 </div>
 <div class="card">
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
@@ -7,13 +7,13 @@
       <div class="row">
         <label>Cari tipi</label>
         <select formControlName="accountType">
-          <option [ngValue]="1">Müşteri</option>
+          <option [ngValue]="1">Cari</option>
           <option [ngValue]="2">Tedarikçi</option>
         </select>
       </div>
       <div class="row">
         <label>Unvan</label>
-        <input formControlName="title" placeholder="Müşteri unvanı" />
+        <input formControlName="title" placeholder="Cari unvanı" />
       </div>
       <div class="row">
         <label>Vergi No / TC</label>
@@ -29,7 +29,7 @@
       </div>
       <div class="row">
         <label>E-posta</label>
-        <input type="email" formControlName="email" placeholder="musteri@ornek.com" />
+        <input type="email" formControlName="email" placeholder="cari@ornek.com" />
       </div>
       @if (error) { <p class="error-msg">{{ error }}</p> }
     </div>

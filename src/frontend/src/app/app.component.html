@@ -13,7 +13,7 @@
       <a routerLink="/account-payments" routerLinkActive="active">Tahsilat/Ödeme</a>
     }
     <a routerLink="/invoices" routerLinkActive="active">Faturalar</a>
-    <a routerLink="/customers" routerLinkActive="active">Müşteriler</a>
+    <a routerLink="/customers" routerLinkActive="active">Cariler</a>
     @if (auth.user()?.role === 'FirmAdmin' || auth.user()?.role === 'SuperAdmin') {
       <a routerLink="/products" routerLinkActive="active">Stok</a>
       <a routerLink="/reports" routerLinkActive="active">Raporlar</a>

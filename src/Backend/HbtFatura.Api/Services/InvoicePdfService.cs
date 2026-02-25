@@ -72,7 +72,7 @@ public class InvoicePdfService : IInvoicePdfService
 
                 page.Content().PaddingVertical(20).Column(col =>
                 {
-                    col.Item().Text("Müşteri").Bold();
+                    col.Item().Text("Cari").Bold();
                     col.Item().Text(invoice.CustomerTitle);
                     if (!string.IsNullOrEmpty(invoice.CustomerTaxNumber)) col.Item().Text($"Vergi No/TC: {invoice.CustomerTaxNumber}");
                     if (!string.IsNullOrEmpty(invoice.CustomerAddress)) col.Item().Text(invoice.CustomerAddress);

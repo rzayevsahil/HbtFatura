@@ -13,14 +13,14 @@
           </select>
         </div>
         <div class="row" #customerDropdownWrap>
-          <label>Müşteri / Tedarikçi</label>
+          <label>Cari / Tedarikçi</label>
           <div class="customer-select">
             <button type="button" class="customer-select-trigger" (click)="toggleCustomerDropdown(); $event.stopPropagation()">
               {{ selectedCustomerTitle }}
             </button>
             @if (customerDropdownOpen) {
               <div class="customer-select-panel">
-                <input type="text" class="customer-search" placeholder="Müşteri ara..." [value]="customerSearchText" (input)="customerSearchText = $any($event.target).value" />
+                <input type="text" class="customer-search" placeholder="Cari ara..." [value]="customerSearchText" (input)="customerSearchText = $any($event.target).value" />
                 <div class="customer-options-list">
                   <button type="button" class="customer-option" (click)="selectCustomer(null)">Manuel gir</button>
                   @for (c of filteredCustomers; track c.id) {
@@ -36,7 +36,7 @@
         </div>
         <div class="row">
           <label>Unvan</label>
-          <input formControlName="customerTitle" placeholder="Müşteri unvanı" />
+          <input formControlName="customerTitle" placeholder="Cari unvanı" />
         </div>
         <div class="row">
           <label>Vergi No</label>

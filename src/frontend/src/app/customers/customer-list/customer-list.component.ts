@@ -36,7 +36,7 @@ export class CustomerListComponent implements OnInit {
     if (confirm('Silmek istediğinize emin misiniz?')) {
       this.api.delete(id).subscribe({
         next: () => {
-          this.toastr.success('Müşteri silindi.');
+          this.toastr.success('Cari silindi.');
           this.load();
         },
         error: e => this.toastr.error(e.error?.message ?? 'Silme sırasında hata oluştu.')
@@ -53,6 +53,6 @@ export class CustomerListComponent implements OnInit {
   }
 
   accountTypeLabel(t: number): string {
-    return t === 2 ? 'Tedarikçi' : 'Müşteri';
+    return t === 2 ? 'Tedarikçi' : 'Cari';
   }
 }

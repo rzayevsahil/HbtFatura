@@ -4,7 +4,7 @@
     <div class="meta">
       <span>Tarih: {{ invoice.invoiceDate | date:'dd.MM.yyyy' }}</span>
       <span class="status-badge" [class]="statusClass(invoice.status)">{{ statusLabel(invoice.status) }}</span>
-      <span>Müşteri: {{ invoice.customerTitle }}</span>
+      <span>Cari: {{ invoice.customerTitle }}</span>
     </div>
   </div>
   <div class="card table-wrap">

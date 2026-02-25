@@ -4,7 +4,7 @@ public class Customer
 {
     public Guid Id { get; set; }
     public Guid UserId { get; set; }
-    public int AccountType { get; set; } = 1; // 1=Müşteri, 2=Tedarikçi
+    public int AccountType { get; set; } = 1; // 1=Cari, 2=Tedarikçi
     public string Title { get; set; } = string.Empty;
     public string? TaxNumber { get; set; }
     public string? Address { get; set; }

@@ -54,7 +54,7 @@ export class CustomerFormComponent implements OnInit {
     if (this.id) {
       this.api.update(this.id, v).subscribe({
         next: () => {
-          this.toastr.success('Müşteri güncellendi.');
+          this.toastr.success('Cari güncellendi.');
           this.router.navigate(['/customers']);
         },
         error: e => {
@@ -67,7 +67,7 @@ export class CustomerFormComponent implements OnInit {
     } else {
       this.api.create(v).subscribe({
         next: () => {
-          this.toastr.success('Müşteri eklendi.');
+          this.toastr.success('Cari eklendi.');
           this.router.navigate(['/customers']);
         },
         error: e => {

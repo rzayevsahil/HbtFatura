@@ -48,7 +48,7 @@ export class CustomerDetailComponent implements OnInit {
   }
 
   accountTypeLabel(t: number): string {
-    return t === 2 ? 'Tedarikçi' : 'Müşteri';
+    return t === 2 ? 'Tedarikçi' : 'Cari';
   }
 
   transactionTypeLabel(t: number): string {
