@@ -4,13 +4,14 @@
 
 .form-grid {
   display: grid;
-  gap: 1rem;
-  max-width: 520px;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem 2rem;
+  max-width: 900px;
 }
 
 .row {
   display: grid;
-  grid-template-columns: 140px 1fr;
+  grid-template-columns: 120px 1fr;
   gap: 1rem;
   align-items: center;
 
@@ -22,6 +23,7 @@
 
   &.full-width {
     grid-column: 1 / -1;
+    grid-template-columns: 120px 1fr;
   }
 
   .input-with-link {
@@ -140,4 +142,10 @@
 .error-msg {
   margin-top: 0.5rem;
   grid-column: 1 / -1;
+}
+
+@media (max-width: 640px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
 }
