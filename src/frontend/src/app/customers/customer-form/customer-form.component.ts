@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CustomerService } from '../../services/customer.service';
+import { MainAccountCodeService, MainAccountCodeDto } from '../../services/main-account-code.service';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -13,6 +14,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./customer-form.component.scss']
 })
 export class CustomerFormComponent implements OnInit {
+  mainAccountCodes: MainAccountCodeDto[] = [];
   form = this.fb.nonNullable.group({
     mainAccountCode: [''],
     code: [''],
@@ -38,11 +40,13 @@ export class CustomerFormComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private api: CustomerService,
+    private mainAccountCodeApi: MainAccountCodeService,
     private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
     this.id = this.route.snapshot.paramMap.get('id');
+    this.mainAccountCodeApi.getByFirm().subscribe(list => (this.mainAccountCodes = list));
     if (this.id) {
       this.api.getById(this.id).subscribe(c => this.form.patchValue({
         mainAccountCode: c.mainAccountCode ?? '',

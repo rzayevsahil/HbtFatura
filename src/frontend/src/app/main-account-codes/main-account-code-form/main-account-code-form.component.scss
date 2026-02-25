@@ -19,26 +19,6 @@
     font-weight: 500;
     color: var(--color-text);
   }
-
-  &.full-width {
-    grid-column: 1 / -1;
-  }
-
-  .input-with-link {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-
-    .link-small {
-      font-size: 0.8125rem;
-      color: var(--color-text-muted);
-      text-decoration: none;
-
-      &:hover {
-        text-decoration: underline;
-      }
-    }
-  }
 }
 
 .actions {
@@ -68,4 +48,5 @@
 .error-msg {
   margin-top: 0.5rem;
   grid-column: 1 / -1;
+  color: var(--color-error, #c00);
 }

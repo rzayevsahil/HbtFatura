@@ -12,4 +12,5 @@ public class Firm
     public ICollection<BankAccount> BankAccounts { get; set; } = new List<BankAccount>();
     public ICollection<Product> Products { get; set; } = new List<Product>();
     public ICollection<ChequeOrPromissory> ChequeOrPromissories { get; set; } = new List<ChequeOrPromissory>();
+    public ICollection<MainAccountCode> MainAccountCodes { get; set; } = new List<MainAccountCode>();
 }

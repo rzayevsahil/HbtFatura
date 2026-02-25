@@ -6,7 +6,15 @@
     <div class="form-grid">
       <div class="row">
         <label>Ana cari kodu</label>
-        <input formControlName="mainAccountCode" placeholder="Örn. 120.01.001" />
+        <div class="input-with-link">
+          <select formControlName="mainAccountCode">
+            <option value="">Seçiniz</option>
+            @for (item of mainAccountCodes; track item.id) {
+              <option [value]="item.code">{{ item.code }} — {{ item.name }}</option>
+            }
+          </select>
+          <a routerLink="/main-account-codes" class="link-small">Kod listesini düzenle</a>
+        </div>
       </div>
       <div class="row">
         <label>Cari kodu</label>

@@ -24,6 +24,7 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid
     public DbSet<Product> Products => Set<Product>();
     public DbSet<StockMovement> StockMovements => Set<StockMovement>();
     public DbSet<ChequeOrPromissory> ChequeOrPromissories => Set<ChequeOrPromissory>();
+    public DbSet<MainAccountCode> MainAccountCodes => Set<MainAccountCode>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -112,6 +113,13 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid
             e.HasIndex(x => x.ProductId);
             e.HasIndex(x => new { x.ProductId, x.Date });
             e.Property(x => x.Quantity).HasPrecision(18, 4);
+        });
+
+        modelBuilder.Entity<MainAccountCode>(e =>
+        {
+            e.HasOne(x => x.Firm).WithMany(x => x.MainAccountCodes).HasForeignKey(x => x.FirmId).OnDelete(DeleteBehavior.Cascade);
+            e.HasIndex(x => x.FirmId);
+            e.HasIndex(x => new { x.FirmId, x.Code }).IsUnique();
         });
 
         modelBuilder.Entity<ChequeOrPromissory>(e =>

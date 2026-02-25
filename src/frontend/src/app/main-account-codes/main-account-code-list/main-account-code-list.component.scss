@@ -1,0 +1,20 @@
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+.actions-cell {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.text-muted {
+  margin-top: 1rem;
+  color: var(--color-text-muted, #666);
+}
