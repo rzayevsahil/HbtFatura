@@ -2,7 +2,7 @@ import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MainAccountCodeService } from '../../services/main-account-code.service';
+import { MainAccountCodeService, MainAccountCodeDto } from '../../services/main-account-code.service';
 import { FirmService, FirmDto } from '../../services/firm.service';
 import { AuthService } from '../../core/services/auth.service';
 import { ToastrService } from 'ngx-toastr';
@@ -17,6 +17,8 @@ import { ToastrService } from 'ngx-toastr';
 export class MainAccountCodeFormComponent implements OnInit {
   @Input() isModal = false;
   @Input() editId: string | null = null;
+  /** Mevcut kod listesi (modalda tekrar kontrol için). */
+  @Input() existingCodes: MainAccountCodeDto[] = [];
   @Output() saved = new EventEmitter<void>();
   @Output() cancel = new EventEmitter<void>();
 
@@ -82,6 +84,26 @@ export class MainAccountCodeFormComponent implements OnInit {
       sortOrder: v.sortOrder ?? 0,
       firmId: 'firmId' in v && v.firmId ? v.firmId : undefined
     };
+
+    const isDuplicate = (list: MainAccountCodeDto[], excludeId?: string) =>
+      list.some(x => (x.code?.trim() || '') === req.code && x.id !== excludeId);
+    if (this.existingCodes.length > 0) {
+      if (this.id) {
+        if (isDuplicate(this.existingCodes, this.id)) {
+          this.error = 'Bu hesap kodu zaten kayıtlı. Farklı bir kod girin.';
+          this.saving = false;
+          this.toastr.error(this.error);
+          return;
+        }
+      } else {
+        if (isDuplicate(this.existingCodes)) {
+          this.error = 'Bu hesap kodu zaten kayıtlı. Farklı bir kod girin.';
+          this.saving = false;
+          this.toastr.error(this.error);
+          return;
+        }
+      }
+    }
 
     if (this.id) {
       this.api.update(this.id, { code: req.code, name: req.name, sortOrder: req.sortOrder }).subscribe({

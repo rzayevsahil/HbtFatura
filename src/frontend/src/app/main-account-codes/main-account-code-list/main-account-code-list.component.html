@@ -58,6 +58,7 @@
       <app-main-account-code-form
         [isModal]="true"
         [editId]="editingId"
+        [existingCodes]="items"
         (saved)="onFormSaved()"
         (cancel)="closeModal()"
       />

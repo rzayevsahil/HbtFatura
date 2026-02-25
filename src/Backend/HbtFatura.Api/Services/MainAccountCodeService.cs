@@ -90,7 +90,7 @@ public class MainAccountCodeService : IMainAccountCodeService
         var code = request.Code.Trim();
         var exists = await _db.MainAccountCodes.AnyAsync(x => x.FirmId == firmId && x.Code == code, ct);
         if (exists)
-            throw new InvalidOperationException("Bu firma için aynı kod zaten kayıtlı.");
+            throw new InvalidOperationException("Bu hesap kodu zaten kayıtlı. Farklı bir kod girin.");
 
         var entity = new MainAccountCode
         {
@@ -124,7 +124,7 @@ public class MainAccountCodeService : IMainAccountCodeService
         var code = request.Code.Trim();
         var exists = await _db.MainAccountCodes.AnyAsync(x => x.FirmId == entity.FirmId && x.Code == code && x.Id != id, ct);
         if (exists)
-            throw new InvalidOperationException("Bu firma için aynı kod zaten kayıtlı.");
+            throw new InvalidOperationException("Bu hesap kodu zaten kayıtlı. Farklı bir kod girin.");
 
         entity.Code = code;
         entity.Name = request.Name.Trim();
