@@ -29,8 +29,8 @@
           <td>
             @if (!item.isSystem) {
               <div class="actions-cell">
-                <a [routerLink]="['/main-account-codes', item.id, 'edit']">Düzenle</a>
-                <button type="button" (click)="delete(item.id, item.code)">Sil</button>
+                <a [routerLink]="['/main-account-codes', item.id, 'edit']" class="btn btn-outline">Düzenle</a>
+                <button type="button" class="btn btn-outline btn-danger" (click)="delete(item.id, item.code)">Sil</button>
               </div>
             } @else {
               <span class="text-muted">Sistem kodu</span>

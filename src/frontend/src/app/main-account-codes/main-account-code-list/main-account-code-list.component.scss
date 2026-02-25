@@ -27,6 +27,41 @@
 .actions-cell {
   display: flex;
   gap: 0.5rem;
+  align-items: center;
+
+  .btn {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.875rem;
+    border-radius: var(--radius-sm, 4px);
+    text-decoration: none;
+    cursor: pointer;
+    border: 1px solid transparent;
+    white-space: nowrap;
+
+    &.btn-outline {
+      color: var(--color-text, #333);
+      background: transparent;
+      border-color: var(--color-border, #ddd);
+
+      &:hover {
+        background: var(--color-background, #f5f5f5);
+        border-color: var(--color-border, #ccc);
+      }
+    }
+
+    &.btn-danger {
+      color: var(--color-danger, #c53030);
+
+      &:hover {
+        background: rgba(197, 48, 48, 0.08);
+        border-color: var(--color-danger, #c53030);
+      }
+    }
+  }
+
+  button.btn {
+    font-family: inherit;
+  }
 }
 
 .text-muted {
