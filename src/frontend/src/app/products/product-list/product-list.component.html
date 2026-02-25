@@ -1,10 +1,10 @@
 <div class="page-header">
   <h1 class="page-title">Ürünler (Stok)</h1>
-  <div class="actions">
-    <input type="text" [(ngModel)]="search" placeholder="Kod, ad, barkod..." (keyup.enter)="applySearch()" />
-    <button type="button" (click)="applySearch()">Ara</button>
-    <a routerLink="/products/new" class="btn btn-primary">Yeni Ürün</a>
-  </div>
+</div>
+<div class="toolbar">
+  <input type="text" [(ngModel)]="search" placeholder="Kod, ad, barkod..." (keyup.enter)="applySearch()" />
+  <button type="button" (click)="applySearch()">Ara</button>
+  <a routerLink="/products/new" class="btn btn-primary">Yeni Ürün</a>
 </div>
 <div class="card table-wrap">
   <table>
@@ -25,7 +25,7 @@
           <td>{{ p.name }}</td>
           <td>{{ p.unit }}</td>
           <td class="amount">{{ p.stockQuantity | number:'1.2-2' }}</td>
-          <td>{{ p.minStock | number:'1.2-2' }} / {{ p.maxStock | number:'1.2-2' }}</td>
+          <td class="amount">{{ p.minStock | number:'1.2-2' }} / {{ p.maxStock | number:'1.2-2' }}</td>
           <td>
             <div class="actions-cell">
               <a [routerLink]="['/products', p.id]">Detay</a>
