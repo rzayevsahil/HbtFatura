@@ -54,7 +54,6 @@ public class CustomerService : ICustomerService
                 Id = x.Id,
                 MainAccountCode = x.MainAccountCode,
                 Code = x.Code,
-                AccountType = x.AccountType,
                 Title = x.Title,
                 TaxPayerType = x.TaxPayerType,
                 CardType = x.CardType,
@@ -107,7 +106,6 @@ public class CustomerService : ICustomerService
                 Id = x.Id,
                 MainAccountCode = x.MainAccountCode,
                 Code = x.Code,
-                AccountType = x.AccountType,
                 Title = x.Title,
                 TaxPayerType = x.TaxPayerType,
                 CardType = x.CardType,
@@ -202,10 +200,9 @@ public class CustomerService : ICustomerService
             UserId = userId,
             MainAccountCode = request.MainAccountCode?.Trim(),
             Code = request.Code?.Trim(),
-            AccountType = request.AccountType is Constants.AccountType.Tedarikci ? Constants.AccountType.Tedarikci : Constants.AccountType.Musteri,
             Title = request.Title.Trim(),
             TaxPayerType = request.TaxPayerType,
-            CardType = request.CardType,
+            CardType = request.CardType is Constants.CardType.Satici ? Constants.CardType.Satici : Constants.CardType.Alici,
             TaxNumber = request.TaxNumber?.Trim(),
             Address = request.Address?.Trim(),
             City = request.City?.Trim(),
@@ -228,10 +225,9 @@ public class CustomerService : ICustomerService
         if (entity == null) return null;
         entity.MainAccountCode = request.MainAccountCode?.Trim();
         entity.Code = request.Code?.Trim();
-        entity.AccountType = request.AccountType is Constants.AccountType.Tedarikci ? Constants.AccountType.Tedarikci : Constants.AccountType.Musteri;
         entity.Title = request.Title.Trim();
         entity.TaxPayerType = request.TaxPayerType;
-        entity.CardType = request.CardType;
+        entity.CardType = request.CardType is Constants.CardType.Satici ? Constants.CardType.Satici : Constants.CardType.Alici;
         entity.TaxNumber = request.TaxNumber?.Trim();
         entity.Address = request.Address?.Trim();
         entity.City = request.City?.Trim();
@@ -261,7 +257,6 @@ public class CustomerService : ICustomerService
         Id = e.Id,
         MainAccountCode = e.MainAccountCode,
         Code = e.Code,
-        AccountType = e.AccountType,
         Title = e.Title,
         TaxPayerType = e.TaxPayerType,
         CardType = e.CardType,

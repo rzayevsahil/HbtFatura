@@ -8,7 +8,6 @@ public class Customer
     public string? MainAccountCode { get; set; }
     /// <summary>Cari kodu (örn. A01 alıcı, S01 satıcı)</summary>
     public string? Code { get; set; }
-    public int AccountType { get; set; } = 1; // 1=Cari, 2=Tedarikçi
     public string Title { get; set; } = string.Empty;
     /// <summary>Mükellef türü: 1=Gerçek kişi, 2=Tüzel kişi</summary>
     public int TaxPayerType { get; set; } = 2;

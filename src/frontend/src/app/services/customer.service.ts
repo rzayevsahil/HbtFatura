@@ -6,7 +6,6 @@ export interface CustomerDto {
   id: string;
   mainAccountCode?: string;
   code?: string;
-  accountType: number;
   title: string;
   taxPayerType: number;
   cardType: number;
@@ -67,11 +66,11 @@ export class CustomerService {
     return this.api.get<PagedResult<AccountTransactionDto>>(`${this.base}/${id}/transactions`, params);
   }
 
-  create(dto: Partial<CustomerDto> & { accountType?: number }): Observable<CustomerDto> {
+  create(dto: Partial<CustomerDto>): Observable<CustomerDto> {
     return this.api.post<CustomerDto>(this.base, dto);
   }
 
-  update(id: string, dto: Partial<CustomerDto> & { accountType?: number }): Observable<CustomerDto> {
+  update(id: string, dto: Partial<CustomerDto>): Observable<CustomerDto> {
     return this.api.put<CustomerDto>(`${this.base}/${id}`, dto);
   }
 

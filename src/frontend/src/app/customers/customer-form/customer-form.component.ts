@@ -32,7 +32,6 @@ export class CustomerFormComponent implements OnInit {
   form = this.fb.nonNullable.group({
     mainAccountCode: [''],
     code: [''],
-    accountType: [1 as number],
     title: ['', Validators.required],
     taxPayerType: [2 as number],
     cardType: [1 as number],
@@ -69,7 +68,6 @@ export class CustomerFormComponent implements OnInit {
         this.form.patchValue({
           mainAccountCode: c.mainAccountCode ?? '',
           code: c.code ?? '',
-          accountType: c.accountType ?? 1,
           title: c.title,
           taxPayerType: c.taxPayerType ?? 2,
           cardType: c.cardType ?? 1,
@@ -111,10 +109,30 @@ export class CustomerFormComponent implements OnInit {
 
   onSubmit(): void {
     this.error = '';
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      this.error = 'Lütfen zorunlu alanları doldurun (Cari adı).';
+      return;
+    }
     this.saving = true;
     const v = this.form.getRawValue();
+    const payload = {
+      mainAccountCode: v.mainAccountCode?.trim() ?? '',
+      code: v.code?.trim() ?? '',
+      title: v.title?.trim() ?? '',
+      taxPayerType: typeof v.taxPayerType === 'number' ? v.taxPayerType : 2,
+      cardType: typeof v.cardType === 'number' ? v.cardType : 1,
+      taxNumber: v.taxNumber?.trim() ?? '',
+      address: v.address?.trim() ?? '',
+      city: v.city?.trim() ?? '',
+      district: v.district?.trim() ?? '',
+      postalCode: v.postalCode?.trim() ?? '',
+      country: v.country?.trim() ?? '',
+      phone: v.phone?.trim() ?? '',
+      email: v.email?.trim() ?? ''
+    };
     if (this.id) {
-      this.api.update(this.id, v).subscribe({
+      this.api.update(this.id, payload).subscribe({
         next: () => {
           this.toastr.success('Cari güncellendi.');
           this.router.navigate(['/customers']);
@@ -127,7 +145,7 @@ export class CustomerFormComponent implements OnInit {
         complete: () => { this.saving = false; }
       });
     } else {
-      this.api.create(v).subscribe({
+      this.api.create(payload).subscribe({
         next: () => {
           this.toastr.success('Cari eklendi.');
           this.router.navigate(['/customers']);

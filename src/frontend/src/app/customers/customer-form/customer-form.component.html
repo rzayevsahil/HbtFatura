@@ -2,7 +2,7 @@
   <h1 class="page-title">{{ id ? 'Cari Düzenle' : 'Yeni Cari' }}</h1>
 </div>
 <div class="card">
-  <form [formGroup]="form" (ngSubmit)="onSubmit()" (click)="showMainAccountDropdown = false">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <div class="form-grid">
       <div class="row">
         <label>Ana cari kodu</label>
@@ -92,7 +92,7 @@
       @if (error) { <p class="error-msg">{{ error }}</p> }
     </div>
     <div class="actions">
-      <button type="submit" [disabled]="form.invalid || saving">Kaydet</button>
+      <button type="button" (click)="onSubmit()" [disabled]="saving">Kaydet</button>
       <a routerLink="/customers">İptal</a>
     </div>
   </form>

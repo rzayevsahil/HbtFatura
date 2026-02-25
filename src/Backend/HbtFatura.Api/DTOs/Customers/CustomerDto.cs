@@ -5,7 +5,6 @@ public class CustomerDto
     public Guid Id { get; set; }
     public string? MainAccountCode { get; set; }
     public string? Code { get; set; }
-    public int AccountType { get; set; }
     public string Title { get; set; } = string.Empty;
     public int TaxPayerType { get; set; }
     public int CardType { get; set; }
@@ -32,7 +31,6 @@ public class CreateCustomerRequest
     public string? MainAccountCode { get; set; }
     public string? Code { get; set; }
     public string Title { get; set; } = string.Empty;
-    public int AccountType { get; set; } = 1;
     public int TaxPayerType { get; set; } = 2;
     public int CardType { get; set; } = 1;
     public string? TaxNumber { get; set; }
