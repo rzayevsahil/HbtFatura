@@ -114,3 +114,32 @@
   margin-top: 1rem;
   color: var(--color-text-muted, #666);
 }
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.modal-content {
+  background: var(--color-surface, #fff);
+  border-radius: var(--radius-sm, 6px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  max-width: 520px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+
+  app-main-account-code-form {
+    display: block;
+
+    ::ng-deep .page-header {
+      margin-bottom: 1rem;
+    }
+  }
+}

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -15,6 +15,11 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./main-account-code-form.component.scss']
 })
 export class MainAccountCodeFormComponent implements OnInit {
+  @Input() isModal = false;
+  @Input() editId: string | null = null;
+  @Output() saved = new EventEmitter<void>();
+  @Output() cancel = new EventEmitter<void>();
+
   form = this.fb.nonNullable.group({
     code: ['', Validators.required],
     name: ['', Validators.required],
@@ -37,7 +42,7 @@ export class MainAccountCodeFormComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.id = this.route.snapshot.paramMap.get('id');
+    this.id = this.isModal ? this.editId : this.route.snapshot.paramMap.get('id');
     if (this.auth.user()?.role === 'SuperAdmin') {
       this.firmApi.getAll().subscribe(list => (this.firms = list));
     } else {
@@ -48,7 +53,7 @@ export class MainAccountCodeFormComponent implements OnInit {
         next: item => {
           if (item.isSystem) {
             this.toastr.warning('Sistem kodları düzenlenemez.');
-            this.router.navigate(['/main-account-codes']);
+            if (this.isModal) this.cancel.emit(); else this.router.navigate(['/main-account-codes']);
             return;
           }
           this.form.patchValue({
@@ -57,7 +62,7 @@ export class MainAccountCodeFormComponent implements OnInit {
             sortOrder: item.sortOrder ?? 0
           });
         },
-        error: () => this.router.navigate(['/main-account-codes'])
+        error: () => this.isModal ? this.cancel.emit() : this.router.navigate(['/main-account-codes'])
       });
     } else {
       this.api.getByFirm(undefined).subscribe(list => {
@@ -82,7 +87,7 @@ export class MainAccountCodeFormComponent implements OnInit {
       this.api.update(this.id, { code: req.code, name: req.name, sortOrder: req.sortOrder }).subscribe({
         next: () => {
           this.toastr.success('Ana cari kodu güncellendi.');
-          this.router.navigate(['/main-account-codes']);
+          if (this.isModal) this.saved.emit(); else this.router.navigate(['/main-account-codes']);
         },
         error: e => {
           this.error = e.error?.message ?? 'Hata';
@@ -97,7 +102,7 @@ export class MainAccountCodeFormComponent implements OnInit {
       this.api.create(req).subscribe({
         next: () => {
           this.toastr.success('Ana cari kodu oluşturuldu.');
-          this.router.navigate(['/main-account-codes']);
+          if (this.isModal) this.saved.emit(); else this.router.navigate(['/main-account-codes']);
         },
         error: e => {
           this.error = e.error?.message ?? 'Hata';
