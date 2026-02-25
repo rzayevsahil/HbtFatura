@@ -2,7 +2,7 @@
   <h1 class="page-title">Cariler</h1>
 </div>
 <div class="toolbar">
-  <input [(ngModel)]="search" placeholder="Unvan veya vergi no ile ara..." (keyup.enter)="load()" />
+  <input [(ngModel)]="search" placeholder="Cari adı veya vergi no ile ara..." (keyup.enter)="load()" />
   <button type="button" (click)="load()">Ara</button>
   <a routerLink="/customers/new" class="btn btn-primary">Yeni Cari</a>
 </div>
@@ -12,7 +12,7 @@
       <tr>
         <th>Cari kodu</th>
         <th>Tip</th>
-        <th>Unvan</th>
+        <th>Cari adı</th>
         <th>Vergi No</th>
         <th>Bakiye</th>
         <th>Adres</th>
