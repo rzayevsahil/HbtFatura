@@ -11,12 +11,11 @@
     <thead>
       <tr>
         <th>Cari kodu</th>
-        <th>Tip</th>
         <th>Cari adı</th>
-        <th>Vergi No</th>
+        <th>Cari tipi</th>
+        <th>Borç toplamı</th>
+        <th>Alacak toplamı</th>
         <th>Bakiye</th>
-        <th>Adres</th>
-        <th>Telefon</th>
         <th></th>
       </tr>
     </thead>
@@ -24,12 +23,11 @@
       @for (c of items; track c.id) {
         <tr>
           <td>{{ c.code || '—' }}</td>
-          <td>{{ accountTypeLabel(c.accountType) }}</td>
           <td><a [routerLink]="['/customers', c.id]">{{ c.title }}</a></td>
-          <td>{{ c.taxNumber }}</td>
+          <td>{{ accountTypeLabel(c.accountType) }}</td>
+          <td class="amount">{{ c.totalDebit | number:'1.2-2' }} ₺</td>
+          <td class="amount">{{ c.totalCredit | number:'1.2-2' }} ₺</td>
           <td class="amount">{{ c.balance | number:'1.2-2' }} ₺</td>
-          <td>{{ c.address }}</td>
-          <td>{{ c.phone }}</td>
           <td>
             <div class="actions-cell">
               <a [routerLink]="['/customers', c.id]">Detay</a>

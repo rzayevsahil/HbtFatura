@@ -23,6 +23,8 @@ public class CustomerDto
 public class CustomerListDto : CustomerDto
 {
     public DateTime CreatedAt { get; set; }
+    public decimal TotalDebit { get; set; }
+    public decimal TotalCredit { get; set; }
 }
 
 public class CreateCustomerRequest

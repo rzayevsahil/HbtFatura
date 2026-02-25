@@ -73,14 +73,27 @@ public class CustomerService : ICustomerService
         if (items.Count > 0)
         {
             var ids = items.Select(x => x.Id).ToList();
-            var balances = await _db.AccountTransactions
+            var aggregates = await _db.AccountTransactions
                 .Where(t => ids.Contains(t.CustomerId))
                 .GroupBy(t => t.CustomerId)
-                .Select(g => new { CustomerId = g.Key, Balance = g.Sum(t => t.Type == AccountTransactionType.Alacak ? t.Amount : -t.Amount) })
+                .Select(g => new
+                {
+                    CustomerId = g.Key,
+                    TotalDebit = g.Where(t => t.Type == AccountTransactionType.Borc).Sum(t => t.Amount),
+                    TotalCredit = g.Where(t => t.Type == AccountTransactionType.Alacak).Sum(t => t.Amount),
+                    Balance = g.Sum(t => t.Type == AccountTransactionType.Alacak ? t.Amount : -t.Amount)
+                })
                 .ToListAsync(ct);
-            var balanceDict = balances.ToDictionary(x => x.CustomerId, x => x.Balance);
+            var aggDict = aggregates.ToDictionary(x => x.CustomerId);
             foreach (var item in items)
-                item.Balance = balanceDict.GetValueOrDefault(item.Id, 0);
+            {
+                if (aggDict.TryGetValue(item.Id, out var agg))
+                {
+                    item.TotalDebit = agg.TotalDebit;
+                    item.TotalCredit = agg.TotalCredit;
+                    item.Balance = agg.Balance;
+                }
+            }
         }
         return new PagedResult<CustomerListDto> { Items = items, TotalCount = total, Page = page, PageSize = pageSize };
     }

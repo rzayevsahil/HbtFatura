@@ -23,6 +23,8 @@ export interface CustomerDto {
 
 export interface CustomerListDto extends CustomerDto {
   createdAt: string;
+  totalDebit: number;
+  totalCredit: number;
 }
 
 export interface AccountTransactionDto {
