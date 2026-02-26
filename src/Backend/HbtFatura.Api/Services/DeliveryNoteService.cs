@@ -286,17 +286,23 @@ public class DeliveryNoteService : IDeliveryNoteService
 
     private async Task<string> GetNextDeliveryNumberAsync(Guid userId, int year, CancellationToken ct)
     {
+        var prefix = "IRS";
+        var yearStr = year.ToString();
         var last = await _db.DeliveryNotes
-            .Where(x => x.UserId == userId && x.DeliveryDate.Year == year)
+            .Where(x => x.UserId == userId && x.DeliveryNumber.StartsWith(prefix + yearStr))
             .OrderByDescending(x => x.DeliveryNumber)
             .Select(x => x.DeliveryNumber)
             .FirstOrDefaultAsync(ct);
-        if (string.IsNullOrEmpty(last))
-            return $"IRS-{year}-0001";
-        var parts = last.Split('-');
-        if (parts.Length != 3 || !int.TryParse(parts[2], out var num))
-            return $"IRS-{year}-0001";
-        return $"IRS-{year}-{(num + 1):D4}";
+            
+        if (string.IsNullOrEmpty(last) || last.Length < 16)
+            return $"{prefix}{yearStr}000000001";
+            
+        var seqStr = last.Substring(7); // 3 (IRS) + 4 (YEAR) = 7
+        if (long.TryParse(seqStr, out var num))
+        {
+            return $"{prefix}{yearStr}{(num + 1):D9}";
+        }
+        return $"{prefix}{yearStr}000000001";
     }
 
     private static DeliveryNoteDto MapToDto(DeliveryNote d) => new()

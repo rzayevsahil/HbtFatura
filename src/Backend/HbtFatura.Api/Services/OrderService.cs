@@ -189,17 +189,23 @@ public class OrderService : IOrderService
 
     private async Task<string> GetNextOrderNumberAsync(Guid userId, int year, CancellationToken ct)
     {
+        var prefix = "SPR";
+        var yearStr = year.ToString();
         var last = await _db.Orders
-            .Where(x => x.UserId == userId && x.OrderDate.Year == year)
+            .Where(x => x.UserId == userId && x.OrderNumber.StartsWith(prefix + yearStr))
             .OrderByDescending(x => x.OrderNumber)
             .Select(x => x.OrderNumber)
             .FirstOrDefaultAsync(ct);
-        if (string.IsNullOrEmpty(last))
-            return $"SIP-{year}-0001";
-        var parts = last.Split('-');
-        if (parts.Length != 3 || !int.TryParse(parts[2], out var num))
-            return $"SIP-{year}-0001";
-        return $"SIP-{year}-{(num + 1):D4}";
+            
+        if (string.IsNullOrEmpty(last) || last.Length < 16)
+            return $"{prefix}{yearStr}000000001";
+            
+        var seqStr = last.Substring(7); // 3 (SPR) + 4 (YEAR) = 7
+        if (long.TryParse(seqStr, out var num))
+        {
+            return $"{prefix}{yearStr}{(num + 1):D9}";
+        }
+        return $"{prefix}{yearStr}000000001";
     }
 
     private static OrderDto MapToDto(Order o) => new()

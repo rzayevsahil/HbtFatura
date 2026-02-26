@@ -429,17 +429,23 @@ if (status == InvoiceStatus.Issued || status == InvoiceStatus.Paid)
 
     private async Task<string> GetNextInvoiceNumberAsync(Guid userId, int year, CancellationToken ct)
     {
+        var prefix = "FTR";
+        var yearStr = year.ToString();
         var last = await _db.Invoices
-            .Where(x => x.UserId == userId && x.InvoiceDate.Year == year)
+            .Where(x => x.UserId == userId && x.InvoiceNumber.StartsWith(prefix + yearStr))
             .OrderByDescending(x => x.InvoiceNumber)
             .Select(x => x.InvoiceNumber)
             .FirstOrDefaultAsync(ct);
-        if (string.IsNullOrEmpty(last))
-            return $"{year}-0001";
-        var parts = last.Split('-');
-        if (parts.Length != 2 || !int.TryParse(parts[1], out var num))
-            return $"{year}-0001";
-        return $"{year}-{(num + 1):D4}";
+            
+        if (string.IsNullOrEmpty(last) || last.Length < 16)
+            return $"{prefix}{yearStr}000000001";
+            
+        var seqStr = last.Substring(7); // 3 (FTR) + 4 (YEAR) = 7
+        if (long.TryParse(seqStr, out var num))
+        {
+            return $"{prefix}{yearStr}{(num + 1):D9}";
+        }
+        return $"{prefix}{yearStr}000000001";
     }
 
     private static InvoiceDto MapToDto(Invoice inv) => new()
