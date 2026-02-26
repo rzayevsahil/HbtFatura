@@ -1,13 +1,41 @@
-.page-header { margin-bottom: 1.5rem; }
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
 
 .toolbar {
   display: flex;
-  gap: 0.75rem;
+  gap: 1rem;
   margin-bottom: 1.25rem;
   flex-wrap: wrap;
-  align-items: center;
+  align-items: flex-end;
 
-  input { max-width: 240px; }
+  .toolbar-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+
+    .toolbar-label {
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: var(--color-text-muted, #64748b);
+    }
+
+    .toolbar-input,
+    .toolbar-select {
+      width: 160px;
+      max-width: 160px;
+      padding: 0.5rem 0.75rem;
+      font-size: 0.9375rem;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      box-sizing: border-box;
+    }
+  }
+
+  .toolbar-field-btn .toolbar-label { visibility: hidden; }
 
   button {
     padding: 0.625rem 1rem;

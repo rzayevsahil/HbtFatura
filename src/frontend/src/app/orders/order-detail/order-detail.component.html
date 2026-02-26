@@ -1,4 +1,5 @@
 <div class="page-header">
+  <a routerLink="/orders" class="back-link">← Geri</a>
   <h1 class="page-title">{{ order?.orderNumber ?? 'Sipariş' }}</h1>
   <div class="actions">
     @if (order && isEditableOrder()) {
