@@ -10,6 +10,7 @@ public class InvoiceItemDto
     public decimal Quantity { get; set; }
     public decimal UnitPrice { get; set; }
     public decimal VatRate { get; set; }
+    public decimal DiscountPercent { get; set; }
     public decimal LineTotalExclVat { get; set; }
     public decimal LineVatAmount { get; set; }
     public decimal LineTotalInclVat { get; set; }
@@ -23,5 +24,6 @@ public class InvoiceItemInputDto
     public decimal Quantity { get; set; }
     public decimal UnitPrice { get; set; }
     public decimal VatRate { get; set; }
+    public decimal DiscountPercent { get; set; }
     public int SortOrder { get; set; }
 }

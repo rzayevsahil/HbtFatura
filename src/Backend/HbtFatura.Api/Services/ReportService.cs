@@ -1,3 +1,4 @@
+using System.Globalization;
 using Microsoft.EntityFrameworkCore;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
@@ -57,6 +58,14 @@ public class ReportService : IReportService
         if (_currentUser.IsFirmAdmin && _currentUser.FirmId.HasValue)
             return q.Where(x => x.FirmId == _currentUser.FirmId.Value);
         return q.Where(x => false);
+    }
+
+    private IQueryable<Invoice> InvoiceScope()
+    {
+        if (_currentUser.IsSuperAdmin) return _db.Invoices.AsQueryable();
+        if (_currentUser.IsFirmAdmin && _currentUser.FirmId.HasValue)
+            return _db.Invoices.Where(i => i.User != null && i.User.FirmId == _currentUser.FirmId.Value);
+        return _db.Invoices.Where(i => i.UserId == _currentUser.UserId);
     }
 
     public async Task<CariExtractReportDto?> GetCariExtractAsync(Guid customerId, DateTime? dateFrom, DateTime? dateTo, CancellationToken ct = default)
@@ -220,6 +229,7 @@ public class ReportService : IReportService
 
         var items = products.Select(p => new StockLevelRowDto
         {
+            ProductId = p.Id,
             Code = p.Code,
             Name = p.Name,
             Unit = p.Unit,
@@ -310,6 +320,128 @@ public class ReportService : IReportService
         }
         ws.Cell(row, 1).Value = "Kapanış bakiyesi:";
         ws.Cell(row, 5).Value = data.ClosingBalance;
+        using var ms = new MemoryStream();
+        wb.SaveAs(ms, false);
+        return ms.ToArray();
+    }
+
+    public async Task<InvoiceReportDto> GetInvoiceReportAsync(DateTime? dateFrom, DateTime? dateTo, Guid? customerId, CancellationToken ct = default)
+    {
+        var query = InvoiceScope();
+        if (dateFrom.HasValue) query = query.Where(x => x.InvoiceDate >= dateFrom.Value.Date);
+        if (dateTo.HasValue) query = query.Where(x => x.InvoiceDate <= dateTo.Value.Date);
+        if (customerId.HasValue) query = query.Where(x => x.CustomerId == customerId.Value);
+
+        var items = await query
+            .OrderByDescending(x => x.InvoiceDate)
+            .ThenByDescending(x => x.InvoiceNumber)
+            .Select(x => new InvoiceReportRowDto
+            {
+                Id = x.Id,
+                InvoiceNumber = x.InvoiceNumber,
+                InvoiceDate = x.InvoiceDate,
+                Status = (int)x.Status,
+                CustomerTitle = x.CustomerTitle,
+                GrandTotal = x.GrandTotal,
+                Currency = x.Currency
+            })
+            .ToListAsync(ct);
+
+        string? customerTitle = null;
+        if (customerId.HasValue)
+            customerTitle = await CustomerScope().Where(c => c.Id == customerId.Value).Select(c => c.Title).FirstOrDefaultAsync(ct);
+
+        return new InvoiceReportDto
+        {
+            DateFrom = dateFrom,
+            DateTo = dateTo,
+            CustomerId = customerId,
+            CustomerTitle = customerTitle,
+            Items = items
+        };
+    }
+
+    public async Task<byte[]?> GetInvoiceReportPdfAsync(DateTime? dateFrom, DateTime? dateTo, Guid? customerId, CancellationToken ct = default)
+    {
+        var data = await GetInvoiceReportAsync(dateFrom, dateTo, customerId, ct);
+        QuestPDF.Settings.License = LicenseType.Community;
+
+        var title = data.CustomerTitle != null ? $"Fatura raporu - {data.CustomerTitle}" : "Fatura raporu";
+        var period = $"Dönem: {(data.DateFrom?.ToString("d", CultureInfo.GetCultureInfo("tr-TR")) ?? "—")} - {(data.DateTo?.ToString("d", CultureInfo.GetCultureInfo("tr-TR")) ?? "—")}";
+        var statusNames = new[] { "Taslak", "Kesildi", "Ödendi", "İptal" };
+
+        var document = Document.Create(container =>
+        {
+            container.Page(page =>
+            {
+                page.Size(PageSizes.A4.Landscape());
+                page.Margin(20);
+                page.Header().Text(title).Bold().FontSize(14);
+                page.Content().PaddingVertical(10).Column(col =>
+                {
+                    col.Item().Text(period);
+                    col.Item().PaddingTop(10).Table(t =>
+                    {
+                        t.ColumnsDefinition(c =>
+                        {
+                            c.ConstantColumn(90);
+                            c.ConstantColumn(80);
+                            c.RelativeColumn();
+                            c.ConstantColumn(60);
+                            c.ConstantColumn(90);
+                            c.ConstantColumn(40);
+                        });
+                        t.Header(h =>
+                        {
+                            h.Cell().Background(Colors.Grey.Lighten2).Padding(4).Text("Fatura No").Bold();
+                            h.Cell().Background(Colors.Grey.Lighten2).Padding(4).Text("Tarih").Bold();
+                            h.Cell().Background(Colors.Grey.Lighten2).Padding(4).Text("Cari").Bold();
+                            h.Cell().Background(Colors.Grey.Lighten2).Padding(4).Text("Durum").Bold();
+                            h.Cell().Background(Colors.Grey.Lighten2).Padding(4).AlignRight().Text("Toplam").Bold();
+                            h.Cell().Background(Colors.Grey.Lighten2).Padding(4).Text("Para").Bold();
+                        });
+                        foreach (var row in data.Items)
+                        {
+                            t.Cell().Padding(4).Text(row.InvoiceNumber);
+                            t.Cell().Padding(4).Text(row.InvoiceDate.ToString("d", CultureInfo.GetCultureInfo("tr-TR")));
+                            t.Cell().Padding(4).Text(row.CustomerTitle);
+                            t.Cell().Padding(4).Text(row.Status >= 0 && row.Status < statusNames.Length ? statusNames[row.Status] : "");
+                            t.Cell().Padding(4).AlignRight().Text(row.GrandTotal.ToString("N2", CultureInfo.GetCultureInfo("tr-TR")));
+                            t.Cell().Padding(4).Text(row.Currency);
+                        }
+                    });
+                });
+            });
+        });
+        return document.GeneratePdf();
+    }
+
+    public async Task<byte[]?> GetInvoiceReportExcelAsync(DateTime? dateFrom, DateTime? dateTo, Guid? customerId, CancellationToken ct = default)
+    {
+        var data = await GetInvoiceReportAsync(dateFrom, dateTo, customerId, ct);
+        var statusNames = new[] { "Taslak", "Kesildi", "Ödendi", "İptal" };
+
+        using var wb = new XLWorkbook();
+        var ws = wb.Worksheets.Add("Fatura raporu");
+        ws.Cell("A1").Value = data.CustomerTitle != null ? $"Fatura raporu - {data.CustomerTitle}" : "Fatura raporu";
+        ws.Cell("A2").Value = $"Dönem: {(data.DateFrom?.ToString("d") ?? "—")} - {(data.DateTo?.ToString("d") ?? "—")}";
+        ws.Cell("A4").Value = "Fatura No";
+        ws.Cell("B4").Value = "Tarih";
+        ws.Cell("C4").Value = "Cari";
+        ws.Cell("D4").Value = "Durum";
+        ws.Cell("E4").Value = "Toplam";
+        ws.Cell("F4").Value = "Para";
+        int row = 5;
+        foreach (var r in data.Items)
+        {
+            ws.Cell(row, 1).Value = r.InvoiceNumber;
+            ws.Cell(row, 2).Value = r.InvoiceDate.ToString("d");
+            ws.Cell(row, 3).Value = r.CustomerTitle;
+            ws.Cell(row, 4).Value = r.Status >= 0 && r.Status < statusNames.Length ? statusNames[r.Status] : "";
+            ws.Cell(row, 5).Value = r.GrandTotal;
+            ws.Cell(row, 6).Value = r.Currency;
+            row++;
+        }
         using var ms = new MemoryStream();
         wb.SaveAs(ms, false);
         return ms.ToArray();

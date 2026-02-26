@@ -1,0 +1,51 @@
+<div class="page-header">
+  <h1 class="page-title">{{ deliveryNote?.deliveryNumber ?? 'İrsaliye' }}</h1>
+  <div class="actions">
+    @if (deliveryNote?.status === 0) {
+      <button type="button" class="btn btn-primary" (click)="confirmDeliveryNote()">Onayla</button>
+    }
+    @if (deliveryNote?.status === 1) {
+      <button type="button" class="btn btn-primary" (click)="createInvoice()" [disabled]="creatingInvoice">
+        {{ creatingInvoice ? 'Oluşturuluyor...' : 'Fatura Oluştur' }}
+      </button>
+    }
+  </div>
+</div>
+@if (loading) {
+  <p>Yükleniyor...</p>
+} @else if (deliveryNote) {
+  <div class="card info-grid">
+    <p><strong>Cari:</strong> {{ deliveryNote.customerTitle || '—' }}</p>
+    <p><strong>Sipariş:</strong> {{ deliveryNote.orderNumber || '—' }}</p>
+    <p><strong>Tarih:</strong> {{ deliveryNote.deliveryDate | date:'dd.MM.yyyy' }}</p>
+    <p><strong>Tip:</strong> {{ typeLabel(deliveryNote.deliveryType) }}</p>
+    <p><strong>Durum:</strong> {{ statusLabel(deliveryNote.status) }}</p>
+  </div>
+  <h2 class="section-title">Kalemler</h2>
+  <div class="card table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Ürün / Açıklama</th>
+          <th class="amount">Miktar</th>
+          <th class="amount">Birim Fiyat</th>
+          <th class="amount">KDV %</th>
+          <th class="amount">Tutar</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (it of deliveryNote.items; track it.id) {
+          <tr>
+            <td>{{ it.description || '—' }}</td>
+            <td class="amount">{{ it.quantity | number:'1.2-2' }}</td>
+            <td class="amount">{{ it.unitPrice | number:'1.2-2' }}</td>
+            <td class="amount">{{ it.vatRate | number:'1.0-0' }}%</td>
+            <td class="amount">{{ (it.quantity * it.unitPrice * (1 + it.vatRate / 100)) | number:'1.2-2' }} ₺</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+} @else {
+  <p>İrsaliye bulunamadı.</p>
+}

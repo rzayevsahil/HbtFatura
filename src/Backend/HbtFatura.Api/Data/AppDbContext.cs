@@ -25,6 +25,10 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid
     public DbSet<StockMovement> StockMovements => Set<StockMovement>();
     public DbSet<ChequeOrPromissory> ChequeOrPromissories => Set<ChequeOrPromissory>();
     public DbSet<MainAccountCode> MainAccountCodes => Set<MainAccountCode>();
+    public DbSet<Order> Orders => Set<Order>();
+    public DbSet<OrderItem> OrderItems => Set<OrderItem>();
+    public DbSet<DeliveryNote> DeliveryNotes => Set<DeliveryNote>();
+    public DbSet<DeliveryNoteItem> DeliveryNoteItems => Set<DeliveryNoteItem>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -155,6 +159,40 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid
             e.Property(x => x.LineTotalExclVat).HasPrecision(18, 2);
             e.Property(x => x.LineVatAmount).HasPrecision(18, 2);
             e.Property(x => x.LineTotalInclVat).HasPrecision(18, 2);
+        });
+
+        modelBuilder.Entity<Order>(e =>
+        {
+            e.HasOne(x => x.User).WithMany(x => x.Orders).HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Restrict);
+            e.HasOne(x => x.Customer).WithMany().HasForeignKey(x => x.CustomerId).OnDelete(DeleteBehavior.SetNull);
+            e.HasIndex(x => new { x.UserId, x.OrderNumber }).IsUnique();
+        });
+
+        modelBuilder.Entity<OrderItem>(e =>
+        {
+            e.HasOne(x => x.Order).WithMany(x => x.Items).HasForeignKey(x => x.OrderId).OnDelete(DeleteBehavior.Cascade);
+            e.HasOne(x => x.Product).WithMany().HasForeignKey(x => x.ProductId).OnDelete(DeleteBehavior.SetNull);
+            e.Property(x => x.Quantity).HasPrecision(18, 4);
+            e.Property(x => x.UnitPrice).HasPrecision(18, 2);
+            e.Property(x => x.VatRate).HasPrecision(5, 2);
+        });
+
+        modelBuilder.Entity<DeliveryNote>(e =>
+        {
+            e.HasOne(x => x.User).WithMany(x => x.DeliveryNotes).HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Restrict);
+            e.HasOne(x => x.Customer).WithMany().HasForeignKey(x => x.CustomerId).OnDelete(DeleteBehavior.SetNull);
+            e.HasOne(x => x.Order).WithMany().HasForeignKey(x => x.OrderId).OnDelete(DeleteBehavior.SetNull);
+            e.HasIndex(x => new { x.UserId, x.DeliveryNumber }).IsUnique();
+        });
+
+        modelBuilder.Entity<DeliveryNoteItem>(e =>
+        {
+            e.HasOne(x => x.DeliveryNote).WithMany(x => x.Items).HasForeignKey(x => x.DeliveryNoteId).OnDelete(DeleteBehavior.Cascade);
+            e.HasOne(x => x.Product).WithMany().HasForeignKey(x => x.ProductId).OnDelete(DeleteBehavior.SetNull);
+            e.HasOne(x => x.OrderItem).WithMany().HasForeignKey(x => x.OrderItemId).OnDelete(DeleteBehavior.SetNull);
+            e.Property(x => x.Quantity).HasPrecision(18, 4);
+            e.Property(x => x.UnitPrice).HasPrecision(18, 2);
+            e.Property(x => x.VatRate).HasPrecision(5, 2);
         });
     }
 }

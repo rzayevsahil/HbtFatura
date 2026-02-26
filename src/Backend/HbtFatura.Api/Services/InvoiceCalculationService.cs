@@ -6,7 +6,8 @@ public class InvoiceCalculationService : IInvoiceCalculationService
 {
     public void CalculateItemTotals(InvoiceItem item)
     {
-        item.LineTotalExclVat = Math.Round(item.Quantity * item.UnitPrice, 2);
+        var discountMultiplier = 1m - (item.DiscountPercent / 100m);
+        item.LineTotalExclVat = Math.Round(item.Quantity * item.UnitPrice * discountMultiplier, 2);
         item.LineVatAmount = Math.Round(item.LineTotalExclVat * (item.VatRate / 100m), 2);
         item.LineTotalInclVat = item.LineTotalExclVat + item.LineVatAmount;
     }

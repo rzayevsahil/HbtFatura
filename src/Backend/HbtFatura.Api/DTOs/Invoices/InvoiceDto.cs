@@ -20,6 +20,8 @@ public class InvoiceDto
     public decimal GrandTotal { get; set; }
     public string Currency { get; set; } = "TRY";
     public decimal ExchangeRate { get; set; }
+    public string? SourceType { get; set; }
+    public Guid? SourceId { get; set; }
     public List<InvoiceItemDto> Items { get; set; } = new();
 }
 

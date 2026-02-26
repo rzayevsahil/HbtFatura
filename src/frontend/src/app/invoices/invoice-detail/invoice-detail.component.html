@@ -6,6 +6,9 @@
         <span>Tarih: {{ invoice.invoiceDate | date:'dd.MM.yyyy' }}</span>
         <span class="status-badge" [class]="statusClass(invoice.status)">{{ statusLabel(invoice.status) }}</span>
         <span>Cari: {{ invoice.customerTitle }}</span>
+        @if (invoice.sourceType && invoice.sourceId) {
+          <span class="source">Kaynak: <a [routerLink]="['/delivery-notes', invoice.sourceId]">İrsaliye</a></span>
+        }
       </div>
     </div>
     <a routerLink="/invoices" class="back-link">← Geri</a>

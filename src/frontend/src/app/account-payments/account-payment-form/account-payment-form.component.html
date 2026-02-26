@@ -57,6 +57,17 @@
           </select>
         </div>
       }
+      @if (form.get('type')?.value === 'Tahsilat' && form.get('customerId')?.value) {
+        <div class="row">
+          <label>Faturaya bağla</label>
+          <select formControlName="invoiceId">
+            <option value="">— İsteğe bağlı —</option>
+            @for (inv of customerInvoices; track inv.id) {
+              <option [ngValue]="inv.id">{{ inv.invoiceNumber }} — {{ inv.grandTotal | number:'1.2-2' }} {{ inv.currency }}</option>
+            }
+          </select>
+        </div>
+      }
       <div class="row">
         <label>Açıklama</label>
         <input formControlName="description" placeholder="İsteğe bağlı" />

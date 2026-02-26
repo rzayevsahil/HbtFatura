@@ -3,6 +3,55 @@
 </div>
 
 <section class="report-section card">
+  <h2>Fatura raporu</h2>
+  <div class="filters">
+    <input type="date" [(ngModel)]="invoiceDateFrom" placeholder="Başlangıç" />
+    <input type="date" [(ngModel)]="invoiceDateTo" placeholder="Bitiş" />
+    <select [(ngModel)]="invoiceCustomerId">
+      <option value="">Tüm cariler</option>
+      @for (c of customers; track c.id) {
+        <option [value]="c.id">{{ c.title }}</option>
+      }
+    </select>
+    <button type="button" (click)="loadInvoiceReport()" [disabled]="invoiceLoading">Yükle</button>
+    @if (invoiceData) {
+      <button type="button" (click)="downloadInvoiceReportPdf()">PDF indir</button>
+      <button type="button" (click)="downloadInvoiceReportExcel()">Excel indir</button>
+    }
+  </div>
+  @if (invoiceLoading) { <p>Yükleniyor...</p> }
+  @if (invoiceData && !invoiceLoading) {
+    <p>{{ invoiceData.customerTitle ? invoiceData.customerTitle + ' — ' : '' }}Toplam {{ invoiceData.items.length }} fatura</p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Fatura No</th>
+            <th>Tarih</th>
+            <th>Cari</th>
+            <th>Durum</th>
+            <th class="amount">Toplam</th>
+            <th>Para</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (r of invoiceData.items; track r.id) {
+            <tr>
+              <td>{{ r.invoiceNumber }}</td>
+              <td>{{ r.invoiceDate | date:'shortDate' }}</td>
+              <td>{{ r.customerTitle }}</td>
+              <td>{{ statusLabel(r.status) }}</td>
+              <td class="amount">{{ r.grandTotal | number:'1.2-2' }}</td>
+              <td>{{ r.currency }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</section>
+
+<section class="report-section card">
   <h2>Cari ekstre</h2>
   <div class="filters">
     <select [(ngModel)]="cariCustomerId" required>

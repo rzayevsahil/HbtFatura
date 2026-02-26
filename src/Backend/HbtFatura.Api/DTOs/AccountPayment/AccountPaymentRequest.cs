@@ -10,4 +10,6 @@ public class AccountPaymentRequest
     public Guid? BankAccountId { get; set; }
     public string Description { get; set; } = string.Empty;
     public string Type { get; set; } = string.Empty; // "Tahsilat" | "Odeme"
+    /// <summary>When set (for Tahsilat), payment is linked to this invoice and invoice status is set to Paid.</summary>
+    public Guid? InvoiceId { get; set; }
 }

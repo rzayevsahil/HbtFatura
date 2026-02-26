@@ -61,6 +61,21 @@ public class InvoicesController : ControllerBase
         }
     }
 
+    [HttpPost("from-delivery-note")]
+    public async Task<ActionResult<InvoiceDto>> CreateFromDeliveryNote([FromBody] CreateInvoiceFromDeliveryNoteRequest request, CancellationToken ct = default)
+    {
+        try
+        {
+            var dto = await _service.CreateFromDeliveryNoteAsync(request.DeliveryNoteId, ct);
+            if (dto == null) return NotFound();
+            return CreatedAtAction(nameof(Get), new { id = dto.Id }, dto);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+
     [HttpPut("{id:guid}")]
     public async Task<ActionResult<InvoiceDto>> Update(Guid id, [FromBody] UpdateInvoiceRequest request, [FromHeader(Name = "If-Match")] string? ifMatch, CancellationToken ct = default)
     {
@@ -105,4 +120,9 @@ public class InvoicesController : ControllerBase
 public class SetStatusRequest
 {
     public InvoiceStatus Status { get; set; }
+}
+
+public class CreateInvoiceFromDeliveryNoteRequest
+{
+    public Guid DeliveryNoteId { get; set; }
 }

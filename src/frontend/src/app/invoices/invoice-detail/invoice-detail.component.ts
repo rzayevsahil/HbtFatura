@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { InvoiceService, InvoiceDto } from '../../services/invoice.service';
 import { ToastrService } from 'ngx-toastr';
 
@@ -14,7 +14,15 @@ import { ToastrService } from 'ngx-toastr';
 export class InvoiceDetailComponent implements OnInit {
   invoice: InvoiceDto | null = null;
 
-  constructor(private route: ActivatedRoute, private api: InvoiceService, private toastr: ToastrService) {}
+  constructor(private route: ActivatedRoute, private router: Router, private api: InvoiceService, private toastr: ToastrService) {}
+
+  @HostListener('document:keydown', ['$event'])
+  onKeyDown(e: KeyboardEvent): void {
+    if (e.key === 'F2' && this.invoice?.status === 0 && !['INPUT', 'TEXTAREA', 'SELECT'].includes((e.target as HTMLElement)?.tagName)) {
+      e.preventDefault();
+      this.router.navigate(['/invoices', this.invoice.id, 'edit']);
+    }
+  }
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');

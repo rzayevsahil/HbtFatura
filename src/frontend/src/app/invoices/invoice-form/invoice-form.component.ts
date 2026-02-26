@@ -2,6 +2,8 @@ import { Component, OnInit, HostListener, ViewChild, ElementRef } from '@angular
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
+import { taxNumberValidator } from '../../core/validators/tax-number.validator';
 import { InvoiceService, CreateInvoiceRequest, InvoiceItemInputDto } from '../../services/invoice.service';
 import { CustomerService, CustomerDto } from '../../services/customer.service';
 import { ProductService, ProductDto } from '../../services/product.service';
@@ -10,7 +12,7 @@ import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-invoice-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterLink],
   templateUrl: './invoice-form.component.html',
   styleUrls: ['./invoice-form.component.scss']
 })
@@ -21,6 +23,7 @@ export class InvoiceFormComponent implements OnInit {
   id: string | null = null;
   customers: CustomerDto[] = [];
   products: ProductDto[] = [];
+  productFilterText = '';
   customerSearchText = '';
   customerDropdownOpen = false;
   error = '';
@@ -43,6 +46,14 @@ export class InvoiceFormComponent implements OnInit {
     return this.customers.filter(c => c.title.toLowerCase().includes(q));
   }
 
+  get filteredProducts(): ProductDto[] {
+    const t = (this.productFilterText || '').trim().toLowerCase();
+    if (!t) return this.products;
+    return this.products.filter(p =>
+      (p.code?.toLowerCase().includes(t)) || (p.name?.toLowerCase().includes(t))
+    );
+  }
+
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
@@ -56,7 +67,7 @@ export class InvoiceFormComponent implements OnInit {
       invoiceType: [0 as number, Validators.required], // 0=Satış, 1=Alış
       customerId: this.fb.control<string | null>(null),
       customerTitle: ['', Validators.required],
-      customerTaxNumber: [''],
+      customerTaxNumber: ['', [taxNumberValidator()]],
       customerAddress: [''],
       customerPhone: [''],
       customerEmail: [''],
@@ -92,6 +103,7 @@ export class InvoiceFormComponent implements OnInit {
           quantity: [it.quantity],
           unitPrice: [it.unitPrice],
           vatRate: [it.vatRate],
+          discountPercent: [it.discountPercent ?? 0],
           sortOrder: [it.sortOrder]
         })));
       });
@@ -105,6 +117,7 @@ export class InvoiceFormComponent implements OnInit {
       quantity: [1],
       unitPrice: [0],
       vatRate: [18],
+      discountPercent: [0],
       sortOrder: [0]
     });
   }
@@ -134,6 +147,14 @@ export class InvoiceFormComponent implements OnInit {
     this.form.patchValue({ customerId: c?.id ?? null });
     if (c) this.onCustomerSelect();
     this.customerDropdownOpen = false;
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  onKeyDown(e: KeyboardEvent): void {
+    if (e.key === 'F9' && !this.saving && this.form.valid && !['INPUT', 'TEXTAREA', 'SELECT'].includes((e.target as HTMLElement)?.tagName)) {
+      e.preventDefault();
+      this.onSubmit();
+    }
   }
 
   @HostListener('document:click', ['$event'])
@@ -178,6 +199,7 @@ export class InvoiceFormComponent implements OnInit {
         quantity: Number(it.quantity),
         unitPrice: Number(it.unitPrice),
         vatRate: Number(it.vatRate),
+        discountPercent: Number(it.discountPercent) || 0,
         sortOrder: i
       } as InvoiceItemInputDto))
     };

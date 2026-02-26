@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ReportService, CariExtractReportDto, CashSummaryReportDto, BankSummaryReportDto, StockLevelsReportDto } from '../services/report.service';
+import { ReportService, CariExtractReportDto, CashSummaryReportDto, BankSummaryReportDto, StockLevelsReportDto, InvoiceReportDto } from '../services/report.service';
 import { CustomerService, CustomerDto } from '../services/customer.service';
 import { CashRegisterService, CashRegisterDto } from '../services/cash-register.service';
 import { BankAccountService, BankAccountDto } from '../services/bank-account.service';
@@ -39,6 +39,12 @@ export class ReportsComponent implements OnInit {
 
   stockData: StockLevelsReportDto | null = null;
   stockLoading = false;
+
+  invoiceDateFrom = '';
+  invoiceDateTo = '';
+  invoiceCustomerId = '';
+  invoiceData: InvoiceReportDto | null = null;
+  invoiceLoading = false;
 
   constructor(
     private reportApi: ReportService,
@@ -143,5 +149,61 @@ export class ReportsComponent implements OnInit {
       next: data => { this.stockData = data; this.stockLoading = false; },
       error: e => { this.toastr.error(e.error?.message ?? 'Yüklenemedi.'); this.stockLoading = false; }
     });
+  }
+
+  loadInvoiceReport(): void {
+    this.invoiceLoading = true;
+    this.invoiceData = null;
+    this.reportApi.getInvoiceReport(
+      this.invoiceDateFrom || undefined,
+      this.invoiceDateTo || undefined,
+      this.invoiceCustomerId || undefined
+    ).subscribe({
+      next: data => { this.invoiceData = data; this.invoiceLoading = false; },
+      error: e => { this.toastr.error(e.error?.message ?? 'Yüklenemedi.'); this.invoiceLoading = false; }
+    });
+  }
+
+  downloadInvoiceReportPdf(): void {
+    this.reportApi.downloadInvoiceReportPdf(
+      this.invoiceDateFrom || undefined,
+      this.invoiceDateTo || undefined,
+      this.invoiceCustomerId || undefined
+    ).subscribe({
+      next: blob => {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'fatura-raporu.pdf';
+        a.click();
+        URL.revokeObjectURL(url);
+        this.toastr.success('PDF indirildi.');
+      },
+      error: e => this.toastr.error(e.error?.message ?? 'İndirilemedi.')
+    });
+  }
+
+  downloadInvoiceReportExcel(): void {
+    this.reportApi.downloadInvoiceReportExcel(
+      this.invoiceDateFrom || undefined,
+      this.invoiceDateTo || undefined,
+      this.invoiceCustomerId || undefined
+    ).subscribe({
+      next: blob => {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'fatura-raporu.xlsx';
+        a.click();
+        URL.revokeObjectURL(url);
+        this.toastr.success('Excel indirildi.');
+      },
+      error: e => this.toastr.error(e.error?.message ?? 'İndirilemedi.')
+    });
+  }
+
+  statusLabel(s: number): string {
+    const map: Record<number, string> = { 0: 'Taslak', 1: 'Kesildi', 2: 'Ödendi', 3: 'İptal' };
+    return map[s] ?? '';
   }
 }

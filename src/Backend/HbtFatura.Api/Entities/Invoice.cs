@@ -23,6 +23,10 @@ public class Invoice
     public string Currency { get; set; } = "TRY";
     public decimal ExchangeRate { get; set; } = 1;
 
+    /// <summary>Kaynak doküman: İrsaliye, Sipariş veya Manuel.</summary>
+    public string? SourceType { get; set; }
+    public Guid? SourceId { get; set; }
+
     public DateTime CreatedAt { get; set; }
     public Guid? CreatedBy { get; set; }
     public DateTime? UpdatedAt { get; set; }

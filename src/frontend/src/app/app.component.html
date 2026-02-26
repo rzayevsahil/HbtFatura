@@ -33,6 +33,8 @@
           <a routerLink="/account-payments" routerLinkActive="active">Tahsilat/Ödeme</a>
         }
         <a routerLink="/invoices" routerLinkActive="active">Faturalar</a>
+        <a routerLink="/orders" routerLinkActive="active">Siparişler</a>
+        <a routerLink="/delivery-notes" routerLinkActive="active">İrsaliyeler</a>
         <a routerLink="/customers" routerLinkActive="active">Cariler</a>
         @if (auth.user()?.role === 'FirmAdmin' || auth.user()?.role === 'SuperAdmin') {
           <a routerLink="/main-account-codes" routerLinkActive="active">Hesap Planı</a>

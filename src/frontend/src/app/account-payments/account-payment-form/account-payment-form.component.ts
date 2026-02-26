@@ -6,6 +6,7 @@ import { CustomerService, CustomerDto } from '../../services/customer.service';
 import { CashRegisterService, CashRegisterDto } from '../../services/cash-register.service';
 import { BankAccountService, BankAccountDto } from '../../services/bank-account.service';
 import { AccountPaymentService } from '../../services/account-payment.service';
+import { InvoiceService, InvoiceListDto } from '../../services/invoice.service';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -24,11 +25,13 @@ export class AccountPaymentFormComponent implements OnInit {
     paymentMethod: ['Kasa' as string, Validators.required],
     cashRegisterId: [''],
     bankAccountId: [''],
-    description: ['']
+    description: [''],
+    invoiceId: ['']
   });
   customers: CustomerDto[] = [];
   cashRegisters: CashRegisterDto[] = [];
   bankAccounts: BankAccountDto[] = [];
+  customerInvoices: InvoiceListDto[] = [];
   error = '';
   saving = false;
 
@@ -38,6 +41,7 @@ export class AccountPaymentFormComponent implements OnInit {
     private cashApi: CashRegisterService,
     private bankApi: BankAccountService,
     private paymentApi: AccountPaymentService,
+    private invoiceApi: InvoiceService,
     private toastr: ToastrService
   ) {}
 
@@ -47,7 +51,28 @@ export class AccountPaymentFormComponent implements OnInit {
     this.bankApi.getAll().subscribe(b => this.bankAccounts = b.filter(x => x.isActive));
     this.form.patchValue({
       cashRegisterId: '',
-      bankAccountId: ''
+      bankAccountId: '',
+      invoiceId: ''
+    });
+    this.form.get('customerId')?.valueChanges.subscribe(customerId => {
+      this.form.patchValue({ invoiceId: '' });
+      this.customerInvoices = [];
+      if (this.form.get('type')?.value === 'Tahsilat' && customerId) {
+        this.invoiceApi.getPaged({ page: 1, pageSize: 200, customerId, status: 1 }).subscribe(res => {
+          this.customerInvoices = res.items;
+        });
+      }
+    });
+    this.form.get('type')?.valueChanges.subscribe(t => {
+      this.form.patchValue({ invoiceId: '' });
+      const customerId = this.form.get('customerId')?.value;
+      if (t === 'Tahsilat' && customerId) {
+        this.invoiceApi.getPaged({ page: 1, pageSize: 200, customerId, status: 1 }).subscribe(res => {
+          this.customerInvoices = res.items;
+        });
+      } else {
+        this.customerInvoices = [];
+      }
     });
   }
 
@@ -75,7 +100,8 @@ export class AccountPaymentFormComponent implements OnInit {
       cashRegisterId: v.paymentMethod === 'Kasa' ? v.cashRegisterId || undefined : undefined,
       bankAccountId: v.paymentMethod === 'Banka' ? v.bankAccountId || undefined : undefined,
       description: v.description || (v.type === 'Tahsilat' ? 'Tahsilat' : 'Ödeme'),
-      type: v.type
+      type: v.type,
+      invoiceId: v.invoiceId || undefined
     }).subscribe({
       next: () => {
         this.toastr.success(v.type === 'Tahsilat' ? 'Tahsilat kaydedildi.' : 'Ödeme kaydedildi.');

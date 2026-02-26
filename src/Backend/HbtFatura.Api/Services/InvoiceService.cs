@@ -128,6 +128,7 @@ public class InvoiceService : IInvoiceService
                 Quantity = item.Quantity,
                 UnitPrice = item.UnitPrice,
                 VatRate = item.VatRate,
+                DiscountPercent = item.DiscountPercent,
                 SortOrder = sortOrder++
             };
             _calc.CalculateItemTotals(entity);
@@ -149,6 +150,75 @@ public class InvoiceService : IInvoiceService
         }
 
         return MapToDto(invoice);
+    }
+
+    public async Task<InvoiceDto?> CreateFromDeliveryNoteAsync(Guid deliveryNoteId, CancellationToken ct = default)
+    {
+        var dn = await _db.DeliveryNotes
+            .Include(x => x.User)
+            .Include(x => x.Customer)
+            .Include(x => x.Items.OrderBy(i => i.SortOrder))
+            .FirstOrDefaultAsync(x => x.Id == deliveryNoteId, ct);
+        if (dn == null) return null;
+        if (!_currentUser.IsSuperAdmin && !(_currentUser.IsFirmAdmin && dn.User?.FirmId == _currentUser.FirmId) && dn.UserId != _currentUser.UserId)
+            return null;
+        if (dn.Status != DeliveryNoteStatus.Onaylandi)
+            throw new InvalidOperationException("Sadece onaylanmış irsaliyelerden fatura oluşturulabilir.");
+
+        var userId = _currentUser.UserId;
+        var invoiceNumber = await GetNextInvoiceNumberAsync(userId, dn.DeliveryDate.Year, ct);
+
+        var customerTitle = dn.Customer?.Title ?? string.Empty;
+        var customerTaxNumber = dn.Customer?.TaxNumber;
+        var customerAddress = dn.Customer?.Address;
+        var customerPhone = dn.Customer?.Phone;
+        var customerEmail = dn.Customer?.Email;
+
+        var invoice = new Invoice
+        {
+            Id = Guid.NewGuid(),
+            UserId = userId,
+            InvoiceNumber = invoiceNumber,
+            InvoiceDate = dn.DeliveryDate,
+            Status = InvoiceStatus.Draft,
+            InvoiceType = dn.DeliveryType,
+            CustomerId = dn.CustomerId,
+            CustomerTitle = customerTitle,
+            CustomerTaxNumber = customerTaxNumber,
+            CustomerAddress = customerAddress,
+            CustomerPhone = customerPhone,
+            CustomerEmail = customerEmail,
+            Currency = "TRY",
+            ExchangeRate = 1,
+            SourceType = ReferenceType.Irsaliye,
+            SourceId = dn.Id,
+            CreatedAt = DateTime.UtcNow,
+            CreatedBy = userId
+        };
+
+        var sortOrder = 0;
+        foreach (var item in dn.Items)
+        {
+            var entity = new InvoiceItem
+            {
+                Id = Guid.NewGuid(),
+                InvoiceId = invoice.Id,
+                ProductId = item.ProductId,
+                Description = item.Description,
+                Quantity = item.Quantity,
+                UnitPrice = item.UnitPrice,
+                VatRate = item.VatRate,
+                DiscountPercent = 0,
+                SortOrder = sortOrder++
+            };
+            _calc.CalculateItemTotals(entity);
+            invoice.Items.Add(entity);
+        }
+        _calc.CalculateInvoiceTotals(invoice);
+
+        _db.Invoices.Add(invoice);
+        await _db.SaveChangesAsync(ct);
+        return await GetByIdAsync(invoice.Id, ct);
     }
 
     public async Task<InvoiceDto?> UpdateAsync(Guid id, UpdateInvoiceRequest request, byte[]? rowVersion, CancellationToken ct = default)
@@ -209,6 +279,7 @@ public class InvoiceService : IInvoiceService
                 Quantity = item.Quantity,
                 UnitPrice = item.UnitPrice,
                 VatRate = item.VatRate,
+                DiscountPercent = item.DiscountPercent,
                 SortOrder = sortOrder++
             };
             _calc.CalculateItemTotals(entity);
@@ -328,6 +399,8 @@ if (status == InvoiceStatus.Issued || status == InvoiceStatus.Paid)
         GrandTotal = inv.GrandTotal,
         Currency = inv.Currency,
         ExchangeRate = inv.ExchangeRate,
+        SourceType = inv.SourceType,
+        SourceId = inv.SourceId,
         Items = inv.Items.OrderBy(x => x.SortOrder).Select(x => new InvoiceItemDto
         {
             Id = x.Id,
@@ -336,6 +409,7 @@ if (status == InvoiceStatus.Issued || status == InvoiceStatus.Paid)
             Quantity = x.Quantity,
             UnitPrice = x.UnitPrice,
             VatRate = x.VatRate,
+            DiscountPercent = x.DiscountPercent,
             LineTotalExclVat = x.LineTotalExclVat,
             LineVatAmount = x.LineVatAmount,
             LineTotalInclVat = x.LineTotalInclVat,

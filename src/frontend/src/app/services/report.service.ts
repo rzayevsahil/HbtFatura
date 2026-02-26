@@ -66,6 +66,7 @@ export interface BankSummaryReportDto {
 }
 
 export interface StockLevelRowDto {
+  productId: string;
   code: string;
   name: string;
   unit: string;
@@ -77,6 +78,24 @@ export interface StockLevelRowDto {
 
 export interface StockLevelsReportDto {
   items: StockLevelRowDto[];
+}
+
+export interface InvoiceReportRowDto {
+  id: string;
+  invoiceNumber: string;
+  invoiceDate: string;
+  status: number;
+  customerTitle: string;
+  grandTotal: number;
+  currency: string;
+}
+
+export interface InvoiceReportDto {
+  dateFrom?: string;
+  dateTo?: string;
+  customerId?: string;
+  customerTitle?: string;
+  items: InvoiceReportRowDto[];
 }
 
 @Injectable({ providedIn: 'root' })
@@ -121,5 +140,29 @@ export class ReportService {
     const params: Record<string, string> = {};
     if (firmId) params['firmId'] = firmId;
     return this.api.get<StockLevelsReportDto>(`${this.base}/stock-levels`, params);
+  }
+
+  getInvoiceReport(dateFrom?: string, dateTo?: string, customerId?: string): Observable<InvoiceReportDto> {
+    const params: Record<string, string> = {};
+    if (dateFrom) params['dateFrom'] = dateFrom;
+    if (dateTo) params['dateTo'] = dateTo;
+    if (customerId) params['customerId'] = customerId;
+    return this.api.get<InvoiceReportDto>(`${this.base}/invoice-report`, params);
+  }
+
+  downloadInvoiceReportPdf(dateFrom?: string, dateTo?: string, customerId?: string): Observable<Blob> {
+    const p = new URLSearchParams({ format: 'pdf' });
+    if (dateFrom) p.set('dateFrom', dateFrom);
+    if (dateTo) p.set('dateTo', dateTo);
+    if (customerId) p.set('customerId', customerId);
+    return this.api.getBlob(`${this.base}/invoice-report?${p.toString()}`);
+  }
+
+  downloadInvoiceReportExcel(dateFrom?: string, dateTo?: string, customerId?: string): Observable<Blob> {
+    const p = new URLSearchParams({ format: 'xlsx' });
+    if (dateFrom) p.set('dateFrom', dateFrom);
+    if (dateTo) p.set('dateTo', dateTo);
+    if (customerId) p.set('customerId', customerId);
+    return this.api.getBlob(`${this.base}/invoice-report?${p.toString()}`);
   }
 }

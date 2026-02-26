@@ -74,4 +74,28 @@ public class ReportsController : ControllerBase
         var data = await _service.GetStockLevelsAsync(firmId, ct);
         return Ok(data);
     }
+
+    [HttpGet("invoice-report")]
+    public async Task<ActionResult<InvoiceReportDto>> GetInvoiceReport(
+        [FromQuery] DateTime? dateFrom,
+        [FromQuery] DateTime? dateTo,
+        [FromQuery] Guid? customerId,
+        [FromQuery] string? format,
+        CancellationToken ct = default)
+    {
+        if (string.Equals(format, "pdf", StringComparison.OrdinalIgnoreCase))
+        {
+            var pdf = await _service.GetInvoiceReportPdfAsync(dateFrom, dateTo, customerId, ct);
+            if (pdf == null) return NotFound();
+            return File(pdf, "application/pdf", "fatura-raporu.pdf");
+        }
+        if (string.Equals(format, "xlsx", StringComparison.OrdinalIgnoreCase))
+        {
+            var excel = await _service.GetInvoiceReportExcelAsync(dateFrom, dateTo, customerId, ct);
+            if (excel == null) return NotFound();
+            return File(excel, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "fatura-raporu.xlsx");
+        }
+        var data = await _service.GetInvoiceReportAsync(dateFrom, dateTo, customerId, ct);
+        return Ok(data);
+    }
 }

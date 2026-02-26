@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HbtFatura.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260225113702_fourth_mig")]
-    partial class fourth_mig
+    [Migration("20260226094944_first_mig")]
+    partial class first_mig
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -411,9 +411,6 @@ namespace HbtFatura.Api.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("AccountType")
-                        .HasColumnType("int");
-
                     b.Property<string>("Address")
                         .HasColumnType("nvarchar(max)");
 
@@ -484,6 +481,103 @@ namespace HbtFatura.Api.Migrations
                         .HasFilter("[Code] IS NOT NULL");
 
                     b.ToTable("Customers");
+                });
+
+            modelBuilder.Entity("HbtFatura.Api.Entities.DeliveryNote", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("CustomerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("DeliveryDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeliveryNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("DeliveryType")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("OrderId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("OrderId");
+
+                    b.HasIndex("UserId", "DeliveryNumber")
+                        .IsUnique();
+
+                    b.ToTable("DeliveryNotes");
+                });
+
+            modelBuilder.Entity("HbtFatura.Api.Entities.DeliveryNoteItem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("DeliveryNoteId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("OrderItemId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("ProductId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("Quantity")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("decimal(18,4)");
+
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("UnitPrice")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("VatRate")
+                        .HasPrecision(5, 2)
+                        .HasColumnType("decimal(5,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DeliveryNoteId");
+
+                    b.HasIndex("OrderItemId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("DeliveryNoteItems");
                 });
 
             modelBuilder.Entity("HbtFatura.Api.Entities.Firm", b =>
@@ -564,6 +658,12 @@ namespace HbtFatura.Api.Migrations
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("rowversion");
 
+                    b.Property<Guid?>("SourceId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("SourceType")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
@@ -603,6 +703,9 @@ namespace HbtFatura.Api.Migrations
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("DiscountPercent")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<Guid>("InvoiceId")
                         .HasColumnType("uniqueidentifier");
@@ -659,7 +762,7 @@ namespace HbtFatura.Api.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("FirmId")
+                    b.Property<Guid?>("FirmId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
@@ -671,12 +774,104 @@ namespace HbtFatura.Api.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Code")
+                        .IsUnique()
+                        .HasFilter("[FirmId] IS NULL");
+
                     b.HasIndex("FirmId");
 
                     b.HasIndex("FirmId", "Code")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[FirmId] IS NOT NULL");
 
                     b.ToTable("MainAccountCodes");
+                });
+
+            modelBuilder.Entity("HbtFatura.Api.Entities.Order", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("CustomerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("OrderDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("OrderNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("OrderType")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("UserId", "OrderNumber")
+                        .IsUnique();
+
+                    b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("HbtFatura.Api.Entities.OrderItem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("OrderId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("ProductId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("Quantity")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("decimal(18,4)");
+
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("UnitPrice")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("VatRate")
+                        .HasPrecision(5, 2)
+                        .HasColumnType("decimal(5,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("OrderItems");
                 });
 
             modelBuilder.Entity("HbtFatura.Api.Entities.Product", b =>
@@ -1057,6 +1252,56 @@ namespace HbtFatura.Api.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("HbtFatura.Api.Entities.DeliveryNote", b =>
+                {
+                    b.HasOne("HbtFatura.Api.Entities.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("HbtFatura.Api.Entities.Order", "Order")
+                        .WithMany()
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("HbtFatura.Api.Entities.ApplicationUser", "User")
+                        .WithMany("DeliveryNotes")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("Order");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("HbtFatura.Api.Entities.DeliveryNoteItem", b =>
+                {
+                    b.HasOne("HbtFatura.Api.Entities.DeliveryNote", "DeliveryNote")
+                        .WithMany("Items")
+                        .HasForeignKey("DeliveryNoteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HbtFatura.Api.Entities.OrderItem", "OrderItem")
+                        .WithMany()
+                        .HasForeignKey("OrderItemId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("HbtFatura.Api.Entities.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("DeliveryNote");
+
+                    b.Navigation("OrderItem");
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("HbtFatura.Api.Entities.Invoice", b =>
                 {
                     b.HasOne("HbtFatura.Api.Entities.Customer", "Customer")
@@ -1098,10 +1343,45 @@ namespace HbtFatura.Api.Migrations
                     b.HasOne("HbtFatura.Api.Entities.Firm", "Firm")
                         .WithMany("MainAccountCodes")
                         .HasForeignKey("FirmId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("Firm");
+                });
+
+            modelBuilder.Entity("HbtFatura.Api.Entities.Order", b =>
+                {
+                    b.HasOne("HbtFatura.Api.Entities.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("HbtFatura.Api.Entities.ApplicationUser", "User")
+                        .WithMany("Orders")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("HbtFatura.Api.Entities.OrderItem", b =>
+                {
+                    b.HasOne("HbtFatura.Api.Entities.Order", "Order")
+                        .WithMany("Items")
+                        .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Firm");
+                    b.HasOne("HbtFatura.Api.Entities.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Order");
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("HbtFatura.Api.Entities.Product", b =>
@@ -1192,7 +1472,11 @@ namespace HbtFatura.Api.Migrations
                 {
                     b.Navigation("Customers");
 
+                    b.Navigation("DeliveryNotes");
+
                     b.Navigation("Invoices");
+
+                    b.Navigation("Orders");
 
                     b.Navigation("RefreshTokens");
                 });
@@ -1214,6 +1498,11 @@ namespace HbtFatura.Api.Migrations
                     b.Navigation("Invoices");
                 });
 
+            modelBuilder.Entity("HbtFatura.Api.Entities.DeliveryNote", b =>
+                {
+                    b.Navigation("Items");
+                });
+
             modelBuilder.Entity("HbtFatura.Api.Entities.Firm", b =>
                 {
                     b.Navigation("BankAccounts");
@@ -1232,6 +1521,11 @@ namespace HbtFatura.Api.Migrations
                 });
 
             modelBuilder.Entity("HbtFatura.Api.Entities.Invoice", b =>
+                {
+                    b.Navigation("Items");
+                });
+
+            modelBuilder.Entity("HbtFatura.Api.Entities.Order", b =>
                 {
                     b.Navigation("Items");
                 });

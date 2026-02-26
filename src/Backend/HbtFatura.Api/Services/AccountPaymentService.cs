@@ -93,6 +93,16 @@ public class AccountPaymentService : IAccountPaymentService
             CreatedAt = DateTime.UtcNow
         });
 
+        if (request.InvoiceId.HasValue && isTahsilat)
+        {
+            var invoice = await _db.Invoices
+                .Where(i => i.Id == request.InvoiceId.Value && i.CustomerId == request.CustomerId && i.Status == InvoiceStatus.Issued)
+                .FirstOrDefaultAsync(ct);
+            if (invoice == null)
+                throw new ArgumentException("Invoice not found, already paid/cancelled, or does not belong to this customer.");
+            invoice.Status = InvoiceStatus.Paid;
+        }
+
         await _db.SaveChangesAsync(ct);
     }
 }

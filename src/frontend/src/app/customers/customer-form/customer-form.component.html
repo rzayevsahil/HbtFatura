@@ -60,6 +60,9 @@
       <div class="row">
         <label>Vergi No / TC</label>
         <input formControlName="taxNumber" placeholder="10 veya 11 haneli" />
+        @if (form.get('taxNumber')?.invalid && form.get('taxNumber')?.touched) {
+          <span class="error-msg">{{ form.get('taxNumber')?.errors?.['taxNumber'] }}</span>
+        }
       </div>
       <div class="row full-width">
         <label>Adres</label>

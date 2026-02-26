@@ -11,6 +11,7 @@ export interface AccountPaymentRequest {
   bankAccountId?: string;
   description: string;
   type: string;
+  invoiceId?: string | null;
 }
 
 @Injectable({ providedIn: 'root' })

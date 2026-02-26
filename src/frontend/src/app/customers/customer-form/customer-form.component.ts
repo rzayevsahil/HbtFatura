@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { taxNumberValidator } from '../../core/validators/tax-number.validator';
 import { CustomerService } from '../../services/customer.service';
 import { MainAccountCodeService, MainAccountCodeDto } from '../../services/main-account-code.service';
 import { ToastrService } from 'ngx-toastr';
@@ -35,7 +36,7 @@ export class CustomerFormComponent implements OnInit {
     title: ['', Validators.required],
     taxPayerType: [2 as number],
     cardType: [1 as number],
-    taxNumber: [''],
+    taxNumber: ['', [taxNumberValidator()]],
     address: [''],
     city: [''],
     district: [''],

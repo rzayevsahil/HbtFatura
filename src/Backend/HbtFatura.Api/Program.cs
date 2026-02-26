@@ -94,6 +94,8 @@ builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IReportService, ReportService>();
 builder.Services.AddScoped<IChequeOrPromissoryService, ChequeOrPromissoryService>();
 builder.Services.AddScoped<IMainAccountCodeService, MainAccountCodeService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IDeliveryNoteService, DeliveryNoteService>();
 
 builder.Services.AddCors(options =>
 {

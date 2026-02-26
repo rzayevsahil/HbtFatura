@@ -12,4 +12,6 @@ public class ApplicationUser : IdentityUser<Guid>
     public ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
     public ICollection<Customer> Customers { get; set; } = new List<Customer>();
     public ICollection<Invoice> Invoices { get; set; } = new List<Invoice>();
+    public ICollection<Order> Orders { get; set; } = new List<Order>();
+    public ICollection<DeliveryNote> DeliveryNotes { get; set; } = new List<DeliveryNote>();
 }

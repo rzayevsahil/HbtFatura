@@ -9,4 +9,6 @@ public static class ReferenceType
     public const string Manuel = "Manuel";
     public const string Acilis = "Acilis";
     public const string Sayim = "Sayim";
+    public const string Irsaliye = "Irsaliye";
+    public const string Siparis = "Siparis";
 }

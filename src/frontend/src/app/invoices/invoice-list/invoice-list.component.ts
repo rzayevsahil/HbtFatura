@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { InvoiceService, InvoiceListDto, InvoiceStatus } from '../../services/invoice.service';
 import { ToastrService } from 'ngx-toastr';
@@ -22,7 +22,15 @@ export class InvoiceListComponent implements OnInit {
   searchStatus: InvoiceStatus | null = null;
   searchInvoiceType: number | null = null;
 
-  constructor(private api: InvoiceService, private toastr: ToastrService) {}
+  constructor(private api: InvoiceService, private router: Router, private toastr: ToastrService) {}
+
+  @HostListener('document:keydown', ['$event'])
+  onKeyDown(e: KeyboardEvent): void {
+    if (e.key === 'F3' && !['INPUT', 'TEXTAREA', 'SELECT'].includes((e.target as HTMLElement)?.tagName)) {
+      e.preventDefault();
+      this.router.navigate(['/invoices/new']);
+    }
+  }
 
   ngOnInit(): void {
     this.load();

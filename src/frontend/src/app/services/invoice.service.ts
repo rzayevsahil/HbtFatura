@@ -12,6 +12,7 @@ export interface InvoiceItemDto {
   quantity: number;
   unitPrice: number;
   vatRate: number;
+  discountPercent: number;
   lineTotalExclVat: number;
   lineVatAmount: number;
   lineTotalInclVat: number;
@@ -24,6 +25,7 @@ export interface InvoiceItemInputDto {
   quantity: number;
   unitPrice: number;
   vatRate: number;
+  discountPercent: number;
   sortOrder: number;
 }
 
@@ -45,6 +47,8 @@ export interface InvoiceDto {
   currency: string;
   exchangeRate: number;
   items: InvoiceItemDto[];
+  sourceType?: string | null;
+  sourceId?: string | null;
 }
 
 export interface InvoiceListDto {
@@ -93,6 +97,10 @@ export class InvoiceService {
 
   create(req: CreateInvoiceRequest): Observable<InvoiceDto> {
     return this.api.post<InvoiceDto>(this.base, req);
+  }
+
+  createFromDeliveryNote(deliveryNoteId: string): Observable<InvoiceDto> {
+    return this.api.post<InvoiceDto>(`${this.base}/from-delivery-note`, { deliveryNoteId });
   }
 
   update(id: string, req: CreateInvoiceRequest, rowVersion?: string): Observable<InvoiceDto> {

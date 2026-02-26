@@ -8,6 +8,8 @@ public class InvoiceItem
     public decimal Quantity { get; set; }
     public decimal UnitPrice { get; set; }
     public decimal VatRate { get; set; }
+    /// <summary>İskonto yüzdesi (0-100).</summary>
+    public decimal DiscountPercent { get; set; }
 
     // Calculated by backend (Quantity * UnitPrice, then VAT)
     public decimal LineTotalExclVat { get; set; }
