@@ -135,7 +135,12 @@ export class OrderFormComponent implements OnInit {
     const productId = g.get('productId')?.value as string | null;
     if (!productId) return;
     const p = this.products.find(x => x.id === productId);
-    if (p) g.patchValue({ description: p.name });
+    if (p) {
+      g.patchValue({
+        description: p.name,
+        unitPrice: p.unitPrice
+      });
+    }
   }
 
   /** datetime-local input için değer: "yyyy-MM-ddTHH:mm". */

@@ -36,6 +36,10 @@
         <label>Mevcut Stok</label>
         <input type="number" formControlName="stockQuantity" step="0.01" />
       </div>
+      <div class="row">
+        <label>Birim Fiyat</label>
+        <input type="number" formControlName="unitPrice" step="0.01" />
+      </div>
       @if (error) { <p class="error-msg">{{ error }}</p> }
     </div>
     <div class="actions">

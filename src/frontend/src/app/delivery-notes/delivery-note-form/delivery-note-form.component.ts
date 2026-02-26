@@ -126,7 +126,12 @@ export class DeliveryNoteFormComponent implements OnInit {
     const productId = g.get('productId')?.value as string | null;
     if (!productId) return;
     const p = this.products.find((x: ProductDto) => x.id === productId);
-    if (p) g.patchValue({ description: p.name });
+    if (p) {
+      g.patchValue({
+        description: p.name,
+        unitPrice: p.unitPrice
+      });
+    }
   }
 
   addItem(): void {

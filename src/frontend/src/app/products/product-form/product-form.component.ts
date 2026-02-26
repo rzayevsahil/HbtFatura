@@ -21,6 +21,7 @@ export class ProductFormComponent implements OnInit {
     barcode: [''],
     unit: ['Adet'],
     stockQuantity: [0],
+    unitPrice: [0],
     firmId: [null as string | null]
   });
   id: string | null = null;
@@ -49,7 +50,8 @@ export class ProductFormComponent implements OnInit {
         name: p.name,
         barcode: p.barcode ?? '',
         unit: p.unit ?? 'Adet',
-        stockQuantity: p.stockQuantity ?? 0
+        stockQuantity: p.stockQuantity ?? 0,
+        unitPrice: p.unitPrice ?? 0
       }));
     }
   }
@@ -64,6 +66,7 @@ export class ProductFormComponent implements OnInit {
       barcode: v.barcode || undefined,
       unit: v.unit || 'Adet',
       stockQuantity: v.stockQuantity ?? 0,
+      unitPrice: v.unitPrice ?? 0,
       firmId: (this.auth.user()?.role === 'SuperAdmin' && v.firmId) ? v.firmId : undefined
     };
     if (this.id) {

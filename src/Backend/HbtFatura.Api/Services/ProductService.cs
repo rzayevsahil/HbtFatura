@@ -55,8 +55,9 @@ public class ProductService : IProductService
                 Name = x.Name,
                 Barcode = x.Barcode,
                 Unit = x.Unit,
-                CreatedAt = x.CreatedAt,
-                StockQuantity = x.StockQuantity
+                StockQuantity = x.StockQuantity,
+                UnitPrice = x.UnitPrice,
+                CreatedAt = x.CreatedAt
             })
             .ToListAsync(ct);
         return new PagedResult<ProductListDto> { Items = items, TotalCount = total, Page = page, PageSize = pageSize };
@@ -75,6 +76,7 @@ public class ProductService : IProductService
             Barcode = entity.Barcode,
             Unit = entity.Unit,
             StockQuantity = entity.StockQuantity,
+            UnitPrice = entity.UnitPrice,
             CreatedAt = entity.CreatedAt
         };
     }
@@ -100,6 +102,7 @@ public class ProductService : IProductService
             Barcode = request.Barcode?.Trim(),
             Unit = request.Unit?.Trim() ?? "Adet",
             StockQuantity = request.StockQuantity,
+            UnitPrice = request.UnitPrice,
             CreatedAt = DateTime.UtcNow
         };
         _db.Products.Add(entity);
@@ -132,6 +135,7 @@ public class ProductService : IProductService
         entity.Name = request.Name.Trim();
         entity.Barcode = request.Barcode?.Trim();
         entity.Unit = request.Unit?.Trim() ?? "Adet";
+        entity.UnitPrice = request.UnitPrice;
         
         if (request.StockQuantity < 0) throw new ArgumentException("Stok miktarı sıfırdan küçük olamaz.");
 
@@ -152,7 +156,8 @@ public class ProductService : IProductService
             _db.StockMovements.Add(movement);
             await _db.SaveChangesAsync(ct);
         }
-
+        
+        await _db.SaveChangesAsync(ct);
         return await GetByIdAsync(id, ct);
     }
 
@@ -250,8 +255,9 @@ public class ProductService : IProductService
                 Name = x.Name,
                 Barcode = x.Barcode,
                 Unit = x.Unit,
-                CreatedAt = x.CreatedAt,
-                StockQuantity = x.StockQuantity
+                StockQuantity = x.StockQuantity,
+                UnitPrice = x.UnitPrice,
+                CreatedAt = x.CreatedAt
             })
             .ToListAsync(ct);
         return list;

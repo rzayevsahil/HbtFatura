@@ -9,6 +9,7 @@ public class Product
     public string? Barcode { get; set; }
     public string Unit { get; set; } = "Adet";
     public decimal StockQuantity { get; set; }
+    public decimal UnitPrice { get; set; }
     public DateTime CreatedAt { get; set; }
 
     public Firm Firm { get; set; } = null!;

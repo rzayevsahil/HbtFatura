@@ -9,6 +9,7 @@ public class ProductDto
     public string? Barcode { get; set; }
     public string Unit { get; set; } = "Adet";
     public decimal StockQuantity { get; set; }
+    public decimal UnitPrice { get; set; }
     public DateTime CreatedAt { get; set; }
 }
 
@@ -21,6 +22,7 @@ public class CreateProductRequest
     public string? Barcode { get; set; }
     public string Unit { get; set; } = "Adet";
     public decimal StockQuantity { get; set; }
+    public decimal UnitPrice { get; set; }
     public Guid? FirmId { get; set; }
 }
 
@@ -31,6 +33,7 @@ public class UpdateProductRequest
     public string? Barcode { get; set; }
     public string Unit { get; set; } = "Adet";
     public decimal StockQuantity { get; set; }
+    public decimal UnitPrice { get; set; }
 }
 
 public class StockMovementDto

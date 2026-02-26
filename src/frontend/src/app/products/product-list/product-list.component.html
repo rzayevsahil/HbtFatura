@@ -13,6 +13,7 @@
         <th>Kod</th>
         <th>Ad</th>
         <th>Birim</th>
+        <th>Fiyat</th>
         <th>Stok</th>
         <th></th>
       </tr>
@@ -23,6 +24,7 @@
         <td>{{ p.code }}</td>
         <td>{{ p.name }}</td>
         <td>{{ p.unit }}</td>
+        <td class="amount">{{ p.unitPrice | number:'1.2-2' }} ₺</td>
         <td class="amount">{{ p.stockQuantity | number:'1.2-2' }}</td>
         <td>
           <div class="actions-cell">

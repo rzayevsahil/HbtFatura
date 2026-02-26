@@ -10,6 +10,7 @@ export interface ProductDto {
   barcode?: string;
   unit: string;
   stockQuantity: number;
+  unitPrice: number;
   createdAt: string;
 }
 
@@ -21,6 +22,7 @@ export interface CreateProductRequest {
   barcode?: string;
   unit?: string;
   stockQuantity?: number;
+  unitPrice?: number;
   firmId?: string;
 }
 
@@ -30,6 +32,7 @@ export interface UpdateProductRequest {
   barcode?: string;
   unit?: string;
   stockQuantity?: number;
+  unitPrice?: number;
 }
 
 export interface StockMovementDto {

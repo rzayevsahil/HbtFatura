@@ -108,6 +108,7 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid
             e.HasIndex(x => x.FirmId);
             e.HasIndex(x => new { x.FirmId, x.Code }).IsUnique();
             e.Property(x => x.StockQuantity).HasPrecision(18, 4);
+            e.Property(x => x.UnitPrice).HasPrecision(18, 2);
         });
 
         modelBuilder.Entity<StockMovement>(e =>
