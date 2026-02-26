@@ -11,14 +11,27 @@
             <span class="form-readonly">{{ orderNumber }}</span>
           </div>
         }
-        <div class="row">
-          <label>Cari</label>
-          <select formControlName="customerId">
-            <option [ngValue]="null">Seçin (opsiyonel)</option>
-            @for (c of customers; track c.id) {
-              <option [ngValue]="c.id">{{ c.title }}</option>
+        <div class="row" #customerDropdownWrap>
+          <label>Cari{{ id ? ' *' : '' }}</label>
+          <div class="customer-select">
+            <button type="button" class="customer-select-trigger" (click)="toggleCustomerDropdown(); $event.stopPropagation()">
+              {{ selectedCustomerTitle }}
+            </button>
+            @if (customerDropdownOpen) {
+              <div class="customer-select-panel">
+                <input type="text" class="customer-search" placeholder="Cari ara..." [value]="customerSearchText" (input)="customerSearchText = $any($event.target).value" />
+                <div class="customer-options-list">
+                  <button type="button" class="customer-option" (click)="selectCustomer(null)">Seçin</button>
+                  @for (c of filteredCustomers; track c.id) {
+                    <button type="button" class="customer-option" (click)="selectCustomer(c)">{{ c.title }}</button>
+                  }
+                  @if (filteredCustomers.length === 0 && customerSearchText) {
+                    <div class="customer-option empty">Sonuç bulunamadı</div>
+                  }
+                </div>
+              </div>
             }
-          </select>
+          </div>
         </div>
         <div class="row">
           <label>Sipariş Tarihi</label>
@@ -60,9 +73,6 @@
                 <option [ngValue]="p.id">{{ p.code }} - {{ p.name }}</option>
               }
               </select>
-              @if (isLowStock(item.get('productId')?.value)) {
-                <span class="low-stock-warning">Düşük stok</span>
-              }
             </div>
             <input formControlName="description" placeholder="Açıklama" />
             <input type="number" formControlName="quantity" placeholder="Adet" min="0" step="1" />

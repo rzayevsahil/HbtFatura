@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators, FormsModule } from '@angular/forms';
@@ -16,6 +16,8 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./order-form.component.scss']
 })
 export class OrderFormComponent implements OnInit {
+  @ViewChild('customerDropdownWrap') customerDropdownWrap?: ElementRef<HTMLElement>;
+
   form: FormGroup;
   id: string | null = null;
   orderNumber: string | null = null;
@@ -25,9 +27,30 @@ export class OrderFormComponent implements OnInit {
   stockLevels: StockLevelsReportDto | null = null;
   error = '';
   saving = false;
+  /** Arama kutusu sadece dropdown içinde (fatura cari gibi) */
+  customerSearchText = '';
+  customerDropdownOpen = false;
 
   get items(): FormArray {
     return this.form.get('items') as FormArray;
+  }
+
+  get selectedCustomerTitle(): string {
+    const cid = this.form.get('customerId')?.value;
+    if (!cid) return 'Seçin';
+    const c = this.customers.find(x => x.id === cid);
+    return c?.title ?? 'Seçin';
+  }
+
+  /** Dropdown içindeki arama kutusuna göre filtrelenir */
+  get filteredCustomers(): CustomerDto[] {
+    const t = this.customerSearchText?.trim().toLowerCase();
+    if (!t) return this.customers;
+    return this.customers.filter(c =>
+      (c.title?.toLowerCase().includes(t)) ||
+      (c.code?.toLowerCase().includes(t)) ||
+      (c.taxNumber?.toLowerCase().includes(t))
+    );
   }
 
   constructor(
@@ -55,6 +78,8 @@ export class OrderFormComponent implements OnInit {
     this.reportApi.getStockLevels().subscribe(data => this.stockLevels = data);
     this.id = this.route.snapshot.paramMap.get('id');
     if (this.id) {
+      this.form.get('customerId')?.setValidators(Validators.required);
+      this.form.get('customerId')?.updateValueAndValidity();
       this.orderApi.getById(this.id).subscribe(o => {
         this.orderNumber = o.orderNumber ?? null;
         const orderTypeNum = this.normalizeOrderType(o.orderType);
@@ -74,6 +99,23 @@ export class OrderFormComponent implements OnInit {
           sortOrder: [idx]
         })));
       });
+    }
+  }
+
+  toggleCustomerDropdown(): void {
+    this.customerDropdownOpen = !this.customerDropdownOpen;
+    if (this.customerDropdownOpen) this.customerSearchText = '';
+  }
+
+  selectCustomer(c: CustomerDto | null): void {
+    this.form.patchValue({ customerId: c?.id ?? null });
+    this.customerDropdownOpen = false;
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(e: MouseEvent): void {
+    if (this.customerDropdownOpen && this.customerDropdownWrap?.nativeElement && !this.customerDropdownWrap.nativeElement.contains(e.target as Node)) {
+      this.customerDropdownOpen = false;
     }
   }
 
