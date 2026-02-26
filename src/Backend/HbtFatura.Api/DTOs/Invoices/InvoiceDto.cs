@@ -22,6 +22,7 @@ public class InvoiceDto
     public decimal ExchangeRate { get; set; }
     public string? SourceType { get; set; }
     public Guid? SourceId { get; set; }
+    public string? SourceNumber { get; set; }
     public List<InvoiceItemDto> Items { get; set; } = new();
 }
 

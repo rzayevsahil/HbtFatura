@@ -58,8 +58,8 @@ export class DeliveryNoteFormComponent implements OnInit {
   /** Düzenlemede salt okunur durum etiketi (API sayı veya string dönebilir). */
   statusLabel(s: string | number | undefined): string {
     if (s === undefined || s === null) return '';
-    const byNumber: Record<number, string> = { 0: 'Taslak', 1: 'Onaylandı', 2: 'İptal' };
-    const byString: Record<string, string> = { Taslak: 'Taslak', Onaylandi: 'Onaylandı', Iptal: 'İptal' };
+    const byNumber: Record<number, string> = { 0: 'Taslak', 1: 'Onaylandı', 2: 'İptal', 3: 'Faturalandı' };
+    const byString: Record<string, string> = { Taslak: 'Taslak', Onaylandi: 'Onaylandı', Iptal: 'İptal', Faturalandi: 'Faturalandı' };
     if (typeof s === 'number') return byNumber[s] ?? '';
     return byString[String(s)] ?? '';
   }

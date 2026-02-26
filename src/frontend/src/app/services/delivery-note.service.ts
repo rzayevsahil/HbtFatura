@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService, PagedResult } from '../core/services/api.service';
 
-export type DeliveryNoteStatus = 0 | 1 | 2; // Taslak, Onaylandi, Iptal
+export type DeliveryNoteStatus = 0 | 1 | 2 | 3; // Taslak, Onaylandi, Iptal, Faturalandi
 export type InvoiceType = 0 | 1;
 
 export interface DeliveryNoteItemDto {

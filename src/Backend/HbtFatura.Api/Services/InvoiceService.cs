@@ -68,7 +68,19 @@ public class InvoiceService : IInvoiceService
         var inv = await ScopeQuery()
             .Include(x => x.Items.OrderBy(i => i.SortOrder))
             .FirstOrDefaultAsync(x => x.Id == id, ct);
-        return inv == null ? null : MapToDto(inv);
+        if (inv == null) return null;
+        var dto = MapToDto(inv);
+        if (inv.SourceType == ReferenceType.Irsaliye && inv.SourceId.HasValue)
+        {
+            var dn = await _db.DeliveryNotes.Select(d => new { d.Id, d.DeliveryNumber }).FirstOrDefaultAsync(x => x.Id == inv.SourceId.Value, ct);
+            if (dn != null) dto.SourceNumber = dn.DeliveryNumber;
+        }
+        else if (inv.SourceType == ReferenceType.Siparis && inv.SourceId.HasValue)
+        {
+            var order = await _db.Orders.Select(o => new { o.Id, o.OrderNumber }).FirstOrDefaultAsync(x => x.Id == inv.SourceId.Value, ct);
+            if (order != null) dto.SourceNumber = order.OrderNumber;
+        }
+        return dto;
     }
 
     public async Task<InvoiceDto> CreateAsync(CreateInvoiceRequest request, CancellationToken ct = default)
@@ -218,6 +230,7 @@ public class InvoiceService : IInvoiceService
 
         _db.Invoices.Add(invoice);
         dn.InvoiceId = invoice.Id;
+        dn.Status = DeliveryNoteStatus.Faturalandi;
         await _db.SaveChangesAsync(ct);
         return await GetByIdAsync(invoice.Id, ct);
     }

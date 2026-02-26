@@ -5,5 +5,6 @@ public enum DeliveryNoteStatus
 {
     Taslak = 0,
     Onaylandi = 1,
-    Iptal = 2
+    Iptal = 2,
+    Faturalandi = 3
 }

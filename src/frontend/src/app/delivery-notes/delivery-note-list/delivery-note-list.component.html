@@ -16,6 +16,7 @@
       <option [ngValue]="null">Tümü</option>
       <option [ngValue]="0">Taslak</option>
       <option [ngValue]="1">Onaylandı</option>
+      <option [ngValue]="3">Faturalandı</option>
       <option [ngValue]="2">İptal</option>
     </select>
   </label>
@@ -43,22 +44,22 @@
     </thead>
     <tbody>
       @for (d of items; track d.id) {
-        <tr>
-          <td><strong>{{ d.deliveryNumber }}</strong></td>
-          <td>{{ d.deliveryDate | date:'dd.MM.yyyy' }}</td>
-          <td>{{ typeLabel(d.deliveryType) }}</td>
-          <td>{{ d.customerTitle || '—' }}</td>
-          <td>{{ d.orderNumber || '—' }}</td>
-          <td>{{ statusLabel(d.status) }}</td>
-          <td>
-            <div class="actions-cell">
-              <a [routerLink]="['/delivery-notes', d.id]">Detay</a>
-              @if (isEditable(d)) {
-                <a [routerLink]="['/delivery-notes', d.id, 'edit']">Düzenle</a>
-              }
-            </div>
-          </td>
-        </tr>
+      <tr>
+        <td><strong>{{ d.deliveryNumber }}</strong></td>
+        <td>{{ d.deliveryDate | date:'dd.MM.yyyy' }}</td>
+        <td>{{ typeLabel(d.deliveryType) }}</td>
+        <td>{{ d.customerTitle || '—' }}</td>
+        <td>{{ d.orderNumber || '—' }}</td>
+        <td>{{ statusLabel(d.status) }}</td>
+        <td>
+          <div class="actions-cell">
+            <a [routerLink]="['/delivery-notes', d.id]">Detay</a>
+            @if (isEditable(d)) {
+            <a [routerLink]="['/delivery-notes', d.id, 'edit']">Düzenle</a>
+            }
+          </div>
+        </td>
+      </tr>
       }
     </tbody>
   </table>

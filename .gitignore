@@ -45,6 +45,7 @@ src/frontend/dist/
 src/frontend/node_modules/
 
 # ========== IDE ve editörler ==========
+.cursor/
 .idea/
 *.iml
 .project

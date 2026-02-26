@@ -2,70 +2,73 @@
   <h1 class="page-title">{{ deliveryNote?.deliveryNumber ?? 'İrsaliye' }}</h1>
   <div class="actions">
     @if (isTaslak(deliveryNote?.status) && !deliveryNote?.invoiceId) {
-      <a [routerLink]="['/delivery-notes', deliveryNote?.id, 'edit']" class="btn btn-secondary">Düzenle</a>
-      <button type="button" class="btn btn-primary" (click)="confirmDeliveryNote()">Onayla</button>
+    <span class="text-muted" style="margin-right: 15px; font-size: 0.9em;">
+      * İrsaliyeyi onayladıktan sonra faturaya aktarabilirsiniz.
+    </span>
+    <a [routerLink]="['/delivery-notes', deliveryNote?.id, 'edit']" class="btn btn-secondary">Düzenle</a>
+    <button type="button" class="btn btn-primary" (click)="confirmDeliveryNote()">Onayla</button>
     }
     @if (isOnaylandi(deliveryNote?.status) && !deliveryNote?.invoiceId) {
-      <button type="button" class="btn btn-primary" (click)="createInvoice()" [disabled]="creatingInvoice">
-        {{ creatingInvoice ? 'Oluşturuluyor...' : 'Faturaya Aktar' }}
-      </button>
+    <button type="button" class="btn btn-primary" (click)="createInvoice()" [disabled]="creatingInvoice">
+      {{ creatingInvoice ? 'Oluşturuluyor...' : 'Faturaya Aktar' }}
+    </button>
     }
     @if (deliveryNote?.invoiceId) {
-      <a [routerLink]="['/invoices', deliveryNote?.invoiceId]" class="btn btn-secondary">Faturaya Git</a>
+    <a [routerLink]="['/invoices', deliveryNote?.invoiceId]" class="btn btn-secondary">Faturaya Git</a>
     }
     <a routerLink="/delivery-notes" class="btn btn-default">← Geri</a>
   </div>
 </div>
 @if (loading) {
-  <p>Yükleniyor...</p>
+<p>Yükleniyor...</p>
 } @else if (deliveryNote) {
-  <div class="card info-grid">
-    <div class="info-item info-item-cari">
-      <span class="info-label">Cari:</span>
-      <span class="info-value">{{ deliveryNote.customerTitle || '—' }}</span>
-    </div>
-    <div class="info-item info-item-siparis">
-      <span class="info-label">Sipariş No:</span>
-      <span class="info-value">{{ deliveryNote.orderNumber || '—' }}</span>
-    </div>
-    <div class="info-item">
-      <span class="info-label">Tarih:</span>
-      <span class="info-value">{{ deliveryNote.deliveryDate | date:'dd.MM.yyyy HH:mm' }}</span>
-    </div>
-    <div class="info-item">
-      <span class="info-label">Tip:</span>
-      <span class="info-value">{{ typeLabel(deliveryNote.deliveryType) }}</span>
-    </div>
-    <div class="info-item">
-      <span class="info-label">Durum:</span>
-      <span class="info-value">{{ statusLabel(deliveryNote.status) }}</span>
-    </div>
+<div class="card info-grid">
+  <div class="info-item info-item-cari">
+    <span class="info-label">Cari:</span>
+    <span class="info-value">{{ deliveryNote.customerTitle || '—' }}</span>
   </div>
-  <h2 class="section-title">Kalemler</h2>
-  <div class="card table-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th>Ürün / Açıklama</th>
-          <th class="amount">Miktar</th>
-          <th class="amount">Birim Fiyat</th>
-          <th class="amount">KDV %</th>
-          <th class="amount">Tutar</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (it of deliveryNote.items; track it.id) {
-          <tr>
-            <td>{{ it.description || '—' }}</td>
-            <td class="amount">{{ it.quantity | number:'1.2-2' }}</td>
-            <td class="amount">{{ it.unitPrice | number:'1.2-2' }}</td>
-            <td class="amount">{{ it.vatRate | number:'1.0-0' }}%</td>
-            <td class="amount">{{ (it.quantity * it.unitPrice * (1 + it.vatRate / 100)) | number:'1.2-2' }} ₺</td>
-          </tr>
-        }
-      </tbody>
-    </table>
+  <div class="info-item info-item-siparis">
+    <span class="info-label">Sipariş No:</span>
+    <span class="info-value">{{ deliveryNote.orderNumber || '—' }}</span>
   </div>
+  <div class="info-item">
+    <span class="info-label">Tarih:</span>
+    <span class="info-value">{{ deliveryNote.deliveryDate | date:'dd.MM.yyyy HH:mm' }}</span>
+  </div>
+  <div class="info-item">
+    <span class="info-label">Tip:</span>
+    <span class="info-value">{{ typeLabel(deliveryNote.deliveryType) }}</span>
+  </div>
+  <div class="info-item">
+    <span class="info-label">Durum:</span>
+    <span class="info-value">{{ statusLabel(deliveryNote.status) }}</span>
+  </div>
+</div>
+<h2 class="section-title">Kalemler</h2>
+<div class="card table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Ürün / Açıklama</th>
+        <th class="amount">Miktar</th>
+        <th class="amount">Birim Fiyat</th>
+        <th class="amount">KDV %</th>
+        <th class="amount">Tutar</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (it of deliveryNote.items; track it.id) {
+      <tr>
+        <td>{{ it.description || '—' }}</td>
+        <td class="amount">{{ it.quantity | number:'1.2-2' }}</td>
+        <td class="amount">{{ it.unitPrice | number:'1.2-2' }}</td>
+        <td class="amount">{{ it.vatRate | number:'1.0-0' }}%</td>
+        <td class="amount">{{ (it.quantity * it.unitPrice * (1 + it.vatRate / 100)) | number:'1.2-2' }} ₺</td>
+      </tr>
+      }
+    </tbody>
+  </table>
+</div>
 } @else {
-  <p>İrsaliye bulunamadı.</p>
+<p>İrsaliye bulunamadı.</p>
 }

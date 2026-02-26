@@ -21,7 +21,7 @@ export class DeliveryNoteListComponent implements OnInit {
   searchDateTo = '';
   searchStatus: DeliveryNoteStatus | null = null;
 
-  constructor(private api: DeliveryNoteService, private toastr: ToastrService) {}
+  constructor(private api: DeliveryNoteService, private toastr: ToastrService) { }
 
   ngOnInit(): void {
     this.load();
@@ -41,8 +41,8 @@ export class DeliveryNoteListComponent implements OnInit {
   /** Backend bazen enum'ı sayı bazen string (örn. "Taslak") gönderebilir. */
   statusLabel(s: DeliveryNoteStatus | string | undefined): string {
     if (s === undefined || s === null) return '';
-    const byNumber: Record<number, string> = { 0: 'Taslak', 1: 'Onaylandı', 2: 'İptal' };
-    const byString: Record<string, string> = { Taslak: 'Taslak', Onaylandi: 'Onaylandı', Iptal: 'İptal' };
+    const byNumber: Record<number, string> = { 0: 'Taslak', 1: 'Onaylandı', 2: 'İptal', 3: 'Faturalandı' };
+    const byString: Record<string, string> = { Taslak: 'Taslak', Onaylandi: 'Onaylandı', Iptal: 'İptal', Faturalandi: 'Faturalandı' };
     if (typeof s === 'number') return byNumber[s] ?? '';
     return byString[String(s)] ?? '';
   }

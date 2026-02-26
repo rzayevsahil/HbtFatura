@@ -49,6 +49,7 @@ export interface InvoiceDto {
   items: InvoiceItemDto[];
   sourceType?: string | null;
   sourceId?: string | null;
+  sourceNumber?: string | null;
 }
 
 export interface InvoiceListDto {
@@ -79,7 +80,7 @@ export interface CreateInvoiceRequest {
 @Injectable({ providedIn: 'root' })
 export class InvoiceService {
   private base = '/api/invoices';
-  constructor(private api: ApiService) {}
+  constructor(private api: ApiService) { }
 
   getPaged(params: { page: number; pageSize: number; dateFrom?: string; dateTo?: string; status?: number; invoiceType?: number; customerId?: string }): Observable<PagedResult<InvoiceListDto>> {
     const p: Record<string, string | number> = { page: params.page, pageSize: params.pageSize };
