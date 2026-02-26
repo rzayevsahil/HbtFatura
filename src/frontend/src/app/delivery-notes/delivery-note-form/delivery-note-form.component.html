@@ -5,6 +5,12 @@
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <div class="form-section">
       <div class="form-grid">
+        @if (id && deliveryNumber) {
+          <div class="row">
+            <label>İrsaliye no</label>
+            <span class="form-readonly">{{ deliveryNumber }}</span>
+          </div>
+        }
         <div class="row" #customerDropdownWrap>
           <label>Cari</label>
           <div class="customer-select">
@@ -38,6 +44,12 @@
               <option [ngValue]="0">Satış</option>
               <option [ngValue]="1">Alış</option>
             </select>
+          </div>
+        }
+        @if (id) {
+          <div class="row">
+            <label>Durum</label>
+            <span class="form-readonly">{{ statusLabel(deliveryStatus) }}</span>
           </div>
         }
       </div>

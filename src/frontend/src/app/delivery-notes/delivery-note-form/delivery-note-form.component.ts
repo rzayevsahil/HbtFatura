@@ -20,6 +20,8 @@ export class DeliveryNoteFormComponent implements OnInit {
 
   form: FormGroup;
   id: string | null = null;
+  deliveryNumber: string | null = null;
+  deliveryStatus: string | number | undefined; // düzenlemede salt okunur göstermek için
   customers: CustomerDto[] = [];
   products: ProductDto[] = [];
   productFilterText = '';
@@ -53,6 +55,15 @@ export class DeliveryNoteFormComponent implements OnInit {
     );
   }
 
+  /** Düzenlemede salt okunur durum etiketi (API sayı veya string dönebilir). */
+  statusLabel(s: string | number | undefined): string {
+    if (s === undefined || s === null) return '';
+    const byNumber: Record<number, string> = { 0: 'Taslak', 1: 'Onaylandı', 2: 'İptal' };
+    const byString: Record<string, string> = { Taslak: 'Taslak', Onaylandi: 'Onaylandı', Iptal: 'İptal' };
+    if (typeof s === 'number') return byNumber[s] ?? '';
+    return byString[String(s)] ?? '';
+  }
+
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
@@ -77,6 +88,8 @@ export class DeliveryNoteFormComponent implements OnInit {
     if (this.id) {
       this.deliveryNoteApi.getById(this.id).subscribe({
         next: dn => {
+          this.deliveryNumber = dn.deliveryNumber ?? null;
+          this.deliveryStatus = dn.status;
           this.form.patchValue({
             customerId: dn.customerId ?? null,
             deliveryDate: dn.deliveryDate.slice(0, 10),
