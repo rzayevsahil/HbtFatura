@@ -23,27 +23,38 @@ export class BankAccountDetailComponent implements OnInit {
   dateTo = '';
   showAddModal = false;
   newTransaction = { date: '', type: 1, amount: 0, description: '' };
+  loading = true;
 
   constructor(
     private route: ActivatedRoute,
     private api: BankAccountService,
     private toastr: ToastrService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
-      this.api.getById(id).subscribe(b => this.bankAccount = b);
+      this.api.getById(id).subscribe({
+        next: b => { this.bankAccount = b; },
+        error: () => { this.loading = false; }
+      });
       this.loadTransactions();
+    } else {
+      this.loading = false;
     }
   }
 
   loadTransactions(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (!id) return;
-    this.api.getTransactions(id, this.page, this.pageSize, this.dateFrom || undefined, this.dateTo || undefined).subscribe((res: PagedResult<BankTransactionDto>) => {
-      this.transactions = res.items;
-      this.totalCount = res.totalCount;
+    this.loading = true;
+    this.api.getTransactions(id, this.page, this.pageSize, this.dateFrom || undefined, this.dateTo || undefined).subscribe({
+      next: (res: PagedResult<BankTransactionDto>) => {
+        this.transactions = res.items;
+        this.totalCount = res.totalCount;
+        this.loading = false;
+      },
+      error: () => { this.loading = false; }
     });
   }
 

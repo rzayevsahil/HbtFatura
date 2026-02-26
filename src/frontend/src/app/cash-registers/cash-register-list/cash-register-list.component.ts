@@ -17,21 +17,29 @@ export class CashRegisterListComponent implements OnInit {
   items: CashRegisterDto[] = [];
   firmId: string | undefined;
   search = '';
+  loading = false;
 
   constructor(
     private api: CashRegisterService,
     public auth: AuthService,
     private toastr: ToastrService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.load();
   }
 
   load(): void {
+    this.loading = true;
     this.api.getAll(this.firmId).subscribe({
-      next: list => (this.items = list),
-      error: e => this.toastr.error(e.error?.message ?? 'Liste yüklenemedi.')
+      next: list => {
+        this.items = list;
+        this.loading = false;
+      },
+      error: e => {
+        this.toastr.error(e.error?.message ?? 'Liste yüklenemedi.');
+        this.loading = false;
+      }
     });
   }
 

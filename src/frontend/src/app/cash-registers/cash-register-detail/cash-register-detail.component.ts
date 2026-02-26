@@ -23,29 +23,40 @@ export class CashRegisterDetailComponent implements OnInit {
   dateTo = '';
   showAddModal = false;
   newTransaction = { date: '', type: 1, amount: 0, description: '' };
+  loading = true;
 
   constructor(
     private route: ActivatedRoute,
     private api: CashRegisterService,
     private toastr: ToastrService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
-      this.api.getById(id).subscribe(c => this.cashRegister = c);
+      this.api.getById(id).subscribe({
+        next: c => { this.cashRegister = c; },
+        error: () => { this.loading = false; }
+      });
       this.loadTransactions();
+    } else {
+      this.loading = false;
     }
   }
 
   loadTransactions(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (!id) return;
+    this.loading = true;
     const dateFrom = this.dateFrom || undefined;
     const dateTo = this.dateTo || undefined;
-    this.api.getTransactions(id, this.page, this.pageSize, dateFrom, dateTo).subscribe((res: PagedResult<CashTransactionDto>) => {
-      this.transactions = res.items;
-      this.totalCount = res.totalCount;
+    this.api.getTransactions(id, this.page, this.pageSize, dateFrom, dateTo).subscribe({
+      next: (res: PagedResult<CashTransactionDto>) => {
+        this.transactions = res.items;
+        this.totalCount = res.totalCount;
+        this.loading = false;
+      },
+      error: () => { this.loading = false; }
     });
   }
 

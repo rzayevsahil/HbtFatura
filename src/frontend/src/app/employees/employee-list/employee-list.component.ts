@@ -14,15 +14,23 @@ import { EmployeeService, EmployeeListDto } from '../../services/employee.servic
 export class EmployeeListComponent implements OnInit {
   items: EmployeeListDto[] = [];
   search = '';
+  loading = false;
 
-  constructor(private api: EmployeeService) {}
+  constructor(private api: EmployeeService) { }
 
   ngOnInit(): void {
     this.load();
   }
 
   load(): void {
-    this.api.getAll().subscribe(list => (this.items = list));
+    this.loading = true;
+    this.api.getAll().subscribe({
+      next: list => {
+        this.items = list;
+        this.loading = false;
+      },
+      error: () => { this.loading = false; }
+    });
   }
 
   get filteredItems(): EmployeeListDto[] {

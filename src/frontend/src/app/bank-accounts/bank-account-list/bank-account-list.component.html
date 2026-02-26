@@ -6,7 +6,12 @@
   <button type="button">Ara</button>
   <a routerLink="/bank-accounts/new" class="btn btn-primary">Yeni Banka Hesabı</a>
 </div>
-<div class="card table-wrap">
+<div class="card table-wrap" style="position: relative; min-height: 200px;">
+  @if (loading) {
+  <div class="loading-overlay">
+    <div class="spinner"></div>
+  </div>
+  }
   <table>
     <thead>
       <tr>
@@ -20,24 +25,25 @@
     </thead>
     <tbody>
       @for (b of filteredItems; track b.id) {
-        <tr>
-          <td><a [routerLink]="['/bank-accounts', b.id]">{{ b.name }}</a></td>
-          <td>{{ b.bankName }}</td>
-          <td>{{ b.iban }}</td>
-          <td class="amount">{{ b.balance | number:'1.2-2' }} ₺</td>
-          <td>{{ b.isActive ? 'Aktif' : 'Pasif' }}</td>
-          <td>
-            <div class="actions-cell">
-              <a [routerLink]="['/bank-accounts', b.id]">Detay</a>
-              <a [routerLink]="['/bank-accounts', b.id, 'edit']">Düzenle</a>
-              <button type="button" (click)="delete(b.id, b.name)">Sil</button>
-            </div>
-          </td>
-        </tr>
+      <tr>
+        <td><a [routerLink]="['/bank-accounts', b.id]">{{ b.name }}</a></td>
+        <td>{{ b.bankName }}</td>
+        <td>{{ b.iban }}</td>
+        <td class="amount">{{ b.balance | number:'1.2-2' }} ₺</td>
+        <td>{{ b.isActive ? 'Aktif' : 'Pasif' }}</td>
+        <td>
+          <div class="actions-cell">
+            <a [routerLink]="['/bank-accounts', b.id]">Detay</a>
+            <a [routerLink]="['/bank-accounts', b.id, 'edit']">Düzenle</a>
+            <button type="button" (click)="delete(b.id, b.name)">Sil</button>
+          </div>
+        </td>
+      </tr>
       }
     </tbody>
   </table>
 </div>
 @if (filteredItems.length === 0) {
-  <p class="text-muted">{{ search.trim() ? 'Arama kriterine uygun hesap bulunamadı.' : 'Henüz banka hesabı tanımlanmamış.' }}</p>
+<p class="text-muted">{{ search.trim() ? 'Arama kriterine uygun hesap bulunamadı.' : 'Henüz banka hesabı tanımlanmamış.'
+  }}</p>
 }

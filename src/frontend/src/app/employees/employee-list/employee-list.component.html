@@ -7,7 +7,12 @@
   <button type="button">Ara</button>
   <a routerLink="/employees/new" class="btn btn-primary">Yeni Çalışan</a>
 </div>
-<div class="card table-wrap">
+<div class="card table-wrap" style="position: relative; min-height: 200px;">
+  @if (loading) {
+  <div class="loading-overlay">
+    <div class="spinner"></div>
+  </div>
+  }
   <table>
     <thead>
       <tr>
@@ -18,15 +23,16 @@
     </thead>
     <tbody>
       @for (e of filteredItems; track e.id) {
-        <tr>
-          <td>{{ e.fullName }}</td>
-          <td>{{ e.email }}</td>
-          <td>{{ e.createdAt | date:'dd.MM.yyyy' }}</td>
-        </tr>
+      <tr>
+        <td>{{ e.fullName }}</td>
+        <td>{{ e.email }}</td>
+        <td>{{ e.createdAt | date:'dd.MM.yyyy' }}</td>
+      </tr>
       }
     </tbody>
   </table>
 </div>
 @if (filteredItems.length === 0) {
-  <p class="text-muted">{{ search.trim() ? 'Arama kriterine uygun çalışan bulunamadı.' : 'Henüz çalışan eklenmemiş.' }}</p>
+<p class="text-muted">{{ search.trim() ? 'Arama kriterine uygun çalışan bulunamadı.' : 'Henüz çalışan eklenmemiş.' }}
+</p>
 }
