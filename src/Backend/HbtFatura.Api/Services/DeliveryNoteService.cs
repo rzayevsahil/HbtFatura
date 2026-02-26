@@ -104,7 +104,7 @@ public class DeliveryNoteService : IDeliveryNoteService
             DeliveryNumber = deliveryNumber,
             CustomerId = request.CustomerId,
             OrderId = orderId,
-            DeliveryDate = deliveryDate.Date,
+            DeliveryDate = deliveryDate,
             Status = DeliveryNoteStatus.Taslak,
             DeliveryType = request.DeliveryType,
             CreatedAt = DateTime.UtcNow,
@@ -160,7 +160,7 @@ public class DeliveryNoteService : IDeliveryNoteService
             DeliveryNumber = deliveryNumber,
             CustomerId = order.CustomerId,
             OrderId = order.Id,
-            DeliveryDate = deliveryDate.Date,
+            DeliveryDate = deliveryDate,
             Status = DeliveryNoteStatus.Taslak,
             DeliveryType = order.OrderType,
             CreatedAt = DateTime.UtcNow,
@@ -196,7 +196,7 @@ public class DeliveryNoteService : IDeliveryNoteService
 
     public async Task<DeliveryNoteDto?> UpdateAsync(Guid id, UpdateDeliveryNoteRequest request, CancellationToken ct = default)
     {
-        var dn = await ScopeQuery().Include(x => x.Items).FirstOrDefaultAsync(x => x.Id == id, ct);
+        var dn = await ScopeQuery().AsTracking().FirstOrDefaultAsync(x => x.Id == id, ct);
         if (dn == null) return null;
         if (dn.InvoiceId.HasValue)
             throw new InvalidOperationException("Faturaya aktarılmış irsaliye güncellenemez.");
@@ -205,16 +205,19 @@ public class DeliveryNoteService : IDeliveryNoteService
         if (dn.Status == DeliveryNoteStatus.Iptal)
             throw new InvalidOperationException("İptal edilmiş irsaliye güncellenemez.");
 
+        // Mevcut kalemleri ayrı sorguyla yükle ve EF üzerinden sil (sipariş güncellemedeki gibi, concurrency hatasını önler)
+        var existingItems = await _db.DeliveryNoteItems.Where(x => x.DeliveryNoteId == id).ToListAsync(ct);
+        _db.DeliveryNoteItems.RemoveRange(existingItems);
+
         dn.CustomerId = request.CustomerId;
-        dn.DeliveryDate = DateTimeHelper.NormalizeForStorage(request.DeliveryDate).Date;
+        dn.DeliveryDate = DateTimeHelper.NormalizeForStorage(request.DeliveryDate);
         dn.UpdatedAt = DateTime.UtcNow;
         dn.UpdatedBy = _currentUser.UserId;
 
-        _db.DeliveryNoteItems.RemoveRange(dn.Items);
         var sortOrder = 0;
         foreach (var item in request.Items ?? new List<DeliveryNoteItemInputDto>())
         {
-            dn.Items.Add(new DeliveryNoteItem
+            _db.DeliveryNoteItems.Add(new DeliveryNoteItem
             {
                 Id = Guid.NewGuid(),
                 DeliveryNoteId = dn.Id,
