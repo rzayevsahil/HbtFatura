@@ -23,7 +23,7 @@ export class OrderDetailComponent implements OnInit {
     private orderApi: OrderService,
     private deliveryNoteApi: DeliveryNoteService,
     private toastr: ToastrService
-  ) {}
+  ) { }
 
   @HostListener('document:keydown', ['$event'])
   onKeyDown(e: KeyboardEvent): void {
@@ -58,11 +58,11 @@ export class OrderDetailComponent implements OnInit {
     return this.order != null && (this.order.status === 0 || this.order.status === 'Bekliyor');
   }
 
-  /** Onaylandı / Kısmi Teslim / Bekliyor iken irsaliyeye gönderilebilir. */
+  /** Onaylandı / Kısmi Teslim iken irsaliyeye aktarılabilir. */
   canSendToDeliveryNote(): boolean {
     if (!this.order) return false;
     const s = this.order.status;
-    return s === 0 || s === 3 || s === 4 || s === 'Bekliyor' || s === 'Onaylandi' || s === 'KismiTeslim';
+    return s === 3 || s === 4 || s === 'Onaylandi' || s === 'KismiTeslim';
   }
 
   typeLabel(t: number): string {
