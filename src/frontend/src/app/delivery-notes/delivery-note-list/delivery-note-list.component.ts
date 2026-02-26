@@ -51,6 +51,12 @@ export class DeliveryNoteListComponent implements OnInit {
     return t === 1 ? 'Alış' : 'Satış';
   }
 
+  /** Taslak ve faturaya aktarılmamışsa düzenlenebilir. */
+  isEditable(d: DeliveryNoteListDto): boolean {
+    const taslak = d.status === 0 || d.status === 'Taslak';
+    return !!taslak && !d.invoiceId;
+  }
+
   setStatus(id: string, status: DeliveryNoteStatus): void {
     this.api.setStatus(id, status).subscribe({
       next: () => { this.toastr.success('Durum güncellendi.'); this.load(); },
