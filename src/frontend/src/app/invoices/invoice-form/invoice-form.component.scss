@@ -1,5 +1,26 @@
 .page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 1.5rem;
+}
+
+.btn {
+  padding: 0.625rem 1.25rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  border-radius: var(--radius-sm, 6px);
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+}
+
+.btn-default {
+  background: var(--color-surface);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
 }
 
 .card {
@@ -151,12 +172,29 @@
   font-weight: 600;
   color: var(--color-text-muted);
 
-  .item-col-product { grid-column: 1; }
-  .item-col-desc { grid-column: 2; }
-  .item-col-qty { grid-column: 3; }
-  .item-col-price { grid-column: 4; }
-  .item-col-vat { grid-column: 5; }
-  .item-col-action { grid-column: 6; }
+  .item-col-product {
+    grid-column: 1;
+  }
+
+  .item-col-desc {
+    grid-column: 2;
+  }
+
+  .item-col-qty {
+    grid-column: 3;
+  }
+
+  .item-col-price {
+    grid-column: 4;
+  }
+
+  .item-col-vat {
+    grid-column: 5;
+  }
+
+  .item-col-action {
+    grid-column: 6;
+  }
 }
 
 .item-row {
