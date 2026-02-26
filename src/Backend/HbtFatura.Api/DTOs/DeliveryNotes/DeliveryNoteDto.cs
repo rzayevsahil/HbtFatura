@@ -19,7 +19,7 @@ public class DeliveryNoteDto
 {
     public Guid Id { get; set; }
     public string DeliveryNumber { get; set; } = string.Empty;
-    public Guid? CustomerId { get; set; }
+    public Guid CustomerId { get; set; }
     public string? CustomerTitle { get; set; }
     public Guid? OrderId { get; set; }
     public string? OrderNumber { get; set; }
@@ -56,7 +56,7 @@ public class DeliveryNoteItemInputDto
 
 public class CreateDeliveryNoteRequest
 {
-    public Guid? CustomerId { get; set; }
+    public Guid CustomerId { get; set; }
     public Guid? OrderId { get; set; }
     public DateTime DeliveryDate { get; set; }
     public InvoiceType DeliveryType { get; set; } = InvoiceType.Satis;
@@ -71,7 +71,7 @@ public class CreateDeliveryNoteFromOrderRequest
 
 public class UpdateDeliveryNoteRequest
 {
-    public Guid? CustomerId { get; set; }
+    public Guid CustomerId { get; set; }
     public DateTime DeliveryDate { get; set; }
     public List<DeliveryNoteItemInputDto> Items { get; set; } = new();
 }

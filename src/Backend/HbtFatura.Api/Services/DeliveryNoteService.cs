@@ -84,14 +84,12 @@ public class DeliveryNoteService : IDeliveryNoteService
         string? customerTitle = null;
         Guid? orderId = request.OrderId;
         string? orderNumber = null;
-        if (request.CustomerId.HasValue)
-        {
-            var customer = await _db.Customers
-                .Where(c => c.Id == request.CustomerId && (c.UserId == userId || (_currentUser.IsFirmAdmin && c.User != null && c.User.FirmId == _currentUser.FirmId)))
-                .Select(c => new { c.Title })
-                .FirstOrDefaultAsync(ct);
-            customerTitle = customer?.Title;
-        }
+        var customer = await _db.Customers
+            .Where(c => c.Id == request.CustomerId && (c.UserId == userId || (_currentUser.IsFirmAdmin && c.User != null && c.User.FirmId == _currentUser.FirmId)))
+            .Select(c => new { c.Title })
+            .FirstOrDefaultAsync(ct);
+        customerTitle = customer?.Title;
+        if (customerTitle == null) throw new Exception("Geçerli bir cari seçilmelidir.");
         if (request.OrderId.HasValue)
         {
             var order = await _db.Orders.Where(o => o.Id == request.OrderId).Select(o => new { o.OrderNumber }).FirstOrDefaultAsync(ct);

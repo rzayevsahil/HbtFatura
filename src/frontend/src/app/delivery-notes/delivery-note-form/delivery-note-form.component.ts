@@ -74,7 +74,7 @@ export class DeliveryNoteFormComponent implements OnInit {
     private toastr: ToastrService
   ) {
     this.form = this.fb.nonNullable.group({
-      customerId: this.fb.control<string | null>(null),
+      customerId: this.fb.control<string | null>(null, Validators.required),
       deliveryDate: [this.toDatetimeLocalValue(new Date()), Validators.required],
       deliveryType: [0 as number, Validators.required],
       items: this.fb.array([this.createItemGroup()])

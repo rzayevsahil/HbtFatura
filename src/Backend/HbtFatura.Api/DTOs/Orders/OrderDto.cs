@@ -18,7 +18,7 @@ public class OrderDto
 {
     public Guid Id { get; set; }
     public string OrderNumber { get; set; } = string.Empty;
-    public Guid? CustomerId { get; set; }
+    public Guid CustomerId { get; set; }
     public string? CustomerTitle { get; set; }
     public DateTime OrderDate { get; set; }
     public OrderStatus Status { get; set; }
@@ -50,7 +50,7 @@ public class OrderItemInputDto
 
 public class CreateOrderRequest
 {
-    public Guid? CustomerId { get; set; }
+    public Guid CustomerId { get; set; }
     public DateTime OrderDate { get; set; }
     public InvoiceType OrderType { get; set; } = InvoiceType.Satis;
     public List<OrderItemInputDto> Items { get; set; } = new();
@@ -58,7 +58,7 @@ public class CreateOrderRequest
 
 public class UpdateOrderRequest
 {
-    public Guid? CustomerId { get; set; }
+    public Guid CustomerId { get; set; }
     public DateTime OrderDate { get; set; }
     /// <summary>Yalnızca Bekliyor iken değiştirilebilir; sadece Bekliyor (0) veya Onaylandı (3) atanabilir.</summary>
     public OrderStatus? Status { get; set; }

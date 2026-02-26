@@ -5,7 +5,7 @@ public class DeliveryNote
     public Guid Id { get; set; }
     public string DeliveryNumber { get; set; } = string.Empty;
     public Guid UserId { get; set; }
-    public Guid? CustomerId { get; set; }
+    public Guid CustomerId { get; set; }
     public Guid? OrderId { get; set; }
     /// <summary>Faturaya aktarıldıysa oluşan fatura Id. Doluysa irsaliye düzenlenemez.</summary>
     public Guid? InvoiceId { get; set; }
@@ -19,7 +19,7 @@ public class DeliveryNote
     public Guid? UpdatedBy { get; set; }
 
     public ApplicationUser User { get; set; } = null!;
-    public Customer? Customer { get; set; }
+    public Customer Customer { get; set; } = null!;
     public Order? Order { get; set; }
     public ICollection<DeliveryNoteItem> Items { get; set; } = new List<DeliveryNoteItem>();
 }

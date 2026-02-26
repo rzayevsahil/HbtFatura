@@ -80,14 +80,12 @@ public class OrderService : IOrderService
         var orderNumber = await GetNextOrderNumberAsync(userId, orderDate.Year, ct);
 
         string? customerTitle = null;
-        if (request.CustomerId.HasValue)
-        {
-            var customer = await _db.Customers
-                .Where(c => c.Id == request.CustomerId && (c.UserId == userId || (_currentUser.IsFirmAdmin && c.User != null && c.User.FirmId == _currentUser.FirmId)))
-                .Select(c => new { c.Title })
-                .FirstOrDefaultAsync(ct);
-            customerTitle = customer?.Title;
-        }
+        var customer = await _db.Customers
+            .Where(c => c.Id == request.CustomerId && (c.UserId == userId || (_currentUser.IsFirmAdmin && c.User != null && c.User.FirmId == _currentUser.FirmId)))
+            .Select(c => new { c.Title })
+            .FirstOrDefaultAsync(ct);
+        customerTitle = customer?.Title;
+        if (customerTitle == null) throw new Exception("Geçerli bir cari seçilmelidir.");
 
         var order = new Order
         {

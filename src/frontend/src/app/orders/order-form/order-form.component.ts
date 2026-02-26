@@ -64,7 +64,7 @@ export class OrderFormComponent implements OnInit {
     private toastr: ToastrService
   ) {
     this.form = this.fb.nonNullable.group({
-      customerId: this.fb.control<string | null>(null),
+      customerId: this.fb.control<string | null>(null, Validators.required),
       orderDate: [this.toDatetimeLocalValue(new Date()), Validators.required],
       orderType: [0 as number, Validators.required],
       status: [0 as number],
