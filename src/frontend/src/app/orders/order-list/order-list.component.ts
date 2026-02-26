@@ -47,7 +47,7 @@ export class OrderListComponent implements OnInit {
   }
 
   statusLabel(s: OrderStatus): string {
-    const map: Record<OrderStatus, string> = { 0: 'Bekliyor', 1: 'Tamamı Teslim', 2: 'İptal' };
+    const map: Record<OrderStatus, string> = { 0: 'Bekliyor', 1: 'Tamamı Teslim', 2: 'İptal', 3: 'Onaylandı', 4: 'Kısmi Teslim' };
     return map[s] ?? '';
   }
 

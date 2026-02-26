@@ -1,13 +1,17 @@
 <div class="page-header">
   <h1 class="page-title">{{ deliveryNote?.deliveryNumber ?? 'İrsaliye' }}</h1>
   <div class="actions">
-    @if (deliveryNote?.status === 0) {
+    @if (deliveryNote?.status === 0 && !deliveryNote?.invoiceId) {
+      <a [routerLink]="['/delivery-notes', deliveryNote?.id, 'edit']" class="btn btn-secondary">Düzenle</a>
       <button type="button" class="btn btn-primary" (click)="confirmDeliveryNote()">Onayla</button>
     }
-    @if (deliveryNote?.status === 1) {
+    @if (deliveryNote?.status === 1 && !deliveryNote?.invoiceId) {
       <button type="button" class="btn btn-primary" (click)="createInvoice()" [disabled]="creatingInvoice">
-        {{ creatingInvoice ? 'Oluşturuluyor...' : 'Fatura Oluştur' }}
+        {{ creatingInvoice ? 'Oluşturuluyor...' : 'Faturaya Aktar' }}
       </button>
+    }
+    @if (deliveryNote?.invoiceId) {
+      <a [routerLink]="['/invoices', deliveryNote?.invoiceId]" class="btn btn-secondary">Faturaya Git</a>
     }
   </div>
 </div>

@@ -217,6 +217,7 @@ public class InvoiceService : IInvoiceService
         _calc.CalculateInvoiceTotals(invoice);
 
         _db.Invoices.Add(invoice);
+        dn.InvoiceId = invoice.Id;
         await _db.SaveChangesAsync(ct);
         return await GetByIdAsync(invoice.Id, ct);
     }

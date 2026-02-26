@@ -23,6 +23,7 @@ export interface DeliveryNoteDto {
   customerTitle?: string;
   orderId?: string;
   orderNumber?: string;
+  invoiceId?: string | null;
   deliveryDate: string;
   status: DeliveryNoteStatus;
   deliveryType: InvoiceType;
@@ -38,6 +39,7 @@ export interface DeliveryNoteListDto {
   deliveryType: InvoiceType;
   customerTitle?: string;
   orderNumber?: string;
+  invoiceId?: string | null;
 }
 
 export interface CreateDeliveryNoteFromOrderRequest {
@@ -45,10 +47,42 @@ export interface CreateDeliveryNoteFromOrderRequest {
   deliveryDate: string;
 }
 
+export interface DeliveryNoteItemInputDto {
+  productId?: string | null;
+  orderItemId?: string | null;
+  description: string;
+  quantity: number;
+  unitPrice: number;
+  vatRate: number;
+  sortOrder: number;
+}
+
+export interface CreateDeliveryNoteRequest {
+  customerId?: string | null;
+  orderId?: string | null;
+  deliveryDate: string;
+  deliveryType: InvoiceType;
+  items: DeliveryNoteItemInputDto[];
+}
+
+export interface UpdateDeliveryNoteRequest {
+  customerId?: string | null;
+  deliveryDate: string;
+  items: DeliveryNoteItemInputDto[];
+}
+
 @Injectable({ providedIn: 'root' })
 export class DeliveryNoteService {
   private base = '/api/deliverynotes';
   constructor(private api: ApiService) {}
+
+  create(req: CreateDeliveryNoteRequest): Observable<DeliveryNoteDto> {
+    return this.api.post<DeliveryNoteDto>(this.base, req);
+  }
+
+  update(id: string, req: UpdateDeliveryNoteRequest): Observable<DeliveryNoteDto> {
+    return this.api.put<DeliveryNoteDto>(`${this.base}/${id}`, req);
+  }
 
   getPaged(params: { page: number; pageSize: number; dateFrom?: string; dateTo?: string; status?: number; customerId?: string; orderId?: string }): Observable<PagedResult<DeliveryNoteListDto>> {
     const p: Record<string, string | number> = { page: params.page, pageSize: params.pageSize };

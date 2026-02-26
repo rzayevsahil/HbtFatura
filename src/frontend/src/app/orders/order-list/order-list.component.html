@@ -9,6 +9,8 @@
     <option [ngValue]="0">Bekliyor</option>
     <option [ngValue]="1">Tamamı Teslim</option>
     <option [ngValue]="2">İptal</option>
+    <option [ngValue]="3">Onaylandı</option>
+    <option [ngValue]="4">Kısmi Teslim</option>
   </select>
   <button type="button" (click)="load()">Filtrele</button>
   <a routerLink="/orders/new" class="btn btn-primary">Yeni Sipariş</a>

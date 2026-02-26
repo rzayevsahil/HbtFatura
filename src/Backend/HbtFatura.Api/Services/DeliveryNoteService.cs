@@ -56,7 +56,8 @@ public class DeliveryNoteService : IDeliveryNoteService
                 Status = x.Status,
                 DeliveryType = x.DeliveryType,
                 CustomerTitle = x.Customer != null ? x.Customer.Title : null,
-                OrderNumber = x.Order != null ? x.Order.OrderNumber : null
+                OrderNumber = x.Order != null ? x.Order.OrderNumber : null,
+                InvoiceId = x.InvoiceId
             })
             .ToListAsync(ct);
         return new PagedResult<DeliveryNoteListDto> { Items = list, TotalCount = total, Page = page, PageSize = pageSize };
@@ -141,8 +142,8 @@ public class DeliveryNoteService : IDeliveryNoteService
         if (order == null) return null;
         if (!_currentUser.IsSuperAdmin && !(_currentUser.IsFirmAdmin && order.User?.FirmId == _currentUser.FirmId) && order.UserId != _currentUser.UserId)
             return null;
-        if (order.Status == OrderStatus.TamamiTeslim)
-            throw new InvalidOperationException("Bu sipariş zaten irsaliyeye dönüştürülmüş.");
+        if (order.Status == OrderStatus.TamamiTeslim || order.Status == OrderStatus.KismiTeslim)
+            throw new InvalidOperationException("Bu sipariş zaten irsaliyeye dönüştürülmüş veya kısmen teslim edilmiş.");
         if (order.Status == OrderStatus.Iptal)
             throw new InvalidOperationException("İptal edilmiş siparişten irsaliye oluşturulamaz.");
 
@@ -194,6 +195,8 @@ public class DeliveryNoteService : IDeliveryNoteService
     {
         var dn = await ScopeQuery().Include(x => x.Items).FirstOrDefaultAsync(x => x.Id == id, ct);
         if (dn == null) return null;
+        if (dn.InvoiceId.HasValue)
+            throw new InvalidOperationException("Faturaya aktarılmış irsaliye güncellenemez.");
         if (dn.Status == DeliveryNoteStatus.Onaylandi)
             throw new InvalidOperationException("Onaylanmış irsaliye güncellenemez.");
         if (dn.Status == DeliveryNoteStatus.Iptal)
@@ -287,6 +290,7 @@ public class DeliveryNoteService : IDeliveryNoteService
         CustomerTitle = d.Customer?.Title,
         OrderId = d.OrderId,
         OrderNumber = d.Order?.OrderNumber,
+        InvoiceId = d.InvoiceId,
         DeliveryDate = d.DeliveryDate,
         Status = d.Status,
         DeliveryType = d.DeliveryType,

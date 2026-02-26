@@ -126,10 +126,8 @@ public class OrderService : IOrderService
     {
         var order = await ScopeQuery().Include(x => x.Items).FirstOrDefaultAsync(x => x.Id == id, ct);
         if (order == null) return null;
-        if (order.Status == OrderStatus.TamamiTeslim)
-            throw new InvalidOperationException("Tamamı teslim edilmiş sipariş güncellenemez.");
-        if (order.Status == OrderStatus.Iptal)
-            throw new InvalidOperationException("İptal edilmiş sipariş güncellenemez.");
+        if (order.Status != OrderStatus.Bekliyor)
+            throw new InvalidOperationException("Sadece bekleyen (taslak) sipariş düzenlenebilir.");
 
         order.CustomerId = request.CustomerId;
         order.OrderDate = request.OrderDate.Date;

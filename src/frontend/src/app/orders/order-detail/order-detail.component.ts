@@ -27,7 +27,7 @@ export class OrderDetailComponent implements OnInit {
 
   @HostListener('document:keydown', ['$event'])
   onKeyDown(e: KeyboardEvent): void {
-    if (e.key === 'F2' && this.order && !['INPUT', 'TEXTAREA', 'SELECT'].includes((e.target as HTMLElement)?.tagName)) {
+    if (e.key === 'F2' && this.order?.status === 0 && !['INPUT', 'TEXTAREA', 'SELECT'].includes((e.target as HTMLElement)?.tagName)) {
       e.preventDefault();
       this.router.navigate(['/orders', this.order.id, 'edit']);
     }
@@ -46,7 +46,7 @@ export class OrderDetailComponent implements OnInit {
   }
 
   statusLabel(s: OrderStatus): string {
-    const map: Record<OrderStatus, string> = { 0: 'Bekliyor', 1: 'Tamamı Teslim', 2: 'İptal' };
+    const map: Record<OrderStatus, string> = { 0: 'Bekliyor', 1: 'Tamamı Teslim', 2: 'İptal', 3: 'Onaylandı', 4: 'Kısmi Teslim' };
     return map[s] ?? '';
   }
 

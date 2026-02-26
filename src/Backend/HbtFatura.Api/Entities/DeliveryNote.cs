@@ -7,6 +7,8 @@ public class DeliveryNote
     public Guid UserId { get; set; }
     public Guid? CustomerId { get; set; }
     public Guid? OrderId { get; set; }
+    /// <summary>Faturaya aktarıldıysa oluşan fatura Id. Doluysa irsaliye düzenlenemez.</summary>
+    public Guid? InvoiceId { get; set; }
     public DateTime DeliveryDate { get; set; }
     public DeliveryNoteStatus Status { get; set; } = DeliveryNoteStatus.Taslak;
     public InvoiceType DeliveryType { get; set; } = InvoiceType.Satis;

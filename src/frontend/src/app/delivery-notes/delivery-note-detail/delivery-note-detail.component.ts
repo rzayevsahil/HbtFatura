@@ -55,7 +55,7 @@ export class DeliveryNoteDetailComponent implements OnInit {
   }
 
   createInvoice(): void {
-    if (!this.deliveryNote || this.deliveryNote.status !== 1) return;
+    if (!this.deliveryNote || this.deliveryNote.status !== 1 || this.deliveryNote.invoiceId) return;
     this.creatingInvoice = true;
     this.invoiceApi.createFromDeliveryNote(this.deliveryNote.id).subscribe({
       next: inv => {

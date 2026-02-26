@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService, PagedResult } from '../core/services/api.service';
 
-export type OrderStatus = 0 | 1 | 2; // Bekliyor, TamamiTeslim, Iptal
+export type OrderStatus = 0 | 1 | 2 | 3 | 4; // Bekliyor, TamamiTeslim, Iptal, Onaylandi, KismiTeslim
 export type InvoiceType = 0 | 1; // Satis, Alis
 
 export interface OrderItemDto {
