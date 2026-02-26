@@ -36,7 +36,8 @@
   }
 
   select,
-  input[type="date"] {
+  input[type="date"],
+  input[type="datetime-local"] {
     max-width: 320px;
     width: 100%;
     box-sizing: border-box;

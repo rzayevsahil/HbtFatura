@@ -75,7 +75,7 @@ export class DeliveryNoteFormComponent implements OnInit {
   ) {
     this.form = this.fb.nonNullable.group({
       customerId: this.fb.control<string | null>(null),
-      deliveryDate: [new Date().toISOString().slice(0, 10), Validators.required],
+      deliveryDate: [this.toDatetimeLocalValue(new Date()), Validators.required],
       deliveryType: [0 as number, Validators.required],
       items: this.fb.array([this.createItemGroup()])
     });
@@ -92,7 +92,7 @@ export class DeliveryNoteFormComponent implements OnInit {
           this.deliveryStatus = dn.status;
           this.form.patchValue({
             customerId: dn.customerId ?? null,
-            deliveryDate: dn.deliveryDate.slice(0, 10),
+            deliveryDate: this.toDatetimeLocalValue(dn.deliveryDate),
             deliveryType: dn.deliveryType ?? 0
           });
           this.items.clear();
@@ -147,6 +147,25 @@ export class DeliveryNoteFormComponent implements OnInit {
     this.customerDropdownOpen = false;
   }
 
+  /** datetime-local input için değer: "yyyy-MM-ddTHH:mm". */
+  toDatetimeLocalValue(date: string | Date): string {
+    if (!date) return '';
+    if (typeof date === 'string' && date.length === 10) return date + 'T00:00';
+    const d = typeof date === 'string' ? new Date(date) : date;
+    if (isNaN(d.getTime())) return '';
+    const pad = (n: number) => n.toString().padStart(2, '0');
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  }
+
+  /** API'ye gönderilecek tarih: ISO 8601 (yyyy-MM-ddTHH:mm:ss). */
+  toDeliveryDateApiValue(value: string): string {
+    if (!value || typeof value !== 'string') return new Date().toISOString().slice(0, 19);
+    const s = value.trim();
+    if (s.length === 10) return s + 'T00:00:00';
+    if (s.length === 16) return s + ':00';
+    return s.slice(0, 19);
+  }
+
   @HostListener('document:click', ['$event'])
   onDocumentClick(e: MouseEvent): void {
     if (this.customerDropdownOpen && this.customerDropdownWrap?.nativeElement && !this.customerDropdownWrap.nativeElement.contains(e.target as Node)) {
@@ -170,7 +189,7 @@ export class DeliveryNoteFormComponent implements OnInit {
     if (this.id) {
       const req: UpdateDeliveryNoteRequest = {
         customerId: v.customerId ?? undefined,
-        deliveryDate: v.deliveryDate,
+        deliveryDate: this.toDeliveryDateApiValue(v.deliveryDate),
         items: itemDtos
       };
       this.deliveryNoteApi.update(this.id, req).subscribe({
@@ -189,7 +208,7 @@ export class DeliveryNoteFormComponent implements OnInit {
       const req: CreateDeliveryNoteRequest = {
         customerId: v.customerId ?? undefined,
         orderId: undefined,
-        deliveryDate: v.deliveryDate,
+        deliveryDate: this.toDeliveryDateApiValue(v.deliveryDate),
         deliveryType: v.deliveryType ?? 0,
         items: itemDtos
       };

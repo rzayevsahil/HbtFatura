@@ -4,6 +4,7 @@ using HbtFatura.Api.Data;
 using HbtFatura.Api.DTOs.Customers;
 using HbtFatura.Api.DTOs.DeliveryNotes;
 using HbtFatura.Api.Entities;
+using HbtFatura.Api.Helpers;
 
 namespace HbtFatura.Api.Services;
 
@@ -76,7 +77,8 @@ public class DeliveryNoteService : IDeliveryNoteService
     public async Task<DeliveryNoteDto> CreateAsync(CreateDeliveryNoteRequest request, CancellationToken ct = default)
     {
         var userId = _currentUser.UserId;
-        var deliveryNumber = await GetNextDeliveryNumberAsync(userId, request.DeliveryDate.Year, ct);
+        var deliveryDate = DateTimeHelper.NormalizeForStorage(request.DeliveryDate);
+        var deliveryNumber = await GetNextDeliveryNumberAsync(userId, deliveryDate.Year, ct);
 
         string? customerTitle = null;
         Guid? orderId = request.OrderId;
@@ -102,7 +104,7 @@ public class DeliveryNoteService : IDeliveryNoteService
             DeliveryNumber = deliveryNumber,
             CustomerId = request.CustomerId,
             OrderId = orderId,
-            DeliveryDate = request.DeliveryDate.Date,
+            DeliveryDate = deliveryDate.Date,
             Status = DeliveryNoteStatus.Taslak,
             DeliveryType = request.DeliveryType,
             CreatedAt = DateTime.UtcNow,
@@ -110,7 +112,7 @@ public class DeliveryNoteService : IDeliveryNoteService
         };
 
         var sortOrder = 0;
-        foreach (var item in request.Items)
+        foreach (var item in request.Items ?? new List<DeliveryNoteItemInputDto>())
         {
             dn.Items.Add(new DeliveryNoteItem
             {
@@ -118,7 +120,7 @@ public class DeliveryNoteService : IDeliveryNoteService
                 DeliveryNoteId = dn.Id,
                 ProductId = item.ProductId,
                 OrderItemId = item.OrderItemId,
-                Description = item.Description.Trim(),
+                Description = (item.Description ?? string.Empty).Trim(),
                 Quantity = item.Quantity,
                 UnitPrice = item.UnitPrice,
                 VatRate = item.VatRate,
@@ -132,8 +134,9 @@ public class DeliveryNoteService : IDeliveryNoteService
         return MapToDto(dn);
     }
 
-    public async Task<DeliveryNoteDto?> CreateFromOrderAsync(Guid orderId, DateTime deliveryDate, CancellationToken ct = default)
+    public async Task<DeliveryNoteDto?> CreateFromOrderAsync(Guid orderId, DateTime deliveryDateParam, CancellationToken ct = default)
     {
+        var deliveryDate = DateTimeHelper.NormalizeForStorage(deliveryDateParam);
         var order = await _db.Orders
             .Include(x => x.User)
             .Include(x => x.Customer)
@@ -203,13 +206,13 @@ public class DeliveryNoteService : IDeliveryNoteService
             throw new InvalidOperationException("İptal edilmiş irsaliye güncellenemez.");
 
         dn.CustomerId = request.CustomerId;
-        dn.DeliveryDate = request.DeliveryDate.Date;
+        dn.DeliveryDate = DateTimeHelper.NormalizeForStorage(request.DeliveryDate).Date;
         dn.UpdatedAt = DateTime.UtcNow;
         dn.UpdatedBy = _currentUser.UserId;
 
         _db.DeliveryNoteItems.RemoveRange(dn.Items);
         var sortOrder = 0;
-        foreach (var item in request.Items)
+        foreach (var item in request.Items ?? new List<DeliveryNoteItemInputDto>())
         {
             dn.Items.Add(new DeliveryNoteItem
             {
@@ -217,7 +220,7 @@ public class DeliveryNoteService : IDeliveryNoteService
                 DeliveryNoteId = dn.Id,
                 ProductId = item.ProductId,
                 OrderItemId = item.OrderItemId,
-                Description = item.Description.Trim(),
+                Description = (item.Description ?? string.Empty).Trim(),
                 Quantity = item.Quantity,
                 UnitPrice = item.UnitPrice,
                 VatRate = item.VatRate,
