@@ -205,7 +205,7 @@ public class ProductService : IProductService
         {
             Id = Guid.NewGuid(),
             ProductId = productId,
-            Date = request.Date.Date,
+            Date = request.Date,
             Type = request.Type,
             Quantity = request.Quantity,
             ReferenceType = ReferenceType.Manuel,

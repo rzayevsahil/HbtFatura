@@ -32,7 +32,7 @@
     <tbody>
       @for (m of movements; track m.id) {
       <tr>
-        <td>{{ m.date | date:'shortDate' }}</td>
+        <td>{{ m.date | date:'dd.MM.yyyy HH:mm' }}</td>
         <td>{{ typeLabel(m.type) }}</td>
         <td class="amount">{{ m.quantity | number:'1.2-2' }}</td>
         <td>{{ m.referenceType }}</td>
@@ -52,7 +52,7 @@
     <div class="form-grid">
       <div class="row">
         <label>Tarih</label>
-        <input type="date" [(ngModel)]="newMovement.date" />
+        <input type="datetime-local" [(ngModel)]="newMovement.date" />
       </div>
       <div class="row">
         <label>Tip</label>

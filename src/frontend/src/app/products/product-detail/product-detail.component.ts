@@ -58,7 +58,10 @@ export class ProductDetailComponent implements OnInit {
   }
 
   openAddModal(): void {
-    this.newMovement = { date: new Date().toISOString().slice(0, 10), type: STOCK_GIRIS, quantity: 0, description: 'Manuel giriş/çıkış' };
+    const pad = (n: number) => n.toString().padStart(2, '0');
+    const d = new Date();
+    const dateVal = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+    this.newMovement = { date: dateVal, type: STOCK_GIRIS, quantity: 0, description: 'Manuel giriş/çıkış' };
     this.showAddModal = true;
   }
 
