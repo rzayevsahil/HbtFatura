@@ -6,75 +6,74 @@
   </div>
 </div>
 @if (product) {
-  <div class="card info-grid">
-    <p><strong>Kod:</strong> {{ product.code }}</p>
-    <p><strong>Birim:</strong> {{ product.unit }}</p>
-    <p><strong>Stok miktarı:</strong> {{ product.stockQuantity | number:'1.2-2' }}</p>
-    <p><strong>Min / Max:</strong> {{ product.minStock | number:'1.2-2' }} / {{ product.maxStock | number:'1.2-2' }}</p>
-    @if (product.barcode) { <p><strong>Barkod:</strong> {{ product.barcode }}</p> }
-  </div>
-  <h2 class="section-title">Stok hareketleri</h2>
-  <div class="card filters">
-    <label>Tarih aralığı</label>
-    <input type="date" [(ngModel)]="dateFrom" />
-    <input type="date" [(ngModel)]="dateTo" />
-    <button type="button" (click)="applyFilter()">Filtrele</button>
-  </div>
-  <div class="card table-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th>Tarih</th>
-          <th>Tip</th>
-          <th>Miktar</th>
-          <th>Referans</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (m of movements; track m.id) {
-          <tr>
-            <td>{{ m.date | date:'shortDate' }}</td>
-            <td>{{ typeLabel(m.type) }}</td>
-            <td class="amount">{{ m.quantity | number:'1.2-2' }}</td>
-            <td>{{ m.referenceType }}</td>
-          </tr>
-        }
-      </tbody>
-    </table>
-  </div>
-  @if (totalCount > pageSize) {
-    <p class="text-muted">Toplam {{ totalCount }} hareket.</p>
-  }
+<div class="card info-grid">
+  <p><strong>Kod:</strong> {{ product.code }}</p>
+  <p><strong>Birim:</strong> {{ product.unit }}</p>
+  <p><strong>Stok miktarı:</strong> {{ product.stockQuantity | number:'1.2-2' }}</p>
+  @if (product.barcode) { <p><strong>Barkod:</strong> {{ product.barcode }}</p> }
+</div>
+<h2 class="section-title">Stok hareketleri</h2>
+<div class="card filters">
+  <label>Tarih aralığı</label>
+  <input type="date" [(ngModel)]="dateFrom" />
+  <input type="date" [(ngModel)]="dateTo" />
+  <button type="button" (click)="applyFilter()">Filtrele</button>
+</div>
+<div class="card table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Tarih</th>
+        <th>Tip</th>
+        <th>Miktar</th>
+        <th>Referans</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (m of movements; track m.id) {
+      <tr>
+        <td>{{ m.date | date:'shortDate' }}</td>
+        <td>{{ typeLabel(m.type) }}</td>
+        <td class="amount">{{ m.quantity | number:'1.2-2' }}</td>
+        <td>{{ m.referenceType }}</td>
+      </tr>
+      }
+    </tbody>
+  </table>
+</div>
+@if (totalCount > pageSize) {
+<p class="text-muted">Toplam {{ totalCount }} hareket.</p>
+}
 }
 @if (showAddModal) {
-  <div class="modal-overlay" (click)="closeAddModal()">
-    <div class="modal" (click)="$event.stopPropagation()">
-      <h3>Stok fişi ekle</h3>
-      <div class="form-grid">
-        <div class="row">
-          <label>Tarih</label>
-          <input type="date" [(ngModel)]="newMovement.date" />
-        </div>
-        <div class="row">
-          <label>Tip</label>
-          <select [(ngModel)]="newMovement.type">
-            <option [ngValue]="1">Giriş</option>
-            <option [ngValue]="2">Çıkış</option>
-          </select>
-        </div>
-        <div class="row">
-          <label>Miktar</label>
-          <input type="number" [(ngModel)]="newMovement.quantity" step="0.01" min="0.01" />
-        </div>
-        <div class="row">
-          <label>Açıklama</label>
-          <input [(ngModel)]="newMovement.description" />
-        </div>
+<div class="modal-overlay" (click)="closeAddModal()">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <h3>Stok fişi ekle</h3>
+    <div class="form-grid">
+      <div class="row">
+        <label>Tarih</label>
+        <input type="date" [(ngModel)]="newMovement.date" />
       </div>
-      <div class="modal-actions">
-        <button type="button" (click)="submitMovement()">Kaydet</button>
-        <button type="button" (click)="closeAddModal()">İptal</button>
+      <div class="row">
+        <label>Tip</label>
+        <select [(ngModel)]="newMovement.type">
+          <option [ngValue]="1">Giriş</option>
+          <option [ngValue]="2">Çıkış</option>
+        </select>
+      </div>
+      <div class="row">
+        <label>Miktar</label>
+        <input type="number" [(ngModel)]="newMovement.quantity" step="0.01" min="0.01" />
+      </div>
+      <div class="row">
+        <label>Açıklama</label>
+        <input [(ngModel)]="newMovement.description" />
       </div>
     </div>
+    <div class="modal-actions">
+      <button type="button" (click)="submitMovement()">Kaydet</button>
+      <button type="button" (click)="closeAddModal()">İptal</button>
+    </div>
   </div>
+</div>
 }

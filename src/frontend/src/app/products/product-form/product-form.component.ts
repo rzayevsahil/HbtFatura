@@ -20,8 +20,6 @@ export class ProductFormComponent implements OnInit {
     name: ['', Validators.required],
     barcode: [''],
     unit: ['Adet'],
-    minStock: [0],
-    maxStock: [0],
     stockQuantity: [0],
     firmId: [null as string | null]
   });
@@ -51,8 +49,6 @@ export class ProductFormComponent implements OnInit {
         name: p.name,
         barcode: p.barcode ?? '',
         unit: p.unit ?? 'Adet',
-        minStock: p.minStock ?? 0,
-        maxStock: p.maxStock ?? 0,
         stockQuantity: p.stockQuantity ?? 0
       }));
     }
@@ -67,8 +63,6 @@ export class ProductFormComponent implements OnInit {
       name: v.name,
       barcode: v.barcode || undefined,
       unit: v.unit || 'Adet',
-      minStock: v.minStock ?? 0,
-      maxStock: v.maxStock ?? 0,
       stockQuantity: v.stockQuantity ?? 0,
       firmId: (this.auth.user()?.role === 'SuperAdmin' && v.firmId) ? v.firmId : undefined
     };

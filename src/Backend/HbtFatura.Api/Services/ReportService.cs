@@ -214,7 +214,7 @@ public class ReportService : IReportService
     {
         var products = await ProductScope(firmId)
             .OrderBy(x => x.Code)
-            .Select(x => new { x.Id, x.Code, x.Name, x.Unit, x.MinStock, x.MaxStock })
+            .Select(x => new { x.Id, x.Code, x.Name, x.Unit })
             .ToListAsync(ct);
         var ids = products.Select(x => x.Id).ToList();
         var stockDict = new Dictionary<Guid, decimal>();
@@ -233,10 +233,7 @@ public class ReportService : IReportService
             Code = p.Code,
             Name = p.Name,
             Unit = p.Unit,
-            Quantity = stockDict.GetValueOrDefault(p.Id, 0),
-            MinStock = p.MinStock,
-            MaxStock = p.MaxStock,
-            LowStock = p.MinStock > 0 && stockDict.GetValueOrDefault(p.Id, 0) <= p.MinStock
+            Quantity = stockDict.GetValueOrDefault(p.Id, 0)
         }).ToList();
 
         return new StockLevelsReportDto { Items = items };

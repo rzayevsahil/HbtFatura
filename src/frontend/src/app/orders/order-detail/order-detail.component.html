@@ -2,7 +2,7 @@
   <h1 class="page-title">{{ order?.orderNumber ?? 'Sipariş' }}</h1>
   <div class="actions">
     @if (order && isEditableOrder()) {
-    <a [routerLink]="['/orders', order?.id, 'edit']" class="btn btn-default">Düzenle</a>
+    <a [routerLink]="['/orders', order.id, 'edit']" class="btn btn-default">Düzenle</a>
     <button type="button" class="btn btn-approve" (click)="setStatusOnayla()">Onayla</button>
     <button type="button" class="btn btn-cancel" (click)="setStatusIptal()">İptal</button>
     }

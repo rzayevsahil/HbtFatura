@@ -12,7 +12,4 @@ public class StockLevelRowDto
     public string Name { get; set; } = string.Empty;
     public string Unit { get; set; } = string.Empty;
     public decimal Quantity { get; set; }
-    public decimal MinStock { get; set; }
-    public decimal MaxStock { get; set; }
-    public bool LowStock { get; set; }
 }

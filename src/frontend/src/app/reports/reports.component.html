@@ -10,44 +10,45 @@
     <select [(ngModel)]="invoiceCustomerId">
       <option value="">Tüm cariler</option>
       @for (c of customers; track c.id) {
-        <option [value]="c.id">{{ c.title }}</option>
+      <option [value]="c.id">{{ c.title }}</option>
       }
     </select>
     <button type="button" (click)="loadInvoiceReport()" [disabled]="invoiceLoading">Yükle</button>
     @if (invoiceData) {
-      <button type="button" (click)="downloadInvoiceReportPdf()">PDF indir</button>
-      <button type="button" (click)="downloadInvoiceReportExcel()">Excel indir</button>
+    <button type="button" (click)="downloadInvoiceReportPdf()">PDF indir</button>
+    <button type="button" (click)="downloadInvoiceReportExcel()">Excel indir</button>
     }
   </div>
   @if (invoiceLoading) { <p>Yükleniyor...</p> }
   @if (invoiceData && !invoiceLoading) {
-    <p>{{ invoiceData.customerTitle ? invoiceData.customerTitle + ' — ' : '' }}Toplam {{ invoiceData.items.length }} fatura</p>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Fatura No</th>
-            <th>Tarih</th>
-            <th>Cari</th>
-            <th>Durum</th>
-            <th class="amount">Toplam</th>
-            <th>Para</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (r of invoiceData.items; track r.id) {
-            <tr>
-              <td>{{ r.invoiceNumber }}</td>
-              <td>{{ r.invoiceDate | date:'shortDate' }}</td>
-              <td>{{ r.customerTitle }}</td>
-              <td>{{ statusLabel(r.status) }}</td>
-              <td class="amount">{{ r.grandTotal | number:'1.2-2' }}</td>
-              <td>{{ r.currency }}</td>
-            </tr>
-          }
-        </tbody>
-      </table>
-    </div>
+  <p>{{ invoiceData.customerTitle ? invoiceData.customerTitle + ' — ' : '' }}Toplam {{ invoiceData.items.length }}
+    fatura</p>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Fatura No</th>
+          <th>Tarih</th>
+          <th>Cari</th>
+          <th>Durum</th>
+          <th class="amount">Toplam</th>
+          <th>Para</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (r of invoiceData.items; track r.id) {
+        <tr>
+          <td>{{ r.invoiceNumber }}</td>
+          <td>{{ r.invoiceDate | date:'shortDate' }}</td>
+          <td>{{ r.customerTitle }}</td>
+          <td>{{ statusLabel(r.status) }}</td>
+          <td class="amount">{{ r.grandTotal | number:'1.2-2' }}</td>
+          <td>{{ r.currency }}</td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
   }
 </section>
 
@@ -57,44 +58,45 @@
     <select [(ngModel)]="cariCustomerId" required>
       <option value="">Cari seçin</option>
       @for (c of customers; track c.id) {
-        <option [value]="c.id">{{ c.title }}</option>
+      <option [value]="c.id">{{ c.title }}</option>
       }
     </select>
     <input type="date" [(ngModel)]="cariDateFrom" placeholder="Başlangıç" />
     <input type="date" [(ngModel)]="cariDateTo" placeholder="Bitiş" />
     <button type="button" (click)="loadCari()" [disabled]="cariLoading">Yükle</button>
     @if (cariData) {
-      <button type="button" (click)="downloadCariPdf()">PDF indir</button>
-      <button type="button" (click)="downloadCariExcel()">Excel indir</button>
+    <button type="button" (click)="downloadCariPdf()">PDF indir</button>
+    <button type="button" (click)="downloadCariExcel()">Excel indir</button>
     }
   </div>
   @if (cariLoading) { <p>Yükleniyor...</p> }
   @if (cariData && !cariLoading) {
-    <p><strong>{{ cariData.customerTitle }}</strong> — Açılış: {{ cariData.openingBalance | number:'1.2-2' }} ₺ — Kapanış: {{ cariData.closingBalance | number:'1.2-2' }} ₺</p>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Tarih</th>
-            <th>Açıklama</th>
-            <th class="amount">Borç</th>
-            <th class="amount">Alacak</th>
-            <th class="amount">Bakiye</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (r of cariData.rows; track r.date + r.description) {
-            <tr>
-              <td>{{ r.date | date:'shortDate' }}</td>
-              <td>{{ r.description }}</td>
-              <td class="amount">{{ r.borc | number:'1.2-2' }}</td>
-              <td class="amount">{{ r.alacak | number:'1.2-2' }}</td>
-              <td class="amount">{{ r.bakiye | number:'1.2-2' }}</td>
-            </tr>
-          }
-        </tbody>
-      </table>
-    </div>
+  <p><strong>{{ cariData.customerTitle }}</strong> — Açılış: {{ cariData.openingBalance | number:'1.2-2' }} ₺ — Kapanış:
+    {{ cariData.closingBalance | number:'1.2-2' }} ₺</p>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Tarih</th>
+          <th>Açıklama</th>
+          <th class="amount">Borç</th>
+          <th class="amount">Alacak</th>
+          <th class="amount">Bakiye</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (r of cariData.rows; track r.date + r.description) {
+        <tr>
+          <td>{{ r.date | date:'shortDate' }}</td>
+          <td>{{ r.description }}</td>
+          <td class="amount">{{ r.borc | number:'1.2-2' }}</td>
+          <td class="amount">{{ r.alacak | number:'1.2-2' }}</td>
+          <td class="amount">{{ r.bakiye | number:'1.2-2' }}</td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
   }
 </section>
 
@@ -104,7 +106,7 @@
     <select [(ngModel)]="cashRegisterId">
       <option value="">Tüm kasalar</option>
       @for (c of cashRegisters; track c.id) {
-        <option [value]="c.id">{{ c.name }}</option>
+      <option [value]="c.id">{{ c.name }}</option>
       }
     </select>
     <input type="date" [(ngModel)]="cashDateFrom" />
@@ -113,27 +115,28 @@
   </div>
   @if (cashLoading) { <p>Yükleniyor...</p> }
   @if (cashData && !cashLoading) {
-    <p>Açılış: {{ cashData.openingBalance | number:'1.2-2' }} — Giriş: {{ cashData.totalGiris | number:'1.2-2' }} — Çıkış: {{ cashData.totalCikis | number:'1.2-2' }} — Kapanış: {{ cashData.closingBalance | number:'1.2-2' }} ₺</p>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Tarih</th>
-            <th>Açıklama</th>
-            <th class="amount">Tutar</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (r of cashData.rows; track r.date + r.description + r.amount) {
-            <tr>
-              <td>{{ r.date | date:'shortDate' }}</td>
-              <td>{{ r.description }}</td>
-              <td class="amount">{{ r.type === 1 ? '+' : '-' }}{{ r.amount | number:'1.2-2' }}</td>
-            </tr>
-          }
-        </tbody>
-      </table>
-    </div>
+  <p>Açılış: {{ cashData.openingBalance | number:'1.2-2' }} — Giriş: {{ cashData.totalGiris | number:'1.2-2' }} — Çıkış:
+    {{ cashData.totalCikis | number:'1.2-2' }} — Kapanış: {{ cashData.closingBalance | number:'1.2-2' }} ₺</p>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Tarih</th>
+          <th>Açıklama</th>
+          <th class="amount">Tutar</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (r of cashData.rows; track r.date + r.description + r.amount) {
+        <tr>
+          <td>{{ r.date | date:'shortDate' }}</td>
+          <td>{{ r.description }}</td>
+          <td class="amount">{{ r.type === 1 ? '+' : '-' }}{{ r.amount | number:'1.2-2' }}</td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
   }
 </section>
 
@@ -143,7 +146,7 @@
     <select [(ngModel)]="bankAccountId">
       <option value="">Tüm hesaplar</option>
       @for (b of bankAccounts; track b.id) {
-        <option [value]="b.id">{{ b.name }}</option>
+      <option [value]="b.id">{{ b.name }}</option>
       }
     </select>
     <input type="date" [(ngModel)]="bankDateFrom" />
@@ -152,27 +155,28 @@
   </div>
   @if (bankLoading) { <p>Yükleniyor...</p> }
   @if (bankData && !bankLoading) {
-    <p>Açılış: {{ bankData.openingBalance | number:'1.2-2' }} — Giriş: {{ bankData.totalGiris | number:'1.2-2' }} — Çıkış: {{ bankData.totalCikis | number:'1.2-2' }} — Kapanış: {{ bankData.closingBalance | number:'1.2-2' }} ₺</p>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Tarih</th>
-            <th>Açıklama</th>
-            <th class="amount">Tutar</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (r of bankData.rows; track r.date + r.description + r.amount) {
-            <tr>
-              <td>{{ r.date | date:'shortDate' }}</td>
-              <td>{{ r.description }}</td>
-              <td class="amount">{{ r.type === 1 ? '+' : '-' }}{{ r.amount | number:'1.2-2' }}</td>
-            </tr>
-          }
-        </tbody>
-      </table>
-    </div>
+  <p>Açılış: {{ bankData.openingBalance | number:'1.2-2' }} — Giriş: {{ bankData.totalGiris | number:'1.2-2' }} — Çıkış:
+    {{ bankData.totalCikis | number:'1.2-2' }} — Kapanış: {{ bankData.closingBalance | number:'1.2-2' }} ₺</p>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Tarih</th>
+          <th>Açıklama</th>
+          <th class="amount">Tutar</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (r of bankData.rows; track r.date + r.description + r.amount) {
+        <tr>
+          <td>{{ r.date | date:'shortDate' }}</td>
+          <td>{{ r.description }}</td>
+          <td class="amount">{{ r.type === 1 ? '+' : '-' }}{{ r.amount | number:'1.2-2' }}</td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
   }
 </section>
 
@@ -181,31 +185,27 @@
   <button type="button" (click)="loadStock()" [disabled]="stockLoading">Yükle</button>
   @if (stockLoading) { <p>Yükleniyor...</p> }
   @if (stockData && !stockLoading) {
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Kod</th>
-            <th>Ad</th>
-            <th>Birim</th>
-            <th class="amount">Miktar</th>
-            <th class="amount">Min / Max</th>
-            <th>Uyarı</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (r of stockData.items; track r.code) {
-            <tr [class.low-stock]="r.lowStock">
-              <td>{{ r.code }}</td>
-              <td>{{ r.name }}</td>
-              <td>{{ r.unit }}</td>
-              <td class="amount">{{ r.quantity | number:'1.2-2' }}</td>
-              <td class="amount">{{ r.minStock | number:'1.2-2' }} / {{ r.maxStock | number:'1.2-2' }}</td>
-              <td>{{ r.lowStock ? 'Düşük stok' : '—' }}</td>
-            </tr>
-          }
-        </tbody>
-      </table>
-    </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Kod</th>
+          <th>Ad</th>
+          <th>Birim</th>
+          <th class="amount">Miktar</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (r of stockData.items; track r.code) {
+        <tr>
+          <td>{{ r.code }}</td>
+          <td>{{ r.name }}</td>
+          <td>{{ r.unit }}</td>
+          <td class="amount">{{ r.quantity | number:'1.2-2' }}</td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
   }
 </section>

@@ -107,8 +107,7 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid
             e.HasOne(x => x.Firm).WithMany(x => x.Products).HasForeignKey(x => x.FirmId).OnDelete(DeleteBehavior.Restrict);
             e.HasIndex(x => x.FirmId);
             e.HasIndex(x => new { x.FirmId, x.Code }).IsUnique();
-            e.Property(x => x.MinStock).HasPrecision(18, 4);
-            e.Property(x => x.MaxStock).HasPrecision(18, 4);
+            e.Property(x => x.StockQuantity).HasPrecision(18, 4);
         });
 
         modelBuilder.Entity<StockMovement>(e =>

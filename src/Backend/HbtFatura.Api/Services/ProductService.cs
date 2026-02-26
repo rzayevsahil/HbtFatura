@@ -55,8 +55,6 @@ public class ProductService : IProductService
                 Name = x.Name,
                 Barcode = x.Barcode,
                 Unit = x.Unit,
-                MinStock = x.MinStock,
-                MaxStock = x.MaxStock,
                 CreatedAt = x.CreatedAt,
                 StockQuantity = x.StockQuantity
             })
@@ -76,8 +74,6 @@ public class ProductService : IProductService
             Name = entity.Name,
             Barcode = entity.Barcode,
             Unit = entity.Unit,
-            MinStock = entity.MinStock,
-            MaxStock = entity.MaxStock,
             StockQuantity = entity.StockQuantity,
             CreatedAt = entity.CreatedAt
         };
@@ -101,8 +97,6 @@ public class ProductService : IProductService
             Name = request.Name.Trim(),
             Barcode = request.Barcode?.Trim(),
             Unit = request.Unit?.Trim() ?? "Adet",
-            MinStock = request.MinStock,
-            MaxStock = request.MaxStock,
             StockQuantity = request.StockQuantity,
             CreatedAt = DateTime.UtcNow
         };
@@ -136,7 +130,6 @@ public class ProductService : IProductService
         entity.Name = request.Name.Trim();
         entity.Barcode = request.Barcode?.Trim();
         entity.Unit = request.Unit?.Trim() ?? "Adet";
-        entity.MaxStock = request.MaxStock;
         
         var difference = request.StockQuantity - entity.StockQuantity;
         if (difference != 0)
@@ -250,8 +243,6 @@ public class ProductService : IProductService
                 Name = x.Name,
                 Barcode = x.Barcode,
                 Unit = x.Unit,
-                MinStock = x.MinStock,
-                MaxStock = x.MaxStock,
                 CreatedAt = x.CreatedAt,
                 StockQuantity = x.StockQuantity
             })

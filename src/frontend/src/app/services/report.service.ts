@@ -71,9 +71,6 @@ export interface StockLevelRowDto {
   name: string;
   unit: string;
   quantity: number;
-  minStock: number;
-  maxStock: number;
-  lowStock: boolean;
 }
 
 export interface StockLevelsReportDto {
@@ -101,7 +98,7 @@ export interface InvoiceReportDto {
 @Injectable({ providedIn: 'root' })
 export class ReportService {
   private base = '/api/reports';
-  constructor(private api: ApiService) {}
+  constructor(private api: ApiService) { }
 
   getCariExtract(customerId: string, dateFrom?: string, dateTo?: string): Observable<CariExtractReportDto> {
     const params: Record<string, string> = { customerId };

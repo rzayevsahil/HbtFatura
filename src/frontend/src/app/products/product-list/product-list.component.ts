@@ -26,7 +26,7 @@ export class ProductListComponent implements OnInit {
     private api: ProductService,
     public auth: AuthService,
     private toastr: ToastrService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.load();
@@ -58,7 +58,4 @@ export class ProductListComponent implements OnInit {
     });
   }
 
-  get lowStock(): (p: ProductListDto) => boolean {
-    return p => p.minStock > 0 && p.stockQuantity <= p.minStock;
-  }
 }

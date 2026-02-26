@@ -157,12 +157,6 @@ export class OrderFormComponent implements OnInit {
     return 0;
   }
 
-  isLowStock(productId: string | null): boolean {
-    if (!productId || !this.stockLevels) return false;
-    const row = this.stockLevels.items.find(x => x.productId === productId);
-    return row?.lowStock ?? false;
-  }
-
   get filteredProducts(): ProductDto[] {
     const t = this.productFilterText?.trim().toLowerCase();
     if (!t) return this.products;

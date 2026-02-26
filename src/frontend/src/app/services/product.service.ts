@@ -9,8 +9,6 @@ export interface ProductDto {
   name: string;
   barcode?: string;
   unit: string;
-  minStock: number;
-  maxStock: number;
   stockQuantity: number;
   createdAt: string;
 }
@@ -22,8 +20,6 @@ export interface CreateProductRequest {
   name: string;
   barcode?: string;
   unit?: string;
-  minStock?: number;
-  maxStock?: number;
   stockQuantity?: number;
   firmId?: string;
 }
@@ -33,8 +29,6 @@ export interface UpdateProductRequest {
   name: string;
   barcode?: string;
   unit?: string;
-  minStock?: number;
-  maxStock?: number;
   stockQuantity?: number;
 }
 
