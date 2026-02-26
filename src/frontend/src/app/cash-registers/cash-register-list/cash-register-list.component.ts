@@ -6,10 +6,12 @@ import { CashRegisterService, CashRegisterDto } from '../../services/cash-regist
 import { AuthService } from '../../core/services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 
+import { ConfirmModalComponent } from '../../shared/confirm-modal/confirm-modal.component';
+
 @Component({
   selector: 'app-cash-register-list',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [CommonModule, RouterLink, FormsModule, ConfirmModalComponent],
   templateUrl: './cash-register-list.component.html',
   styleUrls: ['./cash-register-list.component.scss']
 })
@@ -18,6 +20,8 @@ export class CashRegisterListComponent implements OnInit {
   firmId: string | undefined;
   search = '';
   loading = false;
+  showDeleteModal = false;
+  deletingRegister: { id: string, name: string } | null = null;
 
   constructor(
     private api: CashRegisterService,
@@ -53,14 +57,25 @@ export class CashRegisterListComponent implements OnInit {
     );
   }
 
-  delete(id: string, name: string): void {
-    if (!confirm(`"${name}" kasasını silmek istediğinize emin misiniz?`)) return;
-    this.api.delete(id).subscribe({
+  onDeleteClick(id: string, name: string): void {
+    this.deletingRegister = { id, name };
+    this.showDeleteModal = true;
+  }
+
+  confirmDelete(): void {
+    if (!this.deletingRegister) return;
+    this.api.delete(this.deletingRegister.id).subscribe({
       next: () => {
         this.toastr.success('Kasa silindi.');
+        this.showDeleteModal = false;
+        this.deletingRegister = null;
         this.load();
       },
-      error: e => this.toastr.error(e.error?.message ?? 'Silme sırasında hata oluştu.')
+      error: e => {
+        this.toastr.error(e.error?.message ?? 'Silme sırasında hata oluştu.');
+        this.showDeleteModal = false;
+        this.deletingRegister = null;
+      }
     });
   }
 }

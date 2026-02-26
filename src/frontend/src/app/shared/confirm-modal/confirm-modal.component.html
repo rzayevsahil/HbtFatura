@@ -1,0 +1,20 @@
+<div class="modal-backdrop" (click)="onCancel()">
+    <div class="modal-container" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <div class="icon-circle" [class.danger]="isDanger">
+                <i class="icon">!</i>
+            </div>
+            <h3 class="modal-title">{{ title }}</h3>
+        </div>
+        <div class="modal-body">
+            <p>{{ message }}</p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="onCancel()">{{ cancelText }}</button>
+            <button type="button" class="btn" [class.btn-danger]="isDanger" [class.btn-primary]="!isDanger"
+                (click)="onConfirm()">
+                {{ confirmText }}
+            </button>
+        </div>
+    </div>
+</div>

@@ -35,7 +35,7 @@
           <div class="actions-cell">
             <a [routerLink]="['/products', p.id]">Detay</a>
             <a [routerLink]="['/products', p.id, 'edit']">Düzenle</a>
-            <button type="button" (click)="delete(p.id, p.name)">Sil</button>
+            <button type="button" (click)="onDeleteClick(p.id, p.name)">Sil</button>
           </div>
         </td>
       </tr>
@@ -48,4 +48,10 @@
 }
 @if (items.length === 0) {
 <p class="text-muted">Ürün bulunamadı veya henüz ürün tanımlanmamış.</p>
+}
+
+@if (showDeleteModal) {
+<app-confirm-modal title="Ürün Sil"
+  [message]="'\'' + deletingProduct?.name + '\' isimli ürünü silmek istediğinize emin misiniz?'" confirmText="Sil"
+  cancelText="Vazgeç" (confirm)="confirmDelete()" (cancel)="showDeleteModal = false"></app-confirm-modal>
 }

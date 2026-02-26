@@ -33,7 +33,7 @@
           <div class="actions-cell">
             <a [routerLink]="['/cash-registers', c.id]">Detay</a>
             <a [routerLink]="['/cash-registers', c.id, 'edit']">Düzenle</a>
-            <button type="button" (click)="delete(c.id, c.name)">Sil</button>
+            <button type="button" (click)="onDeleteClick(c.id, c.name)">Sil</button>
           </div>
         </td>
       </tr>
@@ -44,4 +44,10 @@
 @if (filteredItems.length === 0) {
 <p class="text-muted">{{ search.trim() ? 'Arama kriterine uygun kasa bulunamadı.' : 'Henüz kasa tanımlanmamış. Yeni kasa
   ekleyebilirsiniz.' }}</p>
+}
+
+@if (showDeleteModal) {
+<app-confirm-modal title="Kasa Sil"
+  [message]="'\'' + deletingRegister?.name + '\' isimli kasayı silmek istediğinize emin misiniz?'" confirmText="Sil"
+  cancelText="Vazgeç" (confirm)="confirmDelete()" (cancel)="showDeleteModal = false"></app-confirm-modal>
 }

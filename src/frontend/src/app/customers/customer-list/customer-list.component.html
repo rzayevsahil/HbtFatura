@@ -37,7 +37,7 @@
           <div class="actions-cell">
             <a [routerLink]="['/customers', c.id]">Detay</a>
             <a [routerLink]="['/customers', c.id, 'edit']">Düzenle</a>
-            <button type="button" (click)="delete(c.id)">Sil</button>
+            <button type="button" (click)="onDeleteClick(c.id, c.title)">Sil</button>
           </div>
         </td>
       </tr>
@@ -50,3 +50,9 @@
   <button type="button" [disabled]="page <= 1" (click)="prevPage()">Önceki</button>
   <button type="button" [disabled]="items.length < pageSize" (click)="nextPage()">Sonraki</button>
 </div>
+@if (showDeleteModal) {
+<app-confirm-modal title="Cari Sil"
+  [message]="'\'' + deletingCustomer?.title + '\' isimli cari kaydını silmek istediğinize emin misiniz?'"
+  confirmText="Sil" cancelText="Vazgeç" (confirm)="confirmDelete()"
+  (cancel)="showDeleteModal = false"></app-confirm-modal>
+}

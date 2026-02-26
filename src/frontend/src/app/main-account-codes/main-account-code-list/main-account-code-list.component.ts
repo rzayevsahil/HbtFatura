@@ -7,10 +7,12 @@ import { AuthService } from '../../core/services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { MainAccountCodeFormComponent } from '../main-account-code-form/main-account-code-form.component';
 
+import { ConfirmModalComponent } from '../../shared/confirm-modal/confirm-modal.component';
+
 @Component({
   selector: 'app-main-account-code-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, MainAccountCodeFormComponent],
+  imports: [CommonModule, FormsModule, RouterLink, MainAccountCodeFormComponent, ConfirmModalComponent],
   templateUrl: './main-account-code-list.component.html',
   styleUrls: ['./main-account-code-list.component.scss']
 })
@@ -21,6 +23,8 @@ export class MainAccountCodeListComponent implements OnInit {
   modalOpen = false;
   editingId: string | null = null;
   loading = false;
+  showDeleteModal = false;
+  deletingItem: { id: string, code: string } | null = null;
 
   get filteredItems(): MainAccountCodeDto[] {
     const q = this.searchText.trim().toLowerCase();
@@ -56,14 +60,25 @@ export class MainAccountCodeListComponent implements OnInit {
     });
   }
 
-  delete(id: string, code: string): void {
-    if (!confirm(`"${code}" kodunu silmek istediğinize emin misiniz?`)) return;
-    this.api.delete(id).subscribe({
+  onDeleteClick(id: string, code: string): void {
+    this.deletingItem = { id, code };
+    this.showDeleteModal = true;
+  }
+
+  confirmDelete(): void {
+    if (!this.deletingItem) return;
+    this.api.delete(this.deletingItem.id).subscribe({
       next: () => {
         this.toastr.success('Ana cari kodu silindi.');
+        this.showDeleteModal = false;
+        this.deletingItem = null;
         this.load();
       },
-      error: e => this.toastr.error(e.error?.message ?? 'Silme sırasında hata oluştu.')
+      error: e => {
+        this.toastr.error(e.error?.message ?? 'Silme sırasında hata oluştu.');
+        this.showDeleteModal = false;
+        this.deletingItem = null;
+      }
     });
   }
 

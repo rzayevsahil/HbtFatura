@@ -35,7 +35,8 @@
           @if (!item.isSystem) {
           <div class="actions-cell">
             <button type="button" class="btn btn-outline" (click)="openEdit(item.id)">Düzenle</button>
-            <button type="button" class="btn btn-outline btn-danger" (click)="delete(item.id, item.code)">Sil</button>
+            <button type="button" class="btn btn-outline btn-danger"
+              (click)="onDeleteClick(item.id, item.code)">Sil</button>
           </div>
           } @else {
           <span class="text-muted">Sistem kodu</span>
@@ -59,4 +60,10 @@
       (cancel)="closeModal()" />
   </div>
 </div>
+}
+
+@if (showDeleteModal) {
+<app-confirm-modal title="Hesap Kodu Sil"
+  [message]="'\'' + deletingItem?.code + '\' kodlu hesap planını silmek istediğinize emin misiniz?'" confirmText="Sil"
+  cancelText="Vazgeç" (confirm)="confirmDelete()" (cancel)="showDeleteModal = false"></app-confirm-modal>
 }

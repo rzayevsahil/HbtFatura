@@ -6,10 +6,12 @@ import { BankAccountService, BankAccountDto } from '../../services/bank-account.
 import { AuthService } from '../../core/services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 
+import { ConfirmModalComponent } from '../../shared/confirm-modal/confirm-modal.component';
+
 @Component({
   selector: 'app-bank-account-list',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [CommonModule, RouterLink, FormsModule, ConfirmModalComponent],
   templateUrl: './bank-account-list.component.html',
   styleUrls: ['./bank-account-list.component.scss']
 })
@@ -18,6 +20,8 @@ export class BankAccountListComponent implements OnInit {
   firmId: string | undefined;
   search = '';
   loading = false;
+  showDeleteModal = false;
+  deletingAccount: { id: string, name: string } | null = null;
 
   constructor(
     private api: BankAccountService,
@@ -54,14 +58,25 @@ export class BankAccountListComponent implements OnInit {
     );
   }
 
-  delete(id: string, name: string): void {
-    if (!confirm(`"${name}" banka hesabını silmek istediğinize emin misiniz?`)) return;
-    this.api.delete(id).subscribe({
+  onDeleteClick(id: string, name: string): void {
+    this.deletingAccount = { id, name };
+    this.showDeleteModal = true;
+  }
+
+  confirmDelete(): void {
+    if (!this.deletingAccount) return;
+    this.api.delete(this.deletingAccount.id).subscribe({
       next: () => {
         this.toastr.success('Banka hesabı silindi.');
+        this.showDeleteModal = false;
+        this.deletingAccount = null;
         this.load();
       },
-      error: e => this.toastr.error(e.error?.message ?? 'Silme sırasında hata oluştu.')
+      error: e => {
+        this.toastr.error(e.error?.message ?? 'Silme sırasında hata oluştu.');
+        this.showDeleteModal = false;
+        this.deletingAccount = null;
+      }
     });
   }
 }

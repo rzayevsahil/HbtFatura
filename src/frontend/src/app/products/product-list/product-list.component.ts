@@ -7,10 +7,12 @@ import { AuthService } from '../../core/services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { PagedResult } from '../../core/services/api.service';
 
+import { ConfirmModalComponent } from '../../shared/confirm-modal/confirm-modal.component';
+
 @Component({
   selector: 'app-product-list',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [CommonModule, RouterLink, FormsModule, ConfirmModalComponent],
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.scss']
 })
@@ -22,6 +24,8 @@ export class ProductListComponent implements OnInit {
   search = '';
   firmId: string | undefined;
   loading = false;
+  showDeleteModal = false;
+  deletingProduct: { id: string, name: string } | null = null;
 
   constructor(
     private api: ProductService,
@@ -53,14 +57,25 @@ export class ProductListComponent implements OnInit {
     this.load();
   }
 
-  delete(id: string, name: string): void {
-    if (!confirm(`"${name}" ürününü silmek istediğinize emin misiniz?`)) return;
-    this.api.delete(id).subscribe({
+  onDeleteClick(id: string, name: string): void {
+    this.deletingProduct = { id, name };
+    this.showDeleteModal = true;
+  }
+
+  confirmDelete(): void {
+    if (!this.deletingProduct) return;
+    this.api.delete(this.deletingProduct.id).subscribe({
       next: () => {
         this.toastr.success('Ürün silindi.');
+        this.showDeleteModal = false;
+        this.deletingProduct = null;
         this.load();
       },
-      error: e => this.toastr.error(e.error?.message ?? 'Silme sırasında hata oluştu.')
+      error: e => {
+        this.toastr.error(e.error?.message ?? 'Silme sırasında hata oluştu.');
+        this.showDeleteModal = false;
+        this.deletingProduct = null;
+      }
     });
   }
 

@@ -35,7 +35,7 @@
           <div class="actions-cell">
             <a [routerLink]="['/bank-accounts', b.id]">Detay</a>
             <a [routerLink]="['/bank-accounts', b.id, 'edit']">Düzenle</a>
-            <button type="button" (click)="delete(b.id, b.name)">Sil</button>
+            <button type="button" (click)="onDeleteClick(b.id, b.name)">Sil</button>
           </div>
         </td>
       </tr>
@@ -46,4 +46,11 @@
 @if (filteredItems.length === 0) {
 <p class="text-muted">{{ search.trim() ? 'Arama kriterine uygun hesap bulunamadı.' : 'Henüz banka hesabı tanımlanmamış.'
   }}</p>
+}
+
+@if (showDeleteModal) {
+<app-confirm-modal title="Banka Hesabı Sil"
+  [message]="'\'' + deletingAccount?.name + '\' isimli banka hesabını silmek istediğinize emin misiniz?'"
+  confirmText="Sil" cancelText="Vazgeç" (confirm)="confirmDelete()"
+  (cancel)="showDeleteModal = false"></app-confirm-modal>
 }
