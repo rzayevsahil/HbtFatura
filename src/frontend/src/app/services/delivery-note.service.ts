@@ -25,7 +25,8 @@ export interface DeliveryNoteDto {
   orderNumber?: string;
   invoiceId?: string | null;
   deliveryDate: string;
-  status: DeliveryNoteStatus;
+  /** API bazen enum'ı string ("Taslak", "Onaylandi", "Iptal") döner. */
+  status: DeliveryNoteStatus | string;
   deliveryType: InvoiceType;
   createdAt: string;
   items: DeliveryNoteItemDto[];
@@ -35,7 +36,8 @@ export interface DeliveryNoteListDto {
   id: string;
   deliveryNumber: string;
   deliveryDate: string;
-  status: DeliveryNoteStatus;
+  /** API bazen enum'ı string ("Taslak", "Onaylandi", "Iptal") döner. */
+  status: DeliveryNoteStatus | string;
   deliveryType: InvoiceType;
   customerTitle?: string;
   orderNumber?: string;

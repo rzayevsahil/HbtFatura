@@ -1,11 +1,11 @@
 <div class="page-header">
   <h1 class="page-title">{{ deliveryNote?.deliveryNumber ?? 'İrsaliye' }}</h1>
   <div class="actions">
-    @if (deliveryNote?.status === 0 && !deliveryNote?.invoiceId) {
+    @if (isTaslak(deliveryNote?.status) && !deliveryNote?.invoiceId) {
       <a [routerLink]="['/delivery-notes', deliveryNote?.id, 'edit']" class="btn btn-secondary">Düzenle</a>
       <button type="button" class="btn btn-primary" (click)="confirmDeliveryNote()">Onayla</button>
     }
-    @if (deliveryNote?.status === 1 && !deliveryNote?.invoiceId) {
+    @if (isOnaylandi(deliveryNote?.status) && !deliveryNote?.invoiceId) {
       <button type="button" class="btn btn-primary" (click)="createInvoice()" [disabled]="creatingInvoice">
         {{ creatingInvoice ? 'Oluşturuluyor...' : 'Faturaya Aktar' }}
       </button>

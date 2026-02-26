@@ -37,17 +37,29 @@ export class DeliveryNoteDetailComponent implements OnInit {
     }
   }
 
-  statusLabel(s: DeliveryNoteStatus): string {
-    const map: Record<DeliveryNoteStatus, string> = { 0: 'Taslak', 1: 'Onaylandı', 2: 'İptal' };
-    return map[s] ?? '';
+  /** Backend bazen enum'ı sayı bazen string (örn. "Taslak") gönderebilir. */
+  statusLabel(s: DeliveryNoteStatus | string | undefined): string {
+    if (s === undefined || s === null) return '';
+    const byNumber: Record<number, string> = { 0: 'Taslak', 1: 'Onaylandı', 2: 'İptal' };
+    const byString: Record<string, string> = { Taslak: 'Taslak', Onaylandi: 'Onaylandı', Iptal: 'İptal' };
+    if (typeof s === 'number') return byNumber[s] ?? '';
+    return byString[String(s)] ?? '';
   }
 
   typeLabel(t: number): string {
     return t === 1 ? 'Alış' : 'Satış';
   }
 
+  isTaslak(s: DeliveryNoteStatus | string | undefined): boolean {
+    return s === 0 || s === 'Taslak';
+  }
+
+  isOnaylandi(s: DeliveryNoteStatus | string | undefined): boolean {
+    return s === 1 || s === 'Onaylandi';
+  }
+
   confirmDeliveryNote(): void {
-    if (!this.deliveryNote || this.deliveryNote.status !== 0) return;
+    if (!this.deliveryNote || !this.isTaslak(this.deliveryNote.status)) return;
     this.deliveryNoteApi.setStatus(this.deliveryNote.id, 1).subscribe({
       next: () => { this.toastr.success('İrsaliye onaylandı.'); this.ngOnInit(); },
       error: e => this.toastr.error(e.error?.message ?? 'Onaylanamadı.')
@@ -55,7 +67,7 @@ export class DeliveryNoteDetailComponent implements OnInit {
   }
 
   createInvoice(): void {
-    if (!this.deliveryNote || this.deliveryNote.status !== 1 || this.deliveryNote.invoiceId) return;
+    if (!this.deliveryNote || !this.isOnaylandi(this.deliveryNote.status) || this.deliveryNote.invoiceId) return;
     this.creatingInvoice = true;
     this.invoiceApi.createFromDeliveryNote(this.deliveryNote.id).subscribe({
       next: inv => {

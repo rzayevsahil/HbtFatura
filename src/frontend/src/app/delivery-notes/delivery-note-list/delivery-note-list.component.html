@@ -1,19 +1,32 @@
 <div class="page-header">
   <h1 class="page-title">İrsaliyeler</h1>
-  <div class="actions">
-    <a routerLink="/delivery-notes/new" class="btn btn-primary">İrsaliye Ekle</a>
-  </div>
 </div>
 <div class="toolbar">
-  <input [(ngModel)]="searchDateFrom" type="date" />
-  <input [(ngModel)]="searchDateTo" type="date" />
-  <select [(ngModel)]="searchStatus">
-    <option [ngValue]="null">Tümü</option>
-    <option [ngValue]="0">Taslak</option>
-    <option [ngValue]="1">Onaylandı</option>
-    <option [ngValue]="2">İptal</option>
-  </select>
-  <button type="button" (click)="load()">Filtrele</button>
+  <label class="toolbar-field">
+    <span class="toolbar-label">Başlangıç tarihi</span>
+    <input [(ngModel)]="searchDateFrom" type="date" class="toolbar-input" />
+  </label>
+  <label class="toolbar-field">
+    <span class="toolbar-label">Bitiş tarihi</span>
+    <input [(ngModel)]="searchDateTo" type="date" class="toolbar-input" />
+  </label>
+  <label class="toolbar-field">
+    <span class="toolbar-label">Durum</span>
+    <select [(ngModel)]="searchStatus" class="toolbar-select">
+      <option [ngValue]="null">Tümü</option>
+      <option [ngValue]="0">Taslak</option>
+      <option [ngValue]="1">Onaylandı</option>
+      <option [ngValue]="2">İptal</option>
+    </select>
+  </label>
+  <div class="toolbar-field toolbar-field-btn">
+    <span class="toolbar-label">&nbsp;</span>
+    <button type="button" (click)="load()">Filtrele</button>
+  </div>
+  <div class="toolbar-field toolbar-field-btn">
+    <span class="toolbar-label">&nbsp;</span>
+    <a routerLink="/delivery-notes/new" class="btn btn-primary">İrsaliye Ekle</a>
+  </div>
 </div>
 <div class="card table-wrap">
   <table>
