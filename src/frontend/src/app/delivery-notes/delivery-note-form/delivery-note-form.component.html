@@ -1,5 +1,6 @@
 <div class="page-header">
   <h1 class="page-title">{{ id ? 'İrsaliye Düzenle' : 'Yeni İrsaliye' }}</h1>
+  <a routerLink="/delivery-notes" class="btn btn-default">← Geri</a>
 </div>
 <div class="card">
   <form [formGroup]="form" (ngSubmit)="onSubmit()">

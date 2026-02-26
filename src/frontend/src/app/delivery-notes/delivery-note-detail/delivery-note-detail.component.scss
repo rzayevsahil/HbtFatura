@@ -22,6 +22,15 @@
   background: var(--color-background, #f1f5f9);
   color: var(--color-text, #1e293b);
 }
+.btn-default {
+  background: var(--color-surface, #f8fafc);
+  color: var(--color-text, #1e293b);
+  border-color: var(--color-border, #e2e8f0);
+}
+.btn-default:hover {
+  background: var(--color-background, #f1f5f9);
+  color: var(--color-text, #1e293b);
+}
 .card { margin-bottom: 1rem; }
 
 .info-grid {

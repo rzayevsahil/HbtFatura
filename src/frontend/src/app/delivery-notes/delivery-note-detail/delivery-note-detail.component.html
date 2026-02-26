@@ -13,6 +13,7 @@
     @if (deliveryNote?.invoiceId) {
       <a [routerLink]="['/invoices', deliveryNote?.invoiceId]" class="btn btn-secondary">Faturaya Git</a>
     }
+    <a routerLink="/delivery-notes" class="btn btn-default">← Geri</a>
   </div>
 </div>
 @if (loading) {
