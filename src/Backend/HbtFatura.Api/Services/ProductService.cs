@@ -89,6 +89,8 @@ public class ProductService : IProductService
         else
             throw new UnauthorizedAccessException("Firm context required.");
 
+        if (request.StockQuantity < 0) throw new ArgumentException("Başlangıç stok miktarı sıfırdan küçük olamaz.");
+
         var entity = new Product
         {
             Id = Guid.NewGuid(),
@@ -131,6 +133,8 @@ public class ProductService : IProductService
         entity.Barcode = request.Barcode?.Trim();
         entity.Unit = request.Unit?.Trim() ?? "Adet";
         
+        if (request.StockQuantity < 0) throw new ArgumentException("Stok miktarı sıfırdan küçük olamaz.");
+
         var difference = request.StockQuantity - entity.StockQuantity;
         if (difference != 0)
         {
@@ -210,13 +214,16 @@ public class ProductService : IProductService
         _db.StockMovements.Add(entityStock);
         
         var entity = await ScopeQuery().FirstOrDefaultAsync(x => x.Id == productId, ct);
-        if (entity != null)
-        {
-            if (request.Type == StockMovementType.Giris)
-                entity.StockQuantity += request.Quantity;
-            else if (request.Type == StockMovementType.Cikis)
-                entity.StockQuantity -= request.Quantity;
-        }
+        if (entity == null) throw new Exception("Product not found.");
+
+        if (request.Type == StockMovementType.Cikis && request.Quantity > entity.StockQuantity)
+            throw new InvalidOperationException("Yetersiz stok! Mevcut stoktan fazla çıkış yapamazsınız.");
+
+        if (request.Type == StockMovementType.Giris)
+            entity.StockQuantity += request.Quantity;
+        else if (request.Type == StockMovementType.Cikis)
+            entity.StockQuantity -= request.Quantity;
+
 
         await _db.SaveChangesAsync(ct);
         return new StockMovementDto

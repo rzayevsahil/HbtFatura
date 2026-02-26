@@ -31,7 +31,7 @@ export class ProductDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private api: ProductService,
     private toastr: ToastrService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
@@ -69,6 +69,12 @@ export class ProductDetailComponent implements OnInit {
   submitMovement(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (!id || this.newMovement.quantity <= 0) return;
+
+    if (this.newMovement.type === STOCK_CIKIS && this.newMovement.quantity > (this.product?.stockQuantity ?? 0)) {
+      this.toastr.warning('Yetersiz stok! Mevcut stoktan fazla çıkış yapamazsınız.');
+      return;
+    }
+
     this.api.addMovement(id, {
       date: this.newMovement.date,
       type: this.newMovement.type,
