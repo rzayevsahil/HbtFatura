@@ -19,11 +19,26 @@
   <p>Yükleniyor...</p>
 } @else if (deliveryNote) {
   <div class="card info-grid">
-    <p><strong>Cari:</strong> {{ deliveryNote.customerTitle || '—' }}</p>
-    <p><strong>Sipariş:</strong> {{ deliveryNote.orderNumber || '—' }}</p>
-    <p><strong>Tarih:</strong> {{ deliveryNote.deliveryDate | date:'dd.MM.yyyy' }}</p>
-    <p><strong>Tip:</strong> {{ typeLabel(deliveryNote.deliveryType) }}</p>
-    <p><strong>Durum:</strong> {{ statusLabel(deliveryNote.status) }}</p>
+    <div class="info-item info-item-cari">
+      <span class="info-label">Cari:</span>
+      <span class="info-value">{{ deliveryNote.customerTitle || '—' }}</span>
+    </div>
+    <div class="info-item info-item-siparis">
+      <span class="info-label">Sipariş No:</span>
+      <span class="info-value">{{ deliveryNote.orderNumber || '—' }}</span>
+    </div>
+    <div class="info-item">
+      <span class="info-label">Tarih:</span>
+      <span class="info-value">{{ deliveryNote.deliveryDate | date:'dd.MM.yyyy' }}</span>
+    </div>
+    <div class="info-item">
+      <span class="info-label">Tip:</span>
+      <span class="info-value">{{ typeLabel(deliveryNote.deliveryType) }}</span>
+    </div>
+    <div class="info-item">
+      <span class="info-label">Durum:</span>
+      <span class="info-value">{{ statusLabel(deliveryNote.status) }}</span>
+    </div>
   </div>
   <h2 class="section-title">Kalemler</h2>
   <div class="card table-wrap">

@@ -23,7 +23,38 @@
   color: var(--color-text, #1e293b);
 }
 .card { margin-bottom: 1rem; }
-.info-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; }
+
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr minmax(100px, max-content) minmax(70px, max-content) minmax(130px, max-content);
+  gap: 1.5rem 2rem;
+  align-items: baseline;
+  width: 100%;
+}
+
+.info-item {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.35rem;
+  min-width: 0;
+
+  .info-label { font-weight: 600; flex-shrink: 0; color: var(--color-text); }
+  .info-value { min-width: 0; color: var(--color-text); }
+}
+
+.info-item:not(.info-item-cari):not(.info-item-siparis) .info-value {
+  white-space: nowrap;
+}
+
+.info-item-cari,
+.info-item-siparis {
+  .info-value {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
 .section-title { font-size: 1rem; margin: 1.5rem 0 0.5rem; }
 .table-wrap { overflow-x: auto; }
 table { width: 100%; border-collapse: collapse; font-size: 0.9375rem; }
