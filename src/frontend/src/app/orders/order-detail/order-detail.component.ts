@@ -27,7 +27,7 @@ export class OrderDetailComponent implements OnInit {
 
   @HostListener('document:keydown', ['$event'])
   onKeyDown(e: KeyboardEvent): void {
-    if (e.key === 'F2' && this.order?.status === 0 && !['INPUT', 'TEXTAREA', 'SELECT'].includes((e.target as HTMLElement)?.tagName)) {
+    if (e.key === 'F2' && this.order && this.isEditableOrder() && !['INPUT', 'TEXTAREA', 'SELECT'].includes((e.target as HTMLElement)?.tagName)) {
       e.preventDefault();
       this.router.navigate(['/orders', this.order.id, 'edit']);
     }
@@ -45,17 +45,48 @@ export class OrderDetailComponent implements OnInit {
     }
   }
 
-  statusLabel(s: OrderStatus): string {
-    const map: Record<OrderStatus, string> = { 0: 'Bekliyor', 1: 'Tamamı Teslim', 2: 'İptal', 3: 'Onaylandı', 4: 'Kısmi Teslim' };
-    return map[s] ?? '';
+  /** Backend bazen enum'ı sayı bazen string (örn. "Bekliyor") döner. */
+  statusLabel(s: OrderStatus | string | undefined): string {
+    if (s === undefined || s === null) return '';
+    const mapByNumber: Record<number, string> = { 0: 'Bekliyor', 1: 'Tamamı Teslim', 2: 'İptal', 3: 'Onaylandı', 4: 'Kısmi Teslim' };
+    const mapByString: Record<string, string> = { Bekliyor: 'Bekliyor', TamamiTeslim: 'Tamamı Teslim', Iptal: 'İptal', Onaylandi: 'Onaylandı', KismiTeslim: 'Kısmi Teslim' };
+    if (typeof s === 'number') return mapByNumber[s] ?? '';
+    return mapByString[String(s)] ?? '';
+  }
+
+  isEditableOrder(): boolean {
+    return this.order != null && (this.order.status === 0 || this.order.status === 'Bekliyor');
   }
 
   typeLabel(t: number): string {
     return t === 1 ? 'Alış' : 'Satış';
   }
 
+  setStatusOnayla(): void {
+    if (!this.order || !this.isEditableOrder()) return;
+    this.orderApi.setStatus(this.order.id, 3).subscribe({
+      next: () => {
+        this.toastr.success('Sipariş onaylandı.');
+        this.ngOnInit();
+      },
+      error: e => this.toastr.error(e.error?.message ?? 'Durum güncellenemedi.')
+    });
+  }
+
+  setStatusIptal(): void {
+    if (!this.order || !this.isEditableOrder()) return;
+    if (!confirm('Siparişi iptal etmek istediğinize emin misiniz?')) return;
+    this.orderApi.setStatus(this.order.id, 2).subscribe({
+      next: () => {
+        this.toastr.success('Sipariş iptal edildi.');
+        this.ngOnInit();
+      },
+      error: e => this.toastr.error(e.error?.message ?? 'Durum güncellenemedi.')
+    });
+  }
+
   createDeliveryNote(): void {
-    if (!this.order || this.order.status !== 0) return;
+    if (!this.order || !this.isEditableOrder()) return;
     this.creatingDeliveryNote = true;
     const deliveryDate = new Date().toISOString().slice(0, 10);
     this.deliveryNoteApi.createFromOrder({ orderId: this.order.id, deliveryDate }).subscribe({

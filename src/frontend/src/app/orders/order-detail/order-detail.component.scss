@@ -2,8 +2,37 @@
 .actions { display: flex; gap: 0.5rem; align-items: center; }
 .btn { padding: 0.625rem 1.25rem; font-size: 0.9375rem; font-weight: 600; border-radius: var(--radius-sm, 6px); text-decoration: none; cursor: pointer; border: none; }
 .btn-primary { background: var(--color-primary); color: #fff; }
+.btn-default { background: var(--color-surface); color: var(--color-text); border: 1px solid var(--color-border); }
+.btn-approve { background: #0d9488; color: #fff; }
+.btn-cancel { background: #dc2626; color: #fff; }
+.btn-approve:hover, .btn-cancel:hover { opacity: 0.9; }
 .card { margin-bottom: 1rem; }
-.info-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; }
+
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 120px 90px 110px;
+  gap: 1.5rem 2rem;
+  align-items: baseline;
+  width: 100%;
+}
+
+.info-item {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.35rem;
+  min-width: 0;
+
+  .info-label { font-weight: 600; flex-shrink: 0; color: var(--color-text); }
+  .info-value { min-width: 0; color: var(--color-text); }
+}
+
+.info-item-cari {
+  .info-value {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
 .section-title { font-size: 1rem; margin: 1.5rem 0 0.5rem; }
 .table-wrap { overflow-x: auto; }
 table { width: 100%; border-collapse: collapse; font-size: 0.9375rem; }

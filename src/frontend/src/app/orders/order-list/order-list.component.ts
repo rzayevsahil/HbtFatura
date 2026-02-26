@@ -46,13 +46,21 @@ export class OrderListComponent implements OnInit {
     });
   }
 
-  statusLabel(s: OrderStatus): string {
-    const map: Record<OrderStatus, string> = { 0: 'Bekliyor', 1: 'Tamamı Teslim', 2: 'İptal', 3: 'Onaylandı', 4: 'Kısmi Teslim' };
-    return map[s] ?? '';
+  statusLabel(s: OrderStatus | string | undefined): string {
+    if (s === undefined || s === null) return '';
+    const mapByNumber: Record<number, string> = { 0: 'Bekliyor', 1: 'Tamamı Teslim', 2: 'İptal', 3: 'Onaylandı', 4: 'Kısmi Teslim' };
+    const mapByString: Record<string, string> = { Bekliyor: 'Bekliyor', TamamiTeslim: 'Tamamı Teslim', Iptal: 'İptal', Onaylandi: 'Onaylandı', KismiTeslim: 'Kısmi Teslim' };
+    if (typeof s === 'number') return mapByNumber[s] ?? '';
+    return mapByString[String(s)] ?? '';
   }
 
   typeLabel(t: number): string {
     return t === 1 ? 'Alış' : 'Satış';
+  }
+
+  /** Bekliyor (düzenlenebilir) durumu: backend bazen sayı 0 bazen string "Bekliyor" dönebilir. */
+  isEditableStatus(o: OrderListDto): boolean {
+    return o.status === 0 || o.status === 'Bekliyor';
   }
 
   setStatus(id: string, status: OrderStatus): void {

@@ -5,6 +5,12 @@
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <div class="form-section">
       <div class="form-grid">
+        @if (id && orderNumber) {
+          <div class="row">
+            <label>Sipariş kodu</label>
+            <span class="form-readonly">{{ orderNumber }}</span>
+          </div>
+        }
         <div class="row">
           <label>Cari</label>
           <select formControlName="customerId">
@@ -16,7 +22,7 @@
         </div>
         <div class="row">
           <label>Sipariş Tarihi</label>
-          <input type="date" formControlName="orderDate" />
+          <input type="datetime-local" formControlName="orderDate" />
         </div>
         <div class="row">
           <label>Tip</label>
@@ -24,6 +30,10 @@
             <option [ngValue]="0">Satış</option>
             <option [ngValue]="1">Alış</option>
           </select>
+        </div>
+        <div class="row">
+          <label>Durum</label>
+          <span class="form-readonly">Bekliyor</span>
         </div>
       </div>
     </div>

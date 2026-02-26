@@ -3,6 +3,7 @@ using HbtFatura.Api.Data;
 using HbtFatura.Api.DTOs.Customers;
 using HbtFatura.Api.DTOs.Orders;
 using HbtFatura.Api.Entities;
+using HbtFatura.Api.Helpers;
 
 namespace HbtFatura.Api.Services;
 
@@ -34,7 +35,7 @@ public class OrderService : IOrderService
     {
         var query = ScopeQuery(firmId);
         if (dateFrom.HasValue) query = query.Where(x => x.OrderDate >= dateFrom.Value.Date);
-        if (dateTo.HasValue) query = query.Where(x => x.OrderDate <= dateTo.Value.Date);
+        if (dateTo.HasValue) query = query.Where(x => x.OrderDate < dateTo.Value.Date.AddDays(1));
         if (status.HasValue) query = query.Where(x => x.Status == status.Value);
         if (customerId.HasValue) query = query.Where(x => x.CustomerId == customerId.Value);
 
@@ -74,7 +75,8 @@ public class OrderService : IOrderService
     public async Task<OrderDto> CreateAsync(CreateOrderRequest request, CancellationToken ct = default)
     {
         var userId = _currentUser.UserId;
-        var orderNumber = await GetNextOrderNumberAsync(userId, request.OrderDate.Year, ct);
+        var orderDate = DateTimeHelper.NormalizeForStorage(request.OrderDate);
+        var orderNumber = await GetNextOrderNumberAsync(userId, orderDate.Year, ct);
 
         string? customerTitle = null;
         if (request.CustomerId.HasValue)
@@ -92,7 +94,7 @@ public class OrderService : IOrderService
             UserId = userId,
             OrderNumber = orderNumber,
             CustomerId = request.CustomerId,
-            OrderDate = request.OrderDate.Date,
+            OrderDate = orderDate,
             Status = OrderStatus.Bekliyor,
             OrderType = request.OrderType,
             CreatedAt = DateTime.UtcNow,
@@ -124,26 +126,31 @@ public class OrderService : IOrderService
 
     public async Task<OrderDto?> UpdateAsync(Guid id, UpdateOrderRequest request, CancellationToken ct = default)
     {
-        var order = await ScopeQuery().Include(x => x.Items).FirstOrDefaultAsync(x => x.Id == id, ct);
+        var order = await ScopeQuery().AsTracking().FirstOrDefaultAsync(x => x.Id == id, ct);
         if (order == null) return null;
         if (order.Status != OrderStatus.Bekliyor)
             throw new InvalidOperationException("Sadece bekleyen (taslak) sipariş düzenlenebilir.");
 
+        // Mevcut kalemleri ayrı sorguyla yükle ve EF üzerinden sil (loglama/audit için doğru yol)
+        var existingItems = await _db.OrderItems.Where(x => x.OrderId == id).ToListAsync(ct);
+        _db.OrderItems.RemoveRange(existingItems);
+
         order.CustomerId = request.CustomerId;
-        order.OrderDate = request.OrderDate.Date;
+        order.OrderDate = DateTimeHelper.NormalizeForStorage(request.OrderDate);
+        if (request.Status.HasValue && (request.Status.Value == OrderStatus.Bekliyor || request.Status.Value == OrderStatus.Onaylandi))
+            order.Status = request.Status.Value;
         order.UpdatedAt = DateTime.UtcNow;
         order.UpdatedBy = _currentUser.UserId;
 
-        _db.OrderItems.RemoveRange(order.Items);
         var sortOrder = 0;
-        foreach (var item in request.Items)
+        foreach (var item in request.Items ?? new List<OrderItemInputDto>())
         {
-            order.Items.Add(new OrderItem
+            _db.OrderItems.Add(new OrderItem
             {
                 Id = Guid.NewGuid(),
                 OrderId = order.Id,
                 ProductId = item.ProductId,
-                Description = item.Description.Trim(),
+                Description = (item.Description ?? string.Empty).Trim(),
                 Quantity = item.Quantity,
                 UnitPrice = item.UnitPrice,
                 VatRate = item.VatRate,

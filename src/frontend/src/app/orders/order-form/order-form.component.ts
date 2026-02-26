@@ -2,7 +2,7 @@ import { Component, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators, FormsModule } from '@angular/forms';
-import { OrderService, CreateOrderRequest, UpdateOrderRequest } from '../../services/order.service';
+import { OrderService, CreateOrderRequest, UpdateOrderRequest, OrderStatus } from '../../services/order.service';
 import { CustomerService, CustomerDto } from '../../services/customer.service';
 import { ProductService, ProductDto } from '../../services/product.service';
 import { ReportService, StockLevelsReportDto } from '../../services/report.service';
@@ -18,6 +18,7 @@ import { ToastrService } from 'ngx-toastr';
 export class OrderFormComponent implements OnInit {
   form: FormGroup;
   id: string | null = null;
+  orderNumber: string | null = null;
   customers: CustomerDto[] = [];
   products: ProductDto[] = [];
   productFilterText = '';
@@ -41,8 +42,9 @@ export class OrderFormComponent implements OnInit {
   ) {
     this.form = this.fb.nonNullable.group({
       customerId: this.fb.control<string | null>(null),
-      orderDate: [new Date().toISOString().slice(0, 10), Validators.required],
+      orderDate: [this.toDatetimeLocalValue(new Date()), Validators.required],
       orderType: [0 as number, Validators.required],
+      status: [0 as number],
       items: this.fb.array([this.createItemGroup()])
     });
   }
@@ -54,10 +56,13 @@ export class OrderFormComponent implements OnInit {
     this.id = this.route.snapshot.paramMap.get('id');
     if (this.id) {
       this.orderApi.getById(this.id).subscribe(o => {
+        this.orderNumber = o.orderNumber ?? null;
+        const orderTypeNum = this.normalizeOrderType(o.orderType);
         this.form.patchValue({
           customerId: o.customerId ?? null,
-          orderDate: o.orderDate.slice(0, 10),
-          orderType: o.orderType ?? 0
+          orderDate: this.toDatetimeLocalValue(o.orderDate),
+          orderType: orderTypeNum,
+          status: 0
         });
         this.items.clear();
         o.items.forEach((it, idx) => this.items.push(this.fb.nonNullable.group({
@@ -91,6 +96,25 @@ export class OrderFormComponent implements OnInit {
     if (p) g.patchValue({ description: p.name });
   }
 
+  /** datetime-local input için değer: "yyyy-MM-ddTHH:mm". */
+  toDatetimeLocalValue(date: string | Date): string {
+    if (!date) return '';
+    if (typeof date === 'string' && date.length === 10) return date + 'T00:00';
+    const d = typeof date === 'string' ? new Date(date) : date;
+    if (isNaN(d.getTime())) return '';
+    const pad = (n: number) => n.toString().padStart(2, '0');
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  }
+
+  /** API bazen Tip'i string ("Satis", "Alis") döner; select sayı bekliyor. */
+  normalizeOrderType(v: number | string | undefined): number {
+    if (v === undefined || v === null) return 0;
+    if (typeof v === 'number') return v;
+    const s = String(v);
+    if (s === 'Alis' || s === '1') return 1;
+    return 0;
+  }
+
   isLowStock(productId: string | null): boolean {
     if (!productId || !this.stockLevels) return false;
     const row = this.stockLevels.items.find(x => x.productId === productId);
@@ -121,15 +145,25 @@ export class OrderFormComponent implements OnInit {
     if (this.items.length > 1) this.items.removeAt(i);
   }
 
+  /** API'nin kabul ettiği tarih formatı: ISO 8601 saniyeli (yyyy-MM-ddTHH:mm:ss). */
+  toOrderDateApiValue(value: string): string {
+    if (!value || typeof value !== 'string') return new Date().toISOString().slice(0, 19);
+    const s = value.trim();
+    if (s.length === 10) return s + 'T00:00:00';
+    if (s.length === 16) return s + ':00';
+    return s.slice(0, 19);
+  }
+
   onSubmit(): void {
     this.error = '';
     this.form.markAllAsTouched();
     if (this.form.invalid) return;
     this.saving = true;
     const raw = this.form.getRawValue();
+    const orderDateStr = this.toOrderDateApiValue(raw.orderDate);
     const req: CreateOrderRequest = {
       customerId: raw.customerId ?? undefined,
-      orderDate: raw.orderDate,
+      orderDate: orderDateStr,
       orderType: raw.orderType,
       items: raw.items.map((it: any, idx: number) => ({
         productId: it.productId ?? undefined,
@@ -141,7 +175,20 @@ export class OrderFormComponent implements OnInit {
       }))
     };
     if (this.id) {
-      this.orderApi.update(this.id, req).subscribe({
+      const updateReq: UpdateOrderRequest = {
+        customerId: raw.customerId ?? undefined,
+        orderDate: orderDateStr,
+        status: raw.status as OrderStatus,
+        items: raw.items.map((it: any, idx: number) => ({
+          productId: it.productId ?? undefined,
+          description: it.description || '',
+          quantity: Number(it.quantity) || 0,
+          unitPrice: Number(it.unitPrice) || 0,
+          vatRate: Number(it.vatRate) || 0,
+          sortOrder: idx
+        }))
+      };
+      this.orderApi.update(this.id, updateReq).subscribe({
         next: () => { this.toastr.success('Sipariş güncellendi.'); this.router.navigate(['/orders']); },
         error: e => { this.error = e.error?.message ?? 'Kaydedilemedi.'; this.saving = false; }
       });

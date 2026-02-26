@@ -59,5 +59,7 @@ public class UpdateOrderRequest
 {
     public Guid? CustomerId { get; set; }
     public DateTime OrderDate { get; set; }
+    /// <summary>Yalnızca Bekliyor iken değiştirilebilir; sadece Bekliyor (0) veya Onaylandı (3) atanabilir.</summary>
+    public OrderStatus? Status { get; set; }
     public List<OrderItemInputDto> Items { get; set; } = new();
 }

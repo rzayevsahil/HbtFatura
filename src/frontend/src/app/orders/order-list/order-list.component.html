@@ -40,8 +40,9 @@
           <td>
             <div class="actions-cell">
               <a [routerLink]="['/orders', o.id]">Detay</a>
-              @if (o.status === 0) {
+              @if (isEditableStatus(o)) {
                 <a [routerLink]="['/orders', o.id, 'edit']">Düzenle</a>
+                <button type="button" (click)="setStatus(o.id, 3)">Onayla</button>
                 <button type="button" (click)="setStatus(o.id, 2)">İptal</button>
               }
             </div>

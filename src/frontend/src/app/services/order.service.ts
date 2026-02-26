@@ -21,17 +21,18 @@ export interface OrderDto {
   customerId?: string;
   customerTitle?: string;
   orderDate: string;
-  status: OrderStatus;
+  status: OrderStatus | string;
   orderType: InvoiceType;
   createdAt: string;
   items: OrderItemDto[];
 }
 
+/** Backend bazen enum'ı sayı bazen string (örn. "Bekliyor") gönderebilir. */
 export interface OrderListDto {
   id: string;
   orderNumber: string;
   orderDate: string;
-  status: OrderStatus;
+  status: OrderStatus | string;
   orderType: InvoiceType;
   customerTitle?: string;
   totalAmount?: number;
@@ -56,6 +57,8 @@ export interface CreateOrderRequest {
 export interface UpdateOrderRequest {
   customerId?: string;
   orderDate: string;
+  /** Sadece Bekliyor (0) veya Onaylandı (3) atanabilir. */
+  status?: OrderStatus;
   items: OrderItemInputDto[];
 }
 

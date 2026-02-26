@@ -1,8 +1,10 @@
 <div class="page-header">
   <h1 class="page-title">{{ order?.orderNumber ?? 'Sipariş' }}</h1>
   <div class="actions">
-    @if (order?.status === 0) {
-      <a [routerLink]="['/orders', order?.id, 'edit']" class="btn">Düzenle</a>
+    @if (order && isEditableOrder()) {
+      <a [routerLink]="['/orders', order?.id, 'edit']" class="btn btn-default">Düzenle</a>
+      <button type="button" class="btn btn-approve" (click)="setStatusOnayla()">Onayla</button>
+      <button type="button" class="btn btn-cancel" (click)="setStatusIptal()">İptal</button>
       <button type="button" class="btn btn-primary" (click)="createDeliveryNote()" [disabled]="creatingDeliveryNote">
         {{ creatingDeliveryNote ? 'Oluşturuluyor...' : 'İrsaliyeye Gönder' }}
       </button>
@@ -13,10 +15,22 @@
   <p>Yükleniyor...</p>
 } @else if (order) {
   <div class="card info-grid">
-    <p><strong>Cari:</strong> {{ order.customerTitle || '—' }}</p>
-    <p><strong>Tarih:</strong> {{ order.orderDate | date:'dd.MM.yyyy' }}</p>
-    <p><strong>Tip:</strong> {{ typeLabel(order.orderType) }}</p>
-    <p><strong>Durum:</strong> {{ statusLabel(order.status) }}</p>
+    <div class="info-item info-item-cari">
+      <span class="info-label">Cari:</span>
+      <span class="info-value">{{ order.customerTitle || '—' }}</span>
+    </div>
+    <div class="info-item">
+      <span class="info-label">Tarih:</span>
+      <span class="info-value">{{ order.orderDate | date:'dd.MM.yyyy' }}</span>
+    </div>
+    <div class="info-item">
+      <span class="info-label">Tip:</span>
+      <span class="info-value">{{ typeLabel(order.orderType) }}</span>
+    </div>
+    <div class="info-item">
+      <span class="info-label">Durum:</span>
+      <span class="info-value">{{ statusLabel(order.status) }}</span>
+    </div>
   </div>
   <h2 class="section-title">Kalemler</h2>
   <div class="card table-wrap">
