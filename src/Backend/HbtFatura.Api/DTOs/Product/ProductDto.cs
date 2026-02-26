@@ -24,6 +24,7 @@ public class CreateProductRequest
     public string Unit { get; set; } = "Adet";
     public decimal MinStock { get; set; }
     public decimal MaxStock { get; set; }
+    public decimal StockQuantity { get; set; }
     public Guid? FirmId { get; set; }
 }
 
@@ -35,6 +36,7 @@ public class UpdateProductRequest
     public string Unit { get; set; } = "Adet";
     public decimal MinStock { get; set; }
     public decimal MaxStock { get; set; }
+    public decimal StockQuantity { get; set; }
 }
 
 public class StockMovementDto

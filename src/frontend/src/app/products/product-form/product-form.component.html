@@ -5,15 +5,15 @@
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <div class="form-grid">
       @if (auth.user()?.role === 'SuperAdmin' && !id) {
-        <div class="row">
-          <label>Firma</label>
-          <select formControlName="firmId" required>
-            <option [ngValue]="null">Firma seçin</option>
-            @for (f of firms; track f.id) {
-              <option [ngValue]="f.id">{{ f.name }}</option>
-            }
-          </select>
-        </div>
+      <div class="row">
+        <label>Firma</label>
+        <select formControlName="firmId" required>
+          <option [ngValue]="null">Firma seçin</option>
+          @for (f of firms; track f.id) {
+          <option [ngValue]="f.id">{{ f.name }}</option>
+          }
+        </select>
+      </div>
       }
       <div class="row">
         <label>Kod</label>
@@ -38,6 +38,10 @@
       <div class="row">
         <label>Max stok</label>
         <input type="number" formControlName="maxStock" step="0.01" min="0" />
+      </div>
+      <div class="row">
+        <label>Mevcut Stok</label>
+        <input type="number" formControlName="stockQuantity" step="0.01" />
       </div>
       @if (error) { <p class="error-msg">{{ error }}</p> }
     </div>

@@ -58,21 +58,9 @@ public class ProductService : IProductService
                 MinStock = x.MinStock,
                 MaxStock = x.MaxStock,
                 CreatedAt = x.CreatedAt,
-                StockQuantity = 0
+                StockQuantity = x.StockQuantity
             })
             .ToListAsync(ct);
-        if (items.Count > 0)
-        {
-            var ids = items.Select(x => x.Id).ToList();
-            var stocks = await _db.StockMovements
-                .Where(m => ids.Contains(m.ProductId))
-                .GroupBy(m => m.ProductId)
-                .Select(g => new { ProductId = g.Key, Qty = g.Sum(m => m.Type == StockMovementType.Giris ? m.Quantity : -m.Quantity) })
-                .ToListAsync(ct);
-            var dict = stocks.ToDictionary(x => x.ProductId, x => x.Qty);
-            foreach (var item in items)
-                item.StockQuantity = dict.GetValueOrDefault(item.Id, 0);
-        }
         return new PagedResult<ProductListDto> { Items = items, TotalCount = total, Page = page, PageSize = pageSize };
     }
 
@@ -80,9 +68,6 @@ public class ProductService : IProductService
     {
         var entity = await ScopeQuery().FirstOrDefaultAsync(x => x.Id == id, ct);
         if (entity == null) return null;
-        var stock = await _db.StockMovements
-            .Where(m => m.ProductId == id)
-            .SumAsync(m => m.Type == StockMovementType.Giris ? m.Quantity : -m.Quantity, ct);
         return new ProductDto
         {
             Id = entity.Id,
@@ -93,7 +78,7 @@ public class ProductService : IProductService
             Unit = entity.Unit,
             MinStock = entity.MinStock,
             MaxStock = entity.MaxStock,
-            StockQuantity = stock,
+            StockQuantity = entity.StockQuantity,
             CreatedAt = entity.CreatedAt
         };
     }
@@ -118,10 +103,28 @@ public class ProductService : IProductService
             Unit = request.Unit?.Trim() ?? "Adet",
             MinStock = request.MinStock,
             MaxStock = request.MaxStock,
+            StockQuantity = request.StockQuantity,
             CreatedAt = DateTime.UtcNow
         };
         _db.Products.Add(entity);
         await _db.SaveChangesAsync(ct);
+        
+        if (request.StockQuantity != 0)
+        {
+            var movement = new StockMovement
+            {
+                Id = Guid.NewGuid(),
+                ProductId = entity.Id,
+                Date = DateTime.UtcNow,
+                Type = request.StockQuantity > 0 ? StockMovementType.Giris : StockMovementType.Cikis,
+                Quantity = Math.Abs(request.StockQuantity),
+                ReferenceType = ReferenceType.Manuel,
+                CreatedAt = DateTime.UtcNow
+            };
+            _db.StockMovements.Add(movement);
+            await _db.SaveChangesAsync(ct);
+        }
+
         return (await GetByIdAsync(entity.Id, ct))!;
     }
 
@@ -133,9 +136,26 @@ public class ProductService : IProductService
         entity.Name = request.Name.Trim();
         entity.Barcode = request.Barcode?.Trim();
         entity.Unit = request.Unit?.Trim() ?? "Adet";
-        entity.MinStock = request.MinStock;
         entity.MaxStock = request.MaxStock;
-        await _db.SaveChangesAsync(ct);
+        
+        var difference = request.StockQuantity - entity.StockQuantity;
+        if (difference != 0)
+        {
+            entity.StockQuantity = request.StockQuantity;
+            var movement = new StockMovement
+            {
+                Id = Guid.NewGuid(),
+                ProductId = entity.Id,
+                Date = DateTime.UtcNow,
+                Type = difference > 0 ? StockMovementType.Giris : StockMovementType.Cikis,
+                Quantity = Math.Abs(difference),
+                ReferenceType = ReferenceType.Manuel,
+                CreatedAt = DateTime.UtcNow
+            };
+            _db.StockMovements.Add(movement);
+            await _db.SaveChangesAsync(ct);
+        }
+
         return await GetByIdAsync(id, ct);
     }
 
@@ -184,7 +204,7 @@ public class ProductService : IProductService
         if (request.Type != StockMovementType.Giris && request.Type != StockMovementType.Cikis)
             throw new ArgumentException("Type must be Giris (1) or Cikis (2).");
 
-        var entity = new StockMovement
+        var entityStock = new StockMovement
         {
             Id = Guid.NewGuid(),
             ProductId = productId,
@@ -194,17 +214,27 @@ public class ProductService : IProductService
             ReferenceType = ReferenceType.Manuel,
             CreatedAt = DateTime.UtcNow
         };
-        _db.StockMovements.Add(entity);
+        _db.StockMovements.Add(entityStock);
+        
+        var entity = await ScopeQuery().FirstOrDefaultAsync(x => x.Id == productId, ct);
+        if (entity != null)
+        {
+            if (request.Type == StockMovementType.Giris)
+                entity.StockQuantity += request.Quantity;
+            else if (request.Type == StockMovementType.Cikis)
+                entity.StockQuantity -= request.Quantity;
+        }
+
         await _db.SaveChangesAsync(ct);
         return new StockMovementDto
         {
-            Id = entity.Id,
-            Date = entity.Date,
-            Type = entity.Type,
-            Quantity = entity.Quantity,
-            ReferenceType = entity.ReferenceType,
-            ReferenceId = entity.ReferenceId,
-            CreatedAt = entity.CreatedAt
+            Id = entityStock.Id,
+            Date = entityStock.Date,
+            Type = entityStock.Type,
+            Quantity = entityStock.Quantity,
+            ReferenceType = entityStock.ReferenceType,
+            ReferenceId = entityStock.ReferenceId,
+            CreatedAt = entityStock.CreatedAt
         };
     }
 
@@ -223,21 +253,9 @@ public class ProductService : IProductService
                 MinStock = x.MinStock,
                 MaxStock = x.MaxStock,
                 CreatedAt = x.CreatedAt,
-                StockQuantity = 0
+                StockQuantity = x.StockQuantity
             })
             .ToListAsync(ct);
-        if (list.Count > 0)
-        {
-            var ids = list.Select(x => x.Id).ToList();
-            var stocks = await _db.StockMovements
-                .Where(m => ids.Contains(m.ProductId))
-                .GroupBy(m => m.ProductId)
-                .Select(g => new { ProductId = g.Key, Qty = g.Sum(m => m.Type == StockMovementType.Giris ? m.Quantity : -m.Quantity) })
-                .ToListAsync(ct);
-            var dict = stocks.ToDictionary(x => x.ProductId, x => x.Qty);
-            foreach (var item in list)
-                item.StockQuantity = dict.GetValueOrDefault(item.Id, 0);
-        }
         return list;
     }
 }

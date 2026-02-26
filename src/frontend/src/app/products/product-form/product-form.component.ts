@@ -22,6 +22,7 @@ export class ProductFormComponent implements OnInit {
     unit: ['Adet'],
     minStock: [0],
     maxStock: [0],
+    stockQuantity: [0],
     firmId: [null as string | null]
   });
   id: string | null = null;
@@ -37,7 +38,7 @@ export class ProductFormComponent implements OnInit {
     public auth: AuthService,
     private firmApi: FirmService,
     private toastr: ToastrService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     if (this.auth.user()?.role === 'SuperAdmin') {
@@ -51,7 +52,8 @@ export class ProductFormComponent implements OnInit {
         barcode: p.barcode ?? '',
         unit: p.unit ?? 'Adet',
         minStock: p.minStock ?? 0,
-        maxStock: p.maxStock ?? 0
+        maxStock: p.maxStock ?? 0,
+        stockQuantity: p.stockQuantity ?? 0
       }));
     }
   }
@@ -67,6 +69,7 @@ export class ProductFormComponent implements OnInit {
       unit: v.unit || 'Adet',
       minStock: v.minStock ?? 0,
       maxStock: v.maxStock ?? 0,
+      stockQuantity: v.stockQuantity ?? 0,
       firmId: (this.auth.user()?.role === 'SuperAdmin' && v.firmId) ? v.firmId : undefined
     };
     if (this.id) {

@@ -10,6 +10,7 @@ public class Product
     public string Unit { get; set; } = "Adet";
     public decimal MinStock { get; set; }
     public decimal MaxStock { get; set; }
+    public decimal StockQuantity { get; set; }
     public DateTime CreatedAt { get; set; }
 
     public Firm Firm { get; set; } = null!;

@@ -263,6 +263,15 @@ public class DeliveryNoteService : IDeliveryNoteService
                         ReferenceId = id,
                         CreatedAt = DateTime.UtcNow
                     });
+
+                    var product = await _db.Products.FirstOrDefaultAsync(p => p.Id == item.ProductId!.Value, ct);
+                    if (product != null)
+                    {
+                        if (direction == StockMovementType.Giris)
+                            product.StockQuantity += item.Quantity;
+                        else
+                            product.StockQuantity -= item.Quantity;
+                    }
                 }
             }
         }

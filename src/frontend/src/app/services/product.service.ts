@@ -15,7 +15,7 @@ export interface ProductDto {
   createdAt: string;
 }
 
-export interface ProductListDto extends ProductDto {}
+export interface ProductListDto extends ProductDto { }
 
 export interface CreateProductRequest {
   code: string;
@@ -24,6 +24,7 @@ export interface CreateProductRequest {
   unit?: string;
   minStock?: number;
   maxStock?: number;
+  stockQuantity?: number;
   firmId?: string;
 }
 
@@ -34,6 +35,7 @@ export interface UpdateProductRequest {
   unit?: string;
   minStock?: number;
   maxStock?: number;
+  stockQuantity?: number;
 }
 
 export interface StockMovementDto {
@@ -56,7 +58,7 @@ export interface CreateStockMovementRequest {
 @Injectable({ providedIn: 'root' })
 export class ProductService {
   private base = '/api/products';
-  constructor(private api: ApiService) {}
+  constructor(private api: ApiService) { }
 
   getPaged(page: number, pageSize: number, search?: string, firmId?: string): Observable<PagedResult<ProductListDto>> {
     const params: Record<string, string | number> = { page, pageSize };
