@@ -105,6 +105,13 @@ public class OrderService : IOrderService
         var sortOrder = 0;
         foreach (var item in request.Items)
         {
+            if (request.OrderType == InvoiceType.Satis && item.ProductId.HasValue)
+            {
+                var product = await _db.Products.FindAsync(item.ProductId.Value);
+                if (product != null && item.Quantity > product.StockQuantity)
+                    throw new InvalidOperationException($"'{product.Name}' ürünü için yetersiz stok! Mevcut: {product.StockQuantity}");
+            }
+
             order.Items.Add(new OrderItem
             {
                 Id = Guid.NewGuid(),
@@ -146,6 +153,13 @@ public class OrderService : IOrderService
         var sortOrder = 0;
         foreach (var item in request.Items ?? new List<OrderItemInputDto>())
         {
+            if (order.OrderType == InvoiceType.Satis && item.ProductId.HasValue)
+            {
+                var product = await _db.Products.FindAsync(item.ProductId.Value);
+                if (product != null && item.Quantity > product.StockQuantity)
+                    throw new InvalidOperationException($"'{product.Name}' ürünü için yetersiz stok! Mevcut: {product.StockQuantity}");
+            }
+
             _db.OrderItems.Add(new OrderItem
             {
                 Id = Guid.NewGuid(),

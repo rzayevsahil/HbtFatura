@@ -196,6 +196,20 @@ export class OrderFormComponent implements OnInit {
     if (this.form.invalid) return;
     this.saving = true;
     const raw = this.form.getRawValue();
+
+    // Satış siparişi (0) ise stok kontrolü yap
+    if (raw.orderType === 0) {
+      for (const it of raw.items) {
+        if (!it.productId) continue;
+        const p = this.products.find(x => x.id === it.productId);
+        if (p && Number(it.quantity) > p.stockQuantity) {
+          this.toastr.warning(`"${p.name}" ürünü için yetersiz stok! Mevcut: ${p.stockQuantity}`, 'Stok Uyarısı');
+          this.saving = false;
+          return;
+        }
+      }
+    }
+
     const orderDateStr = this.toOrderDateApiValue(raw.orderDate);
     const req: CreateOrderRequest = {
       customerId: raw.customerId ?? undefined,

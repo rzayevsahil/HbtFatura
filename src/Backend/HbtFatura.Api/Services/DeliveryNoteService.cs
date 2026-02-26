@@ -267,6 +267,9 @@ public class DeliveryNoteService : IDeliveryNoteService
                     var product = await _db.Products.FirstOrDefaultAsync(p => p.Id == item.ProductId!.Value, ct);
                     if (product != null)
                     {
+                        if (direction == StockMovementType.Cikis && item.Quantity > product.StockQuantity)
+                            throw new InvalidOperationException($"'{product.Name}' ürünü için yetersiz stok! Mevcut: {product.StockQuantity}");
+
                         if (direction == StockMovementType.Giris)
                             product.StockQuantity += item.Quantity;
                         else
