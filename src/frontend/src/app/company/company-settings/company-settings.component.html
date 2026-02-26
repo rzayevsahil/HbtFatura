@@ -3,7 +3,12 @@
   <h1 class="page-title">Firma Bilgileri</h1>
   <p class="page-subtitle">Fatura başlığında kullanılacak firma bilgileri.</p>
 </div>
-<div class="card">
+<div class="card" style="position: relative; min-height: 300px;">
+  @if (loading) {
+  <div class="loading-overlay">
+    <div class="spinner"></div>
+  </div>
+  }
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <div class="form-grid">
       <div class="row">
@@ -37,9 +42,9 @@
       @if (error) { <p class="error-msg">{{ error }}</p> }
     </div>
     @if (!isReadOnly()) {
-      <div class="actions">
-        <button type="submit" [disabled]="form.invalid || saving">Kaydet</button>
-      </div>
+    <div class="actions">
+      <button type="submit" [disabled]="form.invalid || saving">Kaydet</button>
+    </div>
     }
   </form>
 </div>

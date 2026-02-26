@@ -5,14 +5,14 @@
   </div>
 </div>
 <div class="card list-toolbar">
-  <input
-    type="text"
-    class="search-input"
-    [(ngModel)]="searchText"
-    placeholder="Kod veya ad ile ara..."
-  />
+  <input type="text" class="search-input" [(ngModel)]="searchText" placeholder="Kod veya ad ile ara..." />
 </div>
-<div class="card table-wrap">
+<div class="card table-wrap" style="position: relative; min-height: 200px;">
+  @if (loading) {
+  <div class="loading-overlay">
+    <div class="spinner"></div>
+  </div>
+  }
   <table class="main-table">
     <colgroup>
       <col class="col-code" />
@@ -28,40 +28,35 @@
     </thead>
     <tbody>
       @for (item of filteredItems; track item.id) {
-        <tr>
-          <td>{{ item.code }}</td>
-          <td>{{ item.name }}</td>
-          <td>
-            @if (!item.isSystem) {
-              <div class="actions-cell">
-                <button type="button" class="btn btn-outline" (click)="openEdit(item.id)">Düzenle</button>
-                <button type="button" class="btn btn-outline btn-danger" (click)="delete(item.id, item.code)">Sil</button>
-              </div>
-            } @else {
-              <span class="text-muted">Sistem kodu</span>
-            }
-          </td>
-        </tr>
+      <tr>
+        <td>{{ item.code }}</td>
+        <td>{{ item.name }}</td>
+        <td>
+          @if (!item.isSystem) {
+          <div class="actions-cell">
+            <button type="button" class="btn btn-outline" (click)="openEdit(item.id)">Düzenle</button>
+            <button type="button" class="btn btn-outline btn-danger" (click)="delete(item.id, item.code)">Sil</button>
+          </div>
+          } @else {
+          <span class="text-muted">Sistem kodu</span>
+          }
+        </td>
+      </tr>
       }
     </tbody>
   </table>
 </div>
 @if (items.length === 0) {
-  <p class="text-muted">Henüz ana cari kodu tanımlanmamış. Carilerde kullanmak için buradan kod ekleyebilirsiniz.</p>
+<p class="text-muted">Henüz ana cari kodu tanımlanmamış. Carilerde kullanmak için buradan kod ekleyebilirsiniz.</p>
 } @else if (filteredItems.length === 0) {
-  <p class="text-muted">Arama kriterine uygun kayıt bulunamadı.</p>
+<p class="text-muted">Arama kriterine uygun kayıt bulunamadı.</p>
 }
 
 @if (modalOpen) {
-  <div class="modal-overlay">
-    <div class="modal-content">
-      <app-main-account-code-form
-        [isModal]="true"
-        [editId]="editingId"
-        [existingCodes]="items"
-        (saved)="onFormSaved()"
-        (cancel)="closeModal()"
-      />
-    </div>
+<div class="modal-overlay">
+  <div class="modal-content">
+    <app-main-account-code-form [isModal]="true" [editId]="editingId" [existingCodes]="items" (saved)="onFormSaved()"
+      (cancel)="closeModal()" />
   </div>
+</div>
 }

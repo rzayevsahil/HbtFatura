@@ -20,6 +20,7 @@ export class MainAccountCodeListComponent implements OnInit {
   firmId: string | undefined;
   modalOpen = false;
   editingId: string | null = null;
+  loading = false;
 
   get filteredItems(): MainAccountCodeDto[] {
     const q = this.searchText.trim().toLowerCase();
@@ -35,16 +36,23 @@ export class MainAccountCodeListComponent implements OnInit {
     private api: MainAccountCodeService,
     public auth: AuthService,
     private toastr: ToastrService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.load();
   }
 
   load(): void {
+    this.loading = true;
     this.api.getByFirm(this.firmId).subscribe({
-      next: list => (this.items = list),
-      error: e => this.toastr.error(e.error?.message ?? 'Liste yüklenemedi.')
+      next: list => {
+        this.items = list;
+        this.loading = false;
+      },
+      error: e => {
+        this.toastr.error(e.error?.message ?? 'Liste yüklenemedi.');
+        this.loading = false;
+      }
     });
   }
 

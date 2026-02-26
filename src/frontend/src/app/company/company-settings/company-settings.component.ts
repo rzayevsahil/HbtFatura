@@ -28,6 +28,7 @@ export class CompanySettingsComponent implements OnInit {
   });
   error = '';
   saving = false;
+  loading = true;
 
   constructor(
     private fb: FormBuilder,
@@ -36,21 +37,27 @@ export class CompanySettingsComponent implements OnInit {
     private route: ActivatedRoute,
     private toastr: ToastrService,
     private location: Location
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.firmId = this.route.snapshot.queryParamMap.get('firmId') ?? undefined;
+    this.loading = true;
     this.api.get(this.firmId).subscribe({
-      next: c => this.form.patchValue({
-        companyName: c.companyName,
-        taxOffice: c.taxOffice ?? '',
-        taxNumber: c.taxNumber ?? '',
-        address: c.address ?? '',
-        phone: c.phone ?? '',
-        email: c.email ?? '',
-        iban: c.iban ?? ''
-      }),
-      error: () => {} // 404 = no settings yet
+      next: c => {
+        this.form.patchValue({
+          companyName: c.companyName,
+          taxOffice: c.taxOffice ?? '',
+          taxNumber: c.taxNumber ?? '',
+          address: c.address ?? '',
+          phone: c.phone ?? '',
+          email: c.email ?? '',
+          iban: c.iban ?? ''
+        });
+        this.loading = false;
+      },
+      error: () => {
+        this.loading = false; // 404 = no settings yet
+      }
     });
   }
 
