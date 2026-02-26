@@ -1,10 +1,6 @@
 .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 0.75rem; }
-.back-link {
-  font-size: 0.9375rem; color: var(--color-text-muted, #64748b); text-decoration: none; margin-right: 0.5rem;
-  &:hover { color: var(--color-primary); }
-}
 .actions { display: flex; gap: 0.5rem; align-items: center; }
-.btn { padding: 0.625rem 1.25rem; font-size: 0.9375rem; font-weight: 600; border-radius: var(--radius-sm, 6px); text-decoration: none; cursor: pointer; border: none; }
+.btn { padding: 0.625rem 1.25rem; font-size: 0.9375rem; font-weight: 600; border-radius: var(--radius-sm, 6px); text-decoration: none; cursor: pointer; border: none; display: inline-flex; align-items: center; }
 .btn-primary { background: var(--color-primary); color: #fff; }
 .btn-default { background: var(--color-surface); color: var(--color-text); border: 1px solid var(--color-border); }
 .btn-approve { background: #0d9488; color: #fff; }
@@ -14,7 +10,7 @@
 
 .info-grid {
   display: grid;
-  grid-template-columns: 1fr 120px 90px 110px;
+  grid-template-columns: 1fr minmax(100px, max-content) minmax(70px, max-content) minmax(130px, max-content);
   gap: 1.5rem 2rem;
   align-items: baseline;
   width: 100%;
@@ -28,6 +24,10 @@
 
   .info-label { font-weight: 600; flex-shrink: 0; color: var(--color-text); }
   .info-value { min-width: 0; color: var(--color-text); }
+}
+
+.info-item:not(.info-item-cari) .info-value {
+  white-space: nowrap;
 }
 
 .info-item-cari {

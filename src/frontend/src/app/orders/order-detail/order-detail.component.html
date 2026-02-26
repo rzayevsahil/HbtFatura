@@ -1,15 +1,17 @@
 <div class="page-header">
-  <a routerLink="/orders" class="back-link">← Geri</a>
   <h1 class="page-title">{{ order?.orderNumber ?? 'Sipariş' }}</h1>
   <div class="actions">
     @if (order && isEditableOrder()) {
       <a [routerLink]="['/orders', order?.id, 'edit']" class="btn btn-default">Düzenle</a>
       <button type="button" class="btn btn-approve" (click)="setStatusOnayla()">Onayla</button>
       <button type="button" class="btn btn-cancel" (click)="setStatusIptal()">İptal</button>
+    }
+    @if (order && canSendToDeliveryNote()) {
       <button type="button" class="btn btn-primary" (click)="createDeliveryNote()" [disabled]="creatingDeliveryNote">
         {{ creatingDeliveryNote ? 'Oluşturuluyor...' : 'İrsaliyeye Gönder' }}
       </button>
     }
+    <a routerLink="/orders" class="btn btn-default">← Geri</a>
   </div>
 </div>
 @if (loading) {

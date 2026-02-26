@@ -58,6 +58,13 @@ export class OrderDetailComponent implements OnInit {
     return this.order != null && (this.order.status === 0 || this.order.status === 'Bekliyor');
   }
 
+  /** Onaylandı / Kısmi Teslim / Bekliyor iken irsaliyeye gönderilebilir. */
+  canSendToDeliveryNote(): boolean {
+    if (!this.order) return false;
+    const s = this.order.status;
+    return s === 0 || s === 3 || s === 4 || s === 'Bekliyor' || s === 'Onaylandi' || s === 'KismiTeslim';
+  }
+
   typeLabel(t: number): string {
     return t === 1 ? 'Alış' : 'Satış';
   }
@@ -86,7 +93,7 @@ export class OrderDetailComponent implements OnInit {
   }
 
   createDeliveryNote(): void {
-    if (!this.order || !this.isEditableOrder()) return;
+    if (!this.order || !this.canSendToDeliveryNote()) return;
     this.creatingDeliveryNote = true;
     const deliveryDate = new Date().toISOString().slice(0, 10);
     this.deliveryNoteApi.createFromOrder({ orderId: this.order.id, deliveryDate }).subscribe({
