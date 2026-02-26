@@ -49,6 +49,7 @@
   <table>
     <thead>
       <tr>
+        <th>Stok Kodu</th>
         <th>Ürün / Açıklama</th>
         <th class="amount">Miktar</th>
         <th class="amount">Birim Fiyat</th>
@@ -59,6 +60,7 @@
     <tbody>
       @for (it of deliveryNote.items; track it.id) {
       <tr>
+        <td>{{ it.productCode || '—' }}</td>
         <td>{{ it.description || '—' }}</td>
         <td class="amount">{{ it.quantity | number:'1.2-2' }}</td>
         <td class="amount">{{ it.unitPrice | number:'1.2-2' }}</td>

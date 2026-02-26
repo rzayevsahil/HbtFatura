@@ -70,6 +70,7 @@ public class DeliveryNoteService : IDeliveryNoteService
             .Include(x => x.Customer)
             .Include(x => x.Order)
             .Include(x => x.Items.OrderBy(i => i.SortOrder))
+                .ThenInclude(i => i.Product)
             .FirstOrDefaultAsync(x => x.Id == id, ct);
         return dn == null ? null : MapToDto(dn);
     }
@@ -130,7 +131,7 @@ public class DeliveryNoteService : IDeliveryNoteService
 
         _db.DeliveryNotes.Add(dn);
         await _db.SaveChangesAsync(ct);
-        dn = (await ScopeQuery().Include(x => x.Customer).Include(x => x.Order).Include(x => x.Items.OrderBy(i => i.SortOrder)).FirstOrDefaultAsync(x => x.Id == dn.Id, ct))!;
+        dn = (await ScopeQuery().Include(x => x.Customer).Include(x => x.Order).Include(x => x.Items.OrderBy(i => i.SortOrder)).ThenInclude(i => i.Product).FirstOrDefaultAsync(x => x.Id == dn.Id, ct))!;
         return MapToDto(dn);
     }
 
@@ -190,7 +191,7 @@ public class DeliveryNoteService : IDeliveryNoteService
         order.UpdatedBy = userId;
         await _db.SaveChangesAsync(ct);
 
-        dn = (await ScopeQuery().Include(x => x.Customer).Include(x => x.Order).Include(x => x.Items.OrderBy(i => i.SortOrder)).FirstOrDefaultAsync(x => x.Id == dn.Id, ct))!;
+        dn = (await ScopeQuery().Include(x => x.Customer).Include(x => x.Order).Include(x => x.Items.OrderBy(i => i.SortOrder)).ThenInclude(i => i.Product).FirstOrDefaultAsync(x => x.Id == dn.Id, ct))!;
         return MapToDto(dn);
     }
 
@@ -232,7 +233,7 @@ public class DeliveryNoteService : IDeliveryNoteService
         }
 
         await _db.SaveChangesAsync(ct);
-        dn = (await ScopeQuery().Include(x => x.Customer).Include(x => x.Order).Include(x => x.Items.OrderBy(i => i.SortOrder)).FirstOrDefaultAsync(x => x.Id == id, ct))!;
+        dn = (await ScopeQuery().Include(x => x.Customer).Include(x => x.Order).Include(x => x.Items.OrderBy(i => i.SortOrder)).ThenInclude(i => i.Product).FirstOrDefaultAsync(x => x.Id == id, ct))!;
         return MapToDto(dn);
     }
 
@@ -305,6 +306,7 @@ public class DeliveryNoteService : IDeliveryNoteService
         {
             Id = x.Id,
             ProductId = x.ProductId,
+            ProductCode = x.Product?.Code,
             OrderItemId = x.OrderItemId,
             Description = x.Description,
             Quantity = x.Quantity,

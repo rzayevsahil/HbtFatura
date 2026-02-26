@@ -68,6 +68,7 @@ public class OrderService : IOrderService
         var order = await ScopeQuery()
             .Include(x => x.Customer)
             .Include(x => x.Items.OrderBy(i => i.SortOrder))
+                .ThenInclude(i => i.Product)
             .FirstOrDefaultAsync(x => x.Id == id, ct);
         return order == null ? null : MapToDto(order);
     }
@@ -120,7 +121,7 @@ public class OrderService : IOrderService
         _db.Orders.Add(order);
         await _db.SaveChangesAsync(ct);
 
-        order = (await ScopeQuery().Include(x => x.Customer).Include(x => x.Items.OrderBy(i => i.SortOrder)).FirstOrDefaultAsync(x => x.Id == order.Id, ct))!;
+        order = (await ScopeQuery().Include(x => x.Customer).Include(x => x.Items.OrderBy(i => i.SortOrder)).ThenInclude(i => i.Product).FirstOrDefaultAsync(x => x.Id == order.Id, ct))!;
         return MapToDto(order);
     }
 
@@ -159,7 +160,7 @@ public class OrderService : IOrderService
         }
 
         await _db.SaveChangesAsync(ct);
-        order = (await ScopeQuery().Include(x => x.Customer).Include(x => x.Items.OrderBy(i => i.SortOrder)).FirstOrDefaultAsync(x => x.Id == id, ct))!;
+        order = (await ScopeQuery().Include(x => x.Customer).Include(x => x.Items.OrderBy(i => i.SortOrder)).ThenInclude(i => i.Product).FirstOrDefaultAsync(x => x.Id == id, ct))!;
         return MapToDto(order);
     }
 
@@ -203,6 +204,7 @@ public class OrderService : IOrderService
         {
             Id = x.Id,
             ProductId = x.ProductId,
+            ProductCode = x.Product?.Code,
             Description = x.Description,
             Quantity = x.Quantity,
             UnitPrice = x.UnitPrice,

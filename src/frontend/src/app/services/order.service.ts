@@ -8,6 +8,7 @@ export type InvoiceType = 0 | 1; // Satis, Alis
 export interface OrderItemDto {
   id: string;
   productId?: string;
+  productCode?: string;
   description: string;
   quantity: number;
   unitPrice: number;
@@ -65,7 +66,7 @@ export interface UpdateOrderRequest {
 @Injectable({ providedIn: 'root' })
 export class OrderService {
   private base = '/api/orders';
-  constructor(private api: ApiService) {}
+  constructor(private api: ApiService) { }
 
   getPaged(params: { page: number; pageSize: number; dateFrom?: string; dateTo?: string; status?: number; customerId?: string }): Observable<PagedResult<OrderListDto>> {
     const p: Record<string, string | number> = { page: params.page, pageSize: params.pageSize };

@@ -8,6 +8,7 @@ export type InvoiceType = 0 | 1;
 export interface DeliveryNoteItemDto {
   id: string;
   productId?: string;
+  productCode?: string;
   orderItemId?: string;
   description: string;
   quantity: number;
@@ -76,7 +77,7 @@ export interface UpdateDeliveryNoteRequest {
 @Injectable({ providedIn: 'root' })
 export class DeliveryNoteService {
   private base = '/api/deliverynotes';
-  constructor(private api: ApiService) {}
+  constructor(private api: ApiService) { }
 
   create(req: CreateDeliveryNoteRequest): Observable<DeliveryNoteDto> {
     return this.api.post<DeliveryNoteDto>(this.base, req);

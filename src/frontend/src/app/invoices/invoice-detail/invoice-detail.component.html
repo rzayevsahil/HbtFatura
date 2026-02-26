@@ -23,6 +23,7 @@
   <table>
     <thead>
       <tr>
+        <th>Stok Kodu</th>
         <th>Mal Hizmet</th>
         <th>Miktar</th>
         <th>Birim Fiyat</th>
@@ -34,6 +35,7 @@
     <tbody>
       @for (item of invoice.items; track item.sortOrder) {
       <tr>
+        <td>{{ item.productCode || '—' }}</td>
         <td>{{ item.description }}</td>
         <td>{{ item.quantity | number }}</td>
         <td>{{ item.unitPrice | number:'1.2-2' }} ₺</td>

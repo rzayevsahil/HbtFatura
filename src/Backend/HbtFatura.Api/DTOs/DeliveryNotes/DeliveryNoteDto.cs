@@ -6,6 +6,7 @@ public class DeliveryNoteItemDto
 {
     public Guid Id { get; set; }
     public Guid? ProductId { get; set; }
+    public string? ProductCode { get; set; }
     public Guid? OrderItemId { get; set; }
     public string Description { get; set; } = string.Empty;
     public decimal Quantity { get; set; }

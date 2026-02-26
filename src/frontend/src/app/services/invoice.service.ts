@@ -8,6 +8,7 @@ export type InvoiceType = 0 | 1; // Satis, Alis
 export interface InvoiceItemDto {
   id?: string;
   productId?: string;
+  productCode?: string;
   description: string;
   quantity: number;
   unitPrice: number;

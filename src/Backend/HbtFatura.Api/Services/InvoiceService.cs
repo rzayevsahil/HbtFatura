@@ -67,6 +67,7 @@ public class InvoiceService : IInvoiceService
     {
         var inv = await ScopeQuery()
             .Include(x => x.Items.OrderBy(i => i.SortOrder))
+                .ThenInclude(i => i.Product)
             .FirstOrDefaultAsync(x => x.Id == id, ct);
         if (inv == null) return null;
         var dto = MapToDto(inv);
@@ -161,6 +162,7 @@ public class InvoiceService : IInvoiceService
             throw;
         }
 
+        invoice = (await ScopeQuery().Include(x => x.Items.OrderBy(i => i.SortOrder)).ThenInclude(i => i.Product).FirstOrDefaultAsync(x => x.Id == invoice.Id, ct))!;
         return MapToDto(invoice);
     }
 
@@ -170,6 +172,7 @@ public class InvoiceService : IInvoiceService
             .Include(x => x.User)
             .Include(x => x.Customer)
             .Include(x => x.Items.OrderBy(i => i.SortOrder))
+                .ThenInclude(i => i.Product)
             .FirstOrDefaultAsync(x => x.Id == deliveryNoteId, ct);
         if (dn == null) return null;
         if (!_currentUser.IsSuperAdmin && !(_currentUser.IsFirmAdmin && dn.User?.FirmId == _currentUser.FirmId) && dn.UserId != _currentUser.UserId)
@@ -237,7 +240,7 @@ public class InvoiceService : IInvoiceService
 
     public async Task<InvoiceDto?> UpdateAsync(Guid id, UpdateInvoiceRequest request, byte[]? rowVersion, CancellationToken ct = default)
     {
-        var invoice = await ScopeQuery().Include(x => x.Items).FirstOrDefaultAsync(x => x.Id == id, ct);
+        var invoice = await ScopeQuery().Include(x => x.Items).ThenInclude(i => i.Product).FirstOrDefaultAsync(x => x.Id == id, ct);
         if (invoice == null) return null;
 
         if (invoice.Status == InvoiceStatus.Paid)
@@ -318,6 +321,7 @@ public class InvoiceService : IInvoiceService
             throw;
         }
 
+        invoice = (await ScopeQuery().Include(x => x.Items.OrderBy(i => i.SortOrder)).ThenInclude(i => i.Product).FirstOrDefaultAsync(x => x.Id == invoice.Id, ct))!;
         return await GetByIdAsync(id, ct);
     }
 
@@ -440,6 +444,7 @@ if (status == InvoiceStatus.Issued || status == InvoiceStatus.Paid)
         {
             Id = x.Id,
             ProductId = x.ProductId,
+            ProductCode = x.Product?.Code,
             Description = x.Description,
             Quantity = x.Quantity,
             UnitPrice = x.UnitPrice,
