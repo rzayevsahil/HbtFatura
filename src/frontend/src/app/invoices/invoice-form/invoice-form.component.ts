@@ -67,8 +67,8 @@ export class InvoiceFormComponent implements OnInit {
       invoiceType: [0 as number, Validators.required], // 0=Satış, 1=Alış
       customerId: this.fb.control<string | null>(null),
       customerTitle: ['', Validators.required],
-      customerTaxNumber: ['', [taxNumberValidator()]],
-      customerAddress: [''],
+      customerTaxNumber: ['', [Validators.required, taxNumberValidator()]],
+      customerAddress: ['', Validators.required],
       customerPhone: [''],
       customerEmail: [''],
       invoiceDate: [new Date().toISOString().slice(0, 10), Validators.required],

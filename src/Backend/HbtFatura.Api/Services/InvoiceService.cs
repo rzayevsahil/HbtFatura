@@ -109,6 +109,9 @@ public class InvoiceService : IInvoiceService
             }
         }
 
+        if (string.IsNullOrWhiteSpace(customerTaxNumber)) throw new ArgumentException("Müşterinin Vergi/TC numarası eksik. Lütfen cari kartını güncelleyin veya manuel girin.");
+        if (string.IsNullOrWhiteSpace(customerAddress)) throw new ArgumentException("Müşterinin adresi eksik. Lütfen cari kartını güncelleyin veya manuel girin.");
+
         var invoice = new Invoice
         {
             Id = Guid.NewGuid(),
@@ -189,6 +192,9 @@ public class InvoiceService : IInvoiceService
         var customerPhone = dn.Customer?.Phone;
         var customerEmail = dn.Customer?.Email;
 
+        if (string.IsNullOrWhiteSpace(customerTaxNumber)) throw new ArgumentException("İrsaliyedeki müşterinin Vergi/TC numarası eksik. Fatura oluşturulamaz.");
+        if (string.IsNullOrWhiteSpace(customerAddress)) throw new ArgumentException("İrsaliyedeki müşterinin adresi eksik. Fatura oluşturulamaz.");
+
         var invoice = new Invoice
         {
             Id = Guid.NewGuid(),
@@ -255,7 +261,12 @@ public class InvoiceService : IInvoiceService
 
         invoice.InvoiceDate = request.InvoiceDate.Date;
         invoice.InvoiceType = request.InvoiceType;
+        invoice.CustomerId = request.CustomerId;
         invoice.CustomerTitle = request.CustomerTitle;
+        
+        if (string.IsNullOrWhiteSpace(request.CustomerTaxNumber)) throw new ArgumentException("Vergi/TC numarası boş olamaz.");
+        if (string.IsNullOrWhiteSpace(request.CustomerAddress)) throw new ArgumentException("Adres boş olamaz.");
+
         invoice.CustomerTaxNumber = request.CustomerTaxNumber;
         invoice.CustomerAddress = request.CustomerAddress;
         invoice.CustomerPhone = request.CustomerPhone;
