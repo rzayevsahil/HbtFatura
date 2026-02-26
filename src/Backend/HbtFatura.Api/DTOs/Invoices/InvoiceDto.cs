@@ -23,6 +23,7 @@ public class InvoiceDto
     public string? SourceType { get; set; }
     public Guid? SourceId { get; set; }
     public string? SourceNumber { get; set; }
+    public bool IsGibSent { get; set; }
     public List<InvoiceItemDto> Items { get; set; } = new();
 }
 

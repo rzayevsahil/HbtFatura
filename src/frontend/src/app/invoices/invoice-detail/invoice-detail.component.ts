@@ -14,7 +14,7 @@ import { ToastrService } from 'ngx-toastr';
 export class InvoiceDetailComponent implements OnInit {
   invoice: InvoiceDto | null = null;
 
-  constructor(private route: ActivatedRoute, private router: Router, private api: InvoiceService, private toastr: ToastrService) {}
+  constructor(private route: ActivatedRoute, private router: Router, private api: InvoiceService, private toastr: ToastrService) { }
 
   @HostListener('document:keydown', ['$event'])
   onKeyDown(e: KeyboardEvent): void {
@@ -37,6 +37,25 @@ export class InvoiceDetailComponent implements OnInit {
   statusClass(s: number): string {
     const map: Record<number, string> = { 0: 'draft', 1: 'issued', 2: 'paid', 3: 'cancelled' };
     return map[s] ?? '';
+  }
+
+  sendingGib = false;
+
+  sendToGib(): void {
+    if (!this.invoice || this.invoice.isGibSent) return;
+
+    this.sendingGib = true;
+    this.api.sendToGib(this.invoice.id).subscribe({
+      next: () => {
+        this.sendingGib = false;
+        if (this.invoice) this.invoice.isGibSent = true;
+        this.toastr.success("Fatura başarıyla GİB'e gönderildi.");
+      },
+      error: () => {
+        this.sendingGib = false;
+        this.toastr.error("GİB'e gönderim sırasında bir hata oluştu.");
+      }
+    });
   }
 
   downloadPdf(): void {

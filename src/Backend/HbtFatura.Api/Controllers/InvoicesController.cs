@@ -115,6 +115,14 @@ public class InvoicesController : ControllerBase
         if (pdf == null) return NotFound();
         return File(pdf, "application/pdf", $"fatura-{id}.pdf");
     }
+
+    [HttpPost("{id:guid}/send-to-gib")]
+    public async Task<IActionResult> SendToGib(Guid id, CancellationToken ct)
+    {
+        var result = await _service.SendToGibAsync(id, ct);
+        if (!result) return NotFound();
+        return Ok();
+    }
 }
 
 public class SetStatusRequest

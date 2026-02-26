@@ -23,13 +23,12 @@
   <table>
     <thead>
       <tr>
-        <th>Açıklama</th>
+        <th>Mal Hizmet</th>
         <th>Miktar</th>
         <th>Birim Fiyat</th>
-        <th>KDV %</th>
-        <th>KDV Hariç</th>
-        <th>KDV</th>
-        <th>KDV Dahil</th>
+        <th>KDV Oranı</th>
+        <th>KDV Tutarı</th>
+        <th>Mal Hizmet Tutarı</th>
       </tr>
     </thead>
     <tbody>
@@ -37,18 +36,18 @@
       <tr>
         <td>{{ item.description }}</td>
         <td>{{ item.quantity | number }}</td>
-        <td>{{ item.unitPrice | number:'1.2-2' }}</td>
-        <td>{{ item.vatRate }}</td>
-        <td>{{ item.lineTotalExclVat | number:'1.2-2' }}</td>
-        <td>{{ item.lineVatAmount | number:'1.2-2' }}</td>
-        <td>{{ item.lineTotalInclVat | number:'1.2-2' }}</td>
+        <td>{{ item.unitPrice | number:'1.2-2' }} ₺</td>
+        <td>%{{ item.vatRate }}</td>
+        <td>{{ item.lineVatAmount | number:'1.2-2' }} ₺</td>
+        <td>{{ item.lineTotalInclVat | number:'1.2-2' }} ₺</td>
       </tr>
       }
     </tbody>
   </table>
   <div class="totals">
-    <p><span>Ara Toplam</span> <span>{{ invoice.subTotal | number:'1.2-2' }} {{ invoice.currency }}</span></p>
-    <p><span>Toplam KDV</span> <span>{{ invoice.totalVat | number:'1.2-2' }}</span></p>
+    <p><span>Mal Hizmet Toplam Tutarı</span> <span>{{ invoice.subTotal | number:'1.2-2' }} {{ invoice.currency }}</span>
+    </p>
+    <p><span>Hesaplanan KDV</span> <span>{{ invoice.totalVat | number:'1.2-2' }} {{ invoice.currency }}</span></p>
     <p class="grand-total"><span>Genel Toplam</span> <span>{{ invoice.grandTotal | number:'1.2-2' }} {{ invoice.currency
         }}</span></p>
   </div>
@@ -57,7 +56,17 @@
   @if (invoice.status === 0) {
   <a [routerLink]="['/invoices', invoice.id, 'edit']" class="btn btn-secondary">Düzenle</a>
   }
+
+  @if (!invoice.isGibSent) {
+  <button type="button" class="btn btn-primary" (click)="sendToGib()" [disabled]="sendingGib">
+    {{ sendingGib ? 'Gönderiliyor...' : 'GİB\'e Gönder' }}
+  </button>
+  <span class="text-muted" style="margin-right: 15px; font-size: 0.9em;">
+    * Faturayı PDF olarak indirebilmek için önce GİB'e göndermelisiniz.
+  </span>
+  } @else {
   <button type="button" class="btn btn-primary" (click)="downloadPdf()">PDF İndir</button>
+  }
 </div>
 } @else {
 <p class="loading">Yükleniyor...</p>

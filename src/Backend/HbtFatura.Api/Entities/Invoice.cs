@@ -22,6 +22,7 @@ public class Invoice
     public decimal GrandTotal { get; set; }
     public string Currency { get; set; } = "TRY";
     public decimal ExchangeRate { get; set; } = 1;
+    public bool IsGibSent { get; set; }
 
     /// <summary>Kaynak doküman: İrsaliye, Sipariş veya Manuel.</summary>
     public string? SourceType { get; set; }

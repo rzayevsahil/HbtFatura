@@ -321,6 +321,26 @@ public class InvoiceService : IInvoiceService
         return await GetByIdAsync(id, ct);
     }
 
+    public async Task<bool> SendToGibAsync(Guid id, CancellationToken ct = default)
+    {
+        var invoice = await ScopeQuery().FirstOrDefaultAsync(x => x.Id == id, ct);
+        if (invoice == null) return false;
+        
+        if (invoice.IsGibSent) return true;
+
+        invoice.IsGibSent = true;
+        
+        try
+        {
+            await _db.SaveChangesAsync(ct);
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
     public async Task<bool> SetStatusAsync(Guid id, InvoiceStatus status, CancellationToken ct = default)
     {
         var invoice = await ScopeQuery().Include(x => x.Items).FirstOrDefaultAsync(x => x.Id == id, ct);
@@ -415,6 +435,7 @@ if (status == InvoiceStatus.Issued || status == InvoiceStatus.Paid)
         ExchangeRate = inv.ExchangeRate,
         SourceType = inv.SourceType,
         SourceId = inv.SourceId,
+        IsGibSent = inv.IsGibSent,
         Items = inv.Items.OrderBy(x => x.SortOrder).Select(x => new InvoiceItemDto
         {
             Id = x.Id,

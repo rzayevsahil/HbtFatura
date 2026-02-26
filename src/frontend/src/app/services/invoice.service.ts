@@ -50,6 +50,7 @@ export interface InvoiceDto {
   sourceType?: string | null;
   sourceId?: string | null;
   sourceNumber?: string | null;
+  isGibSent?: boolean;
 }
 
 export interface InvoiceListDto {
@@ -115,5 +116,9 @@ export class InvoiceService {
 
   getPdf(id: string): Observable<Blob> {
     return this.api.getBlob(`${this.base}/${id}/pdf`);
+  }
+
+  sendToGib(id: string): Observable<void> {
+    return this.api.post<void>(`${this.base}/${id}/send-to-gib`, {});
   }
 }
