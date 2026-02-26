@@ -20,8 +20,9 @@ export class OrderListComponent implements OnInit {
   searchDateFrom = '';
   searchDateTo = '';
   searchStatus: OrderStatus | null = null;
+  loading = false;
 
-  constructor(private api: OrderService, private router: Router, private toastr: ToastrService) {}
+  constructor(private api: OrderService, private router: Router, private toastr: ToastrService) { }
 
   @HostListener('document:keydown', ['$event'])
   onKeyDown(e: KeyboardEvent): void {
@@ -36,13 +37,18 @@ export class OrderListComponent implements OnInit {
   }
 
   load(): void {
+    this.loading = true;
     const params: { page: number; pageSize: number; dateFrom?: string; dateTo?: string; status?: number } = { page: this.page, pageSize: this.pageSize };
     if (this.searchDateFrom) params.dateFrom = this.searchDateFrom;
     if (this.searchDateTo) params.dateTo = this.searchDateTo;
     if (this.searchStatus !== null) params.status = this.searchStatus;
-    this.api.getPaged(params).subscribe(res => {
-      this.items = res.items;
-      this.totalCount = res.totalCount;
+    this.api.getPaged(params).subscribe({
+      next: res => {
+        this.items = res.items;
+        this.totalCount = res.totalCount;
+        this.loading = false;
+      },
+      error: () => { this.loading = false; }
     });
   }
 

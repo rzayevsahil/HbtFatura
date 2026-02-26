@@ -30,7 +30,12 @@
     <a routerLink="/orders/new" class="btn btn-primary">Yeni Sipariş</a>
   </div>
 </div>
-<div class="card table-wrap">
+<div class="card table-wrap" style="position: relative; min-height: 200px;">
+  @if (loading) {
+  <div class="loading-overlay">
+    <div class="spinner"></div>
+  </div>
+  }
   <table>
     <thead>
       <tr>
@@ -45,22 +50,22 @@
     </thead>
     <tbody>
       @for (o of items; track o.id) {
-        <tr>
-          <td><strong>{{ o.orderNumber }}</strong></td>
-          <td>{{ o.orderDate | date:'dd.MM.yyyy' }}</td>
-          <td>{{ typeLabel(o.orderType) }}</td>
-          <td>{{ o.customerTitle || '—' }}</td>
-          <td>{{ o.totalAmount != null ? (o.totalAmount | number:'1.2-2') + ' ₺' : '—' }}</td>
-          <td>{{ statusLabel(o.status) }}</td>
-          <td>
-            <div class="actions-cell">
-              <a [routerLink]="['/orders', o.id]">Detay</a>
-              @if (isEditableStatus(o)) {
-                <a [routerLink]="['/orders', o.id, 'edit']">Düzenle</a>
-              }
-            </div>
-          </td>
-        </tr>
+      <tr>
+        <td><strong>{{ o.orderNumber }}</strong></td>
+        <td>{{ o.orderDate | date:'dd.MM.yyyy' }}</td>
+        <td>{{ typeLabel(o.orderType) }}</td>
+        <td>{{ o.customerTitle || '—' }}</td>
+        <td>{{ o.totalAmount != null ? (o.totalAmount | number:'1.2-2') + ' ₺' : '—' }}</td>
+        <td>{{ statusLabel(o.status) }}</td>
+        <td>
+          <div class="actions-cell">
+            <a [routerLink]="['/orders', o.id]">Detay</a>
+            @if (isEditableStatus(o)) {
+            <a [routerLink]="['/orders', o.id, 'edit']">Düzenle</a>
+            }
+          </div>
+        </td>
+      </tr>
       }
     </tbody>
   </table>

@@ -21,6 +21,7 @@ export class ProductListComponent implements OnInit {
   pageSize = 20;
   search = '';
   firmId: string | undefined;
+  loading = false;
 
   constructor(
     private api: ProductService,
@@ -33,12 +34,17 @@ export class ProductListComponent implements OnInit {
   }
 
   load(): void {
+    this.loading = true;
     this.api.getPaged(this.page, this.pageSize, this.search || undefined, this.firmId).subscribe({
       next: (res: PagedResult<ProductListDto>) => {
         this.items = res.items;
         this.totalCount = res.totalCount;
+        this.loading = false;
       },
-      error: e => this.toastr.error(e.error?.message ?? 'Liste yüklenemedi.')
+      error: e => {
+        this.toastr.error(e.error?.message ?? 'Liste yüklenemedi.');
+        this.loading = false;
+      }
     });
   }
 

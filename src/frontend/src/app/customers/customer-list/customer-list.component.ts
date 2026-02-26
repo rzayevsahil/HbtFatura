@@ -18,17 +18,23 @@ export class CustomerListComponent implements OnInit {
   page = 1;
   pageSize = 20;
   search = '';
+  loading = false;
 
-  constructor(private api: CustomerService, private toastr: ToastrService) {}
+  constructor(private api: CustomerService, private toastr: ToastrService) { }
 
   ngOnInit(): void {
     this.load();
   }
 
   load(): void {
-    this.api.getPaged(this.page, this.pageSize, this.search || undefined).subscribe(res => {
-      this.items = res.items;
-      this.totalCount = res.totalCount;
+    this.loading = true;
+    this.api.getPaged(this.page, this.pageSize, this.search || undefined).subscribe({
+      next: res => {
+        this.items = res.items;
+        this.totalCount = res.totalCount;
+        this.loading = false;
+      },
+      error: () => { this.loading = false; }
     });
   }
 

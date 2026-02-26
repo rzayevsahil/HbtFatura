@@ -21,8 +21,9 @@ export class InvoiceListComponent implements OnInit {
   searchDateTo = '';
   searchStatus: InvoiceStatus | null = null;
   searchInvoiceType: number | null = null;
+  loading = false;
 
-  constructor(private api: InvoiceService, private router: Router, private toastr: ToastrService) {}
+  constructor(private api: InvoiceService, private router: Router, private toastr: ToastrService) { }
 
   @HostListener('document:keydown', ['$event'])
   onKeyDown(e: KeyboardEvent): void {
@@ -37,14 +38,19 @@ export class InvoiceListComponent implements OnInit {
   }
 
   load(): void {
+    this.loading = true;
     const params: any = { page: this.page, pageSize: this.pageSize };
     if (this.searchDateFrom) params.dateFrom = this.searchDateFrom;
     if (this.searchDateTo) params.dateTo = this.searchDateTo;
     if (this.searchStatus !== null) params.status = this.searchStatus;
     if (this.searchInvoiceType !== null) params.invoiceType = this.searchInvoiceType;
-    this.api.getPaged(params).subscribe(res => {
-      this.items = res.items;
-      this.totalCount = res.totalCount;
+    this.api.getPaged(params).subscribe({
+      next: res => {
+        this.items = res.items;
+        this.totalCount = res.totalCount;
+        this.loading = false;
+      },
+      error: () => { this.loading = false; }
     });
   }
 

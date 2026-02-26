@@ -20,7 +20,10 @@
   </div>
 </div>
 @if (loading) {
-<p>Yükleniyor...</p>
+<div class="loading-container">
+  <div class="spinner"></div>
+  <p>Veriler yükleniyor...</p>
+</div>
 } @else if (order) {
 <div class="card info-grid">
   <div class="info-item info-item-cari">

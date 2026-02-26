@@ -29,7 +29,12 @@
     <a routerLink="/delivery-notes/new" class="btn btn-primary">İrsaliye Ekle</a>
   </div>
 </div>
-<div class="card table-wrap">
+<div class="card table-wrap" style="position: relative; min-height: 200px;">
+  @if (loading) {
+  <div class="loading-overlay">
+    <div class="spinner"></div>
+  </div>
+  }
   <table>
     <thead>
       <tr>

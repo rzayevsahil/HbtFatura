@@ -6,7 +6,12 @@
   <button type="button" (click)="load()">Ara</button>
   <a routerLink="/customers/new" class="btn btn-primary">Yeni Cari</a>
 </div>
-<div class="card table-wrap">
+<div class="card table-wrap" style="position: relative; min-height: 200px;">
+  @if (loading) {
+  <div class="loading-overlay">
+    <div class="spinner"></div>
+  </div>
+  }
   <table>
     <thead>
       <tr>
@@ -21,21 +26,21 @@
     </thead>
     <tbody>
       @for (c of items; track c.id) {
-        <tr>
-          <td>{{ c.code || '—' }}</td>
-          <td>{{ c.title }}</td>
-          <td>{{ cardTypeLabel(c.cardType) }}</td>
-          <td class="amount">{{ c.totalDebit | number:'1.2-2' }} ₺</td>
-          <td class="amount">{{ c.totalCredit | number:'1.2-2' }} ₺</td>
-          <td class="amount">{{ c.balance | number:'1.2-2' }} ₺</td>
-          <td>
-            <div class="actions-cell">
-              <a [routerLink]="['/customers', c.id]">Detay</a>
-              <a [routerLink]="['/customers', c.id, 'edit']">Düzenle</a>
-              <button type="button" (click)="delete(c.id)">Sil</button>
-            </div>
-          </td>
-        </tr>
+      <tr>
+        <td>{{ c.code || '—' }}</td>
+        <td>{{ c.title }}</td>
+        <td>{{ cardTypeLabel(c.cardType) }}</td>
+        <td class="amount">{{ c.totalDebit | number:'1.2-2' }} ₺</td>
+        <td class="amount">{{ c.totalCredit | number:'1.2-2' }} ₺</td>
+        <td class="amount">{{ c.balance | number:'1.2-2' }} ₺</td>
+        <td>
+          <div class="actions-cell">
+            <a [routerLink]="['/customers', c.id]">Detay</a>
+            <a [routerLink]="['/customers', c.id, 'edit']">Düzenle</a>
+            <button type="button" (click)="delete(c.id)">Sil</button>
+          </div>
+        </td>
+      </tr>
       }
     </tbody>
   </table>
