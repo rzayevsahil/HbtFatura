@@ -56,8 +56,7 @@ export class InvoiceListComponent implements OnInit {
 
   statusLabel(s: any, sourceType?: string | null): string {
     const map: any = {
-      0: sourceType === 'Irsaliye' ? 'Fatura Oluşturuldu' : 'Taslak',
-      'Draft': sourceType === 'Irsaliye' ? 'Fatura Oluşturuldu' : 'Taslak',
+      0: 'Fatura Oluşturuldu', 'Draft': 'Fatura Oluşturuldu',
       1: 'Onaylandı', 'Issued': 'Onaylandı',
       2: 'Ödendi', 'Paid': 'Ödendi',
       3: 'İptal', 'Cancelled': 'İptal'
