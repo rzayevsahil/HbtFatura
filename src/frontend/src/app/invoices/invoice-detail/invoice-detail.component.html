@@ -4,7 +4,7 @@
     <h1 class="page-title">{{ invoice.invoiceNumber }}</h1>
     <div class="meta">
       <span>Tarih: {{ invoice.invoiceDate | date:'dd.MM.yyyy HH:mm' }}</span>
-      <span>Senaryo: {{ invoice.scenario === 1 ? 'Ticari Fatura' : 'Temel Fatura' }}</span>
+      <span>Gönderim Şekli: {{ invoice.scenario === 1 ? 'Ticari Fatura' : 'Temel Fatura' }}</span>
       <span class="status-badge {{ statusClass(invoice.status) }}">{{ statusLabel(invoice.status, invoice.sourceType)
         }}</span>
       <span>Cari: {{ invoice.customerTitle }}</span>

@@ -4,6 +4,7 @@ using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
 using HbtFatura.Api.Data;
 using HbtFatura.Api.Entities;
+using QRCoder;
 
 namespace HbtFatura.Api.Services;
 
@@ -111,7 +112,10 @@ public class InvoicePdfService : IInvoicePdfService
                             c.Item().AlignCenter().Text("e-FATURA").Bold().FontSize(11);
                         });
 
-                        r.RelativeItem(1).Text("");
+                        r.RelativeItem(1).Column(c =>
+                        {
+                            c.Item().AlignRight().Width(80).Image(GenerateQrCode(invoice.InvoiceNumber));
+                        });
                     });
 
                     // Line shortened to left side (40%) - Increased thickness to 2.0f
@@ -225,9 +229,9 @@ public class InvoicePdfService : IInvoicePdfService
                     {
                         r.RelativeItem().Text(""); // Empty space on the left
 
-                        r.ConstantItem(220).Table(t =>
+                        r.ConstantItem(240).Table(t =>
                         {
-                            t.ColumnsDefinition(c => { c.RelativeColumn(); c.ConstantColumn(80); });
+                            t.ColumnsDefinition(c => { c.RelativeColumn(); c.ConstantColumn(100); });
                             
                             t.Cell().Element(TotalStyle).Text("Mal Hizmet Toplam Tutarı:").Bold();
                             t.Cell().Element(TotalStyle).AlignRight().Text($"{invoice.SubTotal.ToString("N2")} TL");
@@ -238,8 +242,8 @@ public class InvoicePdfService : IInvoicePdfService
                             t.Cell().Element(TotalStyle).Text("Vergiler Dahil Toplam Tutar:").Bold();
                             t.Cell().Element(TotalStyle).AlignRight().Text($"{invoice.GrandTotal.ToString("N2")} TL");
 
-                            t.Cell().Element(TotalStyle).Background(Colors.Grey.Lighten4).Text("Ödenecek Tutar:").Bold();
-                            t.Cell().Element(TotalStyle).Background(Colors.Grey.Lighten4).AlignRight().Text($"{invoice.GrandTotal.ToString("N2")} TL");
+                            t.Cell().Element(TotalStyle).Text("Ödenecek Tutar:").Bold();
+                            t.Cell().Element(TotalStyle).AlignRight().Text($"{invoice.GrandTotal.ToString("N2")} TL");
                         });
                     });
 
@@ -259,7 +263,7 @@ public class InvoicePdfService : IInvoicePdfService
                                 if (!string.IsNullOrEmpty(company.BankName))
                                 {
                                     x.Span("Banka: ").Bold();
-                                    x.Span(company.BankName);
+                                    x.Span(company.BankName + "  ");
                                 }
                                 if(!string.IsNullOrEmpty(company.IBAN) && !string.IsNullOrEmpty(company.IBAN))
                                 {
@@ -282,7 +286,7 @@ public class InvoicePdfService : IInvoicePdfService
         return document.GeneratePdf();
     }
 
-    private static IContainer HeaderStyle(IContainer c) => c.Border(0.5f).Background(Colors.Grey.Lighten4).Padding(4).AlignCenter().AlignMiddle().DefaultTextStyle(x => x.Bold());
+    private static IContainer HeaderStyle(IContainer c) => c.Border(0.5f).Padding(4).AlignCenter().AlignMiddle().DefaultTextStyle(x => x.Bold());
     private static IContainer CellStyle(IContainer c) => c.Border(0.5f).Padding(4).AlignMiddle();
     private static IContainer MetaStyle(IContainer c) => c.PaddingHorizontal(4).PaddingVertical(2).BorderBottom(0.5f).BorderColor(Colors.Black);
     private static IContainer TotalStyle(IContainer c) => c.Border(0.5f).Padding(4);
@@ -340,5 +344,13 @@ public class InvoicePdfService : IInvoicePdfService
         }
 
         return "Yalnız " + sonuc;
+    }
+
+    private byte[] GenerateQrCode(string text)
+    {
+        using var qrGenerator = new QRCodeGenerator();
+        using var qrCodeData = qrGenerator.CreateQrCode(text, QRCodeGenerator.ECCLevel.Q);
+        var qrCode = new PngByteQRCode(qrCodeData);
+        return qrCode.GetGraphic(10);
     }
 }

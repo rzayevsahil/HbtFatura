@@ -408,8 +408,8 @@ if (status == InvoiceStatus.Issued || status == InvoiceStatus.Paid)
                         var product = await _db.Products.FirstOrDefaultAsync(p => p.Id == item.ProductId!.Value, ct);
                         if (product != null)
                         {
-                            if (stockDirection == StockMovementType.Cikis && item.Quantity > product.StockQuantity)
-                                throw new InvalidOperationException($"'{product.Name}' ürünü için yetersiz stok! Mevcut: {product.StockQuantity}");
+                            // if (stockDirection == StockMovementType.Cikis && item.Quantity > product.StockQuantity)
+                            //    throw new InvalidOperationException($"'{product.Name}' ürünü için yetersiz stok! Mevcut: {product.StockQuantity}");
 
                             if (stockDirection == StockMovementType.Giris)
                                 product.StockQuantity += item.Quantity;
