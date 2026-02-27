@@ -17,7 +17,7 @@ Modern, web tabanlı e-fatura ve ön muhasebe yönetim sistemi. ASP.NET Core 8 W
 
 Sistem tarafından üretilen; GİB standartlarına uygun, QR kodlu ve ETTN imzalı örnek fatura tasarımı aşağıdadır:
 
-![Örnek Fatura Tasarımı](assets/invoice-sample.png)
+<img width="596" height="526" alt="Image" src="https://github.com/user-attachments/assets/30b6045f-0f32-4a67-9c5c-b5a24a8b1239" />
 
 ### 📦 Stok ve Ürün Yönetimi
 -   Ürün kartları tanımlama ve takip.
