@@ -67,7 +67,7 @@ public class InvoicePdfService : IInvoicePdfService
                         // 1. Company Info (Left)
                         r.RelativeItem().Column(c =>
                         {
-                            c.Item().Text(company?.CompanyName ?? "Firma Adı").FontSize(12);
+                            c.Item().Text(company?.CompanyName ?? "Firma Adı").FontSize(8);
                             c.Item().PaddingTop(4).Text(company?.Address ?? "").FontSize(8);
                             if (!string.IsNullOrEmpty(company?.Phone)) c.Item().Text($"Tel: {company.Phone}").FontSize(8);
                             if (!string.IsNullOrEmpty(company?.Email)) c.Item().Text($"E-Posta: {company.Email}").FontSize(8);
@@ -78,13 +78,15 @@ public class InvoicePdfService : IInvoicePdfService
                         // 2. Logo & e-FATURA (Center)
                         r.RelativeItem().AlignCenter().Column(c =>
                         {
-                            var logoPath = "";
+                            string? logoPath = null;
                             if (!string.IsNullOrEmpty(company?.LogoUrl))
                             {
-                                logoPath = System.IO.Path.Combine(_env.WebRootPath, company.LogoUrl.TrimStart('/'));
+                                // Handle both absolute and relative paths
+                                var cleanUrl = company.LogoUrl.Replace("\\", "/").TrimStart('/');
+                                logoPath = System.IO.Path.Combine(_env.WebRootPath, cleanUrl);
                             }
 
-                            if (!string.IsNullOrEmpty(logoPath) && System.IO.Path.Exists(logoPath))
+                            if (!string.IsNullOrEmpty(logoPath) && System.IO.File.Exists(logoPath))
                             {
                                 c.Item().Height(40).AlignCenter().Image(logoPath);
                             }
