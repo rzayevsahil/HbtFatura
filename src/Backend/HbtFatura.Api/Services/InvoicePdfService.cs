@@ -56,7 +56,7 @@ public class InvoicePdfService : IInvoicePdfService
                     col.Item().Row(r =>
                     {
                         // 1. Company Info (Left)
-                        r.RelativeItem(1.5f).Column(c =>
+                        r.RelativeItem().Column(c =>
                         {
                             c.Item().Text(company?.CompanyName ?? "Firma Adı").Bold().FontSize(12);
                             c.Item().PaddingTop(4).Text(company?.Address ?? "").FontSize(8);
@@ -66,15 +66,37 @@ public class InvoicePdfService : IInvoicePdfService
                             if (!string.IsNullOrEmpty(company?.TaxNumber)) c.Item().Text($"VKN/TCKN: {company.TaxNumber}").FontSize(8);
                         });
 
-                        // 2. Logo & e-FATURA (Center)
-                        r.RelativeItem(1f).AlignCenter().Column(c =>
+                        // 2. Logo & e-FATURA (Center) - Using RelativeItem to help center
+                        r.RelativeItem().AlignCenter().Column(c =>
                         {
                             c.Item().Height(40).AlignCenter().Text("GİB LOGO").FontSize(10).Italic();
                             c.Item().AlignCenter().Text("e-FATURA").Bold().FontSize(11);
                         });
 
-                        // 3. Invoice Metadata Table (Right)
-                        r.RelativeItem(1.5f).AlignRight().Border(0.5f).Table(t =>
+                        // 3. Right empty space to balance the centering
+                        r.RelativeItem().Text("");
+                    });
+
+                    col.Item().PaddingTop(10).LineHorizontal(1).LineColor(Colors.Black);
+                });
+
+                // --- CONTENT SECTION ---
+                page.Content().PaddingVertical(10).Column(col =>
+                {
+                    // Sayın (Customer Info) + Metadata Table
+                    col.Item().Row(r =>
+                    {
+                        r.RelativeItem().Column(c =>
+                        {
+                            c.Item().Text("SAYIN").Bold().FontSize(10);
+                            c.Item().Text(invoice.CustomerTitle).Bold();
+                            c.Item().PaddingTop(4).Text(invoice.CustomerAddress ?? "").FontSize(8);
+                            if (!string.IsNullOrEmpty(invoice.CustomerEmail)) c.Item().Text($"E-Posta: {invoice.CustomerEmail}").FontSize(8);
+                            if (!string.IsNullOrEmpty(invoice.CustomerPhone)) c.Item().Text($"Tel: {invoice.CustomerPhone}").FontSize(8);
+                            if (!string.IsNullOrEmpty(invoice.CustomerTaxNumber)) c.Item().Text($"VKN: {invoice.CustomerTaxNumber}").FontSize(8);
+                        });
+
+                        r.RelativeItem().AlignRight().PaddingRight(1).PaddingTop(5).Border(0.5f).Table(t =>
                         {
                             t.ColumnsDefinition(cd =>
                             {
@@ -91,30 +113,11 @@ public class InvoicePdfService : IInvoicePdfService
                             t.Cell().Element(MetaStyle).Text(invoice.InvoiceNumber);
                             t.Cell().Element(MetaStyle).Text("Fatura Tarihi:").Bold();
                             t.Cell().Element(MetaStyle).Text(invoice.InvoiceDate.ToString("dd-MM-yyyy HH:mm"));
-                            t.Cell().Element(MetaStyle).Text("ETTN:").Bold();
-                            t.Cell().Element(MetaStyle).Text(invoice.Id.ToString().ToUpper()).FontSize(7);
                         });
                     });
 
                     col.Item().PaddingTop(10).LineHorizontal(1).LineColor(Colors.Black);
-                });
-
-                // --- CONTENT SECTION ---
-                page.Content().PaddingVertical(10).Column(col =>
-                {
-                    // Sayın (Customer Info)
-                    col.Item().Row(r =>
-                    {
-                        r.RelativeItem().Column(c =>
-                        {
-                            c.Item().Text("SAYIN").Bold().FontSize(10);
-                            c.Item().Text(invoice.CustomerTitle).Bold();
-                            c.Item().PaddingTop(4).Text(invoice.CustomerAddress ?? "").FontSize(8);
-                            if (!string.IsNullOrEmpty(invoice.CustomerEmail)) c.Item().Text($"E-Posta: {invoice.CustomerEmail}").FontSize(8);
-                            if (!string.IsNullOrEmpty(invoice.CustomerPhone)) c.Item().Text($"Tel: {invoice.CustomerPhone}").FontSize(8);
-                            if (!string.IsNullOrEmpty(invoice.CustomerTaxNumber)) c.Item().Text($"VKN: {invoice.CustomerTaxNumber}").FontSize(8);
-                        });
-                    });
+                    col.Item().Text($"ETTN: {invoice.Id.ToString().ToUpper()}").FontSize(8);
 
                     col.Item().PaddingTop(15).Table(t =>
                     {
@@ -149,41 +152,44 @@ public class InvoicePdfService : IInvoicePdfService
                             t.Cell().Element(CellStyle).Text(item.Product?.Code ?? "");
                             t.Cell().Element(CellStyle).Text(item.Description);
                             t.Cell().Element(CellStyle).AlignRight().Text(item.Quantity.ToString("N2"));
-                            t.Cell().Element(CellStyle).AlignRight().Text(item.UnitPrice.ToString("G29"));
+                            t.Cell().Element(CellStyle).AlignRight().Text($"{item.UnitPrice.ToString("G29")} TL");
                             t.Cell().Element(CellStyle).AlignRight().Text($"{item.VatRate}%");
-                            t.Cell().Element(CellStyle).AlignRight().Text(item.LineVatAmount.ToString("N2"));
-                            t.Cell().Element(CellStyle).AlignRight().Text(item.LineTotalExclVat.ToString("N2"));
+                            t.Cell().Element(CellStyle).AlignRight().Text($"{item.LineVatAmount.ToString("N2")} TL");
+                            t.Cell().Element(CellStyle).AlignRight().Text($"{item.LineTotalExclVat.ToString("N2")} TL");
                         }
                     });
 
-                    // Totals
+                    // Totals Row
                     col.Item().PaddingTop(10).Row(r =>
                     {
-                        r.RelativeItem().Column(c =>
-                        {
-                            c.Item().PaddingTop(20).Text(AmountInWords(invoice.GrandTotal)).Italic().FontSize(8);
-                            if (!string.IsNullOrEmpty(company?.IBAN))
-                            {
-                                c.Item().PaddingTop(10).Text($"IBAN: {company.IBAN}").Bold().FontSize(8);
-                            }
-                        });
+                        r.RelativeItem().Text(""); // Empty space on the left
 
                         r.ConstantItem(220).Table(t =>
                         {
                             t.ColumnsDefinition(c => { c.RelativeColumn(); c.ConstantColumn(80); });
                             
                             t.Cell().Element(TotalStyle).Text("Mal Hizmet Toplam Tutarı:");
-                            t.Cell().Element(TotalStyle).AlignRight().Text(invoice.SubTotal.ToString("N2"));
+                            t.Cell().Element(TotalStyle).AlignRight().Text($"{invoice.SubTotal.ToString("N2")} TL");
 
-                            t.Cell().Element(TotalStyle).Text("Hesaplanan KDV (%18):"); // Fixed 20 or dynamic? Usually multiple VAT rates exist
-                            t.Cell().Element(TotalStyle).AlignRight().Text(invoice.TotalVat.ToString("N2"));
+                            t.Cell().Element(TotalStyle).Text("Hesaplanan KDV (%18):");
+                            t.Cell().Element(TotalStyle).AlignRight().Text($"{invoice.TotalVat.ToString("N2")} TL");
 
                             t.Cell().Element(TotalStyle).Text("Vergiler Dahil Toplam Tutar:").Bold();
-                            t.Cell().Element(TotalStyle).AlignRight().Text(invoice.GrandTotal.ToString("N2")).Bold();
+                            t.Cell().Element(TotalStyle).AlignRight().Text($"{invoice.GrandTotal.ToString("N2")} TL").Bold();
 
                             t.Cell().Element(TotalStyle).Background(Colors.Grey.Lighten4).Text("Ödenecek Tutar:").Bold();
-                            t.Cell().Element(TotalStyle).Background(Colors.Grey.Lighten4).AlignRight().Text(invoice.GrandTotal.ToString("N2") + " " + invoice.Currency).Bold();
+                            t.Cell().Element(TotalStyle).Background(Colors.Grey.Lighten4).AlignRight().Text($"{invoice.GrandTotal.ToString("N2")} TL").Bold();
                         });
+                    });
+
+                    // Notes & IBAN Box (Bottom)
+                    col.Item().PaddingTop(15).Border(0.5f).Padding(10).Column(c =>
+                    {
+                        c.Item().Text(AmountInWords(invoice.GrandTotal)).Italic().FontSize(9);
+                        if (!string.IsNullOrEmpty(company?.IBAN))
+                        {
+                            c.Item().PaddingTop(8).Text($"IBAN: {company.IBAN}").Bold().FontSize(9);
+                        }
                     });
                 });
 
