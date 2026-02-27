@@ -33,6 +33,7 @@ public class InvoicePdfService : IInvoicePdfService
         var invoice = await ScopeQuery()
             .Include(x => x.User)
             .Include(x => x.Items.OrderBy(i => i.SortOrder))
+                .ThenInclude(i => i.Product)
             .FirstOrDefaultAsync(x => x.Id == invoiceId, ct);
         if (invoice == null) return null;
 
@@ -46,82 +47,150 @@ public class InvoicePdfService : IInvoicePdfService
             container.Page(page =>
             {
                 page.Size(PageSizes.A4);
-                page.Margin(40);
-                page.DefaultTextStyle(x => x.FontSize(10));
+                page.Margin(30);
+                page.DefaultTextStyle(x => x.FontSize(9).FontFamily(Fonts.Verdana));
 
+                // --- HEADER SECTION ---
                 page.Header().Column(col =>
                 {
                     col.Item().Row(r =>
                     {
-                        r.RelativeItem().Column(c =>
+                        // 1. Company Info (Left)
+                        r.RelativeItem(1.5f).Column(c =>
                         {
-                            c.Item().Text(company?.CompanyName ?? "Firma").Bold().FontSize(14);
-                            if (!string.IsNullOrEmpty(company?.TaxOffice)) c.Item().Text($"Vergi Dairesi: {company.TaxOffice}");
-                            if (!string.IsNullOrEmpty(company?.TaxNumber)) c.Item().Text($"Vergi No: {company.TaxNumber}");
-                            if (!string.IsNullOrEmpty(company?.Address)) c.Item().Text(company.Address);
-                            if (!string.IsNullOrEmpty(company?.IBAN)) c.Item().Text($"IBAN: {company.IBAN}");
+                            c.Item().Text(company?.CompanyName ?? "Firma Adı").Bold().FontSize(12);
+                            c.Item().PaddingTop(4).Text(company?.Address ?? "").FontSize(8);
+                            if (!string.IsNullOrEmpty(company?.Phone)) c.Item().Text($"Tel: {company.Phone}").FontSize(8);
+                            if (!string.IsNullOrEmpty(company?.Email)) c.Item().Text($"E-Posta: {company.Email}").FontSize(8);
+                            if (!string.IsNullOrEmpty(company?.TaxOffice)) c.Item().Text($"Vergi Dairesi: {company.TaxOffice}").FontSize(8);
+                            if (!string.IsNullOrEmpty(company?.TaxNumber)) c.Item().Text($"VKN/TCKN: {company.TaxNumber}").FontSize(8);
                         });
-                        r.RelativeItem().AlignRight().Column(c =>
+
+                        // 2. Logo & e-FATURA (Center)
+                        r.RelativeItem(1f).AlignCenter().Column(c =>
                         {
-                            c.Item().Text("FATURA").Bold().FontSize(18);
-                            c.Item().Text($"No: {invoice.InvoiceNumber}");
-                            c.Item().Text($"Tarih: {invoice.InvoiceDate:dd.MM.yyyy}");
+                            c.Item().Height(40).AlignCenter().Text("GİB LOGO").FontSize(10).Italic();
+                            c.Item().AlignCenter().Text("e-FATURA").Bold().FontSize(11);
+                        });
+
+                        // 3. Invoice Metadata Table (Right)
+                        r.RelativeItem(1.5f).AlignRight().Border(0.5f).Table(t =>
+                        {
+                            t.ColumnsDefinition(cd =>
+                            {
+                                cd.RelativeColumn();
+                                cd.RelativeColumn();
+                            });
+                            t.Cell().Element(MetaStyle).Text("Özelleştirme No:").Bold();
+                            t.Cell().Element(MetaStyle).Text("TR1.2");
+                            t.Cell().Element(MetaStyle).Text("Senaryo:").Bold();
+                            t.Cell().Element(MetaStyle).Text("TEMELFATURA");
+                            t.Cell().Element(MetaStyle).Text("Fatura Tipi:").Bold();
+                            t.Cell().Element(MetaStyle).Text("SATIS");
+                            t.Cell().Element(MetaStyle).Text("Fatura No:").Bold();
+                            t.Cell().Element(MetaStyle).Text(invoice.InvoiceNumber);
+                            t.Cell().Element(MetaStyle).Text("Fatura Tarihi:").Bold();
+                            t.Cell().Element(MetaStyle).Text(invoice.InvoiceDate.ToString("dd-MM-yyyy HH:mm"));
+                            t.Cell().Element(MetaStyle).Text("ETTN:").Bold();
+                            t.Cell().Element(MetaStyle).Text(invoice.Id.ToString().ToUpper()).FontSize(7);
                         });
                     });
+
+                    col.Item().PaddingTop(10).LineHorizontal(1).LineColor(Colors.Black);
                 });
 
-                page.Content().PaddingVertical(20).Column(col =>
+                // --- CONTENT SECTION ---
+                page.Content().PaddingVertical(10).Column(col =>
                 {
-                    col.Item().Text("Cari").Bold();
-                    col.Item().Text(invoice.CustomerTitle);
-                    if (!string.IsNullOrEmpty(invoice.CustomerTaxNumber)) col.Item().Text($"Vergi No/TC: {invoice.CustomerTaxNumber}");
-                    if (!string.IsNullOrEmpty(invoice.CustomerAddress)) col.Item().Text(invoice.CustomerAddress);
-                    col.Item().PaddingBottom(15);
+                    // Sayın (Customer Info)
+                    col.Item().Row(r =>
+                    {
+                        r.RelativeItem().Column(c =>
+                        {
+                            c.Item().Text("SAYIN").Bold().FontSize(10);
+                            c.Item().Text(invoice.CustomerTitle).Bold();
+                            c.Item().PaddingTop(4).Text(invoice.CustomerAddress ?? "").FontSize(8);
+                            if (!string.IsNullOrEmpty(invoice.CustomerEmail)) c.Item().Text($"E-Posta: {invoice.CustomerEmail}").FontSize(8);
+                            if (!string.IsNullOrEmpty(invoice.CustomerPhone)) c.Item().Text($"Tel: {invoice.CustomerPhone}").FontSize(8);
+                            if (!string.IsNullOrEmpty(invoice.CustomerTaxNumber)) c.Item().Text($"VKN: {invoice.CustomerTaxNumber}").FontSize(8);
+                        });
+                    });
 
-                    col.Item().Table(t =>
+                    col.Item().PaddingTop(15).Table(t =>
                     {
                         t.ColumnsDefinition(c =>
                         {
-                            c.ConstantColumn(25);
-                            c.RelativeColumn(3);
-                            c.ConstantColumn(50);
-                            c.ConstantColumn(60);
-                            c.ConstantColumn(50);
-                            c.ConstantColumn(70);
-                            c.ConstantColumn(70);
-                            c.ConstantColumn(70);
+                            c.ConstantColumn(25);  // Sıra
+                            c.ConstantColumn(80);  // Stok Kodu
+                            c.RelativeColumn();    // Mal Hizmet
+                            c.ConstantColumn(50);  // Miktar
+                            c.ConstantColumn(60);  // Birim Fiyat
+                            c.ConstantColumn(40);  // KDV %
+                            c.ConstantColumn(60);  // KDV Tutarı
+                            c.ConstantColumn(70);  // Toplam
                         });
+                        
                         t.Header(h =>
                         {
-                            h.Cell().Element(CellStyle).Text("#");
-                            h.Cell().Element(CellStyle).Text("Açıklama");
-                            h.Cell().Element(CellStyle).AlignRight().Text("Miktar");
-                            h.Cell().Element(CellStyle).AlignRight().Text("Birim Fiyat");
-                            h.Cell().Element(CellStyle).AlignRight().Text("KDV %");
-                            h.Cell().Element(CellStyle).AlignRight().Text("KDV Hariç");
-                            h.Cell().Element(CellStyle).AlignRight().Text("KDV");
-                            h.Cell().Element(CellStyle).AlignRight().Text("KDV Dahil");
+                            h.Cell().Element(HeaderStyle).Text("Sıra No");
+                            h.Cell().Element(HeaderStyle).Text("Stok Kodu");
+                            h.Cell().Element(HeaderStyle).Text("Mal Hizmet");
+                            h.Cell().Element(HeaderStyle).AlignRight().Text("Miktar");
+                            h.Cell().Element(HeaderStyle).AlignRight().Text("Birim Fiyat");
+                            h.Cell().Element(HeaderStyle).AlignRight().Text("KDV %");
+                            h.Cell().Element(HeaderStyle).AlignRight().Text("KDV Tutarı");
+                            h.Cell().Element(HeaderStyle).AlignRight().Text("Tutar");
                         });
+
                         var i = 1;
                         foreach (var item in invoice.Items)
                         {
                             t.Cell().Element(CellStyle).Text(i++.ToString());
+                            t.Cell().Element(CellStyle).Text(item.Product?.Code ?? "");
                             t.Cell().Element(CellStyle).Text(item.Description);
                             t.Cell().Element(CellStyle).AlignRight().Text(item.Quantity.ToString("N2"));
-                            t.Cell().Element(CellStyle).AlignRight().Text(item.UnitPrice.ToString("N2"));
-                            t.Cell().Element(CellStyle).AlignRight().Text(item.VatRate.ToString("N0"));
-                            t.Cell().Element(CellStyle).AlignRight().Text(item.LineTotalExclVat.ToString("N2"));
+                            t.Cell().Element(CellStyle).AlignRight().Text(item.UnitPrice.ToString("G29"));
+                            t.Cell().Element(CellStyle).AlignRight().Text($"{item.VatRate}%");
                             t.Cell().Element(CellStyle).AlignRight().Text(item.LineVatAmount.ToString("N2"));
-                            t.Cell().Element(CellStyle).AlignRight().Text(item.LineTotalInclVat.ToString("N2"));
+                            t.Cell().Element(CellStyle).AlignRight().Text(item.LineTotalExclVat.ToString("N2"));
                         }
                     });
 
-                    col.Item().AlignRight().PaddingTop(10).Column(c =>
+                    // Totals
+                    col.Item().PaddingTop(10).Row(r =>
                     {
-                        c.Item().Row(r => { r.RelativeItem().Text("Ara Toplam:"); r.ConstantItem(80).AlignRight().Text(invoice.SubTotal.ToString("N2") + " " + invoice.Currency); });
-                        c.Item().Row(r => { r.RelativeItem().Text("Toplam KDV:"); r.ConstantItem(80).AlignRight().Text(invoice.TotalVat.ToString("N2") + " " + invoice.Currency); });
-                        c.Item().Row(r => { r.RelativeItem().Text("Genel Toplam:").Bold(); r.ConstantItem(80).AlignRight().Text(invoice.GrandTotal.ToString("N2") + " " + invoice.Currency).Bold(); });
+                        r.RelativeItem().Column(c =>
+                        {
+                            c.Item().PaddingTop(20).Text(AmountInWords(invoice.GrandTotal)).Italic().FontSize(8);
+                            if (!string.IsNullOrEmpty(company?.IBAN))
+                            {
+                                c.Item().PaddingTop(10).Text($"IBAN: {company.IBAN}").Bold().FontSize(8);
+                            }
+                        });
+
+                        r.ConstantItem(220).Table(t =>
+                        {
+                            t.ColumnsDefinition(c => { c.RelativeColumn(); c.ConstantColumn(80); });
+                            
+                            t.Cell().Element(TotalStyle).Text("Mal Hizmet Toplam Tutarı:");
+                            t.Cell().Element(TotalStyle).AlignRight().Text(invoice.SubTotal.ToString("N2"));
+
+                            t.Cell().Element(TotalStyle).Text("Hesaplanan KDV (%18):"); // Fixed 20 or dynamic? Usually multiple VAT rates exist
+                            t.Cell().Element(TotalStyle).AlignRight().Text(invoice.TotalVat.ToString("N2"));
+
+                            t.Cell().Element(TotalStyle).Text("Vergiler Dahil Toplam Tutar:").Bold();
+                            t.Cell().Element(TotalStyle).AlignRight().Text(invoice.GrandTotal.ToString("N2")).Bold();
+
+                            t.Cell().Element(TotalStyle).Background(Colors.Grey.Lighten4).Text("Ödenecek Tutar:").Bold();
+                            t.Cell().Element(TotalStyle).Background(Colors.Grey.Lighten4).AlignRight().Text(invoice.GrandTotal.ToString("N2") + " " + invoice.Currency).Bold();
+                        });
                     });
+                });
+
+                page.Footer().AlignCenter().Text(x =>
+                {
+                    x.Span("Sayfa ");
+                    x.CurrentPageNumber();
                 });
             });
         });
@@ -129,5 +198,63 @@ public class InvoicePdfService : IInvoicePdfService
         return document.GeneratePdf();
     }
 
-    private static IContainer CellStyle(IContainer c) => c.BorderBottom(0.5f).BorderColor(Colors.Grey.Lighten2).PaddingVertical(4).PaddingHorizontal(4);
+    private static IContainer HeaderStyle(IContainer c) => c.Border(0.5f).Background(Colors.Grey.Lighten4).Padding(4).AlignCenter().AlignMiddle().DefaultTextStyle(x => x.Bold());
+    private static IContainer CellStyle(IContainer c) => c.Border(0.5f).Padding(4).AlignMiddle();
+    private static IContainer MetaStyle(IContainer c) => c.PaddingHorizontal(4).PaddingVertical(2).BorderBottom(0.2f).BorderColor(Colors.Grey.Lighten2);
+    private static IContainer TotalStyle(IContainer c) => c.Border(0.5f).Padding(4);
+
+    private static string AmountInWords(decimal sayi)
+    {
+        string[] birler = { "", "Bir", "İki", "Üç", "Dört", "Beş", "Altı", "Yedi", "Sekiz", "Dokuz" };
+        string[] onlar = { "", "On", "Yirmi", "Otuz", "Kırk", "Elli", "Altmış", "Yetmiş", "Seksen", "Doksan" };
+        string[] binler = { "", "Bin", "Milyon", "Milyar", "Trilyon" };
+
+        string sonuc = "";
+        long tamKisim = (long)Math.Floor(sayi);
+        int kurusKisim = (int)Math.Round((sayi - tamKisim) * 100);
+
+        if (tamKisim == 0) sonuc = "Sıfır";
+        else
+        {
+            int grupSayisi = 0;
+            while (tamKisim > 0)
+            {
+                int grup = (int)(tamKisim % 1000);
+                if (grup > 0)
+                {
+                    string grupYazi = "";
+                    int yuzlerBas = grup / 100;
+                    int onlarBas = (grup % 100) / 10;
+                    int birlerBas = grup % 10;
+
+                    if (yuzlerBas > 0)
+                    {
+                        if (yuzlerBas > 1) grupYazi += birler[yuzlerBas];
+                        grupYazi += "Yüz";
+                    }
+                    grupYazi += onlar[onlarBas];
+                    if (grupSayisi == 1 && birlerBas == 1 && onlarBas == 0 && yuzlerBas == 0)
+                    {
+                        // "BirBin" yerine "Bin"
+                    }
+                    else
+                    {
+                        grupYazi += birler[birlerBas];
+                    }
+
+                    sonuc = grupYazi + binler[grupSayisi] + sonuc;
+                }
+                tamKisim /= 1000;
+                grupSayisi++;
+            }
+        }
+
+        sonuc += " TürkLirası";
+        if (kurusKisim > 0)
+        {
+            sonuc += " " + onlar[kurusKisim / 10] + birler[kurusKisim % 10] + " Kuruş";
+        }
+
+        return "Yalnız " + sonuc;
+    }
 }
