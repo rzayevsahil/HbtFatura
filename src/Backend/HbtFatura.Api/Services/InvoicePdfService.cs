@@ -180,14 +180,14 @@ public class InvoicePdfService : IInvoicePdfService
                     {
                         t.ColumnsDefinition(c =>
                         {
-                            c.ConstantColumn(25);  // Sıra
-                            c.ConstantColumn(80);  // Stok Kodu
+                            c.ConstantColumn(35);  // Sıra No
+                            c.ConstantColumn(70);  // Stok Kodu
                             c.RelativeColumn();    // Mal Hizmet
-                            c.ConstantColumn(50);  // Miktar
-                            c.ConstantColumn(60);  // Birim Fiyat
-                            c.ConstantColumn(40);  // KDV %
-                            c.ConstantColumn(60);  // KDV Tutarı
-                            c.ConstantColumn(70);  // Toplam
+                            c.ConstantColumn(45);  // Miktar
+                            c.ConstantColumn(75);  // Birim Fiyat
+                            c.ConstantColumn(45);  // KDV %
+                            c.ConstantColumn(75);  // KDV Tutarı
+                            c.ConstantColumn(85);  // Tutar
                         });
                         
                         t.Header(h =>
