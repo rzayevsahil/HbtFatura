@@ -71,7 +71,7 @@ export class InvoiceFormComponent implements OnInit {
       customerAddress: ['', Validators.required],
       customerPhone: [''],
       customerEmail: [''],
-      invoiceDate: [new Date().toISOString().slice(0, 10), Validators.required],
+      invoiceDate: [this.formatDateForInput(new Date()), Validators.required],
       currency: ['TRY'],
       exchangeRate: [1],
       items: this.fb.array([this.createItemGroup()])
@@ -92,7 +92,7 @@ export class InvoiceFormComponent implements OnInit {
           customerAddress: inv.customerAddress ?? '',
           customerPhone: inv.customerPhone ?? '',
           customerEmail: inv.customerEmail ?? '',
-          invoiceDate: inv.invoiceDate.slice(0, 10),
+          invoiceDate: inv.invoiceDate ? this.formatDateForInput(new Date(inv.invoiceDate)) : '',
           currency: inv.currency,
           exchangeRate: inv.exchangeRate
         });
@@ -235,5 +235,11 @@ export class InvoiceFormComponent implements OnInit {
         complete: () => { this.saving = false; }
       });
     }
+  }
+
+  private formatDateForInput(date: Date): string {
+    const d = new Date(date);
+    d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+    return d.toISOString().slice(0, 16);
   }
 }

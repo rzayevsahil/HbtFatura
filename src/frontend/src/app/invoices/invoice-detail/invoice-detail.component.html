@@ -3,7 +3,7 @@
   <div class="page-header-left">
     <h1 class="page-title">Fatura {{ invoice.invoiceNumber }}</h1>
     <div class="meta">
-      <span>Tarih: {{ invoice.invoiceDate | date:'dd.MM.yyyy' }}</span>
+      <span>Tarih: {{ invoice.invoiceDate | date:'dd.MM.yyyy HH:mm' }}</span>
       <span class="status-badge" [class]="statusClass(invoice.status)">{{ statusLabel(invoice.status) }}</span>
       <span>Cari: {{ invoice.customerTitle }}</span>
       @if (invoice.sourceType === 'Irsaliye' && invoice.sourceId && invoice.sourceNumber) {

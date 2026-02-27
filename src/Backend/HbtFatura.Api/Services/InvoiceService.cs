@@ -118,7 +118,7 @@ public class InvoiceService : IInvoiceService
             Id = Guid.NewGuid(),
             UserId = userId,
             InvoiceNumber = invoiceNumber,
-            InvoiceDate = request.InvoiceDate.Date,
+            InvoiceDate = DateTimeHelper.NormalizeForStorage(request.InvoiceDate),
             Status = InvoiceStatus.Draft,
             InvoiceType = request.InvoiceType,
             CustomerId = customerId,
@@ -260,7 +260,7 @@ public class InvoiceService : IInvoiceService
 
         var userId = _currentUser.UserId;
 
-        invoice.InvoiceDate = request.InvoiceDate.Date;
+        invoice.InvoiceDate = DateTimeHelper.NormalizeForStorage(request.InvoiceDate);
         invoice.InvoiceType = request.InvoiceType;
         invoice.CustomerId = request.CustomerId;
         invoice.CustomerTitle = request.CustomerTitle;
