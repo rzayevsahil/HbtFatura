@@ -4,7 +4,8 @@
     <h1 class="page-title">Fatura {{ invoice.invoiceNumber }}</h1>
     <div class="meta">
       <span>Tarih: {{ invoice.invoiceDate | date:'dd.MM.yyyy HH:mm' }}</span>
-      <span class="status-badge" [class]="statusClass(invoice.status)">{{ statusLabel(invoice.status) }}</span>
+      <span class="status-badge {{ statusClass(invoice.status) }}">{{ statusLabel(invoice.status, invoice.sourceType)
+        }}</span>
       <span>Cari: {{ invoice.customerTitle }}</span>
       @if (invoice.sourceType === 'Irsaliye' && invoice.sourceId && invoice.sourceNumber) {
       <span class="source">İrsaliye No: {{ invoice.sourceNumber }}</span>

@@ -54,13 +54,24 @@ export class InvoiceListComponent implements OnInit {
     });
   }
 
-  statusLabel(s: InvoiceStatus): string {
-    const map: Record<InvoiceStatus, string> = { 0: 'Taslak', 1: 'Kesildi', 2: 'Ödendi', 3: 'İptal' };
-    return map[s] ?? '';
+  statusLabel(s: any, sourceType?: string | null): string {
+    const map: any = {
+      0: sourceType === 'Irsaliye' ? 'Fatura Oluşturuldu' : 'Taslak',
+      'Draft': sourceType === 'Irsaliye' ? 'Fatura Oluşturuldu' : 'Taslak',
+      1: 'Onaylandı', 'Issued': 'Onaylandı',
+      2: 'Ödendi', 'Paid': 'Ödendi',
+      3: 'İptal', 'Cancelled': 'İptal'
+    };
+    return map[s] ?? (s !== null && s !== undefined ? s.toString() : '');
   }
 
-  statusClass(s: InvoiceStatus): string {
-    const map: Record<InvoiceStatus, string> = { 0: 'draft', 1: 'issued', 2: 'paid', 3: 'cancelled' };
+  statusClass(s: any): string {
+    const map: any = {
+      0: 'draft', 'Draft': 'draft',
+      1: 'issued', 'Issued': 'issued',
+      2: 'paid', 'Paid': 'paid',
+      3: 'cancelled', 'Cancelled': 'cancelled'
+    };
     return map[s] ?? '';
   }
 

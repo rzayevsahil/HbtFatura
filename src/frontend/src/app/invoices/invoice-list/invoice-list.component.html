@@ -6,8 +6,8 @@
   <input [(ngModel)]="searchDateTo" type="date" />
   <select [(ngModel)]="searchStatus">
     <option [ngValue]="null">Tümü</option>
-    <option [ngValue]="0">Taslak</option>
-    <option [ngValue]="1">Kesildi</option>
+    <option [ngValue]="0">Fatura Oluşturuldu</option>
+    <option [ngValue]="1">Onaylandı</option>
     <option [ngValue]="2">Ödendi</option>
     <option [ngValue]="3">İptal</option>
   </select>
@@ -45,7 +45,7 @@
         <td>{{ typeLabel(inv.invoiceType) }}</td>
         <td>{{ inv.customerTitle }}</td>
         <td>{{ inv.grandTotal | number:'1.2-2' }} {{ inv.currency }}</td>
-        <td><span class="status" [class]="statusClass(inv.status)">{{ statusLabel(inv.status) }}</span></td>
+        <td><span class="status {{ statusClass(inv.status) }}">{{ statusLabel(inv.status, inv.sourceType) }}</span></td>
         <td>
           <div class="actions-cell">
             <a [routerLink]="['/invoices', inv.id]">Detay</a>

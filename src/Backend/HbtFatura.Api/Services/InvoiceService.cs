@@ -4,6 +4,7 @@ using HbtFatura.Api.Data;
 using HbtFatura.Api.DTOs.Customers;
 using HbtFatura.Api.DTOs.Invoices;
 using HbtFatura.Api.Entities;
+using HbtFatura.Api.Helpers;
 
 namespace HbtFatura.Api.Services;
 
@@ -58,7 +59,8 @@ public class InvoiceService : IInvoiceService
                 CustomerTitle = x.CustomerTitle,
                 GrandTotal = x.GrandTotal,
                 Currency = x.Currency,
-                IsGibSent = x.IsGibSent
+                IsGibSent = x.IsGibSent,
+                SourceType = x.SourceType
             })
             .ToListAsync(ct);
         return new PagedResult<InvoiceListDto> { Items = items, TotalCount = total, Page = page, PageSize = pageSize };
@@ -344,17 +346,12 @@ public class InvoiceService : IInvoiceService
         
         if (invoice.IsGibSent) return true;
 
+        var ok = await SetStatusAsync(id, InvoiceStatus.Issued, ct);
+        if (!ok) return false;
+
         invoice.IsGibSent = true;
-        
-        try
-        {
-            await _db.SaveChangesAsync(ct);
-            return true;
-        }
-        catch
-        {
-            return false;
-        }
+        await _db.SaveChangesAsync(ct);
+        return true;
     }
 
     public async Task<bool> SetStatusAsync(Guid id, InvoiceStatus status, CancellationToken ct = default)

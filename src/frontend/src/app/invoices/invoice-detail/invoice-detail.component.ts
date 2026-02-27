@@ -29,13 +29,23 @@ export class InvoiceDetailComponent implements OnInit {
     if (id) this.api.getById(id).subscribe(inv => this.invoice = inv);
   }
 
-  statusLabel(s: number): string {
-    const map: Record<number, string> = { 0: 'Taslak', 1: 'Kesildi', 2: 'Ödendi', 3: 'İptal' };
-    return map[s] ?? '';
+  statusLabel(s: any, sourceType?: string | null): string {
+    const map: any = {
+      0: 'Fatura Oluşturuldu', 'Draft': 'Fatura Oluşturuldu',
+      1: 'Onaylandı', 'Issued': 'Onaylandı',
+      2: 'Ödendi', 'Paid': 'Ödendi',
+      3: 'İptal', 'Cancelled': 'İptal'
+    };
+    return map[s] ?? (s !== null && s !== undefined ? s.toString() : '');
   }
 
-  statusClass(s: number): string {
-    const map: Record<number, string> = { 0: 'draft', 1: 'issued', 2: 'paid', 3: 'cancelled' };
+  statusClass(s: any): string {
+    const map: any = {
+      0: 'draft', 'Draft': 'draft',
+      1: 'issued', 'Issued': 'issued',
+      2: 'paid', 'Paid': 'paid',
+      3: 'cancelled', 'Cancelled': 'cancelled'
+    };
     return map[s] ?? '';
   }
 
@@ -48,7 +58,10 @@ export class InvoiceDetailComponent implements OnInit {
     this.api.sendToGib(this.invoice.id).subscribe({
       next: () => {
         this.sendingGib = false;
-        if (this.invoice) this.invoice.isGibSent = true;
+        if (this.invoice) {
+          this.invoice.isGibSent = true;
+          this.invoice.status = 1; // Onaylandı
+        }
         this.toastr.success("Fatura başarıyla GİB'e gönderildi.");
       },
       error: () => {

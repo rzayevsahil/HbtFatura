@@ -64,6 +64,7 @@ export interface InvoiceListDto {
   grandTotal: number;
   currency: string;
   isGibSent: boolean;
+  sourceType?: string | null;
 }
 
 export interface CreateInvoiceRequest {
