@@ -11,11 +11,13 @@ public class OrderService : IOrderService
 {
     private readonly AppDbContext _db;
     private readonly ICurrentUserContext _currentUser;
+    private readonly ILogService _log;
 
-    public OrderService(AppDbContext db, ICurrentUserContext currentUser)
+    public OrderService(AppDbContext db, ICurrentUserContext currentUser, ILogService log)
     {
         _db = db;
         _currentUser = currentUser;
+        _log = log;
     }
 
     private IQueryable<Order> ScopeQuery(Guid? firmIdFilter = null)
@@ -140,6 +142,7 @@ public class OrderService : IOrderService
 
         _db.Orders.Add(order);
         await _db.SaveChangesAsync(ct);
+        await _log.LogAsync($"Sipariş oluşturuldu: {order.OrderNumber}", "Create", "Order", "Info", $"Id: {order.Id}, Cari: {customerTitle}");
 
         order = (await ScopeQuery().Include(x => x.Customer).Include(x => x.Items.OrderBy(i => i.SortOrder)).ThenInclude(i => i.Product).FirstOrDefaultAsync(x => x.Id == order.Id, ct))!;
         return MapToDto(order);
@@ -187,6 +190,7 @@ public class OrderService : IOrderService
         }
 
         await _db.SaveChangesAsync(ct);
+        await _log.LogAsync($"Sipariş güncellendi: {order.OrderNumber}", "Update", "Order", "Info", $"Id: {order.Id}");
         order = (await ScopeQuery().Include(x => x.Customer).Include(x => x.Items.OrderBy(i => i.SortOrder)).ThenInclude(i => i.Product).FirstOrDefaultAsync(x => x.Id == id, ct))!;
         return MapToDto(order);
     }
@@ -199,6 +203,7 @@ public class OrderService : IOrderService
         order.UpdatedAt = DateTime.UtcNow;
         order.UpdatedBy = _currentUser.UserId;
         await _db.SaveChangesAsync(ct);
+        await _log.LogAsync($"Sipariş durumu değişti: {order.OrderNumber} -> {status}", "SetStatus", "Order", "Info", $"Id: {id}");
         return true;
     }
 

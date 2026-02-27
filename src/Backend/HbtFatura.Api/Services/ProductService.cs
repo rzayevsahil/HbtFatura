@@ -11,11 +11,13 @@ public class ProductService : IProductService
 {
     private readonly AppDbContext _db;
     private readonly ICurrentUserContext _currentUser;
+    private readonly ILogService _log;
 
-    public ProductService(AppDbContext db, ICurrentUserContext currentUser)
+    public ProductService(AppDbContext db, ICurrentUserContext currentUser, ILogService log)
     {
         _db = db;
         _currentUser = currentUser;
+        _log = log;
     }
 
     private IQueryable<Product> ScopeQuery(Guid? firmIdFilter = null)
@@ -107,6 +109,7 @@ public class ProductService : IProductService
         };
         _db.Products.Add(entity);
         await _db.SaveChangesAsync(ct);
+        await _log.LogAsync($"Ürün kartı oluşturuldu: {entity.Name} ({entity.Code})", "Create", "Product", "Info", $"Id: {entity.Id}");
         
         if (request.StockQuantity != 0)
         {
@@ -158,6 +161,7 @@ public class ProductService : IProductService
         }
         
         await _db.SaveChangesAsync(ct);
+        await _log.LogAsync($"Ürün kartı güncellendi: {entity.Name} ({entity.Code})", "Update", "Product", "Info", $"Id: {entity.Id}");
         return await GetByIdAsync(id, ct);
     }
 
@@ -167,6 +171,7 @@ public class ProductService : IProductService
         if (entity == null) return false;
         _db.Products.Remove(entity);
         await _db.SaveChangesAsync(ct);
+        await _log.LogAsync($"Ürün kartı silindi: {entity.Name} ({entity.Code})", "Delete", "Product", "Warning", $"Id: {entity.Id}");
         return true;
     }
 

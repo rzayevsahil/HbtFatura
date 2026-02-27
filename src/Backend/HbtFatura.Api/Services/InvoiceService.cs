@@ -171,6 +171,7 @@ public class InvoiceService : IInvoiceService
         }
 
         invoice = (await ScopeQuery().Include(x => x.Items.OrderBy(i => i.SortOrder)).ThenInclude(i => i.Product).FirstOrDefaultAsync(x => x.Id == invoice.Id, ct))!;
+        await _log.LogAsync($"Fatura oluşturuldu: {invoice.InvoiceNumber}", "Create", "Invoice", "Info", $"Id: {invoice.Id}, Cari: {invoice.CustomerTitle}");
         return MapToDto(invoice);
     }
 
@@ -246,6 +247,7 @@ public class InvoiceService : IInvoiceService
         dn.InvoiceId = invoice.Id;
         dn.Status = DeliveryNoteStatus.Faturalandi;
         await _db.SaveChangesAsync(ct);
+        await _log.LogAsync($"İrsaliyeden fatura oluşturuldu: {invoice.InvoiceNumber} (İrsaliye: {dn.DeliveryNumber})", "CreateFromDeliveryNote", "Invoice", "Info", $"Id: {invoice.Id}");
         return await GetByIdAsync(invoice.Id, ct);
     }
 
@@ -338,6 +340,7 @@ public class InvoiceService : IInvoiceService
         }
 
         invoice = (await ScopeQuery().Include(x => x.Items.OrderBy(i => i.SortOrder)).ThenInclude(i => i.Product).FirstOrDefaultAsync(x => x.Id == invoice.Id, ct))!;
+        await _log.LogAsync($"Fatura güncellendi: {invoice.InvoiceNumber}", "Update", "Invoice", "Info", $"Id: {invoice.Id}");
         return await GetByIdAsync(id, ct);
     }
 
@@ -426,7 +429,9 @@ if (status == InvoiceStatus.Issued || status == InvoiceStatus.Paid)
 
         invoice.Status = status;
         invoice.UpdatedAt = DateTime.UtcNow;
+        invoice.UpdatedBy = _currentUser.UserId;
         await _db.SaveChangesAsync(ct);
+        await _log.LogAsync($"Fatura durumu değişti: {invoice.InvoiceNumber} -> {status}", "SetStatus", "Invoice", "Info", $"Id: {id}");
         return true;
     }
 

@@ -11,11 +11,13 @@ public class CashRegisterService : ICashRegisterService
 {
     private readonly AppDbContext _db;
     private readonly ICurrentUserContext _currentUser;
+    private readonly ILogService _log;
 
-    public CashRegisterService(AppDbContext db, ICurrentUserContext currentUser)
+    public CashRegisterService(AppDbContext db, ICurrentUserContext currentUser, ILogService log)
     {
         _db = db;
         _currentUser = currentUser;
+        _log = log;
     }
 
     private IQueryable<CashRegister> ScopeQuery(Guid? firmIdFilter = null)
@@ -99,6 +101,7 @@ public class CashRegisterService : ICashRegisterService
         };
         _db.CashRegisters.Add(entity);
         await _db.SaveChangesAsync(ct);
+        await _log.LogAsync($"Kasa tanımlandı: {entity.Name}", "Create", "CashRegister", "Info", $"Id: {entity.Id}");
         return (await GetByIdAsync(entity.Id, ct))!;
     }
 
@@ -109,6 +112,7 @@ public class CashRegisterService : ICashRegisterService
         entity.Name = request.Name.Trim();
         entity.IsActive = request.IsActive;
         await _db.SaveChangesAsync(ct);
+        await _log.LogAsync($"Kasa güncellendi: {entity.Name}", "Update", "CashRegister", "Info", $"Id: {entity.Id}");
         return await GetByIdAsync(id, ct);
     }
 
@@ -118,6 +122,7 @@ public class CashRegisterService : ICashRegisterService
         if (entity == null) return false;
         _db.CashRegisters.Remove(entity);
         await _db.SaveChangesAsync(ct);
+        await _log.LogAsync($"Kasa silindi: {entity.Name}", "Delete", "CashRegister", "Warning", $"Id: {entity.Id}");
         return true;
     }
 
@@ -168,6 +173,10 @@ public class CashRegisterService : ICashRegisterService
         };
         _db.CashTransactions.Add(entity);
         await _db.SaveChangesAsync(ct);
+        
+        var reg = await _db.CashRegisters.FindAsync(cashRegisterId);
+        await _log.LogAsync($"Kasaya manuel işlem eklendi: {request.Amount:N2} TL ({request.Type})", "AddTransaction", "CashRegister", "Info", $"Kasa: {reg?.Name}, Açıklama: {request.Description}");
+        
         return new CashTransactionDto
         {
             Id = entity.Id,

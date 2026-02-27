@@ -12,11 +12,13 @@ public class DeliveryNoteService : IDeliveryNoteService
 {
     private readonly AppDbContext _db;
     private readonly ICurrentUserContext _currentUser;
+    private readonly ILogService _log;
 
-    public DeliveryNoteService(AppDbContext db, ICurrentUserContext currentUser)
+    public DeliveryNoteService(AppDbContext db, ICurrentUserContext currentUser, ILogService log)
     {
         _db = db;
         _currentUser = currentUser;
+        _log = log;
     }
 
     private IQueryable<DeliveryNote> ScopeQuery(Guid? firmIdFilter = null)
@@ -129,6 +131,7 @@ public class DeliveryNoteService : IDeliveryNoteService
 
         _db.DeliveryNotes.Add(dn);
         await _db.SaveChangesAsync(ct);
+        await _log.LogAsync($"İrsaliye oluşturuldu: {dn.DeliveryNumber}", "Create", "DeliveryNote", "Info", $"Id: {dn.Id}, Cari: {customerTitle}");
         dn = (await ScopeQuery().Include(x => x.Customer).Include(x => x.Order).Include(x => x.Items.OrderBy(i => i.SortOrder)).ThenInclude(i => i.Product).FirstOrDefaultAsync(x => x.Id == dn.Id, ct))!;
         return MapToDto(dn);
     }
@@ -188,6 +191,7 @@ public class DeliveryNoteService : IDeliveryNoteService
         order.UpdatedAt = DateTime.UtcNow;
         order.UpdatedBy = userId;
         await _db.SaveChangesAsync(ct);
+        await _log.LogAsync($"Siparişten irsaliye oluşturuldu: {dn.DeliveryNumber} (Sipariş: {order.OrderNumber})", "CreateFromOrder", "DeliveryNote", "Info", $"Id: {dn.Id}");
 
         dn = (await ScopeQuery().Include(x => x.Customer).Include(x => x.Order).Include(x => x.Items.OrderBy(i => i.SortOrder)).ThenInclude(i => i.Product).FirstOrDefaultAsync(x => x.Id == dn.Id, ct))!;
         return MapToDto(dn);
@@ -231,6 +235,7 @@ public class DeliveryNoteService : IDeliveryNoteService
         }
 
         await _db.SaveChangesAsync(ct);
+        await _log.LogAsync($"İrsaliye güncellendi: {dn.DeliveryNumber}", "Update", "DeliveryNote", "Info", $"Id: {dn.Id}");
         dn = (await ScopeQuery().Include(x => x.Customer).Include(x => x.Order).Include(x => x.Items.OrderBy(i => i.SortOrder)).ThenInclude(i => i.Product).FirstOrDefaultAsync(x => x.Id == id, ct))!;
         return MapToDto(dn);
     }
@@ -281,6 +286,7 @@ public class DeliveryNoteService : IDeliveryNoteService
         dn.UpdatedAt = DateTime.UtcNow;
         dn.UpdatedBy = _currentUser.UserId;
         await _db.SaveChangesAsync(ct);
+        await _log.LogAsync($"İrsaliye durumu değişti: {dn.DeliveryNumber} -> {status}", "SetStatus", "DeliveryNote", "Info", $"Id: {id}");
         return true;
     }
 

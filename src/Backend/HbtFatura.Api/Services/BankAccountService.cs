@@ -11,11 +11,13 @@ public class BankAccountService : IBankAccountService
 {
     private readonly AppDbContext _db;
     private readonly ICurrentUserContext _currentUser;
+    private readonly ILogService _log;
 
-    public BankAccountService(AppDbContext db, ICurrentUserContext currentUser)
+    public BankAccountService(AppDbContext db, ICurrentUserContext currentUser, ILogService log)
     {
         _db = db;
         _currentUser = currentUser;
+        _log = log;
     }
 
     private IQueryable<BankAccount> ScopeQuery(Guid? firmIdFilter = null)
@@ -105,6 +107,7 @@ public class BankAccountService : IBankAccountService
         };
         _db.BankAccounts.Add(entity);
         await _db.SaveChangesAsync(ct);
+        await _log.LogAsync($"Banka hesabı oluşturuldu: {entity.Name}", "Create", "BankAccount", "Info", $"Id: {entity.Id}");
         return (await GetByIdAsync(entity.Id, ct))!;
     }
 
@@ -117,6 +120,7 @@ public class BankAccountService : IBankAccountService
         entity.BankName = request.BankName?.Trim();
         entity.IsActive = request.IsActive;
         await _db.SaveChangesAsync(ct);
+        await _log.LogAsync($"Banka hesabı güncellendi: {entity.Name}", "Update", "BankAccount", "Info", $"Id: {entity.Id}");
         return await GetByIdAsync(id, ct);
     }
 
@@ -126,6 +130,7 @@ public class BankAccountService : IBankAccountService
         if (entity == null) return false;
         _db.BankAccounts.Remove(entity);
         await _db.SaveChangesAsync(ct);
+        await _log.LogAsync($"Banka hesabı silindi: {entity.Name}", "Delete", "BankAccount", "Warning", $"Id: {entity.Id}");
         return true;
     }
 
@@ -176,6 +181,10 @@ public class BankAccountService : IBankAccountService
         };
         _db.BankTransactions.Add(entity);
         await _db.SaveChangesAsync(ct);
+        
+        var bank = await _db.BankAccounts.FindAsync(bankAccountId);
+        await _log.LogAsync($"Bankaya manuel işlem eklendi: {request.Amount:N2} TL ({request.Type})", "AddTransaction", "BankAccount", "Info", $"Banka: {bank?.Name}, Açıklama: {request.Description}");
+        
         return new BankTransactionDto
         {
             Id = entity.Id,

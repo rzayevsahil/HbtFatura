@@ -10,11 +10,13 @@ public class CustomerService : ICustomerService
 {
     private readonly AppDbContext _db;
     private readonly ICurrentUserContext _currentUser;
+    private readonly ILogService _log;
 
-    public CustomerService(AppDbContext db, ICurrentUserContext currentUser)
+    public CustomerService(AppDbContext db, ICurrentUserContext currentUser, ILogService log)
     {
         _db = db;
         _currentUser = currentUser;
+        _log = log;
     }
 
     private IQueryable<Customer> ScopeQuery(Guid? firmIdFilter = null)
@@ -216,6 +218,7 @@ public class CustomerService : ICustomerService
         };
         _db.Customers.Add(entity);
         await _db.SaveChangesAsync(ct);
+        await _log.LogAsync($"Cari kart oluşturuldu: {entity.Title}", "Create", "Customer", "Info", $"Id: {entity.Id}");
         return MapToDto(entity);
     }
 
@@ -239,6 +242,7 @@ public class CustomerService : ICustomerService
         entity.UpdatedAt = DateTime.UtcNow;
         entity.UpdatedBy = _currentUser.UserId;
         await _db.SaveChangesAsync(ct);
+        await _log.LogAsync($"Cari kart güncellendi: {entity.Title}", "Update", "Customer", "Info", $"Id: {entity.Id}");
         return MapToDto(entity);
     }
 
@@ -249,6 +253,7 @@ public class CustomerService : ICustomerService
         entity.IsDeleted = true;
         entity.DeletedAt = DateTime.UtcNow;
         await _db.SaveChangesAsync(ct);
+        await _log.LogAsync($"Cari kart silindi: {entity.Title}", "Delete", "Customer", "Warning", $"Id: {entity.Id}");
         return true;
     }
 

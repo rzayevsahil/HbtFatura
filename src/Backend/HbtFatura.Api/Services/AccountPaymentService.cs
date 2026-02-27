@@ -10,11 +10,13 @@ public class AccountPaymentService : IAccountPaymentService
 {
     private readonly AppDbContext _db;
     private readonly ICurrentUserContext _currentUser;
+    private readonly ILogService _log;
 
-    public AccountPaymentService(AppDbContext db, ICurrentUserContext currentUser)
+    public AccountPaymentService(AppDbContext db, ICurrentUserContext currentUser, ILogService _log)
     {
         _db = db;
         _currentUser = currentUser;
+        this._log = _log;
     }
 
     public async Task CreateAsync(AccountPaymentRequest request, CancellationToken ct = default)
@@ -104,5 +106,6 @@ public class AccountPaymentService : IAccountPaymentService
         }
 
         await _db.SaveChangesAsync(ct);
+        await _log.LogAsync($"{request.Type} işlemi yapıldı: {request.Amount:N2} TL", request.Type, "AccountPayment", "Info", $"Cari: {customer.Title}, Metod: {request.PaymentMethod}");
     }
 }
