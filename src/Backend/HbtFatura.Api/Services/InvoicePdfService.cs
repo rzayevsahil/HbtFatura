@@ -66,18 +66,22 @@ public class InvoicePdfService : IInvoicePdfService
                             if (!string.IsNullOrEmpty(company?.TaxNumber)) c.Item().Text($"VKN/TCKN: {company.TaxNumber}").FontSize(8);
                         });
 
-                        // 2. Logo & e-FATURA (Center) - Using RelativeItem to help center
+                        // 2. Logo & e-FATURA (Center)
                         r.RelativeItem().AlignCenter().Column(c =>
                         {
                             c.Item().Height(40).AlignCenter().Text("GİB LOGO").FontSize(10).Italic();
                             c.Item().AlignCenter().Text("e-FATURA").Bold().FontSize(11);
                         });
 
-                        // 3. Right empty space to balance the centering
                         r.RelativeItem().Text("");
                     });
 
-                    col.Item().PaddingTop(10).LineHorizontal(1).LineColor(Colors.Black);
+                    // Line shortened to left side (40%)
+                    col.Item().PaddingTop(10).Row(row => 
+                    {
+                        row.RelativeItem(4).LineHorizontal(1).LineColor(Colors.Black);
+                        row.RelativeItem(6);
+                    });
                 });
 
                 // --- CONTENT SECTION ---
@@ -96,27 +100,35 @@ public class InvoicePdfService : IInvoicePdfService
                             if (!string.IsNullOrEmpty(invoice.CustomerTaxNumber)) c.Item().Text($"VKN: {invoice.CustomerTaxNumber}").FontSize(8);
                         });
 
-                        r.RelativeItem().AlignRight().PaddingRight(1).PaddingTop(5).Border(0.5f).Table(t =>
+                        // Metadata Box as a Column with Rows to ensure continuous lines
+                        r.RelativeItem().AlignRight().PaddingRight(1).PaddingTop(5).Width(200).Border(0.5f).Column(mc =>
                         {
-                            t.ColumnsDefinition(cd =>
+                            void AddMetaRow(string label, string value, bool last = false)
                             {
-                                cd.RelativeColumn();
-                                cd.RelativeColumn();
-                            });
-                            t.Cell().Element(MetaStyle).Text("Özelleştirme No:").Bold();
-                            t.Cell().Element(MetaStyle).Text("TR1.2");
-                            t.Cell().Element(MetaStyle).Text("Senaryo:").Bold();
-                            t.Cell().Element(MetaStyle).Text("TEMELFATURA");
-                            t.Cell().Element(MetaStyle).Text("Fatura Tipi:").Bold();
-                            t.Cell().Element(MetaStyle).Text("SATIS");
-                            t.Cell().Element(MetaStyle).Text("Fatura No:").Bold();
-                            t.Cell().Element(MetaStyle).Text(invoice.InvoiceNumber);
-                            t.Cell().Element(MetaStyle).Text("Fatura Tarihi:").Bold();
-                            t.Cell().Element(MetaStyle).Text(invoice.InvoiceDate.ToString("dd-MM-yyyy HH:mm"));
+                                var row = mc.Item();
+                                if (!last) row = row.BorderBottom(0.5f);
+                                
+                                row.PaddingVertical(2).PaddingHorizontal(4).Row(rowContent =>
+                                {
+                                    rowContent.RelativeItem().Text(label).Bold().FontSize(8);
+                                    rowContent.RelativeItem().AlignRight().Text(value).FontSize(8);
+                                });
+                            }
+
+                            AddMetaRow("Özelleştirme No:", "TR1.2");
+                            AddMetaRow("Senaryo:", "TEMELFATURA");
+                            AddMetaRow("Fatura Tipi:", "SATIS");
+                            AddMetaRow("Fatura No:", invoice.InvoiceNumber);
+                            AddMetaRow("Fatura Tarihi:", invoice.InvoiceDate.ToString("dd-MM-yyyy HH:mm"), true);
                         });
                     });
 
-                    col.Item().PaddingTop(10).LineHorizontal(1).LineColor(Colors.Black);
+                    // Line shortened like the upper one (40%)
+                    col.Item().PaddingTop(10).Row(row => 
+                    {
+                        row.RelativeItem(4).LineHorizontal(1).LineColor(Colors.Black);
+                        row.RelativeItem(6);
+                    });
                     col.Item().Text($"ETTN: {invoice.Id.ToString().ToUpper()}").FontSize(8);
 
                     col.Item().PaddingTop(15).Table(t =>
@@ -206,7 +218,7 @@ public class InvoicePdfService : IInvoicePdfService
 
     private static IContainer HeaderStyle(IContainer c) => c.Border(0.5f).Background(Colors.Grey.Lighten4).Padding(4).AlignCenter().AlignMiddle().DefaultTextStyle(x => x.Bold());
     private static IContainer CellStyle(IContainer c) => c.Border(0.5f).Padding(4).AlignMiddle();
-    private static IContainer MetaStyle(IContainer c) => c.PaddingHorizontal(4).PaddingVertical(2).BorderBottom(0.2f).BorderColor(Colors.Grey.Lighten2);
+    private static IContainer MetaStyle(IContainer c) => c.PaddingHorizontal(4).PaddingVertical(2).BorderBottom(0.5f).BorderColor(Colors.Black);
     private static IContainer TotalStyle(IContainer c) => c.Border(0.5f).Padding(4);
 
     private static string AmountInWords(decimal sayi)
