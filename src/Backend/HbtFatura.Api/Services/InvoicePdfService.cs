@@ -13,12 +13,16 @@ public class InvoicePdfService : IInvoicePdfService
     private readonly ICurrentUserContext _currentUser;
     private readonly Microsoft.AspNetCore.Hosting.IWebHostEnvironment _env;
 
+    static InvoicePdfService()
+    {
+        QuestPDF.Settings.License = LicenseType.Community;
+    }
+
     public InvoicePdfService(AppDbContext db, ICurrentUserContext currentUser, Microsoft.AspNetCore.Hosting.IWebHostEnvironment env)
     {
         _db = db;
         _currentUser = currentUser;
         _env = env;
-        QuestPDF.Settings.License = LicenseType.Community;
     }
 
     private IQueryable<Invoice> ScopeQuery()
@@ -65,7 +69,7 @@ public class InvoicePdfService : IInvoicePdfService
                     col.Item().PaddingTop(5).Row(r =>
                     {
                         // 1. Company Info (Left)
-                        r.RelativeItem().Column(c =>
+                        r.RelativeItem(1).Column(c =>
                         {
                             c.Item().Text(company?.CompanyName ?? "Firma Adı").FontSize(8);
                             c.Item().PaddingTop(4).Text(company?.Address ?? "").FontSize(8);
@@ -76,28 +80,37 @@ public class InvoicePdfService : IInvoicePdfService
                         });
 
                         // 2. Logo & e-FATURA (Center)
-                        r.RelativeItem().AlignCenter().Column(c =>
+                        r.RelativeItem(1).Column(c =>
                         {
-                            string? logoPath = null;
-                            if (!string.IsNullOrEmpty(company?.LogoUrl))
+                            string? gibLogoPath = null;
+                            var logoFileName = "logos/giblogo.png";
+                            
+                            // Try WebRootPath first
+                            if (!string.IsNullOrEmpty(_env.WebRootPath))
                             {
-                                // Handle both absolute and relative paths
-                                var cleanUrl = company.LogoUrl.Replace("\\", "/").TrimStart('/');
-                                logoPath = System.IO.Path.Combine(_env.WebRootPath, cleanUrl);
+                                var path = System.IO.Path.Combine(_env.WebRootPath, logoFileName);
+                                if (System.IO.File.Exists(path)) gibLogoPath = path;
+                            }
+                            
+                            // Fallback to ContentRootPath/wwwroot
+                            if (gibLogoPath == null)
+                            {
+                                var path = System.IO.Path.Combine(_env.ContentRootPath, "wwwroot", logoFileName);
+                                if (System.IO.File.Exists(path)) gibLogoPath = path;
                             }
 
-                            if (!string.IsNullOrEmpty(logoPath) && System.IO.File.Exists(logoPath))
+                            if (!string.IsNullOrEmpty(gibLogoPath))
                             {
-                                c.Item().Height(40).AlignCenter().Image(logoPath);
+                                c.Item().AlignCenter().Width(160).Height(80).Image(gibLogoPath, ImageScaling.FitArea);
                             }
                             else
                             {
-                                c.Item().Height(40).AlignCenter().Text("GİB LOGO").FontSize(10).Italic();
+                                c.Item().AlignCenter().Height(40).Text("GİB LOGO").FontSize(10).Italic();
                             }
                             c.Item().AlignCenter().Text("e-FATURA").Bold().FontSize(11);
                         });
 
-                        r.RelativeItem().Text("");
+                        r.RelativeItem(1).Text("");
                     });
 
                     // Line shortened to left side (40%) - Increased thickness to 2.0f
@@ -211,17 +224,17 @@ public class InvoicePdfService : IInvoicePdfService
                         {
                             t.ColumnsDefinition(c => { c.RelativeColumn(); c.ConstantColumn(80); });
                             
-                            t.Cell().Element(TotalStyle).Text("Mal Hizmet Toplam Tutarı:");
+                            t.Cell().Element(TotalStyle).Text("Mal Hizmet Toplam Tutarı:").Bold();
                             t.Cell().Element(TotalStyle).AlignRight().Text($"{invoice.SubTotal.ToString("N2")} TL");
 
-                            t.Cell().Element(TotalStyle).Text("Hesaplanan KDV (%18):");
+                            t.Cell().Element(TotalStyle).Text("Hesaplanan KDV (%18):").Bold();
                             t.Cell().Element(TotalStyle).AlignRight().Text($"{invoice.TotalVat.ToString("N2")} TL");
 
                             t.Cell().Element(TotalStyle).Text("Vergiler Dahil Toplam Tutar:").Bold();
-                            t.Cell().Element(TotalStyle).AlignRight().Text($"{invoice.GrandTotal.ToString("N2")} TL").Bold();
+                            t.Cell().Element(TotalStyle).AlignRight().Text($"{invoice.GrandTotal.ToString("N2")} TL");
 
                             t.Cell().Element(TotalStyle).Background(Colors.Grey.Lighten4).Text("Ödenecek Tutar:").Bold();
-                            t.Cell().Element(TotalStyle).Background(Colors.Grey.Lighten4).AlignRight().Text($"{invoice.GrandTotal.ToString("N2")} TL").Bold();
+                            t.Cell().Element(TotalStyle).Background(Colors.Grey.Lighten4).AlignRight().Text($"{invoice.GrandTotal.ToString("N2")} TL");
                         });
                     });
 
