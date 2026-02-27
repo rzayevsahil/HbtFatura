@@ -63,10 +63,15 @@ Modern, web tabanlı e-fatura ve ön muhasebe yönetim sistemi. ASP.NET Core 8 W
 
 1.  `src/backend/HbtFatura.Api/appsettings.json` dosyasındaki Connection String bilgisini kendi SQL Server yapınıza göre düzenleyin.
 2.  Migration işlemlerini uygulayarak veritabanını oluşturun:
-    ```bash
-    cd src/backend/HbtFatura.Api
-    dotnet ef database update
-    ```
+    -   **Visual Studio (Package Manager Console):**
+        ```powershell
+        Update-Database
+        ```
+    -   **Terminal / dotnet CLI:**
+        ```bash
+        cd src/backend/HbtFatura.Api
+        dotnet ef database update
+        ```
 3.  Projeyi çalıştırın:
     ```bash
     dotnet run
