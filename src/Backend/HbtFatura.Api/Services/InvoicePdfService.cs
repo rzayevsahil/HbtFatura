@@ -76,10 +76,10 @@ public class InvoicePdfService : IInvoicePdfService
                         r.RelativeItem().Text("");
                     });
 
-                    // Line shortened to left side (40%)
+                    // Line shortened to left side (40%) - Increased thickness to 2.0f
                     col.Item().PaddingTop(10).Row(row => 
                     {
-                        row.RelativeItem(4).LineHorizontal(1).LineColor(Colors.Black);
+                        row.RelativeItem(4).LineHorizontal(2.0f).LineColor(Colors.Black);
                         row.RelativeItem(6);
                     });
                 });
@@ -100,18 +100,18 @@ public class InvoicePdfService : IInvoicePdfService
                             if (!string.IsNullOrEmpty(invoice.CustomerTaxNumber)) c.Item().Text($"VKN: {invoice.CustomerTaxNumber}").FontSize(8);
                         });
 
-                        // Metadata Box as a Column with Rows to ensure continuous lines
-                        r.RelativeItem().AlignRight().PaddingRight(1).PaddingTop(5).Width(200).Border(0.5f).Column(mc =>
+                        // Metadata Box as a Column with Rows, Vertical Separator and Left-Aligned values
+                        r.RelativeItem().AlignRight().PaddingRight(1).PaddingTop(5).Width(220).Border(0.5f).Column(mc =>
                         {
                             void AddMetaRow(string label, string value, bool last = false)
                             {
-                                var row = mc.Item();
-                                if (!last) row = row.BorderBottom(0.5f);
+                                var rowItem = mc.Item();
+                                if (!last) rowItem = rowItem.BorderBottom(0.5f);
                                 
-                                row.PaddingVertical(2).PaddingHorizontal(4).Row(rowContent =>
+                                rowItem.Row(rowContent =>
                                 {
-                                    rowContent.RelativeItem().Text(label).Bold().FontSize(8);
-                                    rowContent.RelativeItem().AlignRight().Text(value).FontSize(8);
+                                    rowContent.RelativeItem(1.2f).PaddingVertical(2).PaddingHorizontal(4).Text(label).Bold().FontSize(8);
+                                    rowContent.RelativeItem(1.8f).BorderLeft(0.5f).PaddingVertical(2).PaddingHorizontal(4).AlignLeft().Text(value).FontSize(8);
                                 });
                             }
 
@@ -123,10 +123,10 @@ public class InvoicePdfService : IInvoicePdfService
                         });
                     });
 
-                    // Line shortened like the upper one (40%)
+                    // Line shortened to left side (40%) - Increased thickness to 2.0f
                     col.Item().PaddingTop(10).Row(row => 
                     {
-                        row.RelativeItem(4).LineHorizontal(1).LineColor(Colors.Black);
+                        row.RelativeItem(4).LineHorizontal(2.0f).LineColor(Colors.Black);
                         row.RelativeItem(6);
                     });
                     col.Item().Text($"ETTN: {invoice.Id.ToString().ToUpper()}").FontSize(8);
