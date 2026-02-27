@@ -1,18 +1,20 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { InvoiceService, InvoiceDto } from '../../services/invoice.service';
+import { FormsModule } from '@angular/forms';
+import { InvoiceService, InvoiceDto, InvoiceScenario } from '../../services/invoice.service';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-invoice-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, FormsModule],
   templateUrl: './invoice-detail.component.html',
   styleUrls: ['./invoice-detail.component.scss']
 })
 export class InvoiceDetailComponent implements OnInit {
   invoice: InvoiceDto | null = null;
+  selectedScenario: InvoiceScenario = 0;
 
   constructor(private route: ActivatedRoute, private router: Router, private api: InvoiceService, private toastr: ToastrService) { }
 
@@ -55,12 +57,13 @@ export class InvoiceDetailComponent implements OnInit {
     if (!this.invoice || this.invoice.isGibSent) return;
 
     this.sendingGib = true;
-    this.api.sendToGib(this.invoice.id).subscribe({
+    this.api.sendToGib(this.invoice.id, this.selectedScenario).subscribe({
       next: () => {
         this.sendingGib = false;
         if (this.invoice) {
           this.invoice.isGibSent = true;
           this.invoice.status = 1; // Onaylandı
+          this.invoice.scenario = this.selectedScenario;
         }
         this.toastr.success("Fatura başarıyla GİB'e gönderildi.");
       },

@@ -9,6 +9,8 @@ public class InvoiceDto
     public DateTime InvoiceDate { get; set; }
     public InvoiceStatus Status { get; set; }
     public InvoiceType InvoiceType { get; set; }
+    public InvoiceScenario Scenario { get; set; }
+    public string? Ettn { get; set; }
     public Guid? CustomerId { get; set; }
     public string CustomerTitle { get; set; } = string.Empty;
     public string? CustomerTaxNumber { get; set; }

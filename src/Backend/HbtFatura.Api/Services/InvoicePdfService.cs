@@ -161,8 +161,8 @@ public class InvoicePdfService : IInvoicePdfService
                             }
 
                             AddMetaRow("Özelleştirme No:", "TR1.2");
-                            AddMetaRow("Senaryo:", "TEMELFATURA");
-                            AddMetaRow("Fatura Tipi:", "SATIS");
+                            AddMetaRow("Senaryo:", invoice.Scenario == InvoiceScenario.TicariFatura ? "TICARIFATURA" : "TEMELFATURA");
+                            AddMetaRow("Fatura Tipi:", invoice.InvoiceType == InvoiceType.Alis ? "ALIS" : "SATIS");
                             AddMetaRow("Fatura No:", invoice.InvoiceNumber);
                             AddMetaRow("Fatura Tarihi:", invoice.InvoiceDate.ToString("dd-MM-yyyy HH:mm"), true);
                         });
@@ -174,7 +174,11 @@ public class InvoicePdfService : IInvoicePdfService
                         row.RelativeItem(4).LineHorizontal(2.0f).LineColor(Colors.Black);
                         row.RelativeItem(6);
                     });
-                    col.Item().Text($"ETTN: {invoice.Id.ToString().ToUpper()}").FontSize(8);
+                    col.Item().PaddingTop(2).Text(x => {
+                        var ettnValue = invoice.Ettn;
+                        x.Span("ETTN: ").Bold().FontSize(8);
+                        x.Span(ettnValue).FontSize(8);
+                    });
 
                     col.Item().PaddingTop(15).Table(t =>
                     {

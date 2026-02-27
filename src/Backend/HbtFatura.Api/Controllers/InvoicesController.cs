@@ -117,12 +117,17 @@ public class InvoicesController : ControllerBase
     }
 
     [HttpPost("{id:guid}/send-to-gib")]
-    public async Task<IActionResult> SendToGib(Guid id, CancellationToken ct)
+    public async Task<IActionResult> SendToGib(Guid id, [FromBody] SendToGibRequest req, CancellationToken ct)
     {
-        var result = await _service.SendToGibAsync(id, ct);
+        var result = await _service.SendToGibAsync(id, req.Scenario, ct);
         if (!result) return NotFound();
         return Ok();
     }
+}
+
+public class SendToGibRequest
+{
+    public InvoiceScenario Scenario { get; set; }
 }
 
 public class SetStatusRequest

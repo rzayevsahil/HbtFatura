@@ -7,6 +7,8 @@ public class Invoice
     public DateTime InvoiceDate { get; set; }
     public InvoiceStatus Status { get; set; }
     public InvoiceType InvoiceType { get; set; } = InvoiceType.Satis;
+    public InvoiceScenario Scenario { get; set; } = InvoiceScenario.TemelFatura;
+    public string? Ettn { get; set; }
     public Guid UserId { get; set; }
     public Guid? CustomerId { get; set; }
 

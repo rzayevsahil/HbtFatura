@@ -11,6 +11,6 @@ public interface IInvoiceService
     Task<InvoiceDto> CreateAsync(CreateInvoiceRequest request, CancellationToken ct = default);
     Task<InvoiceDto?> CreateFromDeliveryNoteAsync(Guid deliveryNoteId, CancellationToken ct = default);
     Task<InvoiceDto?> UpdateAsync(Guid id, UpdateInvoiceRequest request, byte[]? rowVersion, CancellationToken ct = default);
-    Task<bool> SendToGibAsync(Guid id, CancellationToken ct = default);
+    Task<bool> SendToGibAsync(Guid id, InvoiceScenario scenario, CancellationToken ct = default);
     Task<bool> SetStatusAsync(Guid id, InvoiceStatus status, CancellationToken ct = default);
 }

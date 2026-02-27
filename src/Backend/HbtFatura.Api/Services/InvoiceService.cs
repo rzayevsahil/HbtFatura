@@ -344,7 +344,7 @@ public class InvoiceService : IInvoiceService
         return await GetByIdAsync(id, ct);
     }
 
-    public async Task<bool> SendToGibAsync(Guid id, CancellationToken ct = default)
+    public async Task<bool> SendToGibAsync(Guid id, InvoiceScenario scenario, CancellationToken ct = default)
     {
         var invoice = await ScopeQuery().FirstOrDefaultAsync(x => x.Id == id, ct);
         if (invoice == null) return false;
@@ -354,7 +354,12 @@ public class InvoiceService : IInvoiceService
         var ok = await SetStatusAsync(id, InvoiceStatus.Issued, ct);
         if (!ok) return false;
 
+        invoice.Scenario = scenario;
         invoice.IsGibSent = true;
+        if (string.IsNullOrEmpty(invoice.Ettn))
+        {
+            invoice.Ettn = Guid.NewGuid().ToString().ToUpper();
+        }
         await _db.SaveChangesAsync(ct);
 
         await _log.LogAsync($"Fatura GİB'e gönderildi: {invoice.InvoiceNumber}", "SendToGib", "Invoice", "Info", $"Id: {invoice.Id}");
@@ -463,6 +468,7 @@ if (status == InvoiceStatus.Issued || status == InvoiceStatus.Paid)
         InvoiceDate = inv.InvoiceDate,
         Status = inv.Status,
         InvoiceType = inv.InvoiceType,
+        Ettn = inv.Ettn,
         CustomerId = inv.CustomerId,
         CustomerTitle = inv.CustomerTitle,
         CustomerTaxNumber = inv.CustomerTaxNumber,

@@ -4,6 +4,7 @@ import { ApiService, PagedResult } from '../core/services/api.service';
 
 export type InvoiceStatus = 0 | 1 | 2 | 3; // Draft, Issued, Paid, Cancelled
 export type InvoiceType = 0 | 1; // Satis, Alis
+export type InvoiceScenario = 0 | 1; // TemelFatura, TicariFatura
 
 export interface InvoiceItemDto {
   id?: string;
@@ -36,6 +37,7 @@ export interface InvoiceDto {
   invoiceDate: string;
   status: InvoiceStatus;
   invoiceType: InvoiceType;
+  scenario: InvoiceScenario;
   customerId?: string;
   customerTitle: string;
   customerTaxNumber?: string;
@@ -121,7 +123,7 @@ export class InvoiceService {
     return this.api.getBlob(`${this.base}/${id}/pdf`);
   }
 
-  sendToGib(id: string): Observable<void> {
-    return this.api.post<void>(`${this.base}/${id}/send-to-gib`, {});
+  sendToGib(id: string, scenario: InvoiceScenario): Observable<void> {
+    return this.api.post<void>(`${this.base}/${id}/send-to-gib`, { scenario });
   }
 }
