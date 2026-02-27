@@ -101,7 +101,8 @@ public class InvoicePdfService : IInvoicePdfService
 
                             if (!string.IsNullOrEmpty(gibLogoPath))
                             {
-                                c.Item().AlignCenter().Width(160).Height(80).Image(gibLogoPath, ImageScaling.FitArea);
+                                // Remove fixed width to allow AlignCenter to work on the actual image width
+                                c.Item().AlignCenter().Height(80).Image(gibLogoPath, ImageScaling.FitHeight);
                             }
                             else
                             {
@@ -311,7 +312,7 @@ public class InvoicePdfService : IInvoicePdfService
             }
         }
 
-        sonuc += " TürkLirası";
+        sonuc += "TürkLirası";
         if (kurusKisim > 0)
         {
             sonuc += " " + onlar[kurusKisim / 10] + birler[kurusKisim % 10] + " Kuruş";
