@@ -13,6 +13,12 @@ Modern, web tabanlı e-fatura ve ön muhasebe yönetim sistemi. ASP.NET Core 8 W
 -   **Otomatik Toplamlar:** KDV, İskonto ve Genel Toplamların backend tarafında hassas hesaplanması.
 -   **Yazı ile Tutar:** Toplam tutarın faturada otomatik olarak yazıya çevrilmesi.
 
+## 🖼 Örnek Fatura Görünümü
+
+Sistem tarafından üretilen; GİB standartlarına uygun, QR kodlu ve ETTN imzalı örnek fatura tasarımı aşağıdadır:
+
+![Örnek Fatura Tasarımı](assets/invoice-sample.png)
+
 ### 📦 Stok ve Ürün Yönetimi
 -   Ürün kartları tanımlama ve takip.
 -   Fatura onaylandığında otomatik stok düşümü/artırımı (esnek yapı).
