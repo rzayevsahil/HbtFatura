@@ -11,13 +11,14 @@ export interface CompanySettingsDto {
   phone?: string;
   email?: string;
   iban?: string;
+  bankName?: string;
   logoUrl?: string;
 }
 
 @Injectable({ providedIn: 'root' })
 export class CompanyService {
   private base = '/api/companysettings';
-  constructor(private api: ApiService) {}
+  constructor(private api: ApiService) { }
 
   get(firmId?: string): Observable<CompanySettingsDto> {
     const params = firmId ? { firmId } : undefined;

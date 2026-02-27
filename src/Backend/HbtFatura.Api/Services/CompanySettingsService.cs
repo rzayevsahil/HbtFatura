@@ -60,6 +60,7 @@ public class CompanySettingsService : ICompanySettingsService
         entity.Phone = request.Phone?.Trim();
         entity.Email = request.Email?.Trim();
         entity.IBAN = request.IBAN?.Trim();
+        entity.BankName = request.BankName?.Trim();
         entity.LogoUrl = request.LogoUrl?.Trim();
         await _db.SaveChangesAsync(ct);
         return MapToDto(entity);
@@ -75,6 +76,7 @@ public class CompanySettingsService : ICompanySettingsService
         Phone = e.Phone,
         Email = e.Email,
         IBAN = e.IBAN,
+        BankName = e.BankName,
         LogoUrl = e.LogoUrl
     };
 }

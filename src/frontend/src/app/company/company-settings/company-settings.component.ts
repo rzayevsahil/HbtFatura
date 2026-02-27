@@ -24,7 +24,8 @@ export class CompanySettingsComponent implements OnInit {
     address: [''],
     phone: [''],
     email: [''],
-    iban: ['']
+    iban: [''],
+    bankName: ['']
   });
   error = '';
   saving = false;
@@ -51,7 +52,8 @@ export class CompanySettingsComponent implements OnInit {
           address: c.address ?? '',
           phone: c.phone ?? '',
           email: c.email ?? '',
-          iban: c.iban ?? ''
+          iban: c.iban ?? '',
+          bankName: c.bankName ?? ''
         });
         this.loading = false;
       },

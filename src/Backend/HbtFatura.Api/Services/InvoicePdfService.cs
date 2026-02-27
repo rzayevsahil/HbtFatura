@@ -245,7 +245,24 @@ public class InvoicePdfService : IInvoicePdfService
                         c.Item().Text(AmountInWords(invoice.GrandTotal)).Italic().FontSize(9);
                         if (!string.IsNullOrEmpty(company?.IBAN))
                         {
-                            c.Item().PaddingTop(8).Text($"IBAN: {company.IBAN}").Bold().FontSize(9);
+                            c.Item().PaddingTop(8).Text(x =>
+                            {
+                                if (!string.IsNullOrEmpty(company.IBAN))
+                                {
+                                    x.Span("IBAN: ").Bold();
+                                    x.Span(company.IBAN + "  ");
+                                }
+                                if (!string.IsNullOrEmpty(company.BankName))
+                                {
+                                    x.Span("Banka: ").Bold();
+                                    x.Span(company.BankName);
+                                }
+                                if(!string.IsNullOrEmpty(company.IBAN) && !string.IsNullOrEmpty(company.IBAN))
+                                {
+                                    x.Span("Döviz Türü: ").Bold();
+                                    x.Span("TRY");
+                                }
+                            });
                         }
                     });
                 });

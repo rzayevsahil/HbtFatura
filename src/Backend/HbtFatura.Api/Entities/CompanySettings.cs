@@ -11,6 +11,7 @@ public class CompanySettings
     public string? Phone { get; set; }
     public string? Email { get; set; }
     public string? IBAN { get; set; }
+    public string? BankName { get; set; }
     public string? LogoUrl { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }

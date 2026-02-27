@@ -36,6 +36,10 @@
         <input type="email" formControlName="email" placeholder="firma@ornek.com" [readonly]="isReadOnly()" />
       </div>
       <div class="row">
+        <label>Banka Adı</label>
+        <input formControlName="bankName" placeholder="Banka İsmi" [readonly]="isReadOnly()" />
+      </div>
+      <div class="row">
         <label>IBAN</label>
         <input formControlName="iban" placeholder="TR00 0000 0000 0000 0000 0000 00" [readonly]="isReadOnly()" />
       </div>
