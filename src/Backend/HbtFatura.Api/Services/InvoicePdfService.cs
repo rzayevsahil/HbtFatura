@@ -11,11 +11,13 @@ public class InvoicePdfService : IInvoicePdfService
 {
     private readonly AppDbContext _db;
     private readonly ICurrentUserContext _currentUser;
+    private readonly Microsoft.AspNetCore.Hosting.IWebHostEnvironment _env;
 
-    public InvoicePdfService(AppDbContext db, ICurrentUserContext currentUser)
+    public InvoicePdfService(AppDbContext db, ICurrentUserContext currentUser, Microsoft.AspNetCore.Hosting.IWebHostEnvironment env)
     {
         _db = db;
         _currentUser = currentUser;
+        _env = env;
         QuestPDF.Settings.License = LicenseType.Community;
     }
 
@@ -53,12 +55,19 @@ public class InvoicePdfService : IInvoicePdfService
                 // --- HEADER SECTION ---
                 page.Header().Column(col =>
                 {
-                    col.Item().Row(r =>
+                    // 0. Top Line (New request)
+                    col.Item().Row(row => 
+                    {
+                        row.RelativeItem(4).LineHorizontal(2.0f).LineColor(Colors.Black);
+                        row.RelativeItem(6);
+                    });
+
+                    col.Item().PaddingTop(5).Row(r =>
                     {
                         // 1. Company Info (Left)
                         r.RelativeItem().Column(c =>
                         {
-                            c.Item().Text(company?.CompanyName ?? "Firma Adı").Bold().FontSize(12);
+                            c.Item().Text(company?.CompanyName ?? "Firma Adı").FontSize(12);
                             c.Item().PaddingTop(4).Text(company?.Address ?? "").FontSize(8);
                             if (!string.IsNullOrEmpty(company?.Phone)) c.Item().Text($"Tel: {company.Phone}").FontSize(8);
                             if (!string.IsNullOrEmpty(company?.Email)) c.Item().Text($"E-Posta: {company.Email}").FontSize(8);
@@ -69,7 +78,20 @@ public class InvoicePdfService : IInvoicePdfService
                         // 2. Logo & e-FATURA (Center)
                         r.RelativeItem().AlignCenter().Column(c =>
                         {
-                            c.Item().Height(40).AlignCenter().Text("GİB LOGO").FontSize(10).Italic();
+                            var logoPath = "";
+                            if (!string.IsNullOrEmpty(company?.LogoUrl))
+                            {
+                                logoPath = System.IO.Path.Combine(_env.WebRootPath, company.LogoUrl.TrimStart('/'));
+                            }
+
+                            if (!string.IsNullOrEmpty(logoPath) && System.IO.Path.Exists(logoPath))
+                            {
+                                c.Item().Height(40).AlignCenter().Image(logoPath);
+                            }
+                            else
+                            {
+                                c.Item().Height(40).AlignCenter().Text("GİB LOGO").FontSize(10).Italic();
+                            }
                             c.Item().AlignCenter().Text("e-FATURA").Bold().FontSize(11);
                         });
 
@@ -87,13 +109,20 @@ public class InvoicePdfService : IInvoicePdfService
                 // --- CONTENT SECTION ---
                 page.Content().PaddingVertical(10).Column(col =>
                 {
+                    // Line above SAYIN (New request)
+                    col.Item().Row(row => 
+                    {
+                        row.RelativeItem(4).LineHorizontal(2.0f).LineColor(Colors.Black);
+                        row.RelativeItem(6);
+                    });
+
                     // Sayın (Customer Info) + Metadata Table
-                    col.Item().Row(r =>
+                    col.Item().PaddingTop(5).Row(r =>
                     {
                         r.RelativeItem().Column(c =>
                         {
                             c.Item().Text("SAYIN").Bold().FontSize(10);
-                            c.Item().Text(invoice.CustomerTitle).Bold();
+                            c.Item().Text(invoice.CustomerTitle).FontSize(8);
                             c.Item().PaddingTop(4).Text(invoice.CustomerAddress ?? "").FontSize(8);
                             if (!string.IsNullOrEmpty(invoice.CustomerEmail)) c.Item().Text($"E-Posta: {invoice.CustomerEmail}").FontSize(8);
                             if (!string.IsNullOrEmpty(invoice.CustomerPhone)) c.Item().Text($"Tel: {invoice.CustomerPhone}").FontSize(8);
