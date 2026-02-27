@@ -1,54 +1,58 @@
 @if (auth.isAuthenticated()) {
-  <div class="layout">
-    <header class="header">
-      <span class="header-brand">HBT Fatura</span>
-      <div class="header-right">
-        <button type="button" class="header-user-trigger" (click)="headerMenuOpen = !headerMenuOpen" aria-expanded="headerMenuOpen">
-          <span class="header-user-name">{{ auth.user()?.fullName }}</span>
-          <span class="header-user-chevron">{{ headerMenuOpen ? '▲' : '▼' }}</span>
-        </button>
-        @if (headerMenuOpen) {
-          <div class="header-menu-backdrop" (click)="closeHeaderMenu()"></div>
-          <div class="header-menu">
-            <div class="header-menu-item header-menu-user">
-              <span class="header-menu-label">Profil</span>
-              <span class="header-menu-value">{{ auth.user()?.fullName }}</span>
-            </div>
-            <button type="button" class="header-menu-item header-menu-logout" (click)="auth.logout(); closeHeaderMenu()">Çıkış</button>
-          </div>
-        }
+<div class="layout">
+  <header class="header">
+    <span class="header-brand">HBT Fatura</span>
+    <div class="header-right">
+      <button type="button" class="header-user-trigger" (click)="headerMenuOpen = !headerMenuOpen"
+        aria-expanded="headerMenuOpen">
+        <span class="header-user-name">{{ auth.user()?.fullName }}</span>
+        <span class="header-user-chevron">{{ headerMenuOpen ? '▲' : '▼' }}</span>
+      </button>
+      @if (headerMenuOpen) {
+      <div class="header-menu-backdrop" (click)="closeHeaderMenu()"></div>
+      <div class="header-menu">
+        <div class="header-menu-item header-menu-user">
+          <span class="header-menu-label">Profil</span>
+          <span class="header-menu-value">{{ auth.user()?.fullName }}</span>
+        </div>
+        <button type="button" class="header-menu-item" (click)="closeHeaderMenu()" routerLink="/profile">Profil
+          Ayarları</button>
+        <button type="button" class="header-menu-item header-menu-logout"
+          (click)="auth.logout(); closeHeaderMenu()">Çıkış</button>
       </div>
-    </header>
-    <aside class="sidebar">
-      <nav class="sidebar-nav">
-        @if (auth.user()?.role === 'SuperAdmin') {
-          <a routerLink="/firms" routerLinkActive="active">Firmalar</a>
-        }
-        @if (auth.user()?.role === 'FirmAdmin') {
-          <a routerLink="/employees" routerLinkActive="active">Çalışanlar</a>
-        }
-        @if (auth.user()?.role === 'FirmAdmin' || auth.user()?.role === 'SuperAdmin') {
-          <a routerLink="/cash-registers" routerLinkActive="active">Kasa</a>
-          <a routerLink="/bank-accounts" routerLinkActive="active">Banka</a>
-          <a routerLink="/account-payments" routerLinkActive="active">Tahsilat/Ödeme</a>
-        }
-        <a routerLink="/invoices" routerLinkActive="active">Faturalar</a>
-        <a routerLink="/orders" routerLinkActive="active">Siparişler</a>
-        <a routerLink="/delivery-notes" routerLinkActive="active">İrsaliyeler</a>
-        <a routerLink="/customers" routerLinkActive="active">Cariler</a>
-        @if (auth.user()?.role === 'FirmAdmin' || auth.user()?.role === 'SuperAdmin') {
-          <a routerLink="/main-account-codes" routerLinkActive="active">Hesap Planı</a>
-          <a routerLink="/products" routerLinkActive="active">Stok</a>
-          <a routerLink="/reports" routerLinkActive="active">Raporlar</a>
-          <a routerLink="/cheques" routerLinkActive="active">Çek/Senet</a>
-        }
-        @if (auth.user()?.role !== 'SuperAdmin') {
-          <a routerLink="/company" routerLinkActive="active">Firma Bilgileri</a>
-        }
-      </nav>
-    </aside>
-    <main class="main-content"><router-outlet /></main>
-  </div>
-} @else {
+      }
+    </div>
+  </header>
+  <aside class="sidebar">
+    <nav class="sidebar-nav">
+      @if (auth.user()?.role === 'SuperAdmin') {
+      <a routerLink="/firms" routerLinkActive="active">Firmalar</a>
+      }
+      @if (auth.user()?.role === 'FirmAdmin') {
+      <a routerLink="/employees" routerLinkActive="active">Çalışanlar</a>
+      }
+      @if (auth.user()?.role === 'FirmAdmin' || auth.user()?.role === 'SuperAdmin') {
+      <a routerLink="/cash-registers" routerLinkActive="active">Kasa</a>
+      <a routerLink="/bank-accounts" routerLinkActive="active">Banka</a>
+      <a routerLink="/account-payments" routerLinkActive="active">Tahsilat/Ödeme</a>
+      }
+      <a routerLink="/invoices" routerLinkActive="active">Faturalar</a>
+      <a routerLink="/orders" routerLinkActive="active">Siparişler</a>
+      <a routerLink="/delivery-notes" routerLinkActive="active">İrsaliyeler</a>
+      <a routerLink="/customers" routerLinkActive="active">Cariler</a>
+      @if (auth.user()?.role === 'FirmAdmin' || auth.user()?.role === 'SuperAdmin') {
+      <a routerLink="/main-account-codes" routerLinkActive="active">Hesap Planı</a>
+      <a routerLink="/products" routerLinkActive="active">Stok</a>
+      <a routerLink="/reports" routerLinkActive="active">Raporlar</a>
+      <a routerLink="/cheques" routerLinkActive="active">Çek/Senet</a>
+      }
+      @if (auth.user()?.role !== 'SuperAdmin') {
+      <a routerLink="/company" routerLinkActive="active">Firma Bilgileri</a>
+      }
+    </nav>
+  </aside>
   <main class="main-content"><router-outlet /></main>
+</div>
+} @else {
+<main class="main-content"><router-outlet /></main>
 }

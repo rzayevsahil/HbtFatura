@@ -5,6 +5,7 @@ import { companyGuard } from './core/guards/company.guard';
 export const routes: Routes = [
   { path: '', redirectTo: 'invoices', pathMatch: 'full' },
   { path: 'login', loadComponent: () => import('./auth/login/login.component').then(m => m.LoginComponent) },
+  { path: 'profile', loadComponent: () => import('./auth/profile/profile.component').then(m => m.ProfileComponent), canActivate: [authGuard] },
   { path: 'invoices', loadComponent: () => import('./invoices/invoice-list/invoice-list.component').then(m => m.InvoiceListComponent), canActivate: [authGuard] },
   { path: 'invoices/new', loadComponent: () => import('./invoices/invoice-form/invoice-form.component').then(m => m.InvoiceFormComponent), canActivate: [authGuard] },
   { path: 'invoices/:id', loadComponent: () => import('./invoices/invoice-detail/invoice-detail.component').then(m => m.InvoiceDetailComponent), canActivate: [authGuard] },

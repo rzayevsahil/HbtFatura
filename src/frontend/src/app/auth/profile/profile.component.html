@@ -1,0 +1,66 @@
+<div class="page-header">
+    <h1 class="page-title">Profil Ayarları</h1>
+</div>
+
+@if (loading) {
+<div class="loading-container">
+    <div class="spinner"></div>
+    <p>Profil bilgileri yükleniyor...</p>
+</div>
+} @else if (profile) {
+<div class="profile-container">
+    <div class="card profile-card">
+        <div class="profile-header">
+            <div class="profile-avatar">
+                {{ model.fullName.charAt(0).toUpperCase() }}
+            </div>
+            <div class="profile-info">
+                <h3>{{ profile.fullName }}</h3>
+                <p>{{ profile.email }}</p>
+            </div>
+        </div>
+
+        <form (ngSubmit)="save()" #profileForm="ngForm" class="profile-form">
+            <div class="form-section">
+                <h4 class="section-title">Genel Bilgiler</h4>
+                <div class="form-group">
+                    <label for="fullName">Ad Soyad</label>
+                    <input type="text" id="fullName" name="fullName" [(ngModel)]="model.fullName" required
+                        placeholder="Ad Soyad giriniz">
+                </div>
+                <div class="form-group">
+                    <label for="email">E-posta</label>
+                    <input type="email" id="email" name="email" [value]="profile.email" disabled class="disabled-input">
+                    <small class="help-text">E-posta adresi değiştirilemez.</small>
+                </div>
+                <div class="form-group">
+                    <label for="phoneNumber">Telefon</label>
+                    <input type="text" id="phoneNumber" name="phoneNumber" [(ngModel)]="model.phoneNumber"
+                        placeholder="Telefon numarası giriniz">
+                </div>
+            </div>
+
+            <div class="form-section password-section">
+                <h4 class="section-title">Şifre Değiştir</h4>
+                <p class="section-desc">Şifrenizi değiştirmek istemiyorsanız bu alanları boş bırakabilirsiniz.</p>
+                <div class="form-group">
+                    <label for="currentPassword">Mevcut Şifre</label>
+                    <input type="password" id="currentPassword" name="currentPassword"
+                        [(ngModel)]="model.currentPassword" placeholder="Mevcut şifreniz">
+                </div>
+                <div class="form-group">
+                    <label for="newPassword">Yeni Şifre</label>
+                    <input type="password" id="newPassword" name="newPassword" [(ngModel)]="model.newPassword"
+                        placeholder="Yeni şifreniz (en az 6 karakter)">
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn-primary" [disabled]="saving || !profileForm.valid">
+                    {{ saving ? 'Kaydediliyor...' : 'Değişiklikleri Kaydet' }}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+}
