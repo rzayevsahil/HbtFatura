@@ -29,10 +29,18 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid
     public DbSet<OrderItem> OrderItems => Set<OrderItem>();
     public DbSet<DeliveryNote> DeliveryNotes => Set<DeliveryNote>();
     public DbSet<DeliveryNoteItem> DeliveryNoteItems => Set<DeliveryNoteItem>();
+    public DbSet<LogEntry> LogEntries => Set<LogEntry>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<LogEntry>(e =>
+        {
+            e.HasIndex(x => x.Timestamp);
+            e.HasIndex(x => x.Level);
+            e.HasIndex(x => x.Module);
+        });
 
         modelBuilder.Entity<Firm>(e =>
         {

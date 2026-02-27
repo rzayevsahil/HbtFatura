@@ -44,6 +44,7 @@ export const routes: Routes = [
   { path: 'products/new', loadComponent: () => import('./products/product-form/product-form.component').then(m => m.ProductFormComponent), canActivate: [authGuard] },
   { path: 'products/:id', loadComponent: () => import('./products/product-detail/product-detail.component').then(m => m.ProductDetailComponent), canActivate: [authGuard] },
   { path: 'products/:id/edit', loadComponent: () => import('./products/product-form/product-form.component').then(m => m.ProductFormComponent), canActivate: [authGuard] },
+  { path: 'logs', loadComponent: () => import('./reports/log-list/log-list.component').then(m => m.LogListComponent), canActivate: [authGuard] },
   { path: 'reports', loadComponent: () => import('./reports/reports.component').then(m => m.ReportsComponent), canActivate: [authGuard] },
   { path: 'cheques', loadComponent: () => import('./cheques/cheque-list/cheque-list.component').then(m => m.ChequeListComponent), canActivate: [authGuard] },
   { path: 'cheques/new', loadComponent: () => import('./cheques/cheque-form/cheque-form.component').then(m => m.ChequeFormComponent), canActivate: [authGuard] },

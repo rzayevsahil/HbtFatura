@@ -19,13 +19,15 @@ public class AuthService : IAuthService
     private readonly IConfiguration _config;
 
     private readonly ICurrentUserContext _currentUser;
+    private readonly ILogService _log;
 
-    public AuthService(AppDbContext db, UserManager<ApplicationUser> userManager, IConfiguration config, ICurrentUserContext currentUser)
+    public AuthService(AppDbContext db, UserManager<ApplicationUser> userManager, IConfiguration config, ICurrentUserContext currentUser, ILogService log)
     {
         _db = db;
         _userManager = userManager;
         _config = config;
         _currentUser = currentUser;
+        _log = log;
     }
 
     public async Task<AuthResponse?> RegisterAsync(RegisterRequest request, string? ipAddress, CancellationToken ct = default)
@@ -99,6 +101,8 @@ public class AuthService : IAuthService
             throw new ArgumentException(string.Join(" ", result.Errors.Select(e => e.Description)));
         await _userManager.AddToRoleAsync(user, roleToAssign);
 
+        await _log.LogAsync($"Yeni kullanıcı kaydedildi: {user.Email} ({roleToAssign})", "Register", "Auth", "Info", $"UserId: {user.Id}");
+
         return await BuildAuthResponseAsync(user, ipAddress, ct);
     }
 
@@ -106,8 +110,12 @@ public class AuthService : IAuthService
     {
         var user = await _userManager.FindByEmailAsync(request.Email.ToLowerInvariant());
         if (user == null || !await _userManager.CheckPasswordAsync(user, request.Password))
+        {
+            await _log.LogAsync($"Hatalı giriş denemesi: {request.Email}", "Login", "Auth", "Warning");
             return null;
+        }
 
+        await _log.LogAsync($"Kullanıcı giriş yaptı: {user.Email}", "Login", "Auth", "Info", $"UserId: {user.Id}");
         return await BuildAuthResponseAsync(user, ipAddress, ct);
     }
 

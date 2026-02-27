@@ -1,0 +1,79 @@
+<div class="page-header">
+    <h1 class="page-title">Sistem Log Kayıtları</h1>
+</div>
+
+<div class="toolbar">
+    <div class="filter-group">
+        <select [(ngModel)]="level" (change)="page=1; load()">
+            <option value="">Tüm Seviyeler</option>
+            <option value="Info">Bilgi (Info)</option>
+            <option value="Warning">Uyarı (Warning)</option>
+            <option value="Error">Hata (Error)</option>
+        </select>
+    </div>
+    <div class="filter-group">
+        <input type="text" [(ngModel)]="module" placeholder="Modül (örn: Auth, Invoice)" (keyup.enter)="page=1; load()">
+    </div>
+    <div class="filter-group">
+        <input type="date" [(ngModel)]="dateFrom" (change)="page=1; load()">
+    </div>
+    <div class="filter-group">
+        <input type="date" [(ngModel)]="dateTo" (change)="page=1; load()">
+    </div>
+    <button (click)="page=1; load()" class="btn-refresh">Yenile</button>
+</div>
+
+<div class="card table-wrap" style="position: relative; min-height: 400px;">
+    @if (loading) {
+    <div class="loading-overlay">
+        <div class="spinner"></div>
+    </div>
+    }
+
+    <table>
+        <thead>
+            <tr>
+                <th>Tarih</th>
+                <th>Seviye</th>
+                <th>Modül / İşlem</th>
+                <th>Kullanıcı</th>
+                <th>Mesaj</th>
+                <th>IP Adresi</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (log of items; track log.id) {
+            <tr [ngClass]="getLevelClass(log.level)">
+                <td class="timestamp">{{ log.timestamp | date:'dd.MM.yyyy HH:mm:ss' }}</td>
+                <td>
+                    <span class="level-badge" [class]="log.level.toLowerCase()">{{ log.level }}</span>
+                </td>
+                <td>
+                    <strong>{{ log.module }}</strong><br>
+                    <small class="action-text">{{ log.action }}</small>
+                </td>
+                <td>
+                    {{ log.userFullName }}<br>
+                    <small class="text-muted">{{ log.userId }}</small>
+                </td>
+                <td class="message-cell">
+                    <span class="message-text" [title]="log.details || ''">{{ log.message }}</span>
+                </td>
+                <td class="ip-text">{{ log.ipAddress }}</td>
+            </tr>
+            } @empty {
+            <tr>
+                <td colspan="6" class="empty-state">Kayıt bulunamadı.</td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="pagination">
+    <span>Toplam {{ totalCount }} kayıt | Sayfa {{ page }}</span>
+    <div class="pagination-actions">
+        <button [disabled]="page === 1" (click)="prevPage()">Önceki</button>
+        <button [disabled]="items.length < pageSize" (click)="nextPage()">Sonraki</button>
+    </div>
+</div>

@@ -23,6 +23,7 @@ public class CurrentUserContext : ICurrentUserContext
     }
 
     public string Role => _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.Role) ?? "";
+    public string? FullName => _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.Name);
 
     public Guid? FirmId
     {
@@ -34,6 +35,7 @@ public class CurrentUserContext : ICurrentUserContext
     }
 
     public string? FirmName => _httpContextAccessor.HttpContext?.User?.FindFirst("FirmName")?.Value;
+    public bool IsAuthenticated => UserId != Guid.Empty;
 
     public bool IsSuperAdmin => Role == Roles.SuperAdmin;
     public bool IsFirmAdmin => Role == Roles.FirmAdmin;

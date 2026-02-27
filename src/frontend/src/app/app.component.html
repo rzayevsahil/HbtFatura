@@ -27,6 +27,7 @@
     <nav class="sidebar-nav">
       @if (auth.user()?.role === 'SuperAdmin') {
       <a routerLink="/firms" routerLinkActive="active">Firmalar</a>
+      <a routerLink="/logs" routerLinkActive="active">Log Kayıtları</a>
       }
       @if (auth.user()?.role === 'FirmAdmin') {
       <a routerLink="/employees" routerLinkActive="active">Çalışanlar</a>

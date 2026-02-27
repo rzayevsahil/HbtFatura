@@ -13,12 +13,14 @@ public class InvoiceService : IInvoiceService
     private readonly AppDbContext _db;
     private readonly IInvoiceCalculationService _calc;
     private readonly ICurrentUserContext _currentUser;
+    private readonly ILogService _log;
 
-    public InvoiceService(AppDbContext db, IInvoiceCalculationService calc, ICurrentUserContext currentUser)
+    public InvoiceService(AppDbContext db, IInvoiceCalculationService calc, ICurrentUserContext currentUser, ILogService log)
     {
         _db = db;
         _calc = calc;
         _currentUser = currentUser;
+        _log = log;
     }
 
     private IQueryable<Invoice> ScopeQuery(Guid? firmIdFilter = null)
@@ -351,6 +353,9 @@ public class InvoiceService : IInvoiceService
 
         invoice.IsGibSent = true;
         await _db.SaveChangesAsync(ct);
+
+        await _log.LogAsync($"Fatura GİB'e gönderildi: {invoice.InvoiceNumber}", "SendToGib", "Invoice", "Info", $"Id: {invoice.Id}");
+
         return true;
     }
 
