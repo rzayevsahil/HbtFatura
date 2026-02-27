@@ -63,6 +63,7 @@ export interface InvoiceListDto {
   customerTitle: string;
   grandTotal: number;
   currency: string;
+  isGibSent: boolean;
 }
 
 export interface CreateInvoiceRequest {

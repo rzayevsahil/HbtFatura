@@ -37,6 +37,7 @@ public class InvoiceListDto
     public string CustomerTitle { get; set; } = string.Empty;
     public decimal GrandTotal { get; set; }
     public string Currency { get; set; } = "TRY";
+    public bool IsGibSent { get; set; }
 }
 
 public class CreateInvoiceRequest

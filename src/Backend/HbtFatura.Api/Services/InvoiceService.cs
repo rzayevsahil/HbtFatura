@@ -57,7 +57,8 @@ public class InvoiceService : IInvoiceService
                 InvoiceType = x.InvoiceType,
                 CustomerTitle = x.CustomerTitle,
                 GrandTotal = x.GrandTotal,
-                Currency = x.Currency
+                Currency = x.Currency,
+                IsGibSent = x.IsGibSent
             })
             .ToListAsync(ct);
         return new PagedResult<InvoiceListDto> { Items = items, TotalCount = total, Page = page, PageSize = pageSize };
