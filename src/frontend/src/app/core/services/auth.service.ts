@@ -43,7 +43,7 @@ export class AuthService {
         this.accessToken.set(data.accessToken);
         localStorage.setItem(this.tokenKey, data.accessToken);
         localStorage.setItem(this.refreshKey, data.refreshToken);
-      } catch {}
+      } catch { }
     } else {
       const t = localStorage.getItem(this.tokenKey);
       if (t) this.accessToken.set(t);
@@ -90,6 +90,23 @@ export class AuthService {
     localStorage.removeItem(this.tokenKey);
     localStorage.removeItem(this.refreshKey);
     this.router.navigate(['/login']);
+  }
+
+  updateUser(updatedFields: Partial<User>): void {
+    const current = this.currentUser();
+    if (current) {
+      const newUser = { ...current, ...updatedFields };
+      this.currentUser.set(newUser);
+
+      const stored = localStorage.getItem(this.storageKey);
+      if (stored) {
+        try {
+          const data = JSON.parse(stored) as AuthResponse;
+          data.user = newUser;
+          localStorage.setItem(this.storageKey, JSON.stringify(data));
+        } catch { }
+      }
+    }
   }
 
   private handleAuthResponse(res: AuthResponse): void {

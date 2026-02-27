@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AccountService, UserProfileDto, UpdateProfileRequest } from '../../services/account.service';
+import { AuthService } from '../../core/services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -21,8 +22,13 @@ export class ProfileComponent implements OnInit {
     };
     loading = false;
     saving = false;
+    userNameAfterUpdate = '';
 
-    constructor(private accountService: AccountService, private toastr: ToastrService) { }
+    constructor(
+        private accountService: AccountService,
+        private auth: AuthService,
+        private toastr: ToastrService
+    ) { }
 
     ngOnInit(): void {
         this.loadProfile();
@@ -49,11 +55,18 @@ export class ProfileComponent implements OnInit {
         this.accountService.updateProfile(this.model).subscribe({
             next: () => {
                 this.toastr.success('Profil başarıyla güncellendi.');
+
+                // AuthService'deki kullanıcı adını da güncelle
+                this.auth.updateUser({ fullName: this.model.fullName });
+
+                // Sayfadaki (profile-header) ismini de güncelle
+                if (this.profile) {
+                    this.profile.fullName = this.model.fullName;
+                }
+
                 this.model.currentPassword = '';
                 this.model.newPassword = '';
                 this.saving = false;
-                // Opsiyonel: AuthService'deki kullanıcı adını da güncellemek gerekebilir eğer signal kullanılıyorsa.
-                // Ama sayfa yenilenince veya AuthService API ile eşleşince zaten güncellenir.
             },
             error: (err) => {
                 this.toastr.error(err.error?.message || 'Profil güncellenirken bir hata oluştu.');
