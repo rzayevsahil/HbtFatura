@@ -70,7 +70,22 @@ public class OrderService : IOrderService
             .Include(x => x.Items.OrderBy(i => i.SortOrder))
                 .ThenInclude(i => i.Product)
             .FirstOrDefaultAsync(x => x.Id == id, ct);
-        return order == null ? null : MapToDto(order);
+        if (order == null) return null;
+
+        var dto = MapToDto(order);
+        var dn = await _db.DeliveryNotes
+            .Where(x => x.OrderId == id)
+            .OrderByDescending(x => x.CreatedAt)
+            .Select(x => new { x.Id, x.DeliveryNumber })
+            .FirstOrDefaultAsync(ct);
+
+        if (dn != null)
+        {
+            dto.DeliveryNoteId = dn.Id;
+            dto.DeliveryNoteNumber = dn.DeliveryNumber;
+        }
+
+        return dto;
     }
 
     public async Task<OrderDto> CreateAsync(CreateOrderRequest request, CancellationToken ct = default)

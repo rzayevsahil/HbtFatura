@@ -1,7 +1,7 @@
 @if (invoice) {
 <div class="page-header">
   <div class="page-header-left">
-    <h1 class="page-title">Fatura {{ invoice.invoiceNumber }}</h1>
+    <h1 class="page-title">{{ invoice.invoiceNumber }}</h1>
     <div class="meta">
       <span>Tarih: {{ invoice.invoiceDate | date:'dd.MM.yyyy HH:mm' }}</span>
       <span class="status-badge {{ statusClass(invoice.status) }}">{{ statusLabel(invoice.status, invoice.sourceType)

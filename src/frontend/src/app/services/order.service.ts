@@ -25,6 +25,8 @@ export interface OrderDto {
   status: OrderStatus | string;
   orderType: InvoiceType;
   createdAt: string;
+  deliveryNoteId?: string;
+  deliveryNoteNumber?: string;
   items: OrderItemDto[];
 }
 

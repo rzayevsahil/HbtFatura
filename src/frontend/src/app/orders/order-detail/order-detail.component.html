@@ -16,6 +16,10 @@
       {{ creatingDeliveryNote ? 'Aktarılıyor...' : 'İrsaliyeye Aktar' }}
     </button>
     }
+    @if (order && order.deliveryNoteId) {
+    <a [routerLink]="['/delivery-notes', order.deliveryNoteId]" class="btn btn-default"
+      style="background: white;color: var(--color-primary);">İrsaliyeye Git</a>
+    }
     <a routerLink="/orders" class="btn btn-default">← Geri</a>
   </div>
 </div>
@@ -42,6 +46,12 @@
     <span class="info-label">Durum:</span>
     <span class="info-value">{{ statusLabel(order.status) }}</span>
   </div>
+  @if (order.deliveryNoteId && order.deliveryNoteNumber) {
+  <div class="info-item">
+    <span class="info-label">İrsaliye No:</span>
+    <span class="info-value">{{ order.deliveryNoteNumber }}</span>
+  </div>
+  }
 </div>
 <h2 class="section-title">Kalemler</h2>
 <div class="card table-wrap">
