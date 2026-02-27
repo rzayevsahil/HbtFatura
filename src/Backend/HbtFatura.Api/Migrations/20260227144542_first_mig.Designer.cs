@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HbtFatura.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260226111537_second_mig")]
-    partial class second_mig
+    [Migration("20260227144542_first_mig")]
+    partial class first_mig
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -366,6 +366,9 @@ namespace HbtFatura.Api.Migrations
                     b.Property<string>("Address")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("BankName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("CompanyName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -495,7 +498,7 @@ namespace HbtFatura.Api.Migrations
                     b.Property<Guid?>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("CustomerId")
+                    b.Property<Guid>("CustomerId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("DeliveryDate")
@@ -638,6 +641,9 @@ namespace HbtFatura.Api.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Ettn")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<decimal>("ExchangeRate")
                         .HasPrecision(18, 6)
                         .HasColumnType("decimal(18,6)");
@@ -656,10 +662,16 @@ namespace HbtFatura.Api.Migrations
                     b.Property<int>("InvoiceType")
                         .HasColumnType("int");
 
+                    b.Property<bool>("IsGibSent")
+                        .HasColumnType("bit");
+
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("rowversion");
+
+                    b.Property<int>("Scenario")
+                        .HasColumnType("int");
 
                     b.Property<Guid?>("SourceId")
                         .HasColumnType("uniqueidentifier");
@@ -752,6 +764,52 @@ namespace HbtFatura.Api.Migrations
                     b.ToTable("InvoiceItems");
                 });
 
+            modelBuilder.Entity("HbtFatura.Api.Entities.LogEntry", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Action")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Details")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("IpAddress")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Level")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Module")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("Timestamp")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserFullName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Level");
+
+                    b.HasIndex("Module");
+
+                    b.HasIndex("Timestamp");
+
+                    b.ToTable("LogEntries");
+                });
+
             modelBuilder.Entity("HbtFatura.Api.Entities.MainAccountCode", b =>
                 {
                     b.Property<Guid>("Id")
@@ -802,7 +860,7 @@ namespace HbtFatura.Api.Migrations
                     b.Property<Guid?>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("CustomerId")
+                    b.Property<Guid>("CustomerId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("OrderDate")
@@ -896,21 +954,21 @@ namespace HbtFatura.Api.Migrations
                     b.Property<Guid>("FirmId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<decimal>("MaxStock")
-                        .HasPrecision(18, 4)
-                        .HasColumnType("decimal(18,4)");
-
-                    b.Property<decimal>("MinStock")
-                        .HasPrecision(18, 4)
-                        .HasColumnType("decimal(18,4)");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<decimal>("StockQuantity")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("decimal(18,4)");
+
                     b.Property<string>("Unit")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("UnitPrice")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
@@ -1260,7 +1318,8 @@ namespace HbtFatura.Api.Migrations
                     b.HasOne("HbtFatura.Api.Entities.Customer", "Customer")
                         .WithMany()
                         .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("HbtFatura.Api.Entities.Order", "Order")
                         .WithMany()
@@ -1356,7 +1415,8 @@ namespace HbtFatura.Api.Migrations
                     b.HasOne("HbtFatura.Api.Entities.Customer", "Customer")
                         .WithMany()
                         .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("HbtFatura.Api.Entities.ApplicationUser", "User")
                         .WithMany("Orders")

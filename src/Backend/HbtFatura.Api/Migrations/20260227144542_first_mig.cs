@@ -39,6 +39,26 @@ namespace HbtFatura.Api.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "LogEntries",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Timestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Level = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Message = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Action = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Module = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    UserFullName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IpAddress = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Details = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LogEntries", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -152,6 +172,7 @@ namespace HbtFatura.Api.Migrations
                     Phone = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IBAN = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    BankName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LogoUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
@@ -199,8 +220,8 @@ namespace HbtFatura.Api.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Barcode = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Unit = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    MinStock = table.Column<decimal>(type: "decimal(18,4)", precision: 18, scale: 4, nullable: false),
-                    MaxStock = table.Column<decimal>(type: "decimal(18,4)", precision: 18, scale: 4, nullable: false),
+                    StockQuantity = table.Column<decimal>(type: "decimal(18,4)", precision: 18, scale: 4, nullable: false),
+                    UnitPrice = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -518,6 +539,8 @@ namespace HbtFatura.Api.Migrations
                     InvoiceDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
                     InvoiceType = table.Column<int>(type: "int", nullable: false),
+                    Scenario = table.Column<int>(type: "int", nullable: false),
+                    Ettn = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CustomerId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CustomerTitle = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -530,6 +553,7 @@ namespace HbtFatura.Api.Migrations
                     GrandTotal = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
                     Currency = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ExchangeRate = table.Column<decimal>(type: "decimal(18,6)", precision: 18, scale: 6, nullable: false),
+                    IsGibSent = table.Column<bool>(type: "bit", nullable: false),
                     SourceType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     SourceId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -562,7 +586,7 @@ namespace HbtFatura.Api.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     OrderNumber = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CustomerId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    CustomerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     OrderDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
                     OrderType = table.Column<int>(type: "int", nullable: false),
@@ -585,7 +609,7 @@ namespace HbtFatura.Api.Migrations
                         column: x => x.CustomerId,
                         principalTable: "Customers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.SetNull);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -629,8 +653,9 @@ namespace HbtFatura.Api.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     DeliveryNumber = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CustomerId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    CustomerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     OrderId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    InvoiceId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     DeliveryDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
                     DeliveryType = table.Column<int>(type: "int", nullable: false),
@@ -653,7 +678,7 @@ namespace HbtFatura.Api.Migrations
                         column: x => x.CustomerId,
                         principalTable: "Customers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.SetNull);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_DeliveryNotes_Orders_OrderId",
                         column: x => x.OrderId,
@@ -914,6 +939,21 @@ namespace HbtFatura.Api.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_LogEntries_Level",
+                table: "LogEntries",
+                column: "Level");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LogEntries_Module",
+                table: "LogEntries",
+                column: "Module");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LogEntries_Timestamp",
+                table: "LogEntries",
+                column: "Timestamp");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_MainAccountCodes_Code",
                 table: "MainAccountCodes",
                 column: "Code",
@@ -1023,6 +1063,9 @@ namespace HbtFatura.Api.Migrations
 
             migrationBuilder.DropTable(
                 name: "InvoiceItems");
+
+            migrationBuilder.DropTable(
+                name: "LogEntries");
 
             migrationBuilder.DropTable(
                 name: "MainAccountCodes");
