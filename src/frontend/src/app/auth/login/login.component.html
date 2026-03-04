@@ -33,7 +33,18 @@
         </div>
       </div>
       @if (error) { <p class="error">{{ error }}</p> }
-      <button type="submit" [disabled]="form.invalid || loading">Giriş</button>
+      <button type="submit" [disabled]="form.invalid || loading">
+        @if (loading) {
+        <span class="btn-content">
+          <svg class="spinner-sm" viewBox="0 0 24 24">
+            <circle class="path" cx="12" cy="12" r="10" fill="none" stroke-width="3"></circle>
+          </svg>
+          Giriş yapılıyor...
+        </span>
+        } @else {
+        Giriş
+        }
+      </button>
     </form>
   </div>
 </div>
