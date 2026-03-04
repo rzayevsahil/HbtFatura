@@ -41,6 +41,44 @@
   width: 100%;
 }
 
+.password-input {
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  input {
+    padding-right: 2.5rem;
+  }
+
+  .toggle-password {
+    position: absolute;
+    right: 0.75rem;
+    background: transparent !important;
+    border: none;
+    padding: 0;
+    width: 20px;
+    height: 20px;
+    min-width: unset;
+    min-height: unset;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text-muted, #64748b);
+    cursor: pointer;
+    transition: color 0.2s;
+    box-shadow: none !important;
+    transform: none !important;
+
+    &:hover {
+      color: var(--color-primary);
+    }
+
+    svg {
+      display: block;
+    }
+  }
+}
+
 .auth-box button[type="submit"] {
   width: 100%;
   margin-top: 0.5rem;

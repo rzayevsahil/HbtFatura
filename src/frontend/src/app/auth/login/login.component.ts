@@ -19,8 +19,9 @@ export class LoginComponent {
   });
   error = '';
   loading = false;
+  showPassword = false;
 
-  constructor(private fb: FormBuilder, private auth: AuthService, private toastr: ToastrService) {}
+  constructor(private fb: FormBuilder, private auth: AuthService, private toastr: ToastrService) { }
 
   onSubmit(): void {
     this.error = '';
