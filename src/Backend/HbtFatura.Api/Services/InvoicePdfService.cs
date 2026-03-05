@@ -47,7 +47,12 @@ public class InvoicePdfService : IInvoicePdfService
         var firmId = invoice.User?.FirmId;
         CompanySettings? company = null;
         if (firmId.HasValue)
-            company = await _db.CompanySettings.FirstOrDefaultAsync(x => x.FirmId == firmId.Value, ct);
+            company = await _db.CompanySettings
+                .Include(x => x.TaxOffice)
+                    .ThenInclude(t => t!.City)
+                .Include(x => x.TaxOffice)
+                    .ThenInclude(t => t!.District)
+                .FirstOrDefaultAsync(x => x.FirmId == firmId.Value, ct);
 
         var document = Document.Create(container =>
         {
@@ -73,10 +78,20 @@ public class InvoicePdfService : IInvoicePdfService
                         r.RelativeItem(1).Column(c =>
                         {
                             c.Item().Text(company?.CompanyName ?? "Firma Adı").FontSize(8);
-                            c.Item().PaddingTop(4).Text(company?.Address ?? "").FontSize(8);
+                            
+                            var addressLines = new List<string>();
+                            if (!string.IsNullOrEmpty(company?.Address)) addressLines.Add(company.Address);
+                            
+                            var cityDistrict = "";
+                            if (company?.TaxOffice?.District != null) cityDistrict += company.TaxOffice.District.Name;
+                            if (company?.TaxOffice?.City != null) cityDistrict += (cityDistrict != "" ? " / " : "") + company.TaxOffice.City.Name;
+                            if (!string.IsNullOrEmpty(cityDistrict)) addressLines.Add(cityDistrict);
+                            
+                            foreach(var line in addressLines) c.Item().Text(line).FontSize(8);
+
                             if (!string.IsNullOrEmpty(company?.Phone)) c.Item().Text($"Tel: {company.Phone}").FontSize(8);
                             if (!string.IsNullOrEmpty(company?.Email)) c.Item().Text($"E-Posta: {company.Email}").FontSize(8);
-                            if (!string.IsNullOrEmpty(company?.TaxOffice)) c.Item().Text($"Vergi Dairesi: {company.TaxOffice}").FontSize(8);
+                            if (!string.IsNullOrEmpty(company?.TaxOffice?.Name)) c.Item().Text($"Vergi Dairesi: {company.TaxOffice.Name}").FontSize(8);
                             if (!string.IsNullOrEmpty(company?.TaxNumber)) c.Item().Text($"VKN/TCKN: {company.TaxNumber}").FontSize(8);
                         });
 

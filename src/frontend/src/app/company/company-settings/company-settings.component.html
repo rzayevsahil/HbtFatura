@@ -20,7 +20,7 @@
         <div class="custom-select" [class.disabled]="isReadOnly()">
           <button type="button" class="select-trigger" (click)="toggleCityDropdown(); $event.stopPropagation()"
             [disabled]="isReadOnly()">
-            {{ selectedCity || 'İl Seçiniz' }}
+            {{ selectedCityName || 'İl Seçiniz' }}
           </button>
           @if (cityDropdownOpen) {
           <div class="select-panel">
@@ -28,8 +28,8 @@
               (input)="citySearchText = $any($event.target).value" (click)="$event.stopPropagation()" />
             <div class="options-list">
               <button type="button" class="option" (click)="selectCity(null)">İl Seçiniz</button>
-              @for (city of filteredCities; track city) {
-              <button type="button" class="option" (click)="selectCity(city)">{{ city }}</button>
+              @for (city of filteredCities; track city.id) {
+              <button type="button" class="option" (click)="selectCity(city)">{{ city.name }}</button>
               }
               @if (filteredCities.length === 0 && citySearchText) {
               <div class="option empty">Sonuç bulunamadı</div>
@@ -41,10 +41,10 @@
       </div>
       <div class="row">
         <label>İlçe</label>
-        <div class="custom-select" [class.disabled]="!selectedCity || isReadOnly()">
+        <div class="custom-select" [class.disabled]="!form.get('cityId')?.value || isReadOnly()">
           <button type="button" class="select-trigger" (click)="toggleDistrictDropdown(); $event.stopPropagation()"
-            [disabled]="!selectedCity || isReadOnly()">
-            {{ selectedDistrict || 'İlçe Seçiniz' }}
+            [disabled]="!form.get('cityId')?.value || isReadOnly()">
+            {{ selectedDistrictName || 'İlçe Seçiniz' }}
           </button>
           @if (districtDropdownOpen) {
           <div class="select-panel">
@@ -52,8 +52,8 @@
               (input)="districtSearchText = $any($event.target).value" (click)="$event.stopPropagation()" />
             <div class="options-list">
               <button type="button" class="option" (click)="selectDistrict(null)">İlçe Seçiniz</button>
-              @for (district of filteredDistricts; track district) {
-              <button type="button" class="option" (click)="selectDistrict(district)">{{ district }}</button>
+              @for (district of filteredDistricts; track district.id) {
+              <button type="button" class="option" (click)="selectDistrict(district)">{{ district.name }}</button>
               }
               @if (filteredDistricts.length === 0 && districtSearchText) {
               <div class="option empty">Sonuç bulunamadı</div>
@@ -65,10 +65,10 @@
       </div>
       <div class="row">
         <label>Vergi Dairesi</label>
-        <div class="custom-select" [class.disabled]="!selectedDistrict || isReadOnly()">
+        <div class="custom-select" [class.disabled]="!form.get('districtId')?.value || isReadOnly()">
           <button type="button" class="select-trigger" (click)="toggleOfficeDropdown(); $event.stopPropagation()"
-            [disabled]="!selectedDistrict || isReadOnly()">
-            {{ form.get('taxOffice')?.value || 'Daire Seçiniz' }}
+            [disabled]="!form.get('districtId')?.value || isReadOnly()">
+            {{ selectedOfficeName || 'Daire Seçiniz' }}
           </button>
           @if (officeDropdownOpen) {
           <div class="select-panel">
@@ -77,7 +77,7 @@
             <div class="options-list">
               <button type="button" class="option" (click)="selectOffice(null)">Daire Seçiniz</button>
               @for (office of filteredOffices; track office.id) {
-              <button type="button" class="option" (click)="selectOffice(office.name)">{{ office.name }}</button>
+              <button type="button" class="option" (click)="selectOffice(office)">{{ office.name }}</button>
               }
               @if (filteredOffices.length === 0 && officeSearchText) {
               <div class="option empty">Sonuç bulunamadı</div>

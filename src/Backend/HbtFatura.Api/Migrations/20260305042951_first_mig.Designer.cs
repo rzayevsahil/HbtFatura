@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HbtFatura.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260305031800_first_mig")]
+    [Migration("20260305042951_first_mig")]
     partial class first_mig
     {
         /// <inheritdoc />
@@ -419,14 +419,8 @@ namespace HbtFatura.Api.Migrations
                     b.Property<string>("TaxNumber")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("TaxOffice")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TaxOfficeCity")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TaxOfficeDistrict")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid?>("TaxOfficeId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -435,6 +429,8 @@ namespace HbtFatura.Api.Migrations
 
                     b.HasIndex("FirmId")
                         .IsUnique();
+
+                    b.HasIndex("TaxOfficeId");
 
                     b.ToTable("CompanySettings");
                 });
@@ -1382,7 +1378,14 @@ namespace HbtFatura.Api.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("HbtFatura.Api.Entities.TaxOffice", "TaxOffice")
+                        .WithMany()
+                        .HasForeignKey("TaxOfficeId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.Navigation("Firm");
+
+                    b.Navigation("TaxOffice");
                 });
 
             modelBuilder.Entity("HbtFatura.Api.Entities.Customer", b =>

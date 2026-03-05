@@ -192,37 +192,6 @@ namespace HbtFatura.Api.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CompanySettings",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    FirmId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CompanyName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TaxOffice = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    TaxOfficeCity = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    TaxOfficeDistrict = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    TaxNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    IBAN = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    BankName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LogoUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CompanySettings", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_CompanySettings_Firms_FirmId",
-                        column: x => x.FirmId,
-                        principalTable: "Firms",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "MainAccountCodes",
                 columns: table => new
                 {
@@ -516,6 +485,41 @@ namespace HbtFatura.Api.Migrations
                         principalTable: "Products",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CompanySettings",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FirmId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CompanyName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TaxOfficeId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    TaxNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IBAN = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    BankName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LogoUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CompanySettings", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CompanySettings_Firms_FirmId",
+                        column: x => x.FirmId,
+                        principalTable: "Firms",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CompanySettings_TaxOffices_TaxOfficeId",
+                        column: x => x.TaxOfficeId,
+                        principalTable: "TaxOffices",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -943,6 +947,11 @@ namespace HbtFatura.Api.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_CompanySettings_TaxOfficeId",
+                table: "CompanySettings",
+                column: "TaxOfficeId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Customers_UserId",
                 table: "Customers",
                 column: "UserId");
@@ -1171,9 +1180,6 @@ namespace HbtFatura.Api.Migrations
                 name: "StockMovements");
 
             migrationBuilder.DropTable(
-                name: "TaxOffices");
-
-            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
@@ -1181,6 +1187,9 @@ namespace HbtFatura.Api.Migrations
 
             migrationBuilder.DropTable(
                 name: "BankAccounts");
+
+            migrationBuilder.DropTable(
+                name: "TaxOffices");
 
             migrationBuilder.DropTable(
                 name: "DeliveryNotes");

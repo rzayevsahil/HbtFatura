@@ -21,7 +21,12 @@ public class CompanySettingsService : ICompanySettingsService
         var effectiveFirmId = firmId ?? _currentUser.FirmId;
         if (!effectiveFirmId.HasValue)
             return null;
-        var entity = await _db.CompanySettings.FirstOrDefaultAsync(x => x.FirmId == effectiveFirmId.Value, ct);
+        var entity = await _db.CompanySettings
+            .Include(x => x.TaxOffice)
+                .ThenInclude(t => t!.City)
+            .Include(x => x.TaxOffice)
+                .ThenInclude(t => t!.District)
+            .FirstOrDefaultAsync(x => x.FirmId == effectiveFirmId.Value, ct);
         return entity == null ? null : MapToDto(entity);
     }
 
@@ -54,9 +59,7 @@ public class CompanySettingsService : ICompanySettingsService
             entity.UpdatedAt = DateTime.UtcNow;
         }
         entity.CompanyName = request.CompanyName.Trim();
-        entity.TaxOffice = request.TaxOffice?.Trim();
-        entity.TaxOfficeCity = request.TaxOfficeCity?.Trim();
-        entity.TaxOfficeDistrict = request.TaxOfficeDistrict?.Trim();
+        entity.TaxOfficeId = request.TaxOfficeId;
         entity.TaxNumber = request.TaxNumber?.Trim();
         entity.Address = request.Address?.Trim();
         entity.Phone = request.Phone?.Trim();
@@ -65,16 +68,21 @@ public class CompanySettingsService : ICompanySettingsService
         entity.BankName = request.BankName?.Trim();
         entity.LogoUrl = request.LogoUrl?.Trim();
         await _db.SaveChangesAsync(ct);
-        return MapToDto(entity);
+        
+        // Final return with navigation names
+        return await GetByFirmIdAsync(effectiveFirmId, ct);
     }
 
     private static CompanySettingsDto MapToDto(CompanySettings e) => new()
     {
         Id = e.Id,
         CompanyName = e.CompanyName,
-        TaxOffice = e.TaxOffice,
-        TaxOfficeCity = e.TaxOfficeCity,
-        TaxOfficeDistrict = e.TaxOfficeDistrict,
+        CityId = e.TaxOffice?.CityId,
+        CityName = e.TaxOffice?.City?.Name,
+        DistrictId = e.TaxOffice?.DistrictId,
+        DistrictName = e.TaxOffice?.District?.Name,
+        TaxOfficeId = e.TaxOfficeId,
+        TaxOfficeName = e.TaxOffice?.Name,
         TaxNumber = e.TaxNumber,
         Address = e.Address,
         Phone = e.Phone,

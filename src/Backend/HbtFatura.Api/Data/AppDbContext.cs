@@ -66,6 +66,7 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid
         modelBuilder.Entity<CompanySettings>(e =>
         {
             e.HasOne(x => x.Firm).WithOne(x => x.CompanySettings).HasForeignKey<CompanySettings>(x => x.FirmId).OnDelete(DeleteBehavior.Cascade);
+            e.HasOne(x => x.TaxOffice).WithMany().HasForeignKey(x => x.TaxOfficeId).OnDelete(DeleteBehavior.Restrict);
             e.HasIndex(x => x.FirmId).IsUnique();
         });
 

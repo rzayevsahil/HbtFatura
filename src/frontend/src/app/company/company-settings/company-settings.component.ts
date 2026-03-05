@@ -3,7 +3,7 @@ import { CommonModule, Location } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CompanyService } from '../../services/company.service';
-import { TaxOfficeService, TaxOfficeDto } from '../../services/tax-office.service';
+import { TaxOfficeService, TaxOfficeDto, CityResponse, DistrictResponse } from '../../services/tax-office.service';
 import { AuthService } from '../../core/services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 
@@ -19,27 +19,28 @@ export class CompanySettingsComponent implements OnInit {
   firmId: string | undefined;
 
   form = this.fb.nonNullable.group({
-    companyName: ['', Validators.required],
-    taxOffice: [''],
-    taxOfficeCity: [''],
-    taxOfficeDistrict: [''],
-    taxNumber: [''],
-    address: [''],
-    phone: [''],
-    email: [''],
-    iban: [''],
-    bankName: ['']
+    companyName: ['', [Validators.required]],
+    cityId: [null as string | null, [Validators.required]],
+    districtId: [null as string | null, [Validators.required]],
+    taxOfficeId: [null as string | null, [Validators.required]],
+    taxNumber: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(11)]],
+    address: ['', [Validators.required]],
+    phone: ['', [Validators.required]],
+    email: ['', [Validators.required, Validators.email]],
+    iban: ['', [Validators.required]],
+    bankName: ['', [Validators.required]]
   });
   error = '';
   saving = false;
   loading = true;
 
-  cities: string[] = [];
-  districts: string[] = [];
+  cities: CityResponse[] = [];
+  districts: DistrictResponse[] = [];
   offices: TaxOfficeDto[] = [];
 
-  selectedCity = '';
-  selectedDistrict = '';
+  selectedCityName = '';
+  selectedDistrictName = '';
+  selectedOfficeName = '';
 
   citySearchText = '';
   cityDropdownOpen = false;
@@ -50,16 +51,16 @@ export class CompanySettingsComponent implements OnInit {
   officeSearchText = '';
   officeDropdownOpen = false;
 
-  get filteredCities(): string[] {
+  get filteredCities(): CityResponse[] {
     const t = this.citySearchText?.trim().toLocaleLowerCase('tr');
     if (!t) return this.cities;
-    return this.cities.filter(c => c.toLocaleLowerCase('tr').includes(t));
+    return this.cities.filter(c => c.name.toLocaleLowerCase('tr').includes(t));
   }
 
-  get filteredDistricts(): string[] {
+  get filteredDistricts(): DistrictResponse[] {
     const t = this.districtSearchText?.trim().toLocaleLowerCase('tr');
     if (!t) return this.districts;
-    return this.districts.filter(d => d.toLocaleLowerCase('tr').includes(t));
+    return this.districts.filter(d => d.name.toLocaleLowerCase('tr').includes(t));
   }
 
   get filteredOffices(): TaxOfficeDto[] {
@@ -97,7 +98,7 @@ export class CompanySettingsComponent implements OnInit {
   }
 
   toggleDistrictDropdown(): void {
-    if (this.isReadOnly() || !this.selectedCity) return;
+    if (this.isReadOnly() || !this.form.get('cityId')?.value) return;
     this.districtDropdownOpen = !this.districtDropdownOpen;
     this.cityDropdownOpen = false;
     this.officeDropdownOpen = false;
@@ -105,25 +106,26 @@ export class CompanySettingsComponent implements OnInit {
   }
 
   toggleOfficeDropdown(): void {
-    if (this.isReadOnly() || !this.selectedDistrict) return;
+    if (this.isReadOnly() || !this.form.get('districtId')?.value) return;
     this.officeDropdownOpen = !this.officeDropdownOpen;
     this.cityDropdownOpen = false;
     this.districtDropdownOpen = false;
     if (this.officeDropdownOpen) this.officeSearchText = '';
   }
 
-  selectCity(city: string | null): void {
-    this.onCityChange(city || '');
+  selectCity(city: CityResponse | null): void {
+    this.onCityChange(city?.id || null, city?.name || '');
     this.cityDropdownOpen = false;
   }
 
-  selectDistrict(district: string | null): void {
-    this.onDistrictChange(district || '');
+  selectDistrict(district: DistrictResponse | null): void {
+    this.onDistrictChange(district?.id || null, district?.name || '');
     this.districtDropdownOpen = false;
   }
 
-  selectOffice(officeName: string | null): void {
-    this.form.patchValue({ taxOffice: officeName || '' });
+  selectOffice(office: TaxOfficeDto | null): void {
+    this.form.patchValue({ taxOfficeId: office?.id || null });
+    this.selectedOfficeName = office?.name || '';
     this.officeDropdownOpen = false;
   }
 
@@ -134,9 +136,9 @@ export class CompanySettingsComponent implements OnInit {
       next: c => {
         this.form.patchValue({
           companyName: c.companyName,
-          taxOffice: c.taxOffice ?? '',
-          taxOfficeCity: c.taxOfficeCity ?? '',
-          taxOfficeDistrict: c.taxOfficeDistrict ?? '',
+          cityId: c.cityId ?? null,
+          districtId: c.districtId ?? null,
+          taxOfficeId: c.taxOfficeId ?? null,
           taxNumber: c.taxNumber ?? '',
           address: c.address ?? '',
           phone: c.phone ?? '',
@@ -145,14 +147,16 @@ export class CompanySettingsComponent implements OnInit {
           bankName: c.bankName ?? ''
         });
 
+        this.selectedCityName = c.cityName ?? '';
+        this.selectedDistrictName = c.districtName ?? '';
+        this.selectedOfficeName = c.taxOfficeName ?? '';
+
         // Restore cascading dropdowns
-        if (c.taxOfficeCity) {
-          this.selectedCity = c.taxOfficeCity;
-          this.taxService.getDistricts(c.taxOfficeCity).subscribe(districts => {
+        if (c.cityId) {
+          this.taxService.getDistricts(c.cityId).subscribe(districts => {
             this.districts = districts;
-            if (c.taxOfficeDistrict) {
-              this.selectedDistrict = c.taxOfficeDistrict;
-              this.taxService.getOffices(c.taxOfficeCity!, c.taxOfficeDistrict).subscribe(offices => {
+            if (c.districtId) {
+              this.taxService.getOffices(c.cityId!, c.districtId).subscribe(offices => {
                 this.offices = offices;
                 this.loading = false;
               });
@@ -176,37 +180,40 @@ export class CompanySettingsComponent implements OnInit {
     });
   }
 
-  onCityChange(city: string): void {
-    this.selectedCity = city;
-    this.selectedDistrict = '';
+  onCityChange(cityId: string | null, cityName: string): void {
+    this.selectedCityName = cityName;
+    this.selectedDistrictName = '';
+    this.selectedOfficeName = '';
     this.districts = [];
     this.offices = [];
     this.districtSearchText = '';
     this.officeSearchText = '';
     this.form.patchValue({
-      taxOffice: '',
-      taxOfficeCity: city,
-      taxOfficeDistrict: ''
+      cityId: cityId,
+      districtId: null,
+      taxOfficeId: null
     });
 
-    if (city) {
-      this.taxService.getDistricts(city).subscribe(districts => {
+    if (cityId) {
+      this.taxService.getDistricts(cityId).subscribe(districts => {
         this.districts = districts;
       });
     }
   }
 
-  onDistrictChange(district: string): void {
-    this.selectedDistrict = district;
+  onDistrictChange(districtId: string | null, districtName: string): void {
+    this.selectedDistrictName = districtName;
+    this.selectedOfficeName = '';
     this.offices = [];
     this.officeSearchText = '';
     this.form.patchValue({
-      taxOffice: '',
-      taxOfficeDistrict: district
+      districtId: districtId,
+      taxOfficeId: null
     });
 
-    if (this.selectedCity && district) {
-      this.taxService.getOffices(this.selectedCity, district).subscribe(offices => {
+    const cityId = this.form.get('cityId')?.value;
+    if (cityId && districtId) {
+      this.taxService.getOffices(cityId, districtId).subscribe(offices => {
         this.offices = offices;
       });
     }

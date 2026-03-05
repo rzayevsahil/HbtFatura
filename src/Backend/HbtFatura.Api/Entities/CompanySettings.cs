@@ -5,9 +5,7 @@ public class CompanySettings
     public Guid Id { get; set; }
     public Guid FirmId { get; set; }
     public string CompanyName { get; set; } = string.Empty;
-    public string? TaxOffice { get; set; }
-    public string? TaxOfficeCity { get; set; }
-    public string? TaxOfficeDistrict { get; set; }
+    public Guid? TaxOfficeId { get; set; }
     public string? TaxNumber { get; set; }
     public string? Address { get; set; }
     public string? Phone { get; set; }
@@ -19,4 +17,5 @@ public class CompanySettings
     public DateTime? UpdatedAt { get; set; }
 
     public Firm Firm { get; set; } = null!;
+    public TaxOffice? TaxOffice { get; set; }
 }

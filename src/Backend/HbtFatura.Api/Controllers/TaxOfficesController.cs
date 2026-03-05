@@ -17,31 +17,31 @@ public class TaxOfficesController : ControllerBase
     }
 
     [HttpGet("cities")]
-    public async Task<ActionResult<IEnumerable<string>>> GetCities()
+    public async Task<ActionResult<IEnumerable<object>>> GetCities()
     {
         var cities = await _context.Cities
             .OrderBy(x => x.Name)
-            .Select(x => x.Name)
+            .Select(x => new { x.Id, x.Name })
             .ToListAsync();
         return Ok(cities);
     }
 
-    [HttpGet("districts/{city}")]
-    public async Task<ActionResult<IEnumerable<string>>> GetDistricts(string city)
+    [HttpGet("districts/{cityId}")]
+    public async Task<ActionResult<IEnumerable<object>>> GetDistricts(Guid cityId)
     {
         var districts = await _context.Districts
-            .Where(x => x.City.Name == city)
+            .Where(x => x.CityId == cityId)
             .OrderBy(x => x.Name)
-            .Select(x => x.Name)
+            .Select(x => new { x.Id, x.Name })
             .ToListAsync();
         return Ok(districts);
     }
 
-    [HttpGet("offices/{city}/{district}")]
-    public async Task<ActionResult<IEnumerable<TaxOfficeDto>>> GetOffices(string city, string district)
+    [HttpGet("offices/{cityId}/{districtId}")]
+    public async Task<ActionResult<IEnumerable<TaxOfficeDto>>> GetOffices(Guid cityId, Guid districtId)
     {
         var offices = await _context.TaxOffices
-            .Where(x => x.City.Name == city && x.District.Name == district)
+            .Where(x => x.CityId == cityId && x.DistrictId == districtId)
             .Select(x => new TaxOfficeDto
             {
                 Id = x.Id,

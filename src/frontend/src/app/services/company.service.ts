@@ -5,16 +5,19 @@ import { ApiService } from '../core/services/api.service';
 export interface CompanySettingsDto {
   id: string;
   companyName: string;
-  taxOffice?: string;
-  taxOfficeCity?: string;
-  taxOfficeDistrict?: string;
-  taxNumber?: string;
-  address?: string;
-  phone?: string;
-  email?: string;
-  iban?: string;
-  bankName?: string;
-  logoUrl?: string;
+  cityId?: string | null;
+  cityName?: string | null;
+  districtId?: string | null;
+  districtName?: string | null;
+  taxOfficeId?: string | null;
+  taxOfficeName?: string | null;
+  taxNumber?: string | null;
+  address?: string | null;
+  phone?: string | null;
+  email?: string | null;
+  iban?: string | null;
+  bankName?: string | null;
+  logoUrl?: string | null;
 }
 
 @Injectable({ providedIn: 'root' })
