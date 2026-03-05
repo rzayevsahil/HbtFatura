@@ -413,32 +413,29 @@ public class InvoiceService : IInvoiceService
             }
         }
 
-if (status == InvoiceStatus.Issued || status == InvoiceStatus.Paid)
+        if (status == InvoiceStatus.Issued || status == InvoiceStatus.Paid)
+        {
+            var stockAlreadyCreated = await _db.StockMovements.AnyAsync(m => m.ReferenceType == ReferenceType.Fatura && m.ReferenceId == id, ct);
+            if (!stockAlreadyCreated && invoice.SourceType != ReferenceType.Irsaliye)
             {
-                var stockAlreadyCreated = await _db.StockMovements.AnyAsync(m => m.ReferenceType == ReferenceType.Fatura && m.ReferenceId == id, ct);
-                if (!stockAlreadyCreated)
+                var stockDirection = invoice.InvoiceType == InvoiceType.Alis ? StockMovementType.Giris : StockMovementType.Cikis;
+                foreach (var item in invoice.Items.Where(i => i.ProductId.HasValue))
                 {
-                    var stockDirection = invoice.InvoiceType == InvoiceType.Alis ? StockMovementType.Giris : StockMovementType.Cikis;
-                    foreach (var item in invoice.Items.Where(i => i.ProductId.HasValue))
+                    var product = await _db.Products.FirstOrDefaultAsync(p => p.Id == item.ProductId!.Value, ct);
+                    if (product != null)
                     {
-                        var product = await _db.Products.FirstOrDefaultAsync(p => p.Id == item.ProductId!.Value, ct);
-                        if (product != null)
-                        {
-                            // if (stockDirection == StockMovementType.Cikis && item.Quantity > product.StockQuantity)
-                            //    throw new InvalidOperationException($"'{product.Name}' ürünü için yetersiz stok! Mevcut: {product.StockQuantity}");
+                        if (stockDirection == StockMovementType.Giris)
+                            product.StockQuantity += item.Quantity;
+                        else
+                            product.StockQuantity -= item.Quantity;
+                    }
 
-                            if (stockDirection == StockMovementType.Giris)
-                                product.StockQuantity += item.Quantity;
-                            else
-                                product.StockQuantity -= item.Quantity;
-                        }
-
-                        _db.StockMovements.Add(new StockMovement
-                        {
-                            Id = Guid.NewGuid(),
-                            ProductId = item.ProductId!.Value,
-                            Date = invoice.InvoiceDate,
-                            Type = stockDirection,
+                    _db.StockMovements.Add(new StockMovement
+                    {
+                        Id = Guid.NewGuid(),
+                        ProductId = item.ProductId!.Value,
+                        Date = invoice.InvoiceDate,
+                        Type = stockDirection,
                         Quantity = item.Quantity,
                         ReferenceType = ReferenceType.Fatura,
                         ReferenceId = id,
