@@ -1,5 +1,13 @@
 @if (auth.isAuthenticated()) {
 <div class="layout">
+  @if (auth.loggingOut()) {
+  <div class="logout-overlay">
+    <div class="logout-card">
+      <div class="spinner"></div>
+      <p>Oturum kapatılıyor...</p>
+    </div>
+  </div>
+  }
   <header class="header">
     <span class="header-brand">HBT Fatura</span>
     <div class="header-right">

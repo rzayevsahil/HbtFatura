@@ -27,9 +27,11 @@ export class AuthService {
 
   private currentUser = signal<User | null>(null);
   private accessToken = signal<string | null>(null);
+  private _loggingOut = signal<boolean>(false);
 
   user = computed(() => this.currentUser());
   isAuthenticated = computed(() => !!this.accessToken());
+  loggingOut = computed(() => this._loggingOut());
 
   constructor(
     private http: HttpClient,
@@ -80,16 +82,25 @@ export class AuthService {
   }
 
   logout(): void {
+    if (this._loggingOut()) return;
+    this._loggingOut.set(true);
+
     const refresh = this.getRefreshToken();
     if (refresh) {
       this.http.post('/api/auth/revoke', { refreshToken: refresh }).subscribe();
     }
-    this.currentUser.set(null);
-    this.accessToken.set(null);
-    localStorage.removeItem(this.storageKey);
-    localStorage.removeItem(this.tokenKey);
-    localStorage.removeItem(this.refreshKey);
-    this.router.navigate(['/login']);
+
+    // Give some time for the user to see the "Logging out..." state
+    setTimeout(() => {
+      this.currentUser.set(null);
+      this.accessToken.set(null);
+      localStorage.removeItem(this.storageKey);
+      localStorage.removeItem(this.tokenKey);
+      localStorage.removeItem(this.refreshKey);
+      this.router.navigate(['/login']).then(() => {
+        this._loggingOut.set(false);
+      });
+    }, 1000);
   }
 
   updateUser(updatedFields: Partial<User>): void {
