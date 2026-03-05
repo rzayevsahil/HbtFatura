@@ -99,6 +99,8 @@ public class InvoiceService : IInvoiceService
         string? customerAddress = request.CustomerAddress;
         string? customerPhone = request.CustomerPhone;
         string? customerEmail = request.CustomerEmail;
+        string? customerCity = null;
+        string? customerDistrict = null;
         Guid? customerId = request.CustomerId;
 
         if (request.CustomerId.HasValue)
@@ -109,6 +111,8 @@ public class InvoiceService : IInvoiceService
                 customerTitle = customer.Title;
                 customerTaxNumber = customer.TaxNumber;
                 customerAddress = customer.Address;
+                customerCity = customer.City;
+                customerDistrict = customer.District;
                 customerPhone = customer.Phone;
                 customerEmail = customer.Email;
             }
@@ -129,6 +133,8 @@ public class InvoiceService : IInvoiceService
             CustomerTitle = customerTitle,
             CustomerTaxNumber = customerTaxNumber,
             CustomerAddress = customerAddress,
+            CustomerCity = customerCity,
+            CustomerDistrict = customerDistrict,
             CustomerPhone = customerPhone,
             CustomerEmail = customerEmail,
             Currency = request.Currency,
@@ -195,6 +201,8 @@ public class InvoiceService : IInvoiceService
         var customerTitle = dn.Customer?.Title ?? string.Empty;
         var customerTaxNumber = dn.Customer?.TaxNumber;
         var customerAddress = dn.Customer?.Address;
+        var customerCity = dn.Customer?.City;
+        var customerDistrict = dn.Customer?.District;
         var customerPhone = dn.Customer?.Phone;
         var customerEmail = dn.Customer?.Email;
 
@@ -206,13 +214,15 @@ public class InvoiceService : IInvoiceService
             Id = Guid.NewGuid(),
             UserId = userId,
             InvoiceNumber = invoiceNumber,
-            InvoiceDate = dn.DeliveryDate,
+            InvoiceDate = dn.DeliveryDate.Date.Add(DateTime.Now.TimeOfDay),
             Status = InvoiceStatus.Draft,
             InvoiceType = dn.DeliveryType,
             CustomerId = dn.CustomerId,
             CustomerTitle = customerTitle,
             CustomerTaxNumber = customerTaxNumber,
             CustomerAddress = customerAddress,
+            CustomerCity = customerCity,
+            CustomerDistrict = customerDistrict,
             CustomerPhone = customerPhone,
             CustomerEmail = customerEmail,
             Currency = "TRY",

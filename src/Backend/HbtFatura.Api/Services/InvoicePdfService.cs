@@ -159,6 +159,12 @@ public class InvoicePdfService : IInvoicePdfService
                             c.Item().Text("SAYIN").Bold().FontSize(10);
                             c.Item().Text(invoice.CustomerTitle).FontSize(8);
                             c.Item().PaddingTop(4).Text(invoice.CustomerAddress ?? "").FontSize(8);
+                            
+                            var customerCityDistrict = "";
+                            if (!string.IsNullOrEmpty(invoice.CustomerDistrict)) customerCityDistrict += invoice.CustomerDistrict;
+                            if (!string.IsNullOrEmpty(invoice.CustomerCity)) customerCityDistrict += (customerCityDistrict != "" ? " / " : "") + invoice.CustomerCity;
+                            if (!string.IsNullOrEmpty(customerCityDistrict)) c.Item().Text(customerCityDistrict).FontSize(8);
+                            
                             if (!string.IsNullOrEmpty(invoice.CustomerEmail)) c.Item().Text($"E-Posta: {invoice.CustomerEmail}").FontSize(8);
                             if (!string.IsNullOrEmpty(invoice.CustomerPhone)) c.Item().Text($"Tel: {invoice.CustomerPhone}").FontSize(8);
                             if (!string.IsNullOrEmpty(invoice.CustomerTaxNumber)) c.Item().Text($"VKN: {invoice.CustomerTaxNumber}").FontSize(8);
