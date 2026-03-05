@@ -55,6 +55,8 @@ public class CompanySettingsService : ICompanySettingsService
         }
         entity.CompanyName = request.CompanyName.Trim();
         entity.TaxOffice = request.TaxOffice?.Trim();
+        entity.TaxOfficeCity = request.TaxOfficeCity?.Trim();
+        entity.TaxOfficeDistrict = request.TaxOfficeDistrict?.Trim();
         entity.TaxNumber = request.TaxNumber?.Trim();
         entity.Address = request.Address?.Trim();
         entity.Phone = request.Phone?.Trim();
@@ -71,6 +73,8 @@ public class CompanySettingsService : ICompanySettingsService
         Id = e.Id,
         CompanyName = e.CompanyName,
         TaxOffice = e.TaxOffice,
+        TaxOfficeCity = e.TaxOfficeCity,
+        TaxOfficeDistrict = e.TaxOfficeDistrict,
         TaxNumber = e.TaxNumber,
         Address = e.Address,
         Phone = e.Phone,

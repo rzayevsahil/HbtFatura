@@ -32,6 +32,8 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid
     public DbSet<DeliveryNoteItem> DeliveryNoteItems => Set<DeliveryNoteItem>();
     public DbSet<LogEntry> LogEntries => Set<LogEntry>();
     public DbSet<TaxOffice> TaxOffices => Set<TaxOffice>();
+    public DbSet<City> Cities => Set<City>();
+    public DbSet<District> Districts => Set<District>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -207,44 +209,23 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid
 
         modelBuilder.Entity<TaxOffice>(e =>
         {
-            e.HasIndex(x => x.City);
-            e.HasIndex(x => x.District);
+            e.HasOne(x => x.City).WithMany().HasForeignKey(x => x.CityId).OnDelete(DeleteBehavior.Restrict);
+            e.HasOne(x => x.District).WithMany().HasForeignKey(x => x.DistrictId).OnDelete(DeleteBehavior.Restrict);
+            e.HasIndex(x => x.CityId);
+            e.HasIndex(x => x.DistrictId);
             e.HasIndex(x => x.Name);
+        });
 
-            // Model Seeding from JSON
-            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "tax_offices.json");
-            if (File.Exists(filePath))
-            {
-                try
-                {
-                    var json = File.ReadAllText(filePath);
-                    var entries = JsonSerializer.Deserialize<List<TaxOffice>>(json, new JsonSerializerOptions
-                    {
-                        PropertyNameCaseInsensitive = true
-                    });
+        modelBuilder.Entity<City>(e =>
+        {
+            e.HasIndex(x => x.Name).IsUnique();
+            e.HasIndex(x => x.Code).IsUnique();
+        });
 
-                    if (entries != null)
-                    {
-                        var now = DateTime.UtcNow;
-                        var staticGuidBase = new Guid("11111111-1111-1111-1111-000000000000");
-                        int count = 1;
-                        
-                        foreach (var entry in entries)
-                        {
-                            // HasData requires static keys that don't change between runs
-                            // We'll generate a consistent Guid based on the index/content for the migration
-                            var bytes = BitConverter.GetBytes(count++);
-                            var guidBytes = staticGuidBase.ToByteArray();
-                            Array.Copy(bytes, 0, guidBytes, 0, bytes.Length);
-                            
-                            entry.Id = new Guid(guidBytes);
-                            entry.CreatedAt = now;
-                        }
-                        e.HasData(entries);
-                    }
-                }
-                catch { /* Ignore or Log during migration */ }
-            }
+        modelBuilder.Entity<District>(e =>
+        {
+            e.HasOne(x => x.City).WithMany(x => x.Districts).HasForeignKey(x => x.CityId).OnDelete(DeleteBehavior.Cascade);
+            e.HasIndex(x => new { x.CityId, x.Name }).IsUnique();
         });
     }
 }

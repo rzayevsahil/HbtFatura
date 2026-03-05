@@ -21,6 +21,8 @@ export class CompanySettingsComponent implements OnInit {
   form = this.fb.nonNullable.group({
     companyName: ['', Validators.required],
     taxOffice: [''],
+    taxOfficeCity: [''],
+    taxOfficeDistrict: [''],
     taxNumber: [''],
     address: [''],
     phone: [''],
@@ -57,6 +59,8 @@ export class CompanySettingsComponent implements OnInit {
         this.form.patchValue({
           companyName: c.companyName,
           taxOffice: c.taxOffice ?? '',
+          taxOfficeCity: c.taxOfficeCity ?? '',
+          taxOfficeDistrict: c.taxOfficeDistrict ?? '',
           taxNumber: c.taxNumber ?? '',
           address: c.address ?? '',
           phone: c.phone ?? '',
@@ -64,7 +68,25 @@ export class CompanySettingsComponent implements OnInit {
           iban: c.iban ?? '',
           bankName: c.bankName ?? ''
         });
-        this.loading = false;
+
+        // Restore cascading dropdowns
+        if (c.taxOfficeCity) {
+          this.selectedCity = c.taxOfficeCity;
+          this.taxService.getDistricts(c.taxOfficeCity).subscribe(districts => {
+            this.districts = districts;
+            if (c.taxOfficeDistrict) {
+              this.selectedDistrict = c.taxOfficeDistrict;
+              this.taxService.getOffices(c.taxOfficeCity!, c.taxOfficeDistrict).subscribe(offices => {
+                this.offices = offices;
+                this.loading = false;
+              });
+            } else {
+              this.loading = false;
+            }
+          });
+        } else {
+          this.loading = false;
+        }
       },
       error: () => {
         this.loading = false; // 404 = no settings yet
@@ -83,7 +105,11 @@ export class CompanySettingsComponent implements OnInit {
     this.selectedDistrict = '';
     this.districts = [];
     this.offices = [];
-    this.form.patchValue({ taxOffice: '' });
+    this.form.patchValue({
+      taxOffice: '',
+      taxOfficeCity: city,
+      taxOfficeDistrict: ''
+    });
 
     if (city) {
       this.taxService.getDistricts(city).subscribe(districts => {
@@ -95,7 +121,10 @@ export class CompanySettingsComponent implements OnInit {
   onDistrictChange(district: string): void {
     this.selectedDistrict = district;
     this.offices = [];
-    this.form.patchValue({ taxOffice: '' });
+    this.form.patchValue({
+      taxOffice: '',
+      taxOfficeDistrict: district
+    });
 
     if (this.selectedCity && district) {
       this.taxService.getOffices(this.selectedCity, district).subscribe(offices => {

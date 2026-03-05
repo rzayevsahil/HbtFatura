@@ -7,12 +7,12 @@ public class TaxOffice
     public Guid Id { get; set; } = Guid.NewGuid();
 
     [Required]
-    [MaxLength(100)]
-    public string City { get; set; } = default!;
+    public Guid CityId { get; set; }
+    public City City { get; set; } = default!;
 
     [Required]
-    [MaxLength(100)]
-    public string District { get; set; } = default!;
+    public Guid DistrictId { get; set; }
+    public District District { get; set; } = default!;
 
     [Required]
     [MaxLength(200)]

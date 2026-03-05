@@ -1,11 +1,4 @@
-using Microsoft.EntityFrameworkCore;
-using HbtFatura.Api.Entities;
-
-namespace HbtFatura.Api.Data;
-
-public static class TaxOfficeSeed
-{
-    private static readonly (string City, string District, string Name)[] TaxOfficeEntriesPart1 =
+    private static readonly (string City, string District, string Name)[] TaxOfficeEntries =
     {
         ("ADANA", "Merkez", "Adana İhtisas Vergi Dairesi Müdürlüğü"),
         ("ADANA", "Merkez", "5 Ocak Vergi Dairesi Müdürlüğü"),
@@ -465,10 +458,6 @@ public static class TaxOfficeSeed
         ("MERSİN", "Aydıncık", "Aydıncık Malmüdürlüğü"),
         ("MERSİN", "Bozyazı", "Bozyazı Malmüdürlüğü"),
         ("MERSİN", "Çamlıyayla", "Çamlıyayla Malmüdürlüğü"),
-    };
-
-    private static readonly (string City, string District, string Name)[] TaxOfficeEntriesPart2 =
-    {
         ("İSTANBUL", "Merkez", "Haliç İhtisas Vergi Dairesi Müdürlüğü"),
         ("İSTANBUL", "Merkez", "Vatan İhtisas Vergi Dairesi Müdürlüğü"),
         ("İSTANBUL", "Merkez", "Çamlıca İhtisas Vergi Dairesi Müdürlüğü"),
@@ -1054,40 +1043,3 @@ public static class TaxOfficeSeed
         ("DÜZCE", "Kaynaşlı", "Kaynaşlı Malmüdürlüğü"),
         ("DÜZCE", "Yığılca", "Yığılca Malmüdürlüğü"),
     };
-
-    public static async Task SeedTaxOfficesIfEmptyAsync(AppDbContext db, CancellationToken ct = default)
-    {
-        if (await db.TaxOffices.AnyAsync(ct))
-            return;
-
-        var cities = await db.Cities.Include(x => x.Districts).ToListAsync(ct);
-        var now = DateTime.UtcNow;
-        var toAdd = new List<TaxOffice>();
-
-        var allEntries = TaxOfficeEntriesPart1.Concat(TaxOfficeEntriesPart2);
-
-        foreach (var entry in allEntries)
-        {
-            var city = cities.FirstOrDefault(x => x.Name.Equals(entry.City, StringComparison.OrdinalIgnoreCase));
-            if (city == null) continue;
-
-            var district = city.Districts.FirstOrDefault(x => x.Name.Equals(entry.District, StringComparison.OrdinalIgnoreCase));
-            if (district == null) continue;
-
-            toAdd.Add(new TaxOffice
-            {
-                Id = Guid.NewGuid(),
-                CityId = city.Id,
-                DistrictId = district.Id,
-                Name = entry.Name,
-                CreatedAt = now
-            });
-        }
-
-        if (toAdd.Count > 0)
-        {
-            await db.TaxOffices.AddRangeAsync(toAdd, ct);
-            await db.SaveChangesAsync(ct);
-        }
-    }
-}

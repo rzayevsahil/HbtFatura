@@ -6,6 +6,8 @@ export interface CompanySettingsDto {
   id: string;
   companyName: string;
   taxOffice?: string;
+  taxOfficeCity?: string;
+  taxOfficeDistrict?: string;
   taxNumber?: string;
   address?: string;
   phone?: string;
