@@ -1,4 +1,4 @@
-import { Component, OnInit, computed } from '@angular/core';
+import { Component, OnInit, computed, HostListener, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -41,6 +41,33 @@ export class CompanySettingsComponent implements OnInit {
   selectedCity = '';
   selectedDistrict = '';
 
+  citySearchText = '';
+  cityDropdownOpen = false;
+
+  districtSearchText = '';
+  districtDropdownOpen = false;
+
+  officeSearchText = '';
+  officeDropdownOpen = false;
+
+  get filteredCities(): string[] {
+    const t = this.citySearchText?.trim().toLocaleLowerCase('tr');
+    if (!t) return this.cities;
+    return this.cities.filter(c => c.toLocaleLowerCase('tr').includes(t));
+  }
+
+  get filteredDistricts(): string[] {
+    const t = this.districtSearchText?.trim().toLocaleLowerCase('tr');
+    if (!t) return this.districts;
+    return this.districts.filter(d => d.toLocaleLowerCase('tr').includes(t));
+  }
+
+  get filteredOffices(): TaxOfficeDto[] {
+    const t = this.officeSearchText?.trim().toLocaleLowerCase('tr');
+    if (!t) return this.offices;
+    return this.offices.filter(o => o.name.toLocaleLowerCase('tr').includes(t));
+  }
+
   constructor(
     private fb: FormBuilder,
     private api: CompanyService,
@@ -48,8 +75,57 @@ export class CompanySettingsComponent implements OnInit {
     public auth: AuthService,
     private route: ActivatedRoute,
     private toastr: ToastrService,
-    private location: Location
+    private location: Location,
+    private el: ElementRef
   ) { }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(e: MouseEvent): void {
+    if (!this.el.nativeElement.contains(e.target)) {
+      this.cityDropdownOpen = false;
+      this.districtDropdownOpen = false;
+      this.officeDropdownOpen = false;
+    }
+  }
+
+  toggleCityDropdown(): void {
+    if (this.isReadOnly()) return;
+    this.cityDropdownOpen = !this.cityDropdownOpen;
+    this.districtDropdownOpen = false;
+    this.officeDropdownOpen = false;
+    if (this.cityDropdownOpen) this.citySearchText = '';
+  }
+
+  toggleDistrictDropdown(): void {
+    if (this.isReadOnly() || !this.selectedCity) return;
+    this.districtDropdownOpen = !this.districtDropdownOpen;
+    this.cityDropdownOpen = false;
+    this.officeDropdownOpen = false;
+    if (this.districtDropdownOpen) this.districtSearchText = '';
+  }
+
+  toggleOfficeDropdown(): void {
+    if (this.isReadOnly() || !this.selectedDistrict) return;
+    this.officeDropdownOpen = !this.officeDropdownOpen;
+    this.cityDropdownOpen = false;
+    this.districtDropdownOpen = false;
+    if (this.officeDropdownOpen) this.officeSearchText = '';
+  }
+
+  selectCity(city: string | null): void {
+    this.onCityChange(city || '');
+    this.cityDropdownOpen = false;
+  }
+
+  selectDistrict(district: string | null): void {
+    this.onDistrictChange(district || '');
+    this.districtDropdownOpen = false;
+  }
+
+  selectOffice(officeName: string | null): void {
+    this.form.patchValue({ taxOffice: officeName || '' });
+    this.officeDropdownOpen = false;
+  }
 
   ngOnInit(): void {
     this.firmId = this.route.snapshot.queryParamMap.get('firmId') ?? undefined;
@@ -105,6 +181,8 @@ export class CompanySettingsComponent implements OnInit {
     this.selectedDistrict = '';
     this.districts = [];
     this.offices = [];
+    this.districtSearchText = '';
+    this.officeSearchText = '';
     this.form.patchValue({
       taxOffice: '',
       taxOfficeCity: city,
@@ -121,6 +199,7 @@ export class CompanySettingsComponent implements OnInit {
   onDistrictChange(district: string): void {
     this.selectedDistrict = district;
     this.offices = [];
+    this.officeSearchText = '';
     this.form.patchValue({
       taxOffice: '',
       taxOfficeDistrict: district
