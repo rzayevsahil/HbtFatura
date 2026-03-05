@@ -1,15 +1,16 @@
 import { Component, OnInit, computed } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CompanyService } from '../../services/company.service';
+import { TaxOfficeService, TaxOfficeDto } from '../../services/tax-office.service';
 import { AuthService } from '../../core/services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-company-settings',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink],
   templateUrl: './company-settings.component.html',
   styleUrls: ['./company-settings.component.scss']
 })
@@ -31,9 +32,17 @@ export class CompanySettingsComponent implements OnInit {
   saving = false;
   loading = true;
 
+  cities: string[] = [];
+  districts: string[] = [];
+  offices: TaxOfficeDto[] = [];
+
+  selectedCity = '';
+  selectedDistrict = '';
+
   constructor(
     private fb: FormBuilder,
     private api: CompanyService,
+    private taxService: TaxOfficeService,
     public auth: AuthService,
     private route: ActivatedRoute,
     private toastr: ToastrService,
@@ -42,7 +51,7 @@ export class CompanySettingsComponent implements OnInit {
 
   ngOnInit(): void {
     this.firmId = this.route.snapshot.queryParamMap.get('firmId') ?? undefined;
-    this.loading = true;
+    this.loadCities();
     this.api.get(this.firmId).subscribe({
       next: c => {
         this.form.patchValue({
@@ -61,6 +70,38 @@ export class CompanySettingsComponent implements OnInit {
         this.loading = false; // 404 = no settings yet
       }
     });
+  }
+
+  loadCities(): void {
+    this.taxService.getCities().subscribe(cities => {
+      this.cities = cities;
+    });
+  }
+
+  onCityChange(city: string): void {
+    this.selectedCity = city;
+    this.selectedDistrict = '';
+    this.districts = [];
+    this.offices = [];
+    this.form.patchValue({ taxOffice: '' });
+
+    if (city) {
+      this.taxService.getDistricts(city).subscribe(districts => {
+        this.districts = districts;
+      });
+    }
+  }
+
+  onDistrictChange(district: string): void {
+    this.selectedDistrict = district;
+    this.offices = [];
+    this.form.patchValue({ taxOffice: '' });
+
+    if (this.selectedCity && district) {
+      this.taxService.getOffices(this.selectedCity, district).subscribe(offices => {
+        this.offices = offices;
+      });
+    }
   }
 
   onSubmit(): void {

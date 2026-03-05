@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using HbtFatura.Api.Entities;
+using System.Text.Json;
 
 namespace HbtFatura.Api.Data;
 
@@ -30,6 +31,7 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid
     public DbSet<DeliveryNote> DeliveryNotes => Set<DeliveryNote>();
     public DbSet<DeliveryNoteItem> DeliveryNoteItems => Set<DeliveryNoteItem>();
     public DbSet<LogEntry> LogEntries => Set<LogEntry>();
+    public DbSet<TaxOffice> TaxOffices => Set<TaxOffice>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -201,6 +203,48 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid
             e.Property(x => x.Quantity).HasPrecision(18, 4);
             e.Property(x => x.UnitPrice).HasPrecision(18, 2);
             e.Property(x => x.VatRate).HasPrecision(5, 2);
+        });
+
+        modelBuilder.Entity<TaxOffice>(e =>
+        {
+            e.HasIndex(x => x.City);
+            e.HasIndex(x => x.District);
+            e.HasIndex(x => x.Name);
+
+            // Model Seeding from JSON
+            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "tax_offices.json");
+            if (File.Exists(filePath))
+            {
+                try
+                {
+                    var json = File.ReadAllText(filePath);
+                    var entries = JsonSerializer.Deserialize<List<TaxOffice>>(json, new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    });
+
+                    if (entries != null)
+                    {
+                        var now = DateTime.UtcNow;
+                        var staticGuidBase = new Guid("11111111-1111-1111-1111-000000000000");
+                        int count = 1;
+                        
+                        foreach (var entry in entries)
+                        {
+                            // HasData requires static keys that don't change between runs
+                            // We'll generate a consistent Guid based on the index/content for the migration
+                            var bytes = BitConverter.GetBytes(count++);
+                            var guidBytes = staticGuidBase.ToByteArray();
+                            Array.Copy(bytes, 0, guidBytes, 0, bytes.Length);
+                            
+                            entry.Id = new Guid(guidBytes);
+                            entry.CreatedAt = now;
+                        }
+                        e.HasData(entries);
+                    }
+                }
+                catch { /* Ignore or Log during migration */ }
+            }
         });
     }
 }

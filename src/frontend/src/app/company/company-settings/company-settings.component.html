@@ -16,8 +16,33 @@
         <input formControlName="companyName" placeholder="Firma unvanı" [readonly]="isReadOnly()" />
       </div>
       <div class="row">
+        <label>İl</label>
+        <select [ngModel]="selectedCity" (ngModelChange)="onCityChange($event)" [ngModelOptions]="{standalone: true}"
+          [disabled]="isReadOnly()">
+          <option value="">İl Seçiniz</option>
+          @for (city of cities; track city) {
+          <option [value]="city">{{ city }}</option>
+          }
+        </select>
+      </div>
+      <div class="row">
+        <label>İlçe</label>
+        <select [ngModel]="selectedDistrict" (ngModelChange)="onDistrictChange($event)"
+          [ngModelOptions]="{standalone: true}" [disabled]="!selectedCity || isReadOnly()">
+          <option value="">İlçe Seçiniz</option>
+          @for (district of districts; track district) {
+          <option [value]="district">{{ district }}</option>
+          }
+        </select>
+      </div>
+      <div class="row">
         <label>Vergi Dairesi</label>
-        <input formControlName="taxOffice" placeholder="Örn. Kadıköy" [readonly]="isReadOnly()" />
+        <select formControlName="taxOffice" [disabled]="!selectedDistrict || isReadOnly()">
+          <option value="">Daire Seçiniz</option>
+          @for (office of offices; track office.id) {
+          <option [value]="office.name">{{ office.name }}</option>
+          }
+        </select>
       </div>
       <div class="row">
         <label>Vergi No</label>
