@@ -91,6 +91,9 @@ public class InvoicePdfService : IInvoicePdfService
                                 if (!string.IsNullOrEmpty(company?.TaxOffice?.Name)) inner.Item().Text($"Vergi Dairesi: {company.TaxOffice.Name}").FontSize(8);
                                 if (!string.IsNullOrEmpty(company?.TaxNumber)) inner.Item().Text($"VKN/TCKN: {company.TaxNumber}").FontSize(8);
                             });
+
+                            // Add bottom line for Sender Info
+                            c.Item().PaddingTop(5).LineHorizontal(2.0f).LineColor(Colors.Black);
                         });
 
                         // 2. Logo & e-FATURA (Center)
@@ -157,66 +160,58 @@ public class InvoicePdfService : IInvoicePdfService
                 // --- CONTENT SECTION ---
                 page.Content().PaddingVertical(10).Column(col =>
                 {
-                    // Double line above SAYIN
-                    col.Item().Row(row => 
-                    {
-                        row.RelativeItem(4).LineHorizontal(2.0f).LineColor(Colors.Black);
-                        row.RelativeItem(6);
-                    });
-                    col.Item().PaddingTop(2).Row(row => 
-                    {
-                        row.RelativeItem(4).LineHorizontal(2.0f).LineColor(Colors.Black);
-                        row.RelativeItem(6);
-                    });
-
-                    // Sayın (Customer Info) + Metadata Table
+                    // Sayın (Customer Info) + Metadata Table (Restructured)
                     col.Item().PaddingTop(5).Row(r =>
                     {
-                        r.RelativeItem().Column(c =>
+                        // Left column takes 40% to match header company info width
+                        r.RelativeItem(4).PaddingTop(25).Column(c =>
                         {
-                            c.Item().Text("SAYIN").Bold().FontSize(10);
-                            c.Item().Text(invoice.CustomerTitle).FontSize(8);
-                            c.Item().Text(invoice.CustomerAddress ?? "").FontSize(8);
-                            
-                            var customerCityDistrict = "";
-                            if (!string.IsNullOrEmpty(invoice.CustomerDistrict)) customerCityDistrict += invoice.CustomerDistrict;
-                            if (!string.IsNullOrEmpty(invoice.CustomerCity)) customerCityDistrict += (customerCityDistrict != "" ? " / " : "") + invoice.CustomerCity;
-                            if (!string.IsNullOrEmpty(customerCityDistrict)) c.Item().Text(customerCityDistrict).FontSize(8);
-                            
-                            if (!string.IsNullOrEmpty(invoice.CustomerPhone)) c.Item().Text($"Tel: {invoice.CustomerPhone}").FontSize(8);
-                            if (!string.IsNullOrEmpty(invoice.CustomerEmail)) c.Item().Text($"E-Posta: {invoice.CustomerEmail}").FontSize(8);
-                            if (!string.IsNullOrEmpty(invoice.CustomerTaxNumber)) c.Item().Text($"VKN: {invoice.CustomerTaxNumber}").FontSize(8);
+                            // Top line - expand to full 40% column width
+                            c.Item().LineHorizontal(2.0f).LineColor(Colors.Black);
+
+                            c.Item().PaddingVertical(5).Column(inner =>
+                            {
+                                inner.Item().Text("SAYIN").Bold().FontSize(10);
+                                inner.Item().Text(invoice.CustomerTitle).FontSize(8);
+                                inner.Item().Text(invoice.CustomerAddress ?? "").FontSize(8);
+                                
+                                var customerCityDistrict = "";
+                                if (!string.IsNullOrEmpty(invoice.CustomerDistrict)) customerCityDistrict += invoice.CustomerDistrict;
+                                if (!string.IsNullOrEmpty(invoice.CustomerCity)) customerCityDistrict += (customerCityDistrict != "" ? " / " : "") + invoice.CustomerCity;
+                                if (!string.IsNullOrEmpty(customerCityDistrict)) inner.Item().Text(customerCityDistrict).FontSize(8);
+                                
+                                if (!string.IsNullOrEmpty(invoice.CustomerPhone)) inner.Item().Text($"Tel: {invoice.CustomerPhone}").FontSize(8);
+                                if (!string.IsNullOrEmpty(invoice.CustomerEmail)) inner.Item().Text($"E-Posta: {invoice.CustomerEmail}").FontSize(8);
+                                if (!string.IsNullOrEmpty(invoice.CustomerTaxNumber)) inner.Item().Text($"VKN: {invoice.CustomerTaxNumber}").FontSize(8);
+                            });
+
+                            // Bottom line - expand to full 40% column width
+                            c.Item().LineHorizontal(2.0f).LineColor(Colors.Black);
                         });
 
-                        // Metadata Box as a Column with Rows, Vertical Separator and Left-Aligned values
-                        r.RelativeItem().AlignRight().PaddingRight(1).PaddingTop(5).Width(180).Border(0.5f).Column(mc =>
+                        // Right column takes rest (60%) and aligns metadata to extreme right - moved down with PaddingTop(40)
+                        r.RelativeItem(6).AlignRight().PaddingRight(1).PaddingTop(40).Width(180).Table(t =>
                         {
-                            void AddMetaRow(string label, string value, bool last = false)
+                            t.ColumnsDefinition(c =>
                             {
-                                var rowItem = mc.Item();
-                                if (!last) rowItem = rowItem.BorderBottom(0.5f);
-                                
-                                rowItem.Row(rowContent =>
-                                {
-                                    rowContent.RelativeItem(1.2f).PaddingVertical(2).PaddingHorizontal(4).Text(label).Bold().FontSize(8);
-                                    rowContent.RelativeItem(1.2f).BorderLeft(0.5f).PaddingVertical(2).PaddingHorizontal(4).AlignLeft().Text(value).FontSize(8);
-                                });
+                                c.RelativeColumn(1.2f);
+                                c.RelativeColumn(1.2f);
+                            });
+
+                            void AddMetaTableCelles(string label, string value)
+                            {
+                                t.Cell().Border(0.5f).PaddingVertical(2).PaddingHorizontal(4).Text(label).Bold().FontSize(8);
+                                t.Cell().Border(0.5f).PaddingVertical(2).PaddingHorizontal(4).AlignLeft().Text(value).FontSize(8);
                             }
 
-                            AddMetaRow("Özelleştirme No:", "TR1.2");
-                            AddMetaRow("Senaryo:", invoice.Scenario == InvoiceScenario.TicariFatura ? "TICARIFATURA" : "TEMELFATURA");
-                            AddMetaRow("Fatura Tipi:", invoice.InvoiceType == InvoiceType.Alis ? "ALIS" : "SATIS");
-                            AddMetaRow("Fatura No:", invoice.InvoiceNumber);
-                            AddMetaRow("Fatura Tarihi:", invoice.InvoiceDate.ToString("dd-MM-yyyy HH:mm"), true);
+                            AddMetaTableCelles("Özelleştirme No:", "TR1.2");
+                            AddMetaTableCelles("Senaryo:", invoice.Scenario == InvoiceScenario.TicariFatura ? "TICARIFATURA" : "TEMELFATURA");
+                            AddMetaTableCelles("Fatura Tipi:", invoice.InvoiceType == InvoiceType.Alis ? "ALIS" : "SATIS");
+                            AddMetaTableCelles("Fatura No:", invoice.InvoiceNumber);
+                            AddMetaTableCelles("Fatura Tarihi:", invoice.InvoiceDate.ToString("dd-MM-yyyy HH:mm"));
                         });
                     });
 
-                    // Line shortened to left side (40%) - Increased thickness to 2.0f
-                    col.Item().PaddingTop(10).Row(row => 
-                    {
-                        row.RelativeItem(4).LineHorizontal(2.0f).LineColor(Colors.Black);
-                        row.RelativeItem(6);
-                    });
                     col.Item().PaddingTop(6).Text(x => {
                         var ettnValue = invoice.Ettn;
                         x.Span("ETTN: ").Bold().FontSize(8);
