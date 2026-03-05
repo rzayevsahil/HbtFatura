@@ -294,11 +294,12 @@ public class InvoicePdfService : IInvoicePdfService
                     // Notes & IBAN Box (Bottom)
                     col.Item().PaddingTop(15).Border(0.5f).Padding(10).Column(c =>
                     {
-                        c.Item().Text(AmountInWords(invoice.GrandTotal)).Italic().FontSize(9);
+                        c.Item().Text(AmountInWords(invoice.GrandTotal)).Italic().FontSize(8);
                         if (!string.IsNullOrEmpty(company?.IBAN))
                         {
                             c.Item().PaddingTop(8).Text(x =>
                             {
+                                x.DefaultTextStyle(ts => ts.FontSize(8));
                                 if (!string.IsNullOrEmpty(company.IBAN))
                                 {
                                     x.Span("IBAN: ").Bold();
@@ -309,7 +310,7 @@ public class InvoicePdfService : IInvoicePdfService
                                     x.Span("Banka: ").Bold();
                                     x.Span(company.BankName + "  ");
                                 }
-                                if(!string.IsNullOrEmpty(company.IBAN) && !string.IsNullOrEmpty(company.IBAN))
+                                if(!string.IsNullOrEmpty(company.IBAN))
                                 {
                                     x.Span("Döviz Türü: ").Bold();
                                     x.Span("TRY");
@@ -330,10 +331,10 @@ public class InvoicePdfService : IInvoicePdfService
         return document.GeneratePdf();
     }
 
-    private static IContainer HeaderStyle(IContainer c) => c.Border(0.5f).Padding(4).AlignCenter().AlignMiddle().DefaultTextStyle(x => x.Bold());
-    private static IContainer CellStyle(IContainer c) => c.Border(0.5f).Padding(4).AlignMiddle();
+    private static IContainer HeaderStyle(IContainer c) => c.Border(0.5f).Padding(4).AlignCenter().AlignMiddle().DefaultTextStyle(x => x.Bold().FontSize(8));
+    private static IContainer CellStyle(IContainer c) => c.Border(0.5f).Padding(4).AlignMiddle().DefaultTextStyle(x => x.FontSize(8));
     private static IContainer MetaStyle(IContainer c) => c.PaddingHorizontal(4).PaddingVertical(2).BorderBottom(0.5f).BorderColor(Colors.Black);
-    private static IContainer TotalStyle(IContainer c) => c.Border(0.5f).Padding(4);
+    private static IContainer TotalStyle(IContainer c) => c.Border(0.5f).Padding(4).DefaultTextStyle(x => x.FontSize(8));
 
     private static string AmountInWords(decimal sayi)
     {
