@@ -97,7 +97,7 @@ public class InvoicePdfService : IInvoicePdfService
                         });
 
                         // 2. Logo & e-FATURA (Center)
-                        r.RelativeItem(2).Column(c =>
+                        r.RelativeItem(2).PaddingTop(10).Column(c =>
                         {
                             string? gibLogoPath = null;
                             var logoFileName = "logos/giblogo.png";
@@ -118,13 +118,13 @@ public class InvoicePdfService : IInvoicePdfService
 
                             if (!string.IsNullOrEmpty(gibLogoPath))
                             {
-                                c.Item().AlignCenter().Height(70).Image(gibLogoPath, ImageScaling.FitHeight);
+                                c.Item().AlignCenter().Height(60).Image(gibLogoPath, ImageScaling.FitHeight);
                             }
                             else
                             {
                                 c.Item().AlignCenter().Height(40).Text("GİB LOGO").FontSize(10).Italic();
                             }
-                            c.Item().AlignCenter().Text("e-FATURA").Bold().FontSize(11);
+                            c.Item().PaddingTop(5).AlignCenter().Text("e-FATURA").Bold().FontSize(10);
                         });
 
                         // 3. QR Code & Logo (Right) - Extreme top-right
