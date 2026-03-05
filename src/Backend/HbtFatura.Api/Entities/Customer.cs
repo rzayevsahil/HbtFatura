@@ -15,12 +15,15 @@ public class Customer
     public int CardType { get; set; } = 1;
     public string? TaxNumber { get; set; }
     public string? Address { get; set; }
-    public string? City { get; set; }
-    public string? District { get; set; }
+    public Guid? CityId { get; set; }
+    public Guid? DistrictId { get; set; }
     public string? PostalCode { get; set; }
     public string? Country { get; set; }
     public string? Phone { get; set; }
     public string? Email { get; set; }
+
+    public City? City { get; set; }
+    public District? District { get; set; }
 
     public bool IsDeleted { get; set; }
     public DateTime? DeletedAt { get; set; }

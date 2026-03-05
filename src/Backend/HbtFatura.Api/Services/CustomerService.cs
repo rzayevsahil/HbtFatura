@@ -61,8 +61,10 @@ public class CustomerService : ICustomerService
                 CardType = x.CardType,
                 TaxNumber = x.TaxNumber,
                 Address = x.Address,
-                City = x.City,
-                District = x.District,
+                CityId = x.CityId,
+                CityName = x.City != null ? x.City.Name : null,
+                DistrictId = x.DistrictId,
+                DistrictName = x.District != null ? x.District.Name : null,
                 PostalCode = x.PostalCode,
                 Country = x.Country,
                 Phone = x.Phone,
@@ -113,8 +115,10 @@ public class CustomerService : ICustomerService
                 CardType = x.CardType,
                 TaxNumber = x.TaxNumber,
                 Address = x.Address,
-                City = x.City,
-                District = x.District,
+                CityId = x.CityId,
+                CityName = x.City != null ? x.City.Name : null,
+                DistrictId = x.DistrictId,
+                DistrictName = x.District != null ? x.District.Name : null,
                 PostalCode = x.PostalCode,
                 Country = x.Country,
                 Phone = x.Phone,
@@ -126,7 +130,10 @@ public class CustomerService : ICustomerService
 
     public async Task<CustomerDto?> GetByIdAsync(Guid id, CancellationToken ct = default)
     {
-        var entity = await ScopeQuery().FirstOrDefaultAsync(x => x.Id == id, ct);
+        var entity = await ScopeQuery()
+            .Include(x => x.City)
+            .Include(x => x.District)
+            .FirstOrDefaultAsync(x => x.Id == id, ct);
         if (entity == null) return null;
         var dto = MapToDto(entity);
         dto.Balance = await GetBalanceAsync(id, ct);
@@ -207,8 +214,8 @@ public class CustomerService : ICustomerService
             CardType = request.CardType is Constants.CardType.Satici ? Constants.CardType.Satici : Constants.CardType.Alici,
             TaxNumber = request.TaxNumber?.Trim(),
             Address = request.Address?.Trim(),
-            City = request.City?.Trim(),
-            District = request.District?.Trim(),
+            CityId = request.CityId,
+            DistrictId = request.DistrictId,
             PostalCode = request.PostalCode?.Trim(),
             Country = request.Country?.Trim(),
             Phone = request.Phone?.Trim(),
@@ -233,8 +240,8 @@ public class CustomerService : ICustomerService
         entity.CardType = request.CardType is Constants.CardType.Satici ? Constants.CardType.Satici : Constants.CardType.Alici;
         entity.TaxNumber = request.TaxNumber?.Trim();
         entity.Address = request.Address?.Trim();
-        entity.City = request.City?.Trim();
-        entity.District = request.District?.Trim();
+        entity.CityId = request.CityId;
+        entity.DistrictId = request.DistrictId;
         entity.PostalCode = request.PostalCode?.Trim();
         entity.Country = request.Country?.Trim();
         entity.Phone = request.Phone?.Trim();
@@ -267,8 +274,10 @@ public class CustomerService : ICustomerService
         CardType = e.CardType,
         TaxNumber = e.TaxNumber,
         Address = e.Address,
-        City = e.City,
-        District = e.District,
+        CityId = e.CityId,
+        CityName = e.City?.Name,
+        DistrictId = e.DistrictId,
+        DistrictName = e.District?.Name,
         PostalCode = e.PostalCode,
         Country = e.Country,
         Phone = e.Phone,

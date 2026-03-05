@@ -11,8 +11,10 @@ export interface CustomerDto {
   cardType: number;
   taxNumber?: string;
   address?: string;
-  city?: string;
-  district?: string;
+  cityId?: string | null;
+  cityName?: string | null;
+  districtId?: string | null;
+  districtName?: string | null;
   postalCode?: string;
   country?: string;
   phone?: string;
@@ -41,7 +43,7 @@ export interface AccountTransactionDto {
 @Injectable({ providedIn: 'root' })
 export class CustomerService {
   private base = '/api/customers';
-  constructor(private api: ApiService) {}
+  constructor(private api: ApiService) { }
 
   getPaged(page: number, pageSize: number, search?: string): Observable<PagedResult<CustomerListDto>> {
     return this.api.get<PagedResult<CustomerListDto>>(this.base, { page, pageSize, search: search ?? undefined });

@@ -158,7 +158,7 @@ public class InvoicePdfService : IInvoicePdfService
                         {
                             c.Item().Text("SAYIN").Bold().FontSize(10);
                             c.Item().Text(invoice.CustomerTitle).FontSize(8);
-                            c.Item().PaddingTop(4).Text(invoice.CustomerAddress ?? "").FontSize(8);
+                            c.Item().Text(invoice.CustomerAddress ?? "").FontSize(8);
                             
                             var customerCityDistrict = "";
                             if (!string.IsNullOrEmpty(invoice.CustomerDistrict)) customerCityDistrict += invoice.CustomerDistrict;
@@ -199,13 +199,13 @@ public class InvoicePdfService : IInvoicePdfService
                         row.RelativeItem(4).LineHorizontal(2.0f).LineColor(Colors.Black);
                         row.RelativeItem(6);
                     });
-                    col.Item().PaddingTop(2).Text(x => {
+                    col.Item().PaddingTop(6).Text(x => {
                         var ettnValue = invoice.Ettn;
                         x.Span("ETTN: ").Bold().FontSize(8);
                         x.Span(ettnValue).FontSize(8);
                     });
 
-                    col.Item().PaddingTop(15).Table(t =>
+                    col.Item().PaddingTop(10).Table(t =>
                     {
                         t.ColumnsDefinition(c =>
                         {
@@ -226,9 +226,9 @@ public class InvoicePdfService : IInvoicePdfService
                             h.Cell().Element(HeaderStyle).Text("Mal Hizmet");
                             h.Cell().Element(HeaderStyle).AlignRight().Text("Miktar");
                             h.Cell().Element(HeaderStyle).AlignRight().Text("Birim Fiyat");
-                            h.Cell().Element(HeaderStyle).AlignRight().Text("KDV %");
+                            h.Cell().Element(HeaderStyle).AlignRight().Text("KDV Oranı");
                             h.Cell().Element(HeaderStyle).AlignRight().Text("KDV Tutarı");
-                            h.Cell().Element(HeaderStyle).AlignRight().Text("Tutar");
+                            h.Cell().Element(HeaderStyle).AlignRight().Text("Mal Hizmet Tutarı");
                         });
 
                         var i = 1;
@@ -239,7 +239,7 @@ public class InvoicePdfService : IInvoicePdfService
                             t.Cell().Element(CellStyle).Text(item.Description);
                             t.Cell().Element(CellStyle).AlignRight().Text(item.Quantity.ToString("N2"));
                             t.Cell().Element(CellStyle).AlignRight().Text($"{item.UnitPrice.ToString("G29")} TL");
-                            t.Cell().Element(CellStyle).AlignRight().Text($"{item.VatRate}%");
+                            t.Cell().Element(CellStyle).AlignRight().Text($"%{item.VatRate}");
                             t.Cell().Element(CellStyle).AlignRight().Text($"{item.LineVatAmount.ToString("N2")} TL");
                             t.Cell().Element(CellStyle).AlignRight().Text($"{item.LineTotalExclVat.ToString("N2")} TL");
                         }

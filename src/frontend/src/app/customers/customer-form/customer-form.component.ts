@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { taxNumberValidator } from '../../core/validators/tax-number.validator';
 import { CustomerService } from '../../services/customer.service';
 import { MainAccountCodeService, MainAccountCodeDto } from '../../services/main-account-code.service';
+import { TaxOfficeService, CityResponse, DistrictResponse } from '../../services/tax-office.service';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -19,6 +20,30 @@ export class CustomerFormComponent implements OnInit {
   mainAccountCodeSearch = '';
   selectedMainAccount: MainAccountCodeDto | null = null;
   showMainAccountDropdown = false;
+
+  cities: CityResponse[] = [];
+  districts: DistrictResponse[] = [];
+
+  selectedCityName = '';
+  selectedDistrictName = '';
+
+  citySearchText = '';
+  cityDropdownOpen = false;
+
+  districtSearchText = '';
+  districtDropdownOpen = false;
+
+  get filteredCities(): CityResponse[] {
+    const t = this.citySearchText?.trim().toLocaleLowerCase('tr');
+    if (!t) return this.cities;
+    return this.cities.filter(c => c.name.toLocaleLowerCase('tr').includes(t));
+  }
+
+  get filteredDistricts(): DistrictResponse[] {
+    const t = this.districtSearchText?.trim().toLocaleLowerCase('tr');
+    if (!t) return this.districts;
+    return this.districts.filter(d => d.name.toLocaleLowerCase('tr').includes(t));
+  }
 
   get filteredMainAccountCodes(): MainAccountCodeDto[] {
     const q = this.mainAccountCodeSearch.trim().toLowerCase();
@@ -38,8 +63,8 @@ export class CustomerFormComponent implements OnInit {
     cardType: [1 as number],
     taxNumber: ['', [taxNumberValidator()]],
     address: [''],
-    city: [''],
-    district: [''],
+    cityId: [null as string | null],
+    districtId: [null as string | null],
     postalCode: [''],
     country: [''],
     phone: [''],
@@ -55,8 +80,42 @@ export class CustomerFormComponent implements OnInit {
     private router: Router,
     private api: CustomerService,
     private mainAccountCodeApi: MainAccountCodeService,
-    private toastr: ToastrService
-  ) {}
+    private taxOfficeApi: TaxOfficeService,
+    private toastr: ToastrService,
+    private el: ElementRef
+  ) { }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(e: MouseEvent): void {
+    if (!this.el.nativeElement.contains(e.target)) {
+      this.cityDropdownOpen = false;
+      this.districtDropdownOpen = false;
+    }
+  }
+
+  toggleCityDropdown(): void {
+    this.cityDropdownOpen = !this.cityDropdownOpen;
+    this.districtDropdownOpen = false;
+    if (this.cityDropdownOpen) this.citySearchText = '';
+  }
+
+  toggleDistrictDropdown(): void {
+    if (!this.form.get('cityId')?.value) return;
+    this.districtDropdownOpen = !this.districtDropdownOpen;
+    this.cityDropdownOpen = false;
+    if (this.districtDropdownOpen) this.districtSearchText = '';
+  }
+
+  selectCity(city: CityResponse | null): void {
+    this.onCityChange(city?.id || null, city?.name || '');
+    this.cityDropdownOpen = false;
+  }
+
+  selectDistrict(district: DistrictResponse | null): void {
+    this.selectedDistrictName = district?.name || '';
+    this.form.patchValue({ districtId: district?.id || null });
+    this.districtDropdownOpen = false;
+  }
 
   ngOnInit(): void {
     this.id = this.route.snapshot.paramMap.get('id');
@@ -64,6 +123,7 @@ export class CustomerFormComponent implements OnInit {
       this.mainAccountCodes = list;
       this.onMainAccountCodesLoaded();
     });
+    this.taxOfficeApi.getCities().subscribe(res => this.cities = res);
     if (this.id) {
       this.api.getById(this.id).subscribe(c => {
         this.form.patchValue({
@@ -74,15 +134,35 @@ export class CustomerFormComponent implements OnInit {
           cardType: c.cardType ?? 1,
           taxNumber: c.taxNumber ?? '',
           address: c.address ?? '',
-          city: c.city ?? '',
-          district: c.district ?? '',
+          cityId: c.cityId,
+          districtId: c.districtId,
           postalCode: c.postalCode ?? '',
           country: c.country ?? '',
           phone: c.phone ?? '',
           email: c.email ?? ''
         });
+
+        if (c.cityId) {
+          this.selectedCityName = c.cityName ?? '';
+          this.selectedDistrictName = c.districtName ?? '';
+          this.taxOfficeApi.getDistricts(c.cityId).subscribe(res => {
+            this.districts = res;
+            this.form.patchValue({ districtId: c.districtId });
+          });
+        }
         this.onMainAccountCodesLoaded();
       });
+    }
+  }
+
+  onCityChange(id: string | null, name: string): void {
+    this.selectedCityName = name;
+    this.selectedDistrictName = '';
+    this.districts = [];
+    this.districtSearchText = '';
+    this.form.patchValue({ cityId: id, districtId: null });
+    if (id) {
+      this.taxOfficeApi.getDistricts(id).subscribe(res => this.districts = res);
     }
   }
 
@@ -125,8 +205,8 @@ export class CustomerFormComponent implements OnInit {
       cardType: typeof v.cardType === 'number' ? v.cardType : 1,
       taxNumber: v.taxNumber?.trim() ?? '',
       address: v.address?.trim() ?? '',
-      city: v.city?.trim() ?? '',
-      district: v.district?.trim() ?? '',
+      cityId: v.cityId,
+      districtId: v.districtId,
       postalCode: v.postalCode?.trim() ?? '',
       country: v.country?.trim() ?? '',
       phone: v.phone?.trim() ?? '',

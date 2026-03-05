@@ -73,6 +73,8 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid
         modelBuilder.Entity<Customer>(e =>
         {
             e.HasOne(x => x.User).WithMany(x => x.Customers).HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Cascade);
+            e.HasOne(x => x.City).WithMany().HasForeignKey(x => x.CityId).OnDelete(DeleteBehavior.Restrict);
+            e.HasOne(x => x.District).WithMany().HasForeignKey(x => x.DistrictId).OnDelete(DeleteBehavior.Restrict);
             e.HasIndex(x => x.UserId);
             e.HasIndex(x => new { x.UserId, x.Code }).IsUnique().HasFilter("[Code] IS NOT NULL");
             e.HasQueryFilter(x => !x.IsDeleted);

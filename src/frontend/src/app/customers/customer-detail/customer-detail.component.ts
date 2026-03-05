@@ -21,7 +21,7 @@ export class CustomerDetailComponent implements OnInit {
   dateFrom = '';
   dateTo = '';
 
-  constructor(private route: ActivatedRoute, private api: CustomerService) {}
+  constructor(private route: ActivatedRoute, private api: CustomerService) { }
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
@@ -60,7 +60,7 @@ export class CustomerDetailComponent implements OnInit {
   }
 
   joinCityDistrict(city?: string | null, district?: string | null): string {
-    return [city ?? '', district ?? ''].filter(s => s.length > 0).join(' / ');
+    return [district ?? '', city ?? ''].filter(s => s.length > 0).join(' / ');
   }
 
   prevPage(): void {

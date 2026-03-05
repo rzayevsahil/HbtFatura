@@ -105,14 +105,17 @@ public class InvoiceService : IInvoiceService
 
         if (request.CustomerId.HasValue)
         {
-            var customer = await _db.Customers.FirstOrDefaultAsync(c => c.Id == request.CustomerId && (c.UserId == userId || (_currentUser.IsFirmAdmin && c.User != null && c.User.FirmId == _currentUser.FirmId)), ct);
+            var customer = await _db.Customers
+                .Include(c => c.City)
+                .Include(c => c.District)
+                .FirstOrDefaultAsync(c => c.Id == request.CustomerId && (c.UserId == userId || (_currentUser.IsFirmAdmin && c.User != null && c.User.FirmId == _currentUser.FirmId)), ct);
             if (customer != null)
             {
                 customerTitle = customer.Title;
                 customerTaxNumber = customer.TaxNumber;
                 customerAddress = customer.Address;
-                customerCity = customer.City;
-                customerDistrict = customer.District;
+                customerCity = customer.City?.Name;
+                customerDistrict = customer.District?.Name;
                 customerPhone = customer.Phone;
                 customerEmail = customer.Email;
             }
@@ -186,6 +189,9 @@ public class InvoiceService : IInvoiceService
         var dn = await _db.DeliveryNotes
             .Include(x => x.User)
             .Include(x => x.Customer)
+                .ThenInclude(c => c.City)
+            .Include(x => x.Customer)
+                .ThenInclude(c => c.District)
             .Include(x => x.Items.OrderBy(i => i.SortOrder))
                 .ThenInclude(i => i.Product)
             .FirstOrDefaultAsync(x => x.Id == deliveryNoteId, ct);
@@ -201,8 +207,8 @@ public class InvoiceService : IInvoiceService
         var customerTitle = dn.Customer?.Title ?? string.Empty;
         var customerTaxNumber = dn.Customer?.TaxNumber;
         var customerAddress = dn.Customer?.Address;
-        var customerCity = dn.Customer?.City;
-        var customerDistrict = dn.Customer?.District;
+        var customerCity = dn.Customer?.City?.Name;
+        var customerDistrict = dn.Customer?.District?.Name;
         var customerPhone = dn.Customer?.Phone;
         var customerEmail = dn.Customer?.Email;
 
