@@ -165,8 +165,8 @@ public class InvoicePdfService : IInvoicePdfService
                             if (!string.IsNullOrEmpty(invoice.CustomerCity)) customerCityDistrict += (customerCityDistrict != "" ? " / " : "") + invoice.CustomerCity;
                             if (!string.IsNullOrEmpty(customerCityDistrict)) c.Item().Text(customerCityDistrict).FontSize(8);
                             
-                            if (!string.IsNullOrEmpty(invoice.CustomerEmail)) c.Item().Text($"E-Posta: {invoice.CustomerEmail}").FontSize(8);
                             if (!string.IsNullOrEmpty(invoice.CustomerPhone)) c.Item().Text($"Tel: {invoice.CustomerPhone}").FontSize(8);
+                            if (!string.IsNullOrEmpty(invoice.CustomerEmail)) c.Item().Text($"E-Posta: {invoice.CustomerEmail}").FontSize(8);
                             if (!string.IsNullOrEmpty(invoice.CustomerTaxNumber)) c.Item().Text($"VKN: {invoice.CustomerTaxNumber}").FontSize(8);
                         });
 
@@ -250,7 +250,7 @@ public class InvoicePdfService : IInvoicePdfService
                     {
                         r.RelativeItem().Text(""); // Empty space on the left
 
-                        r.ConstantItem(240).Table(t =>
+                        r.ConstantItem(260).Table(t =>
                         {
                             t.ColumnsDefinition(c => { c.RelativeColumn(); c.ConstantColumn(100); });
                             
