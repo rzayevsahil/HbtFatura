@@ -152,7 +152,17 @@ public class InvoicePdfService : IInvoicePdfService
                                 }
                                 catch { }
                             }
-                            row.ConstantItem(70).AlignTop().Image(GenerateQrCode(invoice.InvoiceNumber));
+                            // Generate rich QR data for a professional look (GIB standard-like)
+                        var qrData = string.Join('|', 
+                            company?.TaxNumber ?? "",
+                            invoice.CustomerTaxNumber ?? "",
+                            invoice.InvoiceNumber ?? "",
+                            invoice.InvoiceDate.ToString("yyyy-MM-dd"),
+                            invoice.SubTotal.ToString("F2"),
+                            "TRY",
+                            invoice.Ettn ?? "");
+
+                        row.ConstantItem(70).AlignTop().Image(GenerateQrCode(qrData));
                         });
                     });
                 });
