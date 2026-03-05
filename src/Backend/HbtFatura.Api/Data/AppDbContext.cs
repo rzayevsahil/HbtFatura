@@ -68,6 +68,7 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid
             e.HasOne(x => x.Firm).WithOne(x => x.CompanySettings).HasForeignKey<CompanySettings>(x => x.FirmId).OnDelete(DeleteBehavior.Cascade);
             e.HasOne(x => x.TaxOffice).WithMany().HasForeignKey(x => x.TaxOfficeId).OnDelete(DeleteBehavior.Restrict);
             e.HasIndex(x => x.FirmId).IsUnique();
+            e.Property(x => x.LogoUrl).IsRequired(false);
         });
 
         modelBuilder.Entity<Customer>(e =>

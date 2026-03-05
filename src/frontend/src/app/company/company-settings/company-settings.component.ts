@@ -6,6 +6,7 @@ import { CompanyService } from '../../services/company.service';
 import { TaxOfficeService, TaxOfficeDto, CityResponse, DistrictResponse } from '../../services/tax-office.service';
 import { AuthService } from '../../core/services/auth.service';
 import { ToastrService } from 'ngx-toastr';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-company-settings',
@@ -28,7 +29,8 @@ export class CompanySettingsComponent implements OnInit {
     phone: ['', [Validators.required]],
     email: ['', [Validators.required, Validators.email]],
     iban: ['', [Validators.required]],
-    bankName: ['', [Validators.required]]
+    bankName: ['', [Validators.required]],
+    logoUrl: [null as string | null]
   });
   error = '';
   saving = false;
@@ -144,7 +146,8 @@ export class CompanySettingsComponent implements OnInit {
           phone: c.phone ?? '',
           email: c.email ?? '',
           iban: c.iban ?? '',
-          bankName: c.bankName ?? ''
+          bankName: c.bankName ?? '',
+          logoUrl: c.logoUrl ?? null
         });
 
         this.selectedCityName = c.cityName ?? '';
@@ -235,6 +238,34 @@ export class CompanySettingsComponent implements OnInit {
       },
       complete: () => { this.saving = false; }
     });
+  }
+
+  onLogoChange(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        this.toastr.warning('Logo boyutu 5MB\'dan küçük olmalıdır.');
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.form.patchValue({ logoUrl: e.target.result });
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  getLogoUrl(): string | null {
+    const url = this.form.get('logoUrl')?.value;
+    if (!url) return null;
+    if (url.startsWith('data:') || url.startsWith('http')) return url;
+    // Prefix relative paths with API URL
+    const baseUrl = environment.apiUrl.replace(/\/api\/?$/, '');
+    return `${baseUrl}${url}`;
+  }
+
+  clearLogo(): void {
+    this.form.patchValue({ logoUrl: null });
   }
 
   goBack(): void {

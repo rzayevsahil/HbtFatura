@@ -127,9 +127,32 @@ public class InvoicePdfService : IInvoicePdfService
                             c.Item().AlignCenter().Text("e-FATURA").Bold().FontSize(11);
                         });
 
-                        r.RelativeItem(1).Column(c =>
+                        // 3. QR Code & Logo (Right)
+                        r.RelativeItem(1).AlignRight().Row(row =>
                         {
-                            c.Item().AlignRight().Width(80).Image(GenerateQrCode(invoice.InvoiceNumber));
+                            if (!string.IsNullOrEmpty(company?.LogoUrl))
+                            {
+                                try
+                                {
+                                    if (company.LogoUrl.StartsWith("/"))
+                                    {
+                                        var logoPath = Path.Combine(_env.WebRootPath, company.LogoUrl.TrimStart('/'));
+                                        if (File.Exists(logoPath))
+                                        {
+                                            row.AutoItem().PaddingRight(10).AlignBottom().Height(80).Image(logoPath, ImageScaling.FitHeight);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        var base64Data = company.LogoUrl;
+                                        if (base64Data.Contains(",")) base64Data = base64Data.Split(',')[1];
+                                        var imageBytes = Convert.FromBase64String(base64Data);
+                                        row.AutoItem().PaddingRight(10).AlignBottom().Height(80).Image(imageBytes, ImageScaling.FitHeight);
+                                    }
+                                }
+                                catch { }
+                            }
+                            row.ConstantItem(80).AlignBottom().Image(GenerateQrCode(invoice.InvoiceNumber));
                         });
                     });
 

@@ -111,6 +111,28 @@
         <label>IBAN</label>
         <input formControlName="iban" placeholder="TR00 0000 0000 0000 0000 0000 00" [readonly]="isReadOnly()" />
       </div>
+      <div class="row">
+        <label>Firma Logosu</label>
+        <div class="logo-upload">
+          @if (getLogoUrl()) {
+          <div class="logo-preview">
+            <img [src]="getLogoUrl()" alt="Firma Logosu" />
+            @if (!isReadOnly()) {
+            <button type="button" class="btn-clear-logo" (click)="clearLogo()" title="Logoyu Sil">×</button>
+            }
+          </div>
+          } @else {
+          <div class="no-logo">Logo seçilmedi</div>
+          }
+          @if (!isReadOnly()) {
+          <div class="upload-control">
+            <input type="file" #fileInput (change)="onLogoChange($event)" accept="image/*" style="display: none" />
+            <button type="button" class="btn-upload" (click)="fileInput.click()">Logo Yükle</button>
+            <p class="hint">Önerilen boyut: 200x200px (Maks. 5MB)</p>
+          </div>
+          }
+        </div>
+      </div>
       @if (error) { <p class="error-msg">{{ error }}</p> }
     </div>
     @if (!isReadOnly()) {

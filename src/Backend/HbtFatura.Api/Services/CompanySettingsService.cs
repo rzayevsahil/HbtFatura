@@ -2,6 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using HbtFatura.Api.Data;
 using HbtFatura.Api.DTOs.CompanySettings;
 using HbtFatura.Api.Entities;
+using Microsoft.AspNetCore.Hosting;
+using System.IO;
 
 namespace HbtFatura.Api.Services;
 
@@ -9,11 +11,13 @@ public class CompanySettingsService : ICompanySettingsService
 {
     private readonly AppDbContext _db;
     private readonly ICurrentUserContext _currentUser;
+    private readonly IWebHostEnvironment _env;
 
-    public CompanySettingsService(AppDbContext db, ICurrentUserContext currentUser)
+    public CompanySettingsService(AppDbContext db, ICurrentUserContext currentUser, IWebHostEnvironment env)
     {
         _db = db;
         _currentUser = currentUser;
+        _env = env;
     }
 
     public async Task<CompanySettingsDto?> GetByFirmIdAsync(Guid? firmId, CancellationToken ct = default)
@@ -66,7 +70,44 @@ public class CompanySettingsService : ICompanySettingsService
         entity.Email = request.Email?.Trim();
         entity.IBAN = request.IBAN?.Trim();
         entity.BankName = request.BankName?.Trim();
-        entity.LogoUrl = request.LogoUrl?.Trim();
+        
+        // Logo handling: save as file if it's base64
+        if (!string.IsNullOrEmpty(request.LogoUrl) && request.LogoUrl.StartsWith("data:image"))
+        {
+            var folderPath = Path.Combine(_env.WebRootPath, "uploads", "logos");
+            if (!Directory.Exists(folderPath)) Directory.CreateDirectory(folderPath);
+
+            // Clean up old logo if exists
+            if (!string.IsNullOrEmpty(entity.LogoUrl) && entity.LogoUrl.StartsWith("/uploads/"))
+            {
+                var oldPath = Path.Combine(_env.WebRootPath, entity.LogoUrl.TrimStart('/'));
+                if (File.Exists(oldPath)) File.Delete(oldPath);
+            }
+
+            var extension = ".png"; // Default to png or extract from data type
+            if (request.LogoUrl.Contains("image/jpeg")) extension = ".jpg";
+            else if (request.LogoUrl.Contains("image/webp")) extension = ".webp";
+
+            var fileName = $"{effectiveFirmId.Value}_{DateTime.Now.Ticks}{extension}";
+            var filePath = Path.Combine(folderPath, fileName);
+            
+            var base64Data = request.LogoUrl.Split(',')[1];
+            var bytes = Convert.FromBase64String(base64Data);
+            await File.WriteAllBytesAsync(filePath, bytes, ct);
+            
+            entity.LogoUrl = $"/uploads/logos/{fileName}";
+        }
+        else if (string.IsNullOrEmpty(request.LogoUrl))
+        {
+            // Clean up if logo is removed
+            if (!string.IsNullOrEmpty(entity.LogoUrl) && entity.LogoUrl.StartsWith("/uploads/"))
+            {
+                var oldPath = Path.Combine(_env.WebRootPath, entity.LogoUrl.TrimStart('/'));
+                if (File.Exists(oldPath)) File.Delete(oldPath);
+            }
+            entity.LogoUrl = null;
+        }
+
         await _db.SaveChangesAsync(ct);
         
         // Final return with navigation names
