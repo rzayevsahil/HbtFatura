@@ -65,38 +65,36 @@ public class InvoicePdfService : IInvoicePdfService
                 // --- HEADER SECTION ---
                 page.Header().Column(col =>
                 {
-                    // 0. Top Line (New request)
-                    col.Item().Row(row => 
+                    col.Item().Row(r =>
                     {
-                        row.RelativeItem(4).LineHorizontal(2.0f).LineColor(Colors.Black);
-                        row.RelativeItem(6);
-                    });
-
-                    col.Item().PaddingTop(5).Row(r =>
-                    {
-                        // 1. Company Info (Left)
-                        r.RelativeItem(1).Column(c =>
+                        // 1. Company Info (Left) - INCLUDING the 40% top line
+                        r.RelativeItem(4).Column(c =>
                         {
-                            c.Item().Text(company?.CompanyName ?? "Firma Adı").FontSize(8);
+                            c.Item().LineHorizontal(2.0f).LineColor(Colors.Black);
                             
-                            var addressLines = new List<string>();
-                            if (!string.IsNullOrEmpty(company?.Address)) addressLines.Add(company.Address);
-                            
-                            var cityDistrict = "";
-                            if (company?.TaxOffice?.District != null) cityDistrict += company.TaxOffice.District.Name;
-                            if (company?.TaxOffice?.City != null) cityDistrict += (cityDistrict != "" ? " / " : "") + company.TaxOffice.City.Name;
-                            if (!string.IsNullOrEmpty(cityDistrict)) addressLines.Add(cityDistrict);
-                            
-                            foreach(var line in addressLines) c.Item().Text(line).FontSize(8);
+                            c.Item().PaddingTop(5).Column(inner => 
+                            {
+                                inner.Item().Text(company?.CompanyName ?? "Firma Adı").FontSize(8);
+                                
+                                var addressLines = new List<string>();
+                                if (!string.IsNullOrEmpty(company?.Address)) addressLines.Add(company.Address);
+                                
+                                var cityDistrict = "";
+                                if (company?.TaxOffice?.District != null) cityDistrict += company.TaxOffice.District.Name;
+                                if (company?.TaxOffice?.City != null) cityDistrict += (cityDistrict != "" ? " / " : "") + company.TaxOffice.City.Name;
+                                if (!string.IsNullOrEmpty(cityDistrict)) addressLines.Add(cityDistrict);
+                                
+                                foreach(var line in addressLines) inner.Item().Text(line).FontSize(8);
 
-                            if (!string.IsNullOrEmpty(company?.Phone)) c.Item().Text($"Tel: {company.Phone}").FontSize(8);
-                            if (!string.IsNullOrEmpty(company?.Email)) c.Item().Text($"E-Posta: {company.Email}").FontSize(8);
-                            if (!string.IsNullOrEmpty(company?.TaxOffice?.Name)) c.Item().Text($"Vergi Dairesi: {company.TaxOffice.Name}").FontSize(8);
-                            if (!string.IsNullOrEmpty(company?.TaxNumber)) c.Item().Text($"VKN/TCKN: {company.TaxNumber}").FontSize(8);
+                                if (!string.IsNullOrEmpty(company?.Phone)) inner.Item().Text($"Tel: {company.Phone}").FontSize(8);
+                                if (!string.IsNullOrEmpty(company?.Email)) inner.Item().Text($"E-Posta: {company.Email}").FontSize(8);
+                                if (!string.IsNullOrEmpty(company?.TaxOffice?.Name)) inner.Item().Text($"Vergi Dairesi: {company.TaxOffice.Name}").FontSize(8);
+                                if (!string.IsNullOrEmpty(company?.TaxNumber)) inner.Item().Text($"VKN/TCKN: {company.TaxNumber}").FontSize(8);
+                            });
                         });
 
                         // 2. Logo & e-FATURA (Center)
-                        r.RelativeItem(1).Column(c =>
+                        r.RelativeItem(2).Column(c =>
                         {
                             string? gibLogoPath = null;
                             var logoFileName = "logos/giblogo.png";
@@ -117,8 +115,7 @@ public class InvoicePdfService : IInvoicePdfService
 
                             if (!string.IsNullOrEmpty(gibLogoPath))
                             {
-                                // Remove fixed width to allow AlignCenter to work on the actual image width
-                                c.Item().AlignCenter().Height(80).Image(gibLogoPath, ImageScaling.FitHeight);
+                                c.Item().AlignCenter().Height(70).Image(gibLogoPath, ImageScaling.FitHeight);
                             }
                             else
                             {
@@ -127,8 +124,8 @@ public class InvoicePdfService : IInvoicePdfService
                             c.Item().AlignCenter().Text("e-FATURA").Bold().FontSize(11);
                         });
 
-                        // 3. QR Code & Logo (Right)
-                        r.RelativeItem(1).AlignRight().Row(row =>
+                        // 3. QR Code & Logo (Right) - Extreme top-right
+                        r.RelativeItem(4).AlignRight().AlignTop().Row(row =>
                         {
                             if (!string.IsNullOrEmpty(company?.LogoUrl))
                             {
@@ -139,7 +136,7 @@ public class InvoicePdfService : IInvoicePdfService
                                         var logoPath = Path.Combine(_env.WebRootPath, company.LogoUrl.TrimStart('/'));
                                         if (File.Exists(logoPath))
                                         {
-                                            row.AutoItem().PaddingRight(10).AlignBottom().Height(80).Image(logoPath, ImageScaling.FitHeight);
+                                            row.AutoItem().PaddingRight(10).AlignTop().Height(70).Image(logoPath, ImageScaling.FitHeight);
                                         }
                                     }
                                     else
@@ -147,28 +144,26 @@ public class InvoicePdfService : IInvoicePdfService
                                         var base64Data = company.LogoUrl;
                                         if (base64Data.Contains(",")) base64Data = base64Data.Split(',')[1];
                                         var imageBytes = Convert.FromBase64String(base64Data);
-                                        row.AutoItem().PaddingRight(10).AlignBottom().Height(80).Image(imageBytes, ImageScaling.FitHeight);
+                                        row.AutoItem().PaddingRight(10).AlignTop().Height(70).Image(imageBytes, ImageScaling.FitHeight);
                                     }
                                 }
                                 catch { }
                             }
-                            row.ConstantItem(80).AlignBottom().Image(GenerateQrCode(invoice.InvoiceNumber));
+                            row.ConstantItem(70).AlignTop().Image(GenerateQrCode(invoice.InvoiceNumber));
                         });
-                    });
-
-                    // Line shortened to left side (40%) - Increased thickness to 2.0f
-                    col.Item().PaddingTop(10).Row(row => 
-                    {
-                        row.RelativeItem(4).LineHorizontal(2.0f).LineColor(Colors.Black);
-                        row.RelativeItem(6);
                     });
                 });
 
                 // --- CONTENT SECTION ---
                 page.Content().PaddingVertical(10).Column(col =>
                 {
-                    // Line above SAYIN (New request)
+                    // Double line above SAYIN
                     col.Item().Row(row => 
+                    {
+                        row.RelativeItem(4).LineHorizontal(2.0f).LineColor(Colors.Black);
+                        row.RelativeItem(6);
+                    });
+                    col.Item().PaddingTop(2).Row(row => 
                     {
                         row.RelativeItem(4).LineHorizontal(2.0f).LineColor(Colors.Black);
                         row.RelativeItem(6);
@@ -194,7 +189,7 @@ public class InvoicePdfService : IInvoicePdfService
                         });
 
                         // Metadata Box as a Column with Rows, Vertical Separator and Left-Aligned values
-                        r.RelativeItem().AlignRight().PaddingRight(1).PaddingTop(5).Width(220).Border(0.5f).Column(mc =>
+                        r.RelativeItem().AlignRight().PaddingRight(1).PaddingTop(5).Width(180).Border(0.5f).Column(mc =>
                         {
                             void AddMetaRow(string label, string value, bool last = false)
                             {
@@ -204,7 +199,7 @@ public class InvoicePdfService : IInvoicePdfService
                                 rowItem.Row(rowContent =>
                                 {
                                     rowContent.RelativeItem(1.2f).PaddingVertical(2).PaddingHorizontal(4).Text(label).Bold().FontSize(8);
-                                    rowContent.RelativeItem(1.8f).BorderLeft(0.5f).PaddingVertical(2).PaddingHorizontal(4).AlignLeft().Text(value).FontSize(8);
+                                    rowContent.RelativeItem(1.2f).BorderLeft(0.5f).PaddingVertical(2).PaddingHorizontal(4).AlignLeft().Text(value).FontSize(8);
                                 });
                             }
 
@@ -273,9 +268,9 @@ public class InvoicePdfService : IInvoicePdfService
                     {
                         r.RelativeItem().Text(""); // Empty space on the left
 
-                        r.ConstantItem(260).Table(t =>
+                        r.ConstantItem(270).Table(t =>
                         {
-                            t.ColumnsDefinition(c => { c.RelativeColumn(); c.ConstantColumn(100); });
+                            t.ColumnsDefinition(c => { c.RelativeColumn(); c.ConstantColumn(110); });
                             
                             t.Cell().Element(TotalStyle).Text("Mal Hizmet Toplam Tutarı:").Bold();
                             t.Cell().Element(TotalStyle).AlignRight().Text($"{invoice.SubTotal.ToString("N2")} TL");
