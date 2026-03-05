@@ -170,12 +170,15 @@
 
 .main-content {
   flex: 1;
-  margin-left: 260px;
-  margin-top: 56px;
   max-width: none;
-  padding: 1.5rem;
   min-height: 100vh;
   background: var(--color-background);
+}
+
+.layout .main-content {
+  margin-left: 260px;
+  margin-top: 56px;
+  padding: 1.5rem;
 }
 
 .logout-overlay {
