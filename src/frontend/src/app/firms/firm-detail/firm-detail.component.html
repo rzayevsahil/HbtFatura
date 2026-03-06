@@ -15,22 +15,35 @@
 @if (firm && company) {
 <section class="company-info card">
   <h2 class="card-title">Firma bilgileri</h2>
-  <dl class="info-list">
-    <dt>Firma adı</dt>
-    <dd>{{ company.companyName }}</dd>
-    <dt>Vergi dairesi</dt>
-    <dd>{{ company.taxOfficeName }}</dd>
-    <dt>Vergi numarası</dt>
-    <dd>{{ company.taxNumber }}</dd>
-    <dt>Adres</dt>
-    <dd>{{ company.address }}</dd>
-    <dt>Telefon</dt>
-    <dd>{{ company.phone }}</dd>
-    <dt>E-posta</dt>
-    <dd><a [href]="'mailto:' + company.email">{{ company.email }}</a></dd>
-    <dt>IBAN</dt>
-    <dd>{{ company.iban }}</dd>
-  </dl>
+  <div class="company-content">
+    <dl class="info-list">
+      <dt>Firma adı</dt>
+      <dd>{{ company.companyName }}</dd>
+      <dt>İl / İlçe</dt>
+      <dd>{{ company.cityName }}@if (company.cityName && company.districtName) { / }{{ company.districtName }}</dd>
+      <dt>Vergi dairesi</dt>
+      <dd>{{ company.taxOfficeName }}</dd>
+      <dt>Vergi No / TC</dt>
+      <dd>{{ company.taxNumber }}</dd>
+      <dt>Adres</dt>
+      <dd>{{ company.address }}</dd>
+      <dt>Telefon</dt>
+      <dd>{{ company.phone }}</dd>
+      <dt>E-posta</dt>
+      <dd><a [href]="'mailto:' + company.email">{{ company.email }}</a></dd>
+      <dt>Web adresi</dt>
+      <dd>@if (company.website) { <a [href]="company.website" target="_blank">{{ company.website }}</a> }</dd>
+      <dt>Banka adı</dt>
+      <dd>{{ company.bankName }}</dd>
+      <dt>IBAN</dt>
+      <dd>{{ company.iban }}</dd>
+    </dl>
+    @if (company.logoUrl) {
+    <div class="company-logo">
+      <img [src]="getLogoUrl()" alt="Firma Logosu" />
+    </div>
+    }
+  </div>
 </section>
 } @else if (firm) {
 <section class="company-info card">

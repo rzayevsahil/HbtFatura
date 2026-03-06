@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FirmService, FirmDto, FirmUserDto } from '../../services/firm.service';
 import { CompanyService, CompanySettingsDto } from '../../services/company.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-firm-detail',
@@ -20,7 +21,7 @@ export class FirmDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private firmApi: FirmService,
     private companyApi: CompanyService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
@@ -37,6 +38,15 @@ export class FirmDetailComponent implements OnInit {
         });
       });
     }
+  }
+
+  getLogoUrl(): string | null {
+    if (!this.company?.logoUrl) return null;
+    const url = this.company.logoUrl;
+    if (url.startsWith('data:') || url.startsWith('http')) return url;
+    // Prefix relative paths with API URL (remove /api if present at end)
+    const baseUrl = environment.apiUrl.replace(/\/api\/?$/, '');
+    return `${baseUrl}${url}`;
   }
 
   roleLabel(role: string): string {
