@@ -80,7 +80,7 @@ export class CustomerFormComponent implements OnInit {
     taxOfficeId: [null as string | null],
     postalCode: [''],
     country: [''],
-    phone: [''],
+    phone: ['', [Validators.minLength(14), Validators.maxLength(14)]],
     email: [''],
     website: ['']
   });

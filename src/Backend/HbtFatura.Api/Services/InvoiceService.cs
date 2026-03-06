@@ -116,6 +116,7 @@ public class InvoiceService : IInvoiceService
             var customer = await _db.Customers
                 .Include(c => c.City)
                 .Include(c => c.District)
+                .Include(c => c.TaxOffice)
                 .FirstOrDefaultAsync(c => c.Id == request.CustomerId && (c.UserId == userId || (_currentUser.IsFirmAdmin && c.User != null && c.User.FirmId == _currentUser.FirmId)), ct);
             if (customer != null)
             {

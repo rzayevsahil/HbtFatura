@@ -14,7 +14,7 @@ export class PhoneFormatter {
 
         let formatted = '';
         for (let i = 0; i < cleaned.length; i++) {
-            if (i === 1 || i === 4 || i === 7 || i === 9) formatted += ' ';
+            if (i === 4 || i === 7 || i === 9) formatted += ' ';
             formatted += cleaned[i];
         }
         return formatted.trim();

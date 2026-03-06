@@ -28,7 +28,7 @@ export class CompanySettingsComponent implements OnInit {
     taxOfficeId: [null as string | null, [Validators.required]],
     taxNumber: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(11)]],
     address: ['', [Validators.required]],
-    phone: ['', [Validators.required, Validators.minLength(15), Validators.maxLength(15)]],
+    phone: ['', [Validators.required, Validators.minLength(14), Validators.maxLength(14)]],
     email: ['', [Validators.required, Validators.email]],
     website: ['', [Validators.pattern('^(https?:\\/\\/)?([\\da-z.-]+)\\.([a-z.]{2,6})([\\/\\w .-]*)*\\/?$')]],
     iban: ['', [Validators.required, Validators.minLength(32), Validators.maxLength(32)]],
