@@ -351,43 +351,6 @@ namespace HbtFatura.Api.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Customers",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    MainAccountCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Code = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TaxPayerType = table.Column<int>(type: "int", nullable: false),
-                    CardType = table.Column<int>(type: "int", nullable: false),
-                    TaxNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    City = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    District = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PostalCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Country = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
-                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    UpdatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Customers", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Customers_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "RefreshTokens",
                 columns: table => new
                 {
@@ -499,6 +462,7 @@ namespace HbtFatura.Api.Migrations
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Phone = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Website = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IBAN = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     BankName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LogoUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -520,6 +484,62 @@ namespace HbtFatura.Api.Migrations
                         principalTable: "TaxOffices",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Customers",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MainAccountCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Code = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TaxPayerType = table.Column<int>(type: "int", nullable: false),
+                    CardType = table.Column<int>(type: "int", nullable: false),
+                    TaxNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CityId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    DistrictId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    TaxOfficeId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    PostalCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Country = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Website = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Customers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Customers_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Customers_Cities_CityId",
+                        column: x => x.CityId,
+                        principalTable: "Cities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Customers_Districts_DistrictId",
+                        column: x => x.DistrictId,
+                        principalTable: "Districts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Customers_TaxOffices_TaxOfficeId",
+                        column: x => x.TaxOfficeId,
+                        principalTable: "TaxOffices",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -611,6 +631,10 @@ namespace HbtFatura.Api.Migrations
                     CustomerTitle = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CustomerTaxNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CustomerAddress = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CustomerCity = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CustomerDistrict = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CustomerTaxOffice = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CustomerWebsite = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CustomerPhone = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CustomerEmail = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     SubTotal = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
@@ -952,6 +976,21 @@ namespace HbtFatura.Api.Migrations
                 column: "TaxOfficeId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Customers_CityId",
+                table: "Customers",
+                column: "CityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Customers_DistrictId",
+                table: "Customers",
+                column: "DistrictId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Customers_TaxOfficeId",
+                table: "Customers",
+                column: "TaxOfficeId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Customers_UserId",
                 table: "Customers",
                 column: "UserId");
@@ -1189,9 +1228,6 @@ namespace HbtFatura.Api.Migrations
                 name: "BankAccounts");
 
             migrationBuilder.DropTable(
-                name: "TaxOffices");
-
-            migrationBuilder.DropTable(
                 name: "DeliveryNotes");
 
             migrationBuilder.DropTable(
@@ -1201,16 +1237,10 @@ namespace HbtFatura.Api.Migrations
                 name: "Invoices");
 
             migrationBuilder.DropTable(
-                name: "Districts");
-
-            migrationBuilder.DropTable(
                 name: "Orders");
 
             migrationBuilder.DropTable(
                 name: "Products");
-
-            migrationBuilder.DropTable(
-                name: "Cities");
 
             migrationBuilder.DropTable(
                 name: "Customers");
@@ -1219,7 +1249,16 @@ namespace HbtFatura.Api.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
+                name: "TaxOffices");
+
+            migrationBuilder.DropTable(
                 name: "Firms");
+
+            migrationBuilder.DropTable(
+                name: "Districts");
+
+            migrationBuilder.DropTable(
+                name: "Cities");
         }
     }
 }

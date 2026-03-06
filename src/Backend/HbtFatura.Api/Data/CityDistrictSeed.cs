@@ -24,16 +24,16 @@ public static class CityDistrictSeed
                 new() { Id = Guid.NewGuid(), Name = "Aladağ" },
                 new() { Id = Guid.NewGuid(), Name = "Ceyhan" },
                 new() { Id = Guid.NewGuid(), Name = "Feke" },
-                new() { Id = Guid.NewGuid(), Name = "Karai̇sali" },
+                new() { Id = Guid.NewGuid(), Name = "Karaisalı" },
                 new() { Id = Guid.NewGuid(), Name = "Karataş" },
                 new() { Id = Guid.NewGuid(), Name = "Kozan" },
-                new() { Id = Guid.NewGuid(), Name = "Pozanti" },
-                new() { Id = Guid.NewGuid(), Name = "Sai̇mbeyli̇" },
-                new() { Id = Guid.NewGuid(), Name = "Sariçam" },
+                new() { Id = Guid.NewGuid(), Name = "Pozantı" },
+                new() { Id = Guid.NewGuid(), Name = "Saimbeyli" },
+                new() { Id = Guid.NewGuid(), Name = "Sarıçam" },
                 new() { Id = Guid.NewGuid(), Name = "Seyhan" },
-                new() { Id = Guid.NewGuid(), Name = "Tufanbeyli̇" },
-                new() { Id = Guid.NewGuid(), Name = "Yumurtalik" },
-                new() { Id = Guid.NewGuid(), Name = "Yüreği̇r" },
+                new() { Id = Guid.NewGuid(), Name = "Tufanbeyli" },
+                new() { Id = Guid.NewGuid(), Name = "Yumurtalık" },
+                new() { Id = Guid.NewGuid(), Name = "Yüreğir" },
                 new() { Id = Guid.NewGuid(), Name = "Çukurova" },
                 new() { Id = Guid.NewGuid(), Name = "İmamoğlu" }
             }
@@ -47,15 +47,15 @@ public static class CityDistrictSeed
             Name = "ADIYAMAN",
             Districts = new List<District>
             {
-                new() { Id = Guid.NewGuid(), Name = "Besni̇" },
+                new() { Id = Guid.NewGuid(), Name = "Besni" },
                 new() { Id = Guid.NewGuid(), Name = "Gerger" },
-                new() { Id = Guid.NewGuid(), Name = "Gölbaşi" },
+                new() { Id = Guid.NewGuid(), Name = "Gölbaşı" },
                 new() { Id = Guid.NewGuid(), Name = "Kahta" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
                 new() { Id = Guid.NewGuid(), Name = "Samsat" },
-                new() { Id = Guid.NewGuid(), Name = "Si̇nci̇k" },
+                new() { Id = Guid.NewGuid(), Name = "Sincik" },
                 new() { Id = Guid.NewGuid(), Name = "Tut" },
-                new() { Id = Guid.NewGuid(), Name = "Çeli̇khan" }
+                new() { Id = Guid.NewGuid(), Name = "Çelikhan" }
             }
         };
 
@@ -68,22 +68,22 @@ public static class CityDistrictSeed
             Districts = new List<District>
             {
                 new() { Id = Guid.NewGuid(), Name = "Bayat" },
-                new() { Id = Guid.NewGuid(), Name = "Başmakçi" },
-                new() { Id = Guid.NewGuid(), Name = "Bolvadi̇n" },
-                new() { Id = Guid.NewGuid(), Name = "Dazkiri" },
-                new() { Id = Guid.NewGuid(), Name = "Di̇nar" },
-                new() { Id = Guid.NewGuid(), Name = "Emi̇rdağ" },
-                new() { Id = Guid.NewGuid(), Name = "Evci̇ler" },
+                new() { Id = Guid.NewGuid(), Name = "Başmakçı" },
+                new() { Id = Guid.NewGuid(), Name = "Bolvadin" },
+                new() { Id = Guid.NewGuid(), Name = "Dazkırı" },
+                new() { Id = Guid.NewGuid(), Name = "Dinar" },
+                new() { Id = Guid.NewGuid(), Name = "Emirdağ" },
+                new() { Id = Guid.NewGuid(), Name = "Evciler" },
                 new() { Id = Guid.NewGuid(), Name = "Hocalar" },
-                new() { Id = Guid.NewGuid(), Name = "Kizilören" },
+                new() { Id = Guid.NewGuid(), Name = "Kızılören" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
-                new() { Id = Guid.NewGuid(), Name = "Sandikli" },
-                new() { Id = Guid.NewGuid(), Name = "Si̇nanpaşa" },
-                new() { Id = Guid.NewGuid(), Name = "Sultandaği" },
+                new() { Id = Guid.NewGuid(), Name = "Sandıklı" },
+                new() { Id = Guid.NewGuid(), Name = "Sinanpaşa" },
+                new() { Id = Guid.NewGuid(), Name = "Sultandağı" },
                 new() { Id = Guid.NewGuid(), Name = "Çay" },
                 new() { Id = Guid.NewGuid(), Name = "Çobanlar" },
-                new() { Id = Guid.NewGuid(), Name = "İhsani̇ye" },
-                new() { Id = Guid.NewGuid(), Name = "İscehi̇sar" },
+                new() { Id = Guid.NewGuid(), Name = "İhsaniye" },
+                new() { Id = Guid.NewGuid(), Name = "İscehisar" },
                 new() { Id = Guid.NewGuid(), Name = "Şuhut" }
             }
         };
@@ -97,13 +97,13 @@ public static class CityDistrictSeed
             Districts = new List<District>
             {
                 new() { Id = Guid.NewGuid(), Name = "Ağaçören" },
-                new() { Id = Guid.NewGuid(), Name = "Eski̇l" },
+                new() { Id = Guid.NewGuid(), Name = "Eskil" },
                 new() { Id = Guid.NewGuid(), Name = "Gülağaç" },
                 new() { Id = Guid.NewGuid(), Name = "Güzelyurt" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
                 new() { Id = Guid.NewGuid(), Name = "Ortaköy" },
-                new() { Id = Guid.NewGuid(), Name = "Sariyahşi̇" },
-                new() { Id = Guid.NewGuid(), Name = "Sultanhani" }
+                new() { Id = Guid.NewGuid(), Name = "Sarıyahşi" },
+                new() { Id = Guid.NewGuid(), Name = "Sultanhanı" }
             }
         };
 
@@ -116,10 +116,10 @@ public static class CityDistrictSeed
             Districts = new List<District>
             {
                 new() { Id = Guid.NewGuid(), Name = "Göynücek" },
-                new() { Id = Guid.NewGuid(), Name = "Gümüşhaciköy" },
+                new() { Id = Guid.NewGuid(), Name = "Gümüşhacıköy" },
                 new() { Id = Guid.NewGuid(), Name = "Hamamözü" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
-                new() { Id = Guid.NewGuid(), Name = "Merzi̇fon" },
+                new() { Id = Guid.NewGuid(), Name = "Merzifon" },
                 new() { Id = Guid.NewGuid(), Name = "Suluova" },
                 new() { Id = Guid.NewGuid(), Name = "Taşova" }
             }
@@ -133,32 +133,32 @@ public static class CityDistrictSeed
             Name = "ANKARA",
             Districts = new List<District>
             {
-                new() { Id = Guid.NewGuid(), Name = "Merkez" },
                 new() { Id = Guid.NewGuid(), Name = "Akyurt" },
-                new() { Id = Guid.NewGuid(), Name = "Altindağ" },
+                new() { Id = Guid.NewGuid(), Name = "Altındağ" },
                 new() { Id = Guid.NewGuid(), Name = "Ayaş" },
                 new() { Id = Guid.NewGuid(), Name = "Bala" },
-                new() { Id = Guid.NewGuid(), Name = "Beypazari" },
+                new() { Id = Guid.NewGuid(), Name = "Beypazarı" },
                 new() { Id = Guid.NewGuid(), Name = "Elmadağ" },
-                new() { Id = Guid.NewGuid(), Name = "Eti̇mesgut" },
+                new() { Id = Guid.NewGuid(), Name = "Etimesgut" },
                 new() { Id = Guid.NewGuid(), Name = "Evren" },
-                new() { Id = Guid.NewGuid(), Name = "Gölbaşi" },
+                new() { Id = Guid.NewGuid(), Name = "Gölbaşı" },
                 new() { Id = Guid.NewGuid(), Name = "Güdül" },
                 new() { Id = Guid.NewGuid(), Name = "Haymana" },
                 new() { Id = Guid.NewGuid(), Name = "Kahramankazan" },
-                new() { Id = Guid.NewGuid(), Name = "Kaleci̇k" },
-                new() { Id = Guid.NewGuid(), Name = "Keçi̇ören" },
-                new() { Id = Guid.NewGuid(), Name = "Kizilcahamam" },
+                new() { Id = Guid.NewGuid(), Name = "Kalecik" },
+                new() { Id = Guid.NewGuid(), Name = "Keçiören" },
+                new() { Id = Guid.NewGuid(), Name = "Kızılcahamam" },
                 new() { Id = Guid.NewGuid(), Name = "Mamak" },
-                new() { Id = Guid.NewGuid(), Name = "Nallihan" },
-                new() { Id = Guid.NewGuid(), Name = "Polatli" },
+                new() { Id = Guid.NewGuid(), Name = "Merkez" },
+                new() { Id = Guid.NewGuid(), Name = "Nallıhan" },
+                new() { Id = Guid.NewGuid(), Name = "Polatlı" },
                 new() { Id = Guid.NewGuid(), Name = "Pursaklar" },
-                new() { Id = Guid.NewGuid(), Name = "Si̇ncan" },
-                new() { Id = Guid.NewGuid(), Name = "Yeni̇mahalle" },
-                new() { Id = Guid.NewGuid(), Name = "Çamlidere" },
+                new() { Id = Guid.NewGuid(), Name = "Sincan" },
+                new() { Id = Guid.NewGuid(), Name = "Yenimahalle" },
+                new() { Id = Guid.NewGuid(), Name = "Çamlıdere" },
                 new() { Id = Guid.NewGuid(), Name = "Çankaya" },
                 new() { Id = Guid.NewGuid(), Name = "Çubuk" },
-                new() { Id = Guid.NewGuid(), Name = "Şerefli̇koçhi̇sar" }
+                new() { Id = Guid.NewGuid(), Name = "Şereflikoçhisar" }
             }
         };
 
@@ -170,26 +170,26 @@ public static class CityDistrictSeed
             Name = "ANTALYA",
             Districts = new List<District>
             {
-                new() { Id = Guid.NewGuid(), Name = "Akseki̇" },
+                new() { Id = Guid.NewGuid(), Name = "Akseki" },
                 new() { Id = Guid.NewGuid(), Name = "Aksu" },
                 new() { Id = Guid.NewGuid(), Name = "Alanya" },
                 new() { Id = Guid.NewGuid(), Name = "Demre" },
-                new() { Id = Guid.NewGuid(), Name = "Döşemealti" },
-                new() { Id = Guid.NewGuid(), Name = "Elmali" },
-                new() { Id = Guid.NewGuid(), Name = "Fi̇ni̇ke" },
-                new() { Id = Guid.NewGuid(), Name = "Gazi̇paşa" },
+                new() { Id = Guid.NewGuid(), Name = "Döşemealtı" },
+                new() { Id = Guid.NewGuid(), Name = "Elmalı" },
+                new() { Id = Guid.NewGuid(), Name = "Finike" },
+                new() { Id = Guid.NewGuid(), Name = "Gazipaşa" },
                 new() { Id = Guid.NewGuid(), Name = "Gündoğmuş" },
                 new() { Id = Guid.NewGuid(), Name = "Kaş" },
                 new() { Id = Guid.NewGuid(), Name = "Kemer" },
                 new() { Id = Guid.NewGuid(), Name = "Kepez" },
-                new() { Id = Guid.NewGuid(), Name = "Konyaalti" },
-                new() { Id = Guid.NewGuid(), Name = "Korkuteli̇" },
+                new() { Id = Guid.NewGuid(), Name = "Konyaaltı" },
+                new() { Id = Guid.NewGuid(), Name = "Korkuteli" },
                 new() { Id = Guid.NewGuid(), Name = "Kumluca" },
                 new() { Id = Guid.NewGuid(), Name = "Manavgat" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
                 new() { Id = Guid.NewGuid(), Name = "Muratpaşa" },
-                new() { Id = Guid.NewGuid(), Name = "Seri̇k" },
-                new() { Id = Guid.NewGuid(), Name = "İbradi" }
+                new() { Id = Guid.NewGuid(), Name = "Serik" },
+                new() { Id = Guid.NewGuid(), Name = "İbradı" }
             }
         };
 
@@ -206,7 +206,7 @@ public static class CityDistrictSeed
                 new() { Id = Guid.NewGuid(), Name = "Hanak" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
                 new() { Id = Guid.NewGuid(), Name = "Posof" },
-                new() { Id = Guid.NewGuid(), Name = "Çildir" }
+                new() { Id = Guid.NewGuid(), Name = "Çıldır" }
             }
         };
 
@@ -219,13 +219,13 @@ public static class CityDistrictSeed
             Districts = new List<District>
             {
                 new() { Id = Guid.NewGuid(), Name = "Ardanuç" },
-                new() { Id = Guid.NewGuid(), Name = "Arhavi̇" },
+                new() { Id = Guid.NewGuid(), Name = "Arhavi" },
                 new() { Id = Guid.NewGuid(), Name = "Borçka" },
                 new() { Id = Guid.NewGuid(), Name = "Hopa" },
                 new() { Id = Guid.NewGuid(), Name = "Kemalpaşa" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
                 new() { Id = Guid.NewGuid(), Name = "Murgul" },
-                new() { Id = Guid.NewGuid(), Name = "Yusufeli̇" },
+                new() { Id = Guid.NewGuid(), Name = "Yusufeli" },
                 new() { Id = Guid.NewGuid(), Name = "Şavşat" }
             }
         };
@@ -240,22 +240,22 @@ public static class CityDistrictSeed
             {
                 new() { Id = Guid.NewGuid(), Name = "Bozdoğan" },
                 new() { Id = Guid.NewGuid(), Name = "Buharkent" },
-                new() { Id = Guid.NewGuid(), Name = "Di̇di̇m" },
+                new() { Id = Guid.NewGuid(), Name = "Didim" },
                 new() { Id = Guid.NewGuid(), Name = "Efeler" },
-                new() { Id = Guid.NewGuid(), Name = "Germenci̇k" },
+                new() { Id = Guid.NewGuid(), Name = "Germencik" },
                 new() { Id = Guid.NewGuid(), Name = "Karacasu" },
                 new() { Id = Guid.NewGuid(), Name = "Karpuzlu" },
-                new() { Id = Guid.NewGuid(), Name = "Koçarli" },
+                new() { Id = Guid.NewGuid(), Name = "Koçarlı" },
                 new() { Id = Guid.NewGuid(), Name = "Kuyucak" },
-                new() { Id = Guid.NewGuid(), Name = "Kuşadasi" },
+                new() { Id = Guid.NewGuid(), Name = "Kuşadası" },
                 new() { Id = Guid.NewGuid(), Name = "Köşk" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
-                new() { Id = Guid.NewGuid(), Name = "Nazi̇lli̇" },
-                new() { Id = Guid.NewGuid(), Name = "Sultanhi̇sar" },
+                new() { Id = Guid.NewGuid(), Name = "Nazilli" },
+                new() { Id = Guid.NewGuid(), Name = "Sultanhisar" },
                 new() { Id = Guid.NewGuid(), Name = "Söke" },
-                new() { Id = Guid.NewGuid(), Name = "Yeni̇pazar" },
-                new() { Id = Guid.NewGuid(), Name = "Çi̇ne" },
-                new() { Id = Guid.NewGuid(), Name = "İnci̇rli̇ova" }
+                new() { Id = Guid.NewGuid(), Name = "Yenipazar" },
+                new() { Id = Guid.NewGuid(), Name = "Çine" },
+                new() { Id = Guid.NewGuid(), Name = "İncirliova" }
             }
         };
 
@@ -267,13 +267,13 @@ public static class CityDistrictSeed
             Name = "AĞRI",
             Districts = new List<District>
             {
-                new() { Id = Guid.NewGuid(), Name = "Di̇yadi̇n" },
-                new() { Id = Guid.NewGuid(), Name = "Doğubayazit" },
-                new() { Id = Guid.NewGuid(), Name = "Eleşki̇rt" },
+                new() { Id = Guid.NewGuid(), Name = "Diyadin" },
+                new() { Id = Guid.NewGuid(), Name = "Doğubayazıt" },
+                new() { Id = Guid.NewGuid(), Name = "Eleşkirt" },
                 new() { Id = Guid.NewGuid(), Name = "Hamur" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
                 new() { Id = Guid.NewGuid(), Name = "Patnos" },
-                new() { Id = Guid.NewGuid(), Name = "Taşliçay" },
+                new() { Id = Guid.NewGuid(), Name = "Taşlıçay" },
                 new() { Id = Guid.NewGuid(), Name = "Tutak" }
             }
         };
@@ -286,27 +286,27 @@ public static class CityDistrictSeed
             Name = "BALIKESİR",
             Districts = new List<District>
             {
-                new() { Id = Guid.NewGuid(), Name = "Altieylül" },
-                new() { Id = Guid.NewGuid(), Name = "Ayvalik" },
+                new() { Id = Guid.NewGuid(), Name = "Altıeylül" },
+                new() { Id = Guid.NewGuid(), Name = "Ayvalık" },
                 new() { Id = Guid.NewGuid(), Name = "Balya" },
-                new() { Id = Guid.NewGuid(), Name = "Bandirma" },
-                new() { Id = Guid.NewGuid(), Name = "Bi̇gadi̇ç" },
-                new() { Id = Guid.NewGuid(), Name = "Burhani̇ye" },
+                new() { Id = Guid.NewGuid(), Name = "Bandırma" },
+                new() { Id = Guid.NewGuid(), Name = "Bigadiç" },
+                new() { Id = Guid.NewGuid(), Name = "Burhaniye" },
                 new() { Id = Guid.NewGuid(), Name = "Dursunbey" },
-                new() { Id = Guid.NewGuid(), Name = "Edremi̇t" },
+                new() { Id = Guid.NewGuid(), Name = "Edremit" },
                 new() { Id = Guid.NewGuid(), Name = "Erdek" },
                 new() { Id = Guid.NewGuid(), Name = "Gömeç" },
                 new() { Id = Guid.NewGuid(), Name = "Gönen" },
                 new() { Id = Guid.NewGuid(), Name = "Havran" },
-                new() { Id = Guid.NewGuid(), Name = "Karesi̇" },
+                new() { Id = Guid.NewGuid(), Name = "Karesi" },
                 new() { Id = Guid.NewGuid(), Name = "Kepsut" },
                 new() { Id = Guid.NewGuid(), Name = "Manyas" },
                 new() { Id = Guid.NewGuid(), Name = "Marmara" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
                 new() { Id = Guid.NewGuid(), Name = "Savaştepe" },
-                new() { Id = Guid.NewGuid(), Name = "Sindirgi" },
                 new() { Id = Guid.NewGuid(), Name = "Susurluk" },
-                new() { Id = Guid.NewGuid(), Name = "İvri̇ndi̇" }
+                new() { Id = Guid.NewGuid(), Name = "Sındırgı" },
+                new() { Id = Guid.NewGuid(), Name = "İvrindi" }
             }
         };
 
@@ -319,7 +319,7 @@ public static class CityDistrictSeed
             Districts = new List<District>
             {
                 new() { Id = Guid.NewGuid(), Name = "Amasra" },
-                new() { Id = Guid.NewGuid(), Name = "Kurucaşi̇le" },
+                new() { Id = Guid.NewGuid(), Name = "Kurucaşile" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
                 new() { Id = Guid.NewGuid(), Name = "Ulus" }
             }
@@ -333,7 +333,7 @@ public static class CityDistrictSeed
             Name = "BATMAN",
             Districts = new List<District>
             {
-                new() { Id = Guid.NewGuid(), Name = "Beşi̇ri̇" },
+                new() { Id = Guid.NewGuid(), Name = "Beşiri" },
                 new() { Id = Guid.NewGuid(), Name = "Gercüş" },
                 new() { Id = Guid.NewGuid(), Name = "Hasankeyf" },
                 new() { Id = Guid.NewGuid(), Name = "Kozluk" },
@@ -350,8 +350,8 @@ public static class CityDistrictSeed
             Name = "BAYBURT",
             Districts = new List<District>
             {
-                new() { Id = Guid.NewGuid(), Name = "Aydintepe" },
-                new() { Id = Guid.NewGuid(), Name = "Demi̇rözü" },
+                new() { Id = Guid.NewGuid(), Name = "Aydıntepe" },
+                new() { Id = Guid.NewGuid(), Name = "Demirözü" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" }
             }
         };
@@ -364,15 +364,15 @@ public static class CityDistrictSeed
             Name = "BOLU",
             Districts = new List<District>
             {
-                new() { Id = Guid.NewGuid(), Name = "Dörtdi̇van" },
+                new() { Id = Guid.NewGuid(), Name = "Dörtdivan" },
                 new() { Id = Guid.NewGuid(), Name = "Gerede" },
                 new() { Id = Guid.NewGuid(), Name = "Göynük" },
-                new() { Id = Guid.NewGuid(), Name = "Kibriscik" },
+                new() { Id = Guid.NewGuid(), Name = "Kıbrıscık" },
                 new() { Id = Guid.NewGuid(), Name = "Mengen" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
                 new() { Id = Guid.NewGuid(), Name = "Mudurnu" },
                 new() { Id = Guid.NewGuid(), Name = "Seben" },
-                new() { Id = Guid.NewGuid(), Name = "Yeni̇çağa" }
+                new() { Id = Guid.NewGuid(), Name = "Yeniçağa" }
             }
         };
 
@@ -384,17 +384,17 @@ public static class CityDistrictSeed
             Name = "BURDUR",
             Districts = new List<District>
             {
-                new() { Id = Guid.NewGuid(), Name = "Altinyayla" },
+                new() { Id = Guid.NewGuid(), Name = "Altınyayla" },
                 new() { Id = Guid.NewGuid(), Name = "Ağlasun" },
                 new() { Id = Guid.NewGuid(), Name = "Bucak" },
-                new() { Id = Guid.NewGuid(), Name = "Gölhi̇sar" },
-                new() { Id = Guid.NewGuid(), Name = "Karamanli" },
+                new() { Id = Guid.NewGuid(), Name = "Gölhisar" },
+                new() { Id = Guid.NewGuid(), Name = "Karamanlı" },
                 new() { Id = Guid.NewGuid(), Name = "Kemer" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
-                new() { Id = Guid.NewGuid(), Name = "Tefenni̇" },
-                new() { Id = Guid.NewGuid(), Name = "Yeşi̇lova" },
-                new() { Id = Guid.NewGuid(), Name = "Çavdir" },
-                new() { Id = Guid.NewGuid(), Name = "Çelti̇kçi̇" }
+                new() { Id = Guid.NewGuid(), Name = "Tefenni" },
+                new() { Id = Guid.NewGuid(), Name = "Yeşilova" },
+                new() { Id = Guid.NewGuid(), Name = "Çavdır" },
+                new() { Id = Guid.NewGuid(), Name = "Çeltikçi" }
             }
         };
 
@@ -406,24 +406,24 @@ public static class CityDistrictSeed
             Name = "BURSA",
             Districts = new List<District>
             {
-                new() { Id = Guid.NewGuid(), Name = "Merkez" },
                 new() { Id = Guid.NewGuid(), Name = "Büyükorhan" },
-                new() { Id = Guid.NewGuid(), Name = "Gemli̇k" },
+                new() { Id = Guid.NewGuid(), Name = "Gemlik" },
                 new() { Id = Guid.NewGuid(), Name = "Gürsu" },
-                new() { Id = Guid.NewGuid(), Name = "Harmancik" },
+                new() { Id = Guid.NewGuid(), Name = "Harmancık" },
                 new() { Id = Guid.NewGuid(), Name = "Karacabey" },
                 new() { Id = Guid.NewGuid(), Name = "Keles" },
                 new() { Id = Guid.NewGuid(), Name = "Kestel" },
+                new() { Id = Guid.NewGuid(), Name = "Merkez" },
                 new() { Id = Guid.NewGuid(), Name = "Mudanya" },
                 new() { Id = Guid.NewGuid(), Name = "Mustafakemalpaşa" },
-                new() { Id = Guid.NewGuid(), Name = "Ni̇lüfer" },
-                new() { Id = Guid.NewGuid(), Name = "Orhaneli̇" },
-                new() { Id = Guid.NewGuid(), Name = "Orhangazi̇" },
-                new() { Id = Guid.NewGuid(), Name = "Osmangazi̇" },
-                new() { Id = Guid.NewGuid(), Name = "Yeni̇şehi̇r" },
-                new() { Id = Guid.NewGuid(), Name = "Yildirim" },
+                new() { Id = Guid.NewGuid(), Name = "Nilüfer" },
+                new() { Id = Guid.NewGuid(), Name = "Orhaneli" },
+                new() { Id = Guid.NewGuid(), Name = "Orhangazi" },
+                new() { Id = Guid.NewGuid(), Name = "Osmangazi" },
+                new() { Id = Guid.NewGuid(), Name = "Yenişehir" },
+                new() { Id = Guid.NewGuid(), Name = "Yıldırım" },
                 new() { Id = Guid.NewGuid(), Name = "İnegöl" },
-                new() { Id = Guid.NewGuid(), Name = "İzni̇k" }
+                new() { Id = Guid.NewGuid(), Name = "İznik" }
             }
         };
 
@@ -436,13 +436,13 @@ public static class CityDistrictSeed
             Districts = new List<District>
             {
                 new() { Id = Guid.NewGuid(), Name = "Bozüyük" },
-                new() { Id = Guid.NewGuid(), Name = "Gölpazari" },
+                new() { Id = Guid.NewGuid(), Name = "Gölpazarı" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
-                new() { Id = Guid.NewGuid(), Name = "Osmaneli̇" },
-                new() { Id = Guid.NewGuid(), Name = "Pazaryeri̇" },
+                new() { Id = Guid.NewGuid(), Name = "Osmaneli" },
+                new() { Id = Guid.NewGuid(), Name = "Pazaryeri" },
                 new() { Id = Guid.NewGuid(), Name = "Söğüt" },
-                new() { Id = Guid.NewGuid(), Name = "Yeni̇pazar" },
-                new() { Id = Guid.NewGuid(), Name = "İnhi̇sar" }
+                new() { Id = Guid.NewGuid(), Name = "Yenipazar" },
+                new() { Id = Guid.NewGuid(), Name = "İnhisar" }
             }
         };
 
@@ -454,14 +454,14 @@ public static class CityDistrictSeed
             Name = "BİNGÖL",
             Districts = new List<District>
             {
-                new() { Id = Guid.NewGuid(), Name = "Adakli" },
+                new() { Id = Guid.NewGuid(), Name = "Adaklı" },
                 new() { Id = Guid.NewGuid(), Name = "Genç" },
-                new() { Id = Guid.NewGuid(), Name = "Karliova" },
-                new() { Id = Guid.NewGuid(), Name = "Ki̇ği" },
+                new() { Id = Guid.NewGuid(), Name = "Karlıova" },
+                new() { Id = Guid.NewGuid(), Name = "Kiğı" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
                 new() { Id = Guid.NewGuid(), Name = "Solhan" },
                 new() { Id = Guid.NewGuid(), Name = "Yayladere" },
-                new() { Id = Guid.NewGuid(), Name = "Yedi̇su" }
+                new() { Id = Guid.NewGuid(), Name = "Yedisu" }
             }
         };
 
@@ -473,12 +473,12 @@ public static class CityDistrictSeed
             Name = "BİTLİS",
             Districts = new List<District>
             {
-                new() { Id = Guid.NewGuid(), Name = "Adi̇lcevaz" },
+                new() { Id = Guid.NewGuid(), Name = "Adilcevaz" },
                 new() { Id = Guid.NewGuid(), Name = "Ahlat" },
                 new() { Id = Guid.NewGuid(), Name = "Güroymak" },
-                new() { Id = Guid.NewGuid(), Name = "Hi̇zan" },
+                new() { Id = Guid.NewGuid(), Name = "Hizan" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
-                new() { Id = Guid.NewGuid(), Name = "Mutki̇" },
+                new() { Id = Guid.NewGuid(), Name = "Mutki" },
                 new() { Id = Guid.NewGuid(), Name = "Tatvan" }
             }
         };
@@ -491,10 +491,10 @@ public static class CityDistrictSeed
             Name = "DENİZLİ",
             Districts = new List<District>
             {
-                new() { Id = Guid.NewGuid(), Name = "Acipayam" },
+                new() { Id = Guid.NewGuid(), Name = "Acıpayam" },
                 new() { Id = Guid.NewGuid(), Name = "Babadağ" },
                 new() { Id = Guid.NewGuid(), Name = "Baklan" },
-                new() { Id = Guid.NewGuid(), Name = "Beki̇lli̇" },
+                new() { Id = Guid.NewGuid(), Name = "Bekilli" },
                 new() { Id = Guid.NewGuid(), Name = "Beyağaç" },
                 new() { Id = Guid.NewGuid(), Name = "Bozkurt" },
                 new() { Id = Guid.NewGuid(), Name = "Buldan" },
@@ -502,15 +502,15 @@ public static class CityDistrictSeed
                 new() { Id = Guid.NewGuid(), Name = "Honaz" },
                 new() { Id = Guid.NewGuid(), Name = "Kale" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
-                new() { Id = Guid.NewGuid(), Name = "Merkezefendi̇" },
+                new() { Id = Guid.NewGuid(), Name = "Merkezefendi" },
                 new() { Id = Guid.NewGuid(), Name = "Pamukkale" },
                 new() { Id = Guid.NewGuid(), Name = "Sarayköy" },
-                new() { Id = Guid.NewGuid(), Name = "Seri̇nhi̇sar" },
+                new() { Id = Guid.NewGuid(), Name = "Serinhisar" },
                 new() { Id = Guid.NewGuid(), Name = "Tavas" },
                 new() { Id = Guid.NewGuid(), Name = "Çal" },
-                new() { Id = Guid.NewGuid(), Name = "Çameli̇" },
+                new() { Id = Guid.NewGuid(), Name = "Çameli" },
                 new() { Id = Guid.NewGuid(), Name = "Çardak" },
-                new() { Id = Guid.NewGuid(), Name = "Çi̇vri̇l" }
+                new() { Id = Guid.NewGuid(), Name = "Çivril" }
             }
         };
 
@@ -523,13 +523,13 @@ public static class CityDistrictSeed
             Districts = new List<District>
             {
                 new() { Id = Guid.NewGuid(), Name = "Akçakoca" },
-                new() { Id = Guid.NewGuid(), Name = "Cumayeri̇" },
+                new() { Id = Guid.NewGuid(), Name = "Cumayeri" },
                 new() { Id = Guid.NewGuid(), Name = "Gölyaka" },
                 new() { Id = Guid.NewGuid(), Name = "Gümüşova" },
-                new() { Id = Guid.NewGuid(), Name = "Kaynaşli" },
+                new() { Id = Guid.NewGuid(), Name = "Kaynaşlı" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
-                new() { Id = Guid.NewGuid(), Name = "Yiğilca" },
-                new() { Id = Guid.NewGuid(), Name = "Çi̇li̇mli̇" }
+                new() { Id = Guid.NewGuid(), Name = "Yığılca" },
+                new() { Id = Guid.NewGuid(), Name = "Çilimli" }
             }
         };
 
@@ -542,23 +542,23 @@ public static class CityDistrictSeed
             Districts = new List<District>
             {
                 new() { Id = Guid.NewGuid(), Name = "Bağlar" },
-                new() { Id = Guid.NewGuid(), Name = "Bi̇smi̇l" },
-                new() { Id = Guid.NewGuid(), Name = "Di̇cle" },
-                new() { Id = Guid.NewGuid(), Name = "Ergani̇" },
-                new() { Id = Guid.NewGuid(), Name = "Eği̇l" },
-                new() { Id = Guid.NewGuid(), Name = "Hani̇" },
+                new() { Id = Guid.NewGuid(), Name = "Bismil" },
+                new() { Id = Guid.NewGuid(), Name = "Dicle" },
+                new() { Id = Guid.NewGuid(), Name = "Ergani" },
+                new() { Id = Guid.NewGuid(), Name = "Eğil" },
+                new() { Id = Guid.NewGuid(), Name = "Hani" },
                 new() { Id = Guid.NewGuid(), Name = "Hazro" },
-                new() { Id = Guid.NewGuid(), Name = "Kayapinar" },
+                new() { Id = Guid.NewGuid(), Name = "Kayapınar" },
                 new() { Id = Guid.NewGuid(), Name = "Kocaköy" },
                 new() { Id = Guid.NewGuid(), Name = "Kulp" },
-                new() { Id = Guid.NewGuid(), Name = "Li̇ce" },
+                new() { Id = Guid.NewGuid(), Name = "Lice" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
-                new() { Id = Guid.NewGuid(), Name = "Si̇lvan" },
+                new() { Id = Guid.NewGuid(), Name = "Silvan" },
                 new() { Id = Guid.NewGuid(), Name = "Sur" },
-                new() { Id = Guid.NewGuid(), Name = "Yeni̇şehi̇r" },
-                new() { Id = Guid.NewGuid(), Name = "Çermi̇k" },
-                new() { Id = Guid.NewGuid(), Name = "Çinar" },
-                new() { Id = Guid.NewGuid(), Name = "Çüngüş" }
+                new() { Id = Guid.NewGuid(), Name = "Yenişehir" },
+                new() { Id = Guid.NewGuid(), Name = "Çermik" },
+                new() { Id = Guid.NewGuid(), Name = "Çüngüş" },
+                new() { Id = Guid.NewGuid(), Name = "Çınar" }
             }
         };
 
@@ -574,7 +574,7 @@ public static class CityDistrictSeed
                 new() { Id = Guid.NewGuid(), Name = "Havsa" },
                 new() { Id = Guid.NewGuid(), Name = "Keşan" },
                 new() { Id = Guid.NewGuid(), Name = "Lalapaşa" },
-                new() { Id = Guid.NewGuid(), Name = "Meri̇ç" },
+                new() { Id = Guid.NewGuid(), Name = "Meriç" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
                 new() { Id = Guid.NewGuid(), Name = "Süloğlu" },
                 new() { Id = Guid.NewGuid(), Name = "Uzunköprü" },
@@ -591,16 +591,16 @@ public static class CityDistrictSeed
             Districts = new List<District>
             {
                 new() { Id = Guid.NewGuid(), Name = "Alacakaya" },
-                new() { Id = Guid.NewGuid(), Name = "Aricak" },
-                new() { Id = Guid.NewGuid(), Name = "Ağin" },
-                new() { Id = Guid.NewGuid(), Name = "Baski̇l" },
+                new() { Id = Guid.NewGuid(), Name = "Arıcak" },
+                new() { Id = Guid.NewGuid(), Name = "Ağın" },
+                new() { Id = Guid.NewGuid(), Name = "Baskil" },
                 new() { Id = Guid.NewGuid(), Name = "Karakoçan" },
                 new() { Id = Guid.NewGuid(), Name = "Keban" },
-                new() { Id = Guid.NewGuid(), Name = "Kovancilar" },
+                new() { Id = Guid.NewGuid(), Name = "Kovancılar" },
                 new() { Id = Guid.NewGuid(), Name = "Maden" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
                 new() { Id = Guid.NewGuid(), Name = "Palu" },
-                new() { Id = Guid.NewGuid(), Name = "Si̇vri̇ce" }
+                new() { Id = Guid.NewGuid(), Name = "Sivrice" }
             }
         };
 
@@ -612,11 +612,11 @@ public static class CityDistrictSeed
             Name = "ERZURUM",
             Districts = new List<District>
             {
-                new() { Id = Guid.NewGuid(), Name = "Azi̇zi̇ye" },
+                new() { Id = Guid.NewGuid(), Name = "Aziziye" },
                 new() { Id = Guid.NewGuid(), Name = "Aşkale" },
-                new() { Id = Guid.NewGuid(), Name = "Hinis" },
                 new() { Id = Guid.NewGuid(), Name = "Horasan" },
-                new() { Id = Guid.NewGuid(), Name = "Karayazi" },
+                new() { Id = Guid.NewGuid(), Name = "Hınıs" },
+                new() { Id = Guid.NewGuid(), Name = "Karayazı" },
                 new() { Id = Guid.NewGuid(), Name = "Karaçoban" },
                 new() { Id = Guid.NewGuid(), Name = "Köprüköy" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
@@ -624,14 +624,14 @@ public static class CityDistrictSeed
                 new() { Id = Guid.NewGuid(), Name = "Oltu" },
                 new() { Id = Guid.NewGuid(), Name = "Olur" },
                 new() { Id = Guid.NewGuid(), Name = "Palandöken" },
-                new() { Id = Guid.NewGuid(), Name = "Pasi̇nler" },
+                new() { Id = Guid.NewGuid(), Name = "Pasinler" },
                 new() { Id = Guid.NewGuid(), Name = "Pazaryolu" },
                 new() { Id = Guid.NewGuid(), Name = "Tekman" },
                 new() { Id = Guid.NewGuid(), Name = "Tortum" },
                 new() { Id = Guid.NewGuid(), Name = "Uzundere" },
-                new() { Id = Guid.NewGuid(), Name = "Yakuti̇ye" },
+                new() { Id = Guid.NewGuid(), Name = "Yakutiye" },
                 new() { Id = Guid.NewGuid(), Name = "Çat" },
-                new() { Id = Guid.NewGuid(), Name = "İspi̇r" },
+                new() { Id = Guid.NewGuid(), Name = "İspir" },
                 new() { Id = Guid.NewGuid(), Name = "Şenkaya" }
             }
         };
@@ -645,14 +645,14 @@ public static class CityDistrictSeed
             Districts = new List<District>
             {
                 new() { Id = Guid.NewGuid(), Name = "Kemah" },
-                new() { Id = Guid.NewGuid(), Name = "Kemali̇ye" },
+                new() { Id = Guid.NewGuid(), Name = "Kemaliye" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
-                new() { Id = Guid.NewGuid(), Name = "Otlukbeli̇" },
-                new() { Id = Guid.NewGuid(), Name = "Refahi̇ye" },
+                new() { Id = Guid.NewGuid(), Name = "Otlukbeli" },
+                new() { Id = Guid.NewGuid(), Name = "Refahiye" },
                 new() { Id = Guid.NewGuid(), Name = "Tercan" },
-                new() { Id = Guid.NewGuid(), Name = "Çayirli" },
+                new() { Id = Guid.NewGuid(), Name = "Çayırlı" },
                 new() { Id = Guid.NewGuid(), Name = "Üzümlü" },
-                new() { Id = Guid.NewGuid(), Name = "İli̇ç" }
+                new() { Id = Guid.NewGuid(), Name = "İliç" }
             }
         };
 
@@ -665,19 +665,19 @@ public static class CityDistrictSeed
             Districts = new List<District>
             {
                 new() { Id = Guid.NewGuid(), Name = "Alpu" },
-                new() { Id = Guid.NewGuid(), Name = "Beyli̇kova" },
+                new() { Id = Guid.NewGuid(), Name = "Beylikova" },
                 new() { Id = Guid.NewGuid(), Name = "Günyüzü" },
                 new() { Id = Guid.NewGuid(), Name = "Han" },
-                new() { Id = Guid.NewGuid(), Name = "Mahmudi̇ye" },
+                new() { Id = Guid.NewGuid(), Name = "Mahmudiye" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
-                new() { Id = Guid.NewGuid(), Name = "Mi̇halgazi̇" },
-                new() { Id = Guid.NewGuid(), Name = "Mi̇haliççik" },
-                new() { Id = Guid.NewGuid(), Name = "Odunpazari" },
-                new() { Id = Guid.NewGuid(), Name = "Saricakaya" },
-                new() { Id = Guid.NewGuid(), Name = "Seyi̇tgazi̇" },
-                new() { Id = Guid.NewGuid(), Name = "Si̇vri̇hi̇sar" },
-                new() { Id = Guid.NewGuid(), Name = "Tepebaşi" },
-                new() { Id = Guid.NewGuid(), Name = "Çi̇fteler" },
+                new() { Id = Guid.NewGuid(), Name = "Mihalgazi" },
+                new() { Id = Guid.NewGuid(), Name = "Mihalıççık" },
+                new() { Id = Guid.NewGuid(), Name = "Odunpazarı" },
+                new() { Id = Guid.NewGuid(), Name = "Sarıcakaya" },
+                new() { Id = Guid.NewGuid(), Name = "Seyitgazi" },
+                new() { Id = Guid.NewGuid(), Name = "Sivrihisar" },
+                new() { Id = Guid.NewGuid(), Name = "Tepebaşı" },
+                new() { Id = Guid.NewGuid(), Name = "Çifteler" },
                 new() { Id = Guid.NewGuid(), Name = "İnönü" }
             }
         };
@@ -691,15 +691,15 @@ public static class CityDistrictSeed
             Districts = new List<District>
             {
                 new() { Id = Guid.NewGuid(), Name = "Araban" },
-                new() { Id = Guid.NewGuid(), Name = "Karkamiş" },
+                new() { Id = Guid.NewGuid(), Name = "Karkamış" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
-                new() { Id = Guid.NewGuid(), Name = "Ni̇zi̇p" },
-                new() { Id = Guid.NewGuid(), Name = "Nurdaği" },
-                new() { Id = Guid.NewGuid(), Name = "Oğuzeli̇" },
-                new() { Id = Guid.NewGuid(), Name = "Yavuzeli̇" },
-                new() { Id = Guid.NewGuid(), Name = "İslahi̇ye" },
-                new() { Id = Guid.NewGuid(), Name = "Şahi̇nbey" },
-                new() { Id = Guid.NewGuid(), Name = "Şehi̇tkami̇l" }
+                new() { Id = Guid.NewGuid(), Name = "Nizip" },
+                new() { Id = Guid.NewGuid(), Name = "Nurdağı" },
+                new() { Id = Guid.NewGuid(), Name = "Oğuzeli" },
+                new() { Id = Guid.NewGuid(), Name = "Yavuzeli" },
+                new() { Id = Guid.NewGuid(), Name = "İslahiye" },
+                new() { Id = Guid.NewGuid(), Name = "Şahinbey" },
+                new() { Id = Guid.NewGuid(), Name = "Şehitkamil" }
             }
         };
 
@@ -711,12 +711,12 @@ public static class CityDistrictSeed
             Name = "GÜMÜŞHANE",
             Districts = new List<District>
             {
-                new() { Id = Guid.NewGuid(), Name = "Kelki̇t" },
+                new() { Id = Guid.NewGuid(), Name = "Kelkit" },
                 new() { Id = Guid.NewGuid(), Name = "Köse" },
                 new() { Id = Guid.NewGuid(), Name = "Kürtün" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
                 new() { Id = Guid.NewGuid(), Name = "Torul" },
-                new() { Id = Guid.NewGuid(), Name = "Şi̇ran" }
+                new() { Id = Guid.NewGuid(), Name = "Şiran" }
             }
         };
 
@@ -730,20 +730,20 @@ public static class CityDistrictSeed
             {
                 new() { Id = Guid.NewGuid(), Name = "Alucra" },
                 new() { Id = Guid.NewGuid(), Name = "Bulancak" },
-                new() { Id = Guid.NewGuid(), Name = "Dereli̇" },
+                new() { Id = Guid.NewGuid(), Name = "Dereli" },
                 new() { Id = Guid.NewGuid(), Name = "Doğankent" },
-                new() { Id = Guid.NewGuid(), Name = "Espi̇ye" },
-                new() { Id = Guid.NewGuid(), Name = "Eynesi̇l" },
+                new() { Id = Guid.NewGuid(), Name = "Espiye" },
+                new() { Id = Guid.NewGuid(), Name = "Eynesil" },
                 new() { Id = Guid.NewGuid(), Name = "Görele" },
                 new() { Id = Guid.NewGuid(), Name = "Güce" },
                 new() { Id = Guid.NewGuid(), Name = "Keşap" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
-                new() { Id = Guid.NewGuid(), Name = "Pi̇razi̇z" },
-                new() { Id = Guid.NewGuid(), Name = "Ti̇rebolu" },
-                new() { Id = Guid.NewGuid(), Name = "Yağlidere" },
+                new() { Id = Guid.NewGuid(), Name = "Piraziz" },
+                new() { Id = Guid.NewGuid(), Name = "Tirebolu" },
+                new() { Id = Guid.NewGuid(), Name = "Yağlıdere" },
                 new() { Id = Guid.NewGuid(), Name = "Çamoluk" },
-                new() { Id = Guid.NewGuid(), Name = "Çanakçi" },
-                new() { Id = Guid.NewGuid(), Name = "Şebi̇nkarahi̇sar" }
+                new() { Id = Guid.NewGuid(), Name = "Çanakçı" },
+                new() { Id = Guid.NewGuid(), Name = "Şebinkarahisar" }
             }
         };
 
@@ -756,9 +756,10 @@ public static class CityDistrictSeed
             Districts = new List<District>
             {
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
+                new() { Id = Guid.NewGuid(), Name = "Derecik" },
                 new() { Id = Guid.NewGuid(), Name = "Yüksekova" },
                 new() { Id = Guid.NewGuid(), Name = "Çukurca" },
-                new() { Id = Guid.NewGuid(), Name = "Şemdi̇nli̇" }
+                new() { Id = Guid.NewGuid(), Name = "Şemdinli" }
             }
         };
 
@@ -770,21 +771,21 @@ public static class CityDistrictSeed
             Name = "HATAY",
             Districts = new List<District>
             {
-                new() { Id = Guid.NewGuid(), Name = "Altinözü" },
+                new() { Id = Guid.NewGuid(), Name = "Altınözü" },
                 new() { Id = Guid.NewGuid(), Name = "Antakya" },
                 new() { Id = Guid.NewGuid(), Name = "Arsuz" },
                 new() { Id = Guid.NewGuid(), Name = "Belen" },
                 new() { Id = Guid.NewGuid(), Name = "Defne" },
                 new() { Id = Guid.NewGuid(), Name = "Dörtyol" },
-                new() { Id = Guid.NewGuid(), Name = "Erzi̇n" },
+                new() { Id = Guid.NewGuid(), Name = "Erzin" },
                 new() { Id = Guid.NewGuid(), Name = "Hassa" },
-                new() { Id = Guid.NewGuid(), Name = "Kirikhan" },
                 new() { Id = Guid.NewGuid(), Name = "Kumlu" },
+                new() { Id = Guid.NewGuid(), Name = "Kırıkhan" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
                 new() { Id = Guid.NewGuid(), Name = "Payas" },
-                new() { Id = Guid.NewGuid(), Name = "Reyhanli" },
+                new() { Id = Guid.NewGuid(), Name = "Reyhanlı" },
                 new() { Id = Guid.NewGuid(), Name = "Samandağ" },
-                new() { Id = Guid.NewGuid(), Name = "Yayladaği" },
+                new() { Id = Guid.NewGuid(), Name = "Yayladağı" },
                 new() { Id = Guid.NewGuid(), Name = "İskenderun" }
             }
         };
@@ -799,17 +800,17 @@ public static class CityDistrictSeed
             {
                 new() { Id = Guid.NewGuid(), Name = "Aksu" },
                 new() { Id = Guid.NewGuid(), Name = "Atabey" },
-                new() { Id = Guid.NewGuid(), Name = "Eği̇rdi̇r" },
+                new() { Id = Guid.NewGuid(), Name = "Eğirdir" },
                 new() { Id = Guid.NewGuid(), Name = "Gelendost" },
                 new() { Id = Guid.NewGuid(), Name = "Gönen" },
-                new() { Id = Guid.NewGuid(), Name = "Keçi̇borlu" },
+                new() { Id = Guid.NewGuid(), Name = "Keçiborlu" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
-                new() { Id = Guid.NewGuid(), Name = "Seni̇rkent" },
+                new() { Id = Guid.NewGuid(), Name = "Senirkent" },
                 new() { Id = Guid.NewGuid(), Name = "Sütçüler" },
                 new() { Id = Guid.NewGuid(), Name = "Uluborlu" },
                 new() { Id = Guid.NewGuid(), Name = "Yalvaç" },
-                new() { Id = Guid.NewGuid(), Name = "Yeni̇şarbademli̇" },
-                new() { Id = Guid.NewGuid(), Name = "Şarki̇karaağaç" }
+                new() { Id = Guid.NewGuid(), Name = "Yenişarbademli" },
+                new() { Id = Guid.NewGuid(), Name = "Şarkikaraağaç" }
             }
         };
 
@@ -821,7 +822,7 @@ public static class CityDistrictSeed
             Name = "IĞDIR",
             Districts = new List<District>
             {
-                new() { Id = Guid.NewGuid(), Name = "Aralik" },
+                new() { Id = Guid.NewGuid(), Name = "Aralık" },
                 new() { Id = Guid.NewGuid(), Name = "Karakoyunlu" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
                 new() { Id = Guid.NewGuid(), Name = "Tuzluca" }
@@ -836,18 +837,18 @@ public static class CityDistrictSeed
             Name = "KAHRAMANMARAŞ",
             Districts = new List<District>
             {
-                new() { Id = Guid.NewGuid(), Name = "Afşi̇n" },
-                new() { Id = Guid.NewGuid(), Name = "Andirin" },
-                new() { Id = Guid.NewGuid(), Name = "Dulkadi̇roğlu" },
-                new() { Id = Guid.NewGuid(), Name = "Eki̇nözü" },
-                new() { Id = Guid.NewGuid(), Name = "Elbi̇stan" },
+                new() { Id = Guid.NewGuid(), Name = "Afşin" },
+                new() { Id = Guid.NewGuid(), Name = "Andırın" },
+                new() { Id = Guid.NewGuid(), Name = "Dulkadiroğlu" },
+                new() { Id = Guid.NewGuid(), Name = "Ekinözü" },
+                new() { Id = Guid.NewGuid(), Name = "Elbistan" },
                 new() { Id = Guid.NewGuid(), Name = "Göksun" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
                 new() { Id = Guid.NewGuid(), Name = "Nurhak" },
-                new() { Id = Guid.NewGuid(), Name = "Oni̇ki̇şubat" },
-                new() { Id = Guid.NewGuid(), Name = "Pazarcik" },
+                new() { Id = Guid.NewGuid(), Name = "Onikişubat" },
+                new() { Id = Guid.NewGuid(), Name = "Pazarcık" },
                 new() { Id = Guid.NewGuid(), Name = "Türkoğlu" },
-                new() { Id = Guid.NewGuid(), Name = "Çağlayanceri̇t" }
+                new() { Id = Guid.NewGuid(), Name = "Çağlayancerit" }
             }
         };
 
@@ -859,12 +860,12 @@ public static class CityDistrictSeed
             Name = "KARABÜK",
             Districts = new List<District>
             {
-                new() { Id = Guid.NewGuid(), Name = "Eflani̇" },
-                new() { Id = Guid.NewGuid(), Name = "Eski̇pazar" },
+                new() { Id = Guid.NewGuid(), Name = "Eflani" },
+                new() { Id = Guid.NewGuid(), Name = "Eskipazar" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
-                new() { Id = Guid.NewGuid(), Name = "Ovacik" },
+                new() { Id = Guid.NewGuid(), Name = "Ovacık" },
                 new() { Id = Guid.NewGuid(), Name = "Safranbolu" },
-                new() { Id = Guid.NewGuid(), Name = "Yeni̇ce" }
+                new() { Id = Guid.NewGuid(), Name = "Yenice" }
             }
         };
 
@@ -876,12 +877,12 @@ public static class CityDistrictSeed
             Name = "KARAMAN",
             Districts = new List<District>
             {
-                new() { Id = Guid.NewGuid(), Name = "Ayranci" },
+                new() { Id = Guid.NewGuid(), Name = "Ayrancı" },
                 new() { Id = Guid.NewGuid(), Name = "Başyayla" },
                 new() { Id = Guid.NewGuid(), Name = "Ermenek" },
-                new() { Id = Guid.NewGuid(), Name = "Kazimkarabeki̇r" },
+                new() { Id = Guid.NewGuid(), Name = "Kazımkarabekir" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
-                new() { Id = Guid.NewGuid(), Name = "Sariveli̇ler" }
+                new() { Id = Guid.NewGuid(), Name = "Sarıveliler" }
             }
         };
 
@@ -895,11 +896,11 @@ public static class CityDistrictSeed
             {
                 new() { Id = Guid.NewGuid(), Name = "Akyaka" },
                 new() { Id = Guid.NewGuid(), Name = "Arpaçay" },
-                new() { Id = Guid.NewGuid(), Name = "Di̇gor" },
-                new() { Id = Guid.NewGuid(), Name = "Kağizman" },
+                new() { Id = Guid.NewGuid(), Name = "Digor" },
+                new() { Id = Guid.NewGuid(), Name = "Kağızman" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
-                new() { Id = Guid.NewGuid(), Name = "Sarikamiş" },
-                new() { Id = Guid.NewGuid(), Name = "Seli̇m" },
+                new() { Id = Guid.NewGuid(), Name = "Sarıkamış" },
+                new() { Id = Guid.NewGuid(), Name = "Selim" },
                 new() { Id = Guid.NewGuid(), Name = "Susuz" }
             }
         };
@@ -915,21 +916,21 @@ public static class CityDistrictSeed
                 new() { Id = Guid.NewGuid(), Name = "Abana" },
                 new() { Id = Guid.NewGuid(), Name = "Araç" },
                 new() { Id = Guid.NewGuid(), Name = "Azdavay" },
-                new() { Id = Guid.NewGuid(), Name = "Ağli" },
+                new() { Id = Guid.NewGuid(), Name = "Ağlı" },
                 new() { Id = Guid.NewGuid(), Name = "Bozkurt" },
-                new() { Id = Guid.NewGuid(), Name = "Ci̇de" },
+                new() { Id = Guid.NewGuid(), Name = "Cide" },
                 new() { Id = Guid.NewGuid(), Name = "Daday" },
-                new() { Id = Guid.NewGuid(), Name = "Devrekani̇" },
+                new() { Id = Guid.NewGuid(), Name = "Devrekani" },
                 new() { Id = Guid.NewGuid(), Name = "Doğanyurt" },
                 new() { Id = Guid.NewGuid(), Name = "Hanönü" },
                 new() { Id = Guid.NewGuid(), Name = "Küre" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
-                new() { Id = Guid.NewGuid(), Name = "Pinarbaşi" },
-                new() { Id = Guid.NewGuid(), Name = "Seydi̇ler" },
+                new() { Id = Guid.NewGuid(), Name = "Pınarbaşı" },
+                new() { Id = Guid.NewGuid(), Name = "Seydiler" },
                 new() { Id = Guid.NewGuid(), Name = "Taşköprü" },
                 new() { Id = Guid.NewGuid(), Name = "Tosya" },
-                new() { Id = Guid.NewGuid(), Name = "Çatalzeyti̇n" },
-                new() { Id = Guid.NewGuid(), Name = "İhsangazi̇" },
+                new() { Id = Guid.NewGuid(), Name = "Çatalzeytin" },
+                new() { Id = Guid.NewGuid(), Name = "İhsangazi" },
                 new() { Id = Guid.NewGuid(), Name = "İnebolu" },
                 new() { Id = Guid.NewGuid(), Name = "Şenpazar" }
             }
@@ -943,21 +944,21 @@ public static class CityDistrictSeed
             Name = "KAYSERİ",
             Districts = new List<District>
             {
-                new() { Id = Guid.NewGuid(), Name = "Merkez" },
-                new() { Id = Guid.NewGuid(), Name = "Akkişla" },
+                new() { Id = Guid.NewGuid(), Name = "Akkışla" },
                 new() { Id = Guid.NewGuid(), Name = "Bünyan" },
-                new() { Id = Guid.NewGuid(), Name = "Develi̇" },
-                new() { Id = Guid.NewGuid(), Name = "Felahi̇ye" },
-                new() { Id = Guid.NewGuid(), Name = "Hacilar" },
-                new() { Id = Guid.NewGuid(), Name = "Kocasi̇nan" },
-                new() { Id = Guid.NewGuid(), Name = "Meli̇kgazi̇" },
-                new() { Id = Guid.NewGuid(), Name = "Pinarbaşi" },
-                new() { Id = Guid.NewGuid(), Name = "Sarioğlan" },
-                new() { Id = Guid.NewGuid(), Name = "Sariz" },
+                new() { Id = Guid.NewGuid(), Name = "Develi" },
+                new() { Id = Guid.NewGuid(), Name = "Felahiye" },
+                new() { Id = Guid.NewGuid(), Name = "Hacılar" },
+                new() { Id = Guid.NewGuid(), Name = "Kocasinan" },
+                new() { Id = Guid.NewGuid(), Name = "Melikgazi" },
+                new() { Id = Guid.NewGuid(), Name = "Merkez" },
+                new() { Id = Guid.NewGuid(), Name = "Pınarbaşı" },
+                new() { Id = Guid.NewGuid(), Name = "Sarıoğlan" },
+                new() { Id = Guid.NewGuid(), Name = "Sarız" },
                 new() { Id = Guid.NewGuid(), Name = "Talas" },
                 new() { Id = Guid.NewGuid(), Name = "Tomarza" },
-                new() { Id = Guid.NewGuid(), Name = "Yahyali" },
-                new() { Id = Guid.NewGuid(), Name = "Yeşi̇lhi̇sar" },
+                new() { Id = Guid.NewGuid(), Name = "Yahyalı" },
+                new() { Id = Guid.NewGuid(), Name = "Yeşilhisar" },
                 new() { Id = Guid.NewGuid(), Name = "Özvatan" },
                 new() { Id = Guid.NewGuid(), Name = "İncesu" }
             }
@@ -971,15 +972,15 @@ public static class CityDistrictSeed
             Name = "KIRIKKALE",
             Districts = new List<District>
             {
-                new() { Id = Guid.NewGuid(), Name = "Bahşi̇li̇" },
-                new() { Id = Guid.NewGuid(), Name = "Balişeyh" },
-                new() { Id = Guid.NewGuid(), Name = "Deli̇ce" },
-                new() { Id = Guid.NewGuid(), Name = "Karakeçi̇li̇" },
-                new() { Id = Guid.NewGuid(), Name = "Keski̇n" },
+                new() { Id = Guid.NewGuid(), Name = "Bahşili" },
+                new() { Id = Guid.NewGuid(), Name = "Balışeyh" },
+                new() { Id = Guid.NewGuid(), Name = "Delice" },
+                new() { Id = Guid.NewGuid(), Name = "Karakeçili" },
+                new() { Id = Guid.NewGuid(), Name = "Keskin" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
                 new() { Id = Guid.NewGuid(), Name = "Sulakyurt" },
-                new() { Id = Guid.NewGuid(), Name = "Yahşi̇han" },
-                new() { Id = Guid.NewGuid(), Name = "Çelebi̇" }
+                new() { Id = Guid.NewGuid(), Name = "Yahşihan" },
+                new() { Id = Guid.NewGuid(), Name = "Çelebi" }
             }
         };
 
@@ -991,14 +992,14 @@ public static class CityDistrictSeed
             Name = "KIRKLARELİ",
             Districts = new List<District>
             {
-                new() { Id = Guid.NewGuid(), Name = "Babaeski̇" },
-                new() { Id = Guid.NewGuid(), Name = "Demi̇rköy" },
+                new() { Id = Guid.NewGuid(), Name = "Babaeski" },
+                new() { Id = Guid.NewGuid(), Name = "Demirköy" },
                 new() { Id = Guid.NewGuid(), Name = "Kofçaz" },
                 new() { Id = Guid.NewGuid(), Name = "Lüleburgaz" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
-                new() { Id = Guid.NewGuid(), Name = "Pehli̇vanköy" },
-                new() { Id = Guid.NewGuid(), Name = "Pinarhi̇sar" },
-                new() { Id = Guid.NewGuid(), Name = "Vi̇ze" }
+                new() { Id = Guid.NewGuid(), Name = "Pehlivanköy" },
+                new() { Id = Guid.NewGuid(), Name = "Pınarhisar" },
+                new() { Id = Guid.NewGuid(), Name = "Vize" }
             }
         };
 
@@ -1010,13 +1011,13 @@ public static class CityDistrictSeed
             Name = "KIRŞEHİR",
             Districts = new List<District>
             {
-                new() { Id = Guid.NewGuid(), Name = "Akpinar" },
+                new() { Id = Guid.NewGuid(), Name = "Akpınar" },
                 new() { Id = Guid.NewGuid(), Name = "Akçakent" },
                 new() { Id = Guid.NewGuid(), Name = "Boztepe" },
                 new() { Id = Guid.NewGuid(), Name = "Kaman" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
                 new() { Id = Guid.NewGuid(), Name = "Mucur" },
-                new() { Id = Guid.NewGuid(), Name = "Çi̇çekdaği" }
+                new() { Id = Guid.NewGuid(), Name = "Çiçekdağı" }
             }
         };
 
@@ -1028,19 +1029,19 @@ public static class CityDistrictSeed
             Name = "KOCAELİ",
             Districts = new List<District>
             {
-                new() { Id = Guid.NewGuid(), Name = "Başi̇skele" },
-                new() { Id = Guid.NewGuid(), Name = "Darica" },
-                new() { Id = Guid.NewGuid(), Name = "Deri̇nce" },
-                new() { Id = Guid.NewGuid(), Name = "Di̇lovasi" },
+                new() { Id = Guid.NewGuid(), Name = "Başiskele" },
+                new() { Id = Guid.NewGuid(), Name = "Darıca" },
+                new() { Id = Guid.NewGuid(), Name = "Derince" },
+                new() { Id = Guid.NewGuid(), Name = "Dilovası" },
                 new() { Id = Guid.NewGuid(), Name = "Gebze" },
                 new() { Id = Guid.NewGuid(), Name = "Gölcük" },
-                new() { Id = Guid.NewGuid(), Name = "Kandira" },
+                new() { Id = Guid.NewGuid(), Name = "Kandıra" },
                 new() { Id = Guid.NewGuid(), Name = "Karamürsel" },
                 new() { Id = Guid.NewGuid(), Name = "Kartepe" },
                 new() { Id = Guid.NewGuid(), Name = "Körfez" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
-                new() { Id = Guid.NewGuid(), Name = "Çayirova" },
-                new() { Id = Guid.NewGuid(), Name = "İzmi̇t" }
+                new() { Id = Guid.NewGuid(), Name = "Çayırova" },
+                new() { Id = Guid.NewGuid(), Name = "İzmit" }
             }
         };
 
@@ -1052,37 +1053,37 @@ public static class CityDistrictSeed
             Name = "KONYA",
             Districts = new List<District>
             {
-                new() { Id = Guid.NewGuid(), Name = "Merkez" },
-                new() { Id = Guid.NewGuid(), Name = "Ahirli" },
+                new() { Id = Guid.NewGuid(), Name = "Ahırlı" },
                 new() { Id = Guid.NewGuid(), Name = "Akören" },
-                new() { Id = Guid.NewGuid(), Name = "Akşehi̇r" },
-                new() { Id = Guid.NewGuid(), Name = "Altineki̇n" },
-                new() { Id = Guid.NewGuid(), Name = "Beyşehi̇r" },
-                new() { Id = Guid.NewGuid(), Name = "Bozkir" },
-                new() { Id = Guid.NewGuid(), Name = "Ci̇hanbeyli̇" },
+                new() { Id = Guid.NewGuid(), Name = "Akşehir" },
+                new() { Id = Guid.NewGuid(), Name = "Altınekin" },
+                new() { Id = Guid.NewGuid(), Name = "Beyşehir" },
+                new() { Id = Guid.NewGuid(), Name = "Bozkır" },
+                new() { Id = Guid.NewGuid(), Name = "Cihanbeyli" },
                 new() { Id = Guid.NewGuid(), Name = "Derbent" },
                 new() { Id = Guid.NewGuid(), Name = "Derebucak" },
-                new() { Id = Guid.NewGuid(), Name = "Doğanhi̇sar" },
-                new() { Id = Guid.NewGuid(), Name = "Emi̇rgazi̇" },
-                new() { Id = Guid.NewGuid(), Name = "Ereğli̇" },
-                new() { Id = Guid.NewGuid(), Name = "Güneysinir" },
-                new() { Id = Guid.NewGuid(), Name = "Hadi̇m" },
-                new() { Id = Guid.NewGuid(), Name = "Halkapinar" },
+                new() { Id = Guid.NewGuid(), Name = "Doğanhisar" },
+                new() { Id = Guid.NewGuid(), Name = "Emirgazi" },
+                new() { Id = Guid.NewGuid(), Name = "Ereğli" },
+                new() { Id = Guid.NewGuid(), Name = "Güneysınır" },
+                new() { Id = Guid.NewGuid(), Name = "Hadim" },
+                new() { Id = Guid.NewGuid(), Name = "Halkapınar" },
                 new() { Id = Guid.NewGuid(), Name = "Hüyük" },
-                new() { Id = Guid.NewGuid(), Name = "Ilgin" },
-                new() { Id = Guid.NewGuid(), Name = "Kadinhani" },
-                new() { Id = Guid.NewGuid(), Name = "Karapinar" },
+                new() { Id = Guid.NewGuid(), Name = "Ilgın" },
+                new() { Id = Guid.NewGuid(), Name = "Kadınhanı" },
+                new() { Id = Guid.NewGuid(), Name = "Karapınar" },
                 new() { Id = Guid.NewGuid(), Name = "Karatay" },
                 new() { Id = Guid.NewGuid(), Name = "Kulu" },
                 new() { Id = Guid.NewGuid(), Name = "Meram" },
+                new() { Id = Guid.NewGuid(), Name = "Merkez" },
                 new() { Id = Guid.NewGuid(), Name = "Sarayönü" },
                 new() { Id = Guid.NewGuid(), Name = "Selçuklu" },
-                new() { Id = Guid.NewGuid(), Name = "Seydi̇şehi̇r" },
+                new() { Id = Guid.NewGuid(), Name = "Seydişehir" },
                 new() { Id = Guid.NewGuid(), Name = "Taşkent" },
                 new() { Id = Guid.NewGuid(), Name = "Tuzlukçu" },
-                new() { Id = Guid.NewGuid(), Name = "Yalihüyük" },
+                new() { Id = Guid.NewGuid(), Name = "Yalıhüyük" },
                 new() { Id = Guid.NewGuid(), Name = "Yunak" },
-                new() { Id = Guid.NewGuid(), Name = "Çelti̇k" },
+                new() { Id = Guid.NewGuid(), Name = "Çeltik" },
                 new() { Id = Guid.NewGuid(), Name = "Çumra" }
             }
         };
@@ -1095,18 +1096,18 @@ public static class CityDistrictSeed
             Name = "KÜTAHYA",
             Districts = new List<District>
             {
-                new() { Id = Guid.NewGuid(), Name = "Altintaş" },
+                new() { Id = Guid.NewGuid(), Name = "Altıntaş" },
                 new() { Id = Guid.NewGuid(), Name = "Aslanapa" },
-                new() { Id = Guid.NewGuid(), Name = "Domani̇ç" },
-                new() { Id = Guid.NewGuid(), Name = "Dumlupinar" },
+                new() { Id = Guid.NewGuid(), Name = "Domaniç" },
+                new() { Id = Guid.NewGuid(), Name = "Dumlupınar" },
                 new() { Id = Guid.NewGuid(), Name = "Emet" },
-                new() { Id = Guid.NewGuid(), Name = "Gedi̇z" },
-                new() { Id = Guid.NewGuid(), Name = "Hi̇sarcik" },
+                new() { Id = Guid.NewGuid(), Name = "Gediz" },
+                new() { Id = Guid.NewGuid(), Name = "Hisarcık" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
                 new() { Id = Guid.NewGuid(), Name = "Pazarlar" },
-                new() { Id = Guid.NewGuid(), Name = "Si̇mav" },
-                new() { Id = Guid.NewGuid(), Name = "Tavşanli" },
-                new() { Id = Guid.NewGuid(), Name = "Çavdarhi̇sar" },
+                new() { Id = Guid.NewGuid(), Name = "Simav" },
+                new() { Id = Guid.NewGuid(), Name = "Tavşanlı" },
+                new() { Id = Guid.NewGuid(), Name = "Çavdarhisar" },
                 new() { Id = Guid.NewGuid(), Name = "Şaphane" }
             }
         };
@@ -1119,10 +1120,10 @@ public static class CityDistrictSeed
             Name = "KİLİS",
             Districts = new List<District>
             {
-                new() { Id = Guid.NewGuid(), Name = "Elbeyli̇" },
+                new() { Id = Guid.NewGuid(), Name = "Elbeyli" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
-                new() { Id = Guid.NewGuid(), Name = "Musabeyli̇" },
-                new() { Id = Guid.NewGuid(), Name = "Polateli̇" }
+                new() { Id = Guid.NewGuid(), Name = "Musabeyli" },
+                new() { Id = Guid.NewGuid(), Name = "Polateli" }
             }
         };
 
@@ -1135,19 +1136,19 @@ public static class CityDistrictSeed
             Districts = new List<District>
             {
                 new() { Id = Guid.NewGuid(), Name = "Akçadağ" },
-                new() { Id = Guid.NewGuid(), Name = "Arapgi̇r" },
+                new() { Id = Guid.NewGuid(), Name = "Arapgir" },
                 new() { Id = Guid.NewGuid(), Name = "Arguvan" },
-                new() { Id = Guid.NewGuid(), Name = "Battalgazi̇" },
+                new() { Id = Guid.NewGuid(), Name = "Battalgazi" },
                 new() { Id = Guid.NewGuid(), Name = "Darende" },
                 new() { Id = Guid.NewGuid(), Name = "Doğanyol" },
-                new() { Id = Guid.NewGuid(), Name = "Doğanşehi̇r" },
-                new() { Id = Guid.NewGuid(), Name = "Heki̇mhan" },
+                new() { Id = Guid.NewGuid(), Name = "Doğanşehir" },
+                new() { Id = Guid.NewGuid(), Name = "Hekimhan" },
                 new() { Id = Guid.NewGuid(), Name = "Kale" },
                 new() { Id = Guid.NewGuid(), Name = "Kuluncak" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
                 new() { Id = Guid.NewGuid(), Name = "Pütürge" },
-                new() { Id = Guid.NewGuid(), Name = "Yazihan" },
-                new() { Id = Guid.NewGuid(), Name = "Yeşi̇lyurt" }
+                new() { Id = Guid.NewGuid(), Name = "Yazıhan" },
+                new() { Id = Guid.NewGuid(), Name = "Yeşilyurt" }
             }
         };
 
@@ -1159,20 +1160,20 @@ public static class CityDistrictSeed
             Name = "MANİSA",
             Districts = new List<District>
             {
-                new() { Id = Guid.NewGuid(), Name = "Ahmetli̇" },
-                new() { Id = Guid.NewGuid(), Name = "Akhi̇sar" },
-                new() { Id = Guid.NewGuid(), Name = "Alaşehi̇r" },
-                new() { Id = Guid.NewGuid(), Name = "Demi̇rci̇" },
+                new() { Id = Guid.NewGuid(), Name = "Ahmetli" },
+                new() { Id = Guid.NewGuid(), Name = "Akhisar" },
+                new() { Id = Guid.NewGuid(), Name = "Alaşehir" },
+                new() { Id = Guid.NewGuid(), Name = "Demirci" },
                 new() { Id = Guid.NewGuid(), Name = "Gölmarmara" },
                 new() { Id = Guid.NewGuid(), Name = "Gördes" },
-                new() { Id = Guid.NewGuid(), Name = "Kirkağaç" },
                 new() { Id = Guid.NewGuid(), Name = "Kula" },
-                new() { Id = Guid.NewGuid(), Name = "Köprübaşi" },
+                new() { Id = Guid.NewGuid(), Name = "Köprübaşı" },
+                new() { Id = Guid.NewGuid(), Name = "Kırkağaç" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
-                new() { Id = Guid.NewGuid(), Name = "Sali̇hli̇" },
-                new() { Id = Guid.NewGuid(), Name = "Sarigöl" },
-                new() { Id = Guid.NewGuid(), Name = "Saruhanli" },
-                new() { Id = Guid.NewGuid(), Name = "Selendi̇" },
+                new() { Id = Guid.NewGuid(), Name = "Salihli" },
+                new() { Id = Guid.NewGuid(), Name = "Saruhanlı" },
+                new() { Id = Guid.NewGuid(), Name = "Sarıgöl" },
+                new() { Id = Guid.NewGuid(), Name = "Selendi" },
                 new() { Id = Guid.NewGuid(), Name = "Soma" },
                 new() { Id = Guid.NewGuid(), Name = "Turgutlu" },
                 new() { Id = Guid.NewGuid(), Name = "Yunusemre" },
@@ -1189,16 +1190,16 @@ public static class CityDistrictSeed
             Districts = new List<District>
             {
                 new() { Id = Guid.NewGuid(), Name = "Artuklu" },
-                new() { Id = Guid.NewGuid(), Name = "Dargeçi̇t" },
-                new() { Id = Guid.NewGuid(), Name = "Deri̇k" },
-                new() { Id = Guid.NewGuid(), Name = "Kiziltepe" },
-                new() { Id = Guid.NewGuid(), Name = "Mazidaği" },
+                new() { Id = Guid.NewGuid(), Name = "Dargeçit" },
+                new() { Id = Guid.NewGuid(), Name = "Derik" },
+                new() { Id = Guid.NewGuid(), Name = "Kızıltepe" },
+                new() { Id = Guid.NewGuid(), Name = "Mazıdağı" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
-                new() { Id = Guid.NewGuid(), Name = "Mi̇dyat" },
-                new() { Id = Guid.NewGuid(), Name = "Nusaybi̇n" },
+                new() { Id = Guid.NewGuid(), Name = "Midyat" },
+                new() { Id = Guid.NewGuid(), Name = "Nusaybin" },
                 new() { Id = Guid.NewGuid(), Name = "Savur" },
-                new() { Id = Guid.NewGuid(), Name = "Yeşi̇lli̇" },
-                new() { Id = Guid.NewGuid(), Name = "Ömerli̇" }
+                new() { Id = Guid.NewGuid(), Name = "Yeşilli" },
+                new() { Id = Guid.NewGuid(), Name = "Ömerli" }
             }
         };
 
@@ -1210,20 +1211,20 @@ public static class CityDistrictSeed
             Name = "MERSİN",
             Districts = new List<District>
             {
-                new() { Id = Guid.NewGuid(), Name = "Akdeni̇z" },
+                new() { Id = Guid.NewGuid(), Name = "Akdeniz" },
                 new() { Id = Guid.NewGuid(), Name = "Anamur" },
-                new() { Id = Guid.NewGuid(), Name = "Aydincik" },
-                new() { Id = Guid.NewGuid(), Name = "Bozyazi" },
-                new() { Id = Guid.NewGuid(), Name = "Erdemli̇" },
+                new() { Id = Guid.NewGuid(), Name = "Aydıncık" },
+                new() { Id = Guid.NewGuid(), Name = "Bozyazı" },
+                new() { Id = Guid.NewGuid(), Name = "Erdemli" },
                 new() { Id = Guid.NewGuid(), Name = "Gülnar" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
-                new() { Id = Guid.NewGuid(), Name = "Mezi̇tli̇" },
+                new() { Id = Guid.NewGuid(), Name = "Mezitli" },
                 new() { Id = Guid.NewGuid(), Name = "Mut" },
-                new() { Id = Guid.NewGuid(), Name = "Si̇li̇fke" },
+                new() { Id = Guid.NewGuid(), Name = "Silifke" },
                 new() { Id = Guid.NewGuid(), Name = "Tarsus" },
                 new() { Id = Guid.NewGuid(), Name = "Toroslar" },
-                new() { Id = Guid.NewGuid(), Name = "Yeni̇şehi̇r" },
-                new() { Id = Guid.NewGuid(), Name = "Çamliyayla" }
+                new() { Id = Guid.NewGuid(), Name = "Yenişehir" },
+                new() { Id = Guid.NewGuid(), Name = "Çamlıyayla" }
             }
         };
 
@@ -1238,15 +1239,15 @@ public static class CityDistrictSeed
                 new() { Id = Guid.NewGuid(), Name = "Bodrum" },
                 new() { Id = Guid.NewGuid(), Name = "Dalaman" },
                 new() { Id = Guid.NewGuid(), Name = "Datça" },
-                new() { Id = Guid.NewGuid(), Name = "Fethi̇ye" },
-                new() { Id = Guid.NewGuid(), Name = "Kavaklidere" },
-                new() { Id = Guid.NewGuid(), Name = "Köyceği̇z" },
-                new() { Id = Guid.NewGuid(), Name = "Marmari̇s" },
+                new() { Id = Guid.NewGuid(), Name = "Fethiye" },
+                new() { Id = Guid.NewGuid(), Name = "Kavaklıdere" },
+                new() { Id = Guid.NewGuid(), Name = "Köyceğiz" },
+                new() { Id = Guid.NewGuid(), Name = "Marmaris" },
                 new() { Id = Guid.NewGuid(), Name = "Menteşe" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
-                new() { Id = Guid.NewGuid(), Name = "Mi̇las" },
+                new() { Id = Guid.NewGuid(), Name = "Milas" },
                 new() { Id = Guid.NewGuid(), Name = "Ortaca" },
-                new() { Id = Guid.NewGuid(), Name = "Seydi̇kemer" },
+                new() { Id = Guid.NewGuid(), Name = "Seydikemer" },
                 new() { Id = Guid.NewGuid(), Name = "Ula" },
                 new() { Id = Guid.NewGuid(), Name = "Yatağan" }
             }
@@ -1260,10 +1261,10 @@ public static class CityDistrictSeed
             Name = "MUŞ",
             Districts = new List<District>
             {
-                new() { Id = Guid.NewGuid(), Name = "Bulanik" },
+                new() { Id = Guid.NewGuid(), Name = "Bulanık" },
                 new() { Id = Guid.NewGuid(), Name = "Hasköy" },
                 new() { Id = Guid.NewGuid(), Name = "Korkut" },
-                new() { Id = Guid.NewGuid(), Name = "Malazgi̇rt" },
+                new() { Id = Guid.NewGuid(), Name = "Malazgirt" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
                 new() { Id = Guid.NewGuid(), Name = "Varto" }
             }
@@ -1277,12 +1278,12 @@ public static class CityDistrictSeed
             Name = "NEVŞEHİR",
             Districts = new List<District>
             {
-                new() { Id = Guid.NewGuid(), Name = "Acigöl" },
+                new() { Id = Guid.NewGuid(), Name = "Acıgöl" },
                 new() { Id = Guid.NewGuid(), Name = "Avanos" },
-                new() { Id = Guid.NewGuid(), Name = "Deri̇nkuyu" },
-                new() { Id = Guid.NewGuid(), Name = "Gülşehi̇r" },
-                new() { Id = Guid.NewGuid(), Name = "Hacibektaş" },
-                new() { Id = Guid.NewGuid(), Name = "Kozakli" },
+                new() { Id = Guid.NewGuid(), Name = "Derinkuyu" },
+                new() { Id = Guid.NewGuid(), Name = "Gülşehir" },
+                new() { Id = Guid.NewGuid(), Name = "Hacıbektaş" },
+                new() { Id = Guid.NewGuid(), Name = "Kozaklı" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
                 new() { Id = Guid.NewGuid(), Name = "Ürgüp" }
             }
@@ -1296,12 +1297,12 @@ public static class CityDistrictSeed
             Name = "NİĞDE",
             Districts = new List<District>
             {
-                new() { Id = Guid.NewGuid(), Name = "Altunhi̇sar" },
+                new() { Id = Guid.NewGuid(), Name = "Altunhisar" },
                 new() { Id = Guid.NewGuid(), Name = "Bor" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
-                new() { Id = Guid.NewGuid(), Name = "Ulukişla" },
-                new() { Id = Guid.NewGuid(), Name = "Çamardi" },
-                new() { Id = Guid.NewGuid(), Name = "Çi̇ftli̇k" }
+                new() { Id = Guid.NewGuid(), Name = "Ulukışla" },
+                new() { Id = Guid.NewGuid(), Name = "Çamardı" },
+                new() { Id = Guid.NewGuid(), Name = "Çiftlik" }
             }
         };
 
@@ -1314,25 +1315,25 @@ public static class CityDistrictSeed
             Districts = new List<District>
             {
                 new() { Id = Guid.NewGuid(), Name = "Akkuş" },
-                new() { Id = Guid.NewGuid(), Name = "Altinordu" },
-                new() { Id = Guid.NewGuid(), Name = "Aybasti" },
+                new() { Id = Guid.NewGuid(), Name = "Altınordu" },
+                new() { Id = Guid.NewGuid(), Name = "Aybastı" },
                 new() { Id = Guid.NewGuid(), Name = "Fatsa" },
                 new() { Id = Guid.NewGuid(), Name = "Gölköy" },
-                new() { Id = Guid.NewGuid(), Name = "Gülyali" },
+                new() { Id = Guid.NewGuid(), Name = "Gülyalı" },
                 new() { Id = Guid.NewGuid(), Name = "Gürgentepe" },
                 new() { Id = Guid.NewGuid(), Name = "Kabadüz" },
                 new() { Id = Guid.NewGuid(), Name = "Kabataş" },
                 new() { Id = Guid.NewGuid(), Name = "Korgan" },
                 new() { Id = Guid.NewGuid(), Name = "Kumru" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
-                new() { Id = Guid.NewGuid(), Name = "Mesudi̇ye" },
+                new() { Id = Guid.NewGuid(), Name = "Mesudiye" },
                 new() { Id = Guid.NewGuid(), Name = "Perşembe" },
                 new() { Id = Guid.NewGuid(), Name = "Ulubey" },
                 new() { Id = Guid.NewGuid(), Name = "Çamaş" },
-                new() { Id = Guid.NewGuid(), Name = "Çatalpinar" },
-                new() { Id = Guid.NewGuid(), Name = "Çaybaşi" },
+                new() { Id = Guid.NewGuid(), Name = "Çatalpınar" },
+                new() { Id = Guid.NewGuid(), Name = "Çaybaşı" },
                 new() { Id = Guid.NewGuid(), Name = "Ünye" },
-                new() { Id = Guid.NewGuid(), Name = "İki̇zce" }
+                new() { Id = Guid.NewGuid(), Name = "İkizce" }
             }
         };
 
@@ -1345,9 +1346,9 @@ public static class CityDistrictSeed
             Districts = new List<District>
             {
                 new() { Id = Guid.NewGuid(), Name = "Bahçe" },
-                new() { Id = Guid.NewGuid(), Name = "Düzi̇çi̇" },
-                new() { Id = Guid.NewGuid(), Name = "Hasanbeyli̇" },
-                new() { Id = Guid.NewGuid(), Name = "Kadi̇rli̇" },
+                new() { Id = Guid.NewGuid(), Name = "Düziçi" },
+                new() { Id = Guid.NewGuid(), Name = "Hasanbeyli" },
+                new() { Id = Guid.NewGuid(), Name = "Kadirli" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
                 new() { Id = Guid.NewGuid(), Name = "Sumbas" },
                 new() { Id = Guid.NewGuid(), Name = "Toprakkale" }
@@ -1363,17 +1364,17 @@ public static class CityDistrictSeed
             Districts = new List<District>
             {
                 new() { Id = Guid.NewGuid(), Name = "Ardeşen" },
-                new() { Id = Guid.NewGuid(), Name = "Derepazari" },
-                new() { Id = Guid.NewGuid(), Name = "Findikli" },
+                new() { Id = Guid.NewGuid(), Name = "Derepazarı" },
+                new() { Id = Guid.NewGuid(), Name = "Fındıklı" },
                 new() { Id = Guid.NewGuid(), Name = "Güneysu" },
-                new() { Id = Guid.NewGuid(), Name = "Hemşi̇n" },
+                new() { Id = Guid.NewGuid(), Name = "Hemşin" },
                 new() { Id = Guid.NewGuid(), Name = "Kalkandere" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
                 new() { Id = Guid.NewGuid(), Name = "Pazar" },
-                new() { Id = Guid.NewGuid(), Name = "Çamlihemşi̇n" },
-                new() { Id = Guid.NewGuid(), Name = "Çayeli̇" },
-                new() { Id = Guid.NewGuid(), Name = "İki̇zdere" },
-                new() { Id = Guid.NewGuid(), Name = "İyi̇dere" }
+                new() { Id = Guid.NewGuid(), Name = "Çamlıhemşin" },
+                new() { Id = Guid.NewGuid(), Name = "Çayeli" },
+                new() { Id = Guid.NewGuid(), Name = "İkizdere" },
+                new() { Id = Guid.NewGuid(), Name = "İyidere" }
             }
         };
 
@@ -1385,23 +1386,23 @@ public static class CityDistrictSeed
             Name = "SAKARYA",
             Districts = new List<District>
             {
-                new() { Id = Guid.NewGuid(), Name = "Adapazari" },
-                new() { Id = Guid.NewGuid(), Name = "Akyazi" },
-                new() { Id = Guid.NewGuid(), Name = "Ari̇fi̇ye" },
+                new() { Id = Guid.NewGuid(), Name = "Adapazarı" },
+                new() { Id = Guid.NewGuid(), Name = "Akyazı" },
+                new() { Id = Guid.NewGuid(), Name = "Arifiye" },
                 new() { Id = Guid.NewGuid(), Name = "Erenler" },
-                new() { Id = Guid.NewGuid(), Name = "Feri̇zli̇" },
+                new() { Id = Guid.NewGuid(), Name = "Ferizli" },
                 new() { Id = Guid.NewGuid(), Name = "Geyve" },
                 new() { Id = Guid.NewGuid(), Name = "Hendek" },
                 new() { Id = Guid.NewGuid(), Name = "Karapürçek" },
                 new() { Id = Guid.NewGuid(), Name = "Karasu" },
                 new() { Id = Guid.NewGuid(), Name = "Kaynarca" },
-                new() { Id = Guid.NewGuid(), Name = "Kocaali̇" },
+                new() { Id = Guid.NewGuid(), Name = "Kocaali" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
                 new() { Id = Guid.NewGuid(), Name = "Pamukova" },
                 new() { Id = Guid.NewGuid(), Name = "Sapanca" },
-                new() { Id = Guid.NewGuid(), Name = "Serdi̇van" },
+                new() { Id = Guid.NewGuid(), Name = "Serdivan" },
                 new() { Id = Guid.NewGuid(), Name = "Söğütlü" },
-                new() { Id = Guid.NewGuid(), Name = "Tarakli" }
+                new() { Id = Guid.NewGuid(), Name = "Taraklı" }
             }
         };
 
@@ -1413,24 +1414,24 @@ public static class CityDistrictSeed
             Name = "SAMSUN",
             Districts = new List<District>
             {
-                new() { Id = Guid.NewGuid(), Name = "19 Mayis" },
+                new() { Id = Guid.NewGuid(), Name = "Ondokuz Mayıs" },
                 new() { Id = Guid.NewGuid(), Name = "Alaçam" },
-                new() { Id = Guid.NewGuid(), Name = "Asarcik" },
+                new() { Id = Guid.NewGuid(), Name = "Asarcık" },
                 new() { Id = Guid.NewGuid(), Name = "Atakum" },
-                new() { Id = Guid.NewGuid(), Name = "Ayvacik" },
+                new() { Id = Guid.NewGuid(), Name = "Ayvacık" },
                 new() { Id = Guid.NewGuid(), Name = "Bafra" },
-                new() { Id = Guid.NewGuid(), Name = "Cani̇k" },
+                new() { Id = Guid.NewGuid(), Name = "Canik" },
                 new() { Id = Guid.NewGuid(), Name = "Havza" },
                 new() { Id = Guid.NewGuid(), Name = "Kavak" },
-                new() { Id = Guid.NewGuid(), Name = "Ladi̇k" },
+                new() { Id = Guid.NewGuid(), Name = "Ladik" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
-                new() { Id = Guid.NewGuid(), Name = "Salipazari" },
+                new() { Id = Guid.NewGuid(), Name = "Salıpazarı" },
                 new() { Id = Guid.NewGuid(), Name = "Tekkeköy" },
                 new() { Id = Guid.NewGuid(), Name = "Terme" },
-                new() { Id = Guid.NewGuid(), Name = "Vezi̇rköprü" },
+                new() { Id = Guid.NewGuid(), Name = "Vezirköprü" },
                 new() { Id = Guid.NewGuid(), Name = "Yakakent" },
                 new() { Id = Guid.NewGuid(), Name = "Çarşamba" },
-                new() { Id = Guid.NewGuid(), Name = "İlkadim" }
+                new() { Id = Guid.NewGuid(), Name = "İlkadım" }
             }
         };
 
@@ -1442,15 +1443,15 @@ public static class CityDistrictSeed
             Name = "SİNOP",
             Districts = new List<District>
             {
-                new() { Id = Guid.NewGuid(), Name = "Ayancik" },
+                new() { Id = Guid.NewGuid(), Name = "Ayancık" },
                 new() { Id = Guid.NewGuid(), Name = "Boyabat" },
-                new() { Id = Guid.NewGuid(), Name = "Di̇kmen" },
+                new() { Id = Guid.NewGuid(), Name = "Dikmen" },
                 new() { Id = Guid.NewGuid(), Name = "Durağan" },
                 new() { Id = Guid.NewGuid(), Name = "Erfelek" },
                 new() { Id = Guid.NewGuid(), Name = "Gerze" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
                 new() { Id = Guid.NewGuid(), Name = "Saraydüzü" },
-                new() { Id = Guid.NewGuid(), Name = "Türkeli̇" }
+                new() { Id = Guid.NewGuid(), Name = "Türkeli" }
             }
         };
 
@@ -1462,23 +1463,23 @@ public static class CityDistrictSeed
             Name = "SİVAS",
             Districts = new List<District>
             {
-                new() { Id = Guid.NewGuid(), Name = "Akincilar" },
-                new() { Id = Guid.NewGuid(), Name = "Altinyayla" },
-                new() { Id = Guid.NewGuid(), Name = "Di̇vri̇ği̇" },
+                new() { Id = Guid.NewGuid(), Name = "Akıncılar" },
+                new() { Id = Guid.NewGuid(), Name = "Altınyayla" },
+                new() { Id = Guid.NewGuid(), Name = "Divriği" },
                 new() { Id = Guid.NewGuid(), Name = "Doğanşar" },
                 new() { Id = Guid.NewGuid(), Name = "Gemerek" },
                 new() { Id = Guid.NewGuid(), Name = "Gölova" },
                 new() { Id = Guid.NewGuid(), Name = "Gürün" },
-                new() { Id = Guid.NewGuid(), Name = "Hafi̇k" },
+                new() { Id = Guid.NewGuid(), Name = "Hafik" },
                 new() { Id = Guid.NewGuid(), Name = "Kangal" },
-                new() { Id = Guid.NewGuid(), Name = "Koyulhi̇sar" },
+                new() { Id = Guid.NewGuid(), Name = "Koyulhisar" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
-                new() { Id = Guid.NewGuid(), Name = "Suşehri̇" },
+                new() { Id = Guid.NewGuid(), Name = "Suşehri" },
                 new() { Id = Guid.NewGuid(), Name = "Ulaş" },
-                new() { Id = Guid.NewGuid(), Name = "Yildizeli̇" },
+                new() { Id = Guid.NewGuid(), Name = "Yıldızeli" },
                 new() { Id = Guid.NewGuid(), Name = "Zara" },
-                new() { Id = Guid.NewGuid(), Name = "İmranli" },
-                new() { Id = Guid.NewGuid(), Name = "Şarkişla" }
+                new() { Id = Guid.NewGuid(), Name = "İmranlı" },
+                new() { Id = Guid.NewGuid(), Name = "Şarkışla" }
             }
         };
 
@@ -1494,9 +1495,9 @@ public static class CityDistrictSeed
                 new() { Id = Guid.NewGuid(), Name = "Eruh" },
                 new() { Id = Guid.NewGuid(), Name = "Kurtalan" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
-                new() { Id = Guid.NewGuid(), Name = "Pervari̇" },
-                new() { Id = Guid.NewGuid(), Name = "Ti̇llo" },
-                new() { Id = Guid.NewGuid(), Name = "Şi̇rvan" }
+                new() { Id = Guid.NewGuid(), Name = "Pervari" },
+                new() { Id = Guid.NewGuid(), Name = "Tillo" },
+                new() { Id = Guid.NewGuid(), Name = "Şirvan" }
             }
         };
 
@@ -1510,11 +1511,11 @@ public static class CityDistrictSeed
             {
                 new() { Id = Guid.NewGuid(), Name = "Ergene" },
                 new() { Id = Guid.NewGuid(), Name = "Hayrabolu" },
-                new() { Id = Guid.NewGuid(), Name = "Kapakli" },
+                new() { Id = Guid.NewGuid(), Name = "Kapaklı" },
                 new() { Id = Guid.NewGuid(), Name = "Malkara" },
-                new() { Id = Guid.NewGuid(), Name = "Marmaraereğli̇si̇" },
+                new() { Id = Guid.NewGuid(), Name = "Marmaraereğlisi" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
-                new() { Id = Guid.NewGuid(), Name = "Muratli" },
+                new() { Id = Guid.NewGuid(), Name = "Muratlı" },
                 new() { Id = Guid.NewGuid(), Name = "Saray" },
                 new() { Id = Guid.NewGuid(), Name = "Süleymanpaşa" },
                 new() { Id = Guid.NewGuid(), Name = "Çerkezköy" },
@@ -1533,16 +1534,16 @@ public static class CityDistrictSeed
             {
                 new() { Id = Guid.NewGuid(), Name = "Almus" },
                 new() { Id = Guid.NewGuid(), Name = "Artova" },
-                new() { Id = Guid.NewGuid(), Name = "Başçi̇ftli̇k" },
+                new() { Id = Guid.NewGuid(), Name = "Başçiftlik" },
                 new() { Id = Guid.NewGuid(), Name = "Erbaa" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
-                new() { Id = Guid.NewGuid(), Name = "Ni̇ksar" },
+                new() { Id = Guid.NewGuid(), Name = "Niksar" },
                 new() { Id = Guid.NewGuid(), Name = "Pazar" },
-                new() { Id = Guid.NewGuid(), Name = "Reşadi̇ye" },
+                new() { Id = Guid.NewGuid(), Name = "Reşadiye" },
                 new() { Id = Guid.NewGuid(), Name = "Sulusaray" },
                 new() { Id = Guid.NewGuid(), Name = "Turhal" },
-                new() { Id = Guid.NewGuid(), Name = "Yeşi̇lyurt" },
-                new() { Id = Guid.NewGuid(), Name = "Zi̇le" }
+                new() { Id = Guid.NewGuid(), Name = "Yeşilyurt" },
+                new() { Id = Guid.NewGuid(), Name = "Zile" }
             }
         };
 
@@ -1555,24 +1556,24 @@ public static class CityDistrictSeed
             Districts = new List<District>
             {
                 new() { Id = Guid.NewGuid(), Name = "Akçaabat" },
-                new() { Id = Guid.NewGuid(), Name = "Arakli" },
-                new() { Id = Guid.NewGuid(), Name = "Arsi̇n" },
-                new() { Id = Guid.NewGuid(), Name = "Beşi̇kdüzü" },
-                new() { Id = Guid.NewGuid(), Name = "Dernekpazari" },
+                new() { Id = Guid.NewGuid(), Name = "Araklı" },
+                new() { Id = Guid.NewGuid(), Name = "Arsin" },
+                new() { Id = Guid.NewGuid(), Name = "Beşikdüzü" },
+                new() { Id = Guid.NewGuid(), Name = "Dernekpazarı" },
                 new() { Id = Guid.NewGuid(), Name = "Düzköy" },
                 new() { Id = Guid.NewGuid(), Name = "Hayrat" },
-                new() { Id = Guid.NewGuid(), Name = "Köprübaşi" },
+                new() { Id = Guid.NewGuid(), Name = "Köprübaşı" },
                 new() { Id = Guid.NewGuid(), Name = "Maçka" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
                 new() { Id = Guid.NewGuid(), Name = "Of" },
-                new() { Id = Guid.NewGuid(), Name = "Ortahi̇sar" },
+                new() { Id = Guid.NewGuid(), Name = "Ortahisar" },
                 new() { Id = Guid.NewGuid(), Name = "Sürmene" },
                 new() { Id = Guid.NewGuid(), Name = "Tonya" },
-                new() { Id = Guid.NewGuid(), Name = "Vakfikebi̇r" },
+                new() { Id = Guid.NewGuid(), Name = "Vakfıkebir" },
                 new() { Id = Guid.NewGuid(), Name = "Yomra" },
-                new() { Id = Guid.NewGuid(), Name = "Çarşibaşi" },
+                new() { Id = Guid.NewGuid(), Name = "Çarşıbaşı" },
                 new() { Id = Guid.NewGuid(), Name = "Çaykara" },
-                new() { Id = Guid.NewGuid(), Name = "Şalpazari" }
+                new() { Id = Guid.NewGuid(), Name = "Şalpazarı" }
             }
         };
 
@@ -1585,13 +1586,13 @@ public static class CityDistrictSeed
             Districts = new List<District>
             {
                 new() { Id = Guid.NewGuid(), Name = "Hozat" },
-                new() { Id = Guid.NewGuid(), Name = "Mazgi̇rt" },
+                new() { Id = Guid.NewGuid(), Name = "Mazgirt" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
-                new() { Id = Guid.NewGuid(), Name = "Nazimi̇ye" },
-                new() { Id = Guid.NewGuid(), Name = "Ovacik" },
+                new() { Id = Guid.NewGuid(), Name = "Nazımiye" },
+                new() { Id = Guid.NewGuid(), Name = "Ovacık" },
                 new() { Id = Guid.NewGuid(), Name = "Pertek" },
                 new() { Id = Guid.NewGuid(), Name = "Pülümür" },
-                new() { Id = Guid.NewGuid(), Name = "Çemi̇şgezek" }
+                new() { Id = Guid.NewGuid(), Name = "Çemişgezek" }
             }
         };
 
@@ -1605,10 +1606,10 @@ public static class CityDistrictSeed
             {
                 new() { Id = Guid.NewGuid(), Name = "Banaz" },
                 new() { Id = Guid.NewGuid(), Name = "Eşme" },
-                new() { Id = Guid.NewGuid(), Name = "Karahalli" },
+                new() { Id = Guid.NewGuid(), Name = "Karahallı" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
-                new() { Id = Guid.NewGuid(), Name = "Si̇vasli" },
-                new() { Id = Guid.NewGuid(), Name = "Ulubey" }
+                new() { Id = Guid.NewGuid(), Name = "Sivaslı" },
+                new() { Id = Guid.NewGuid(), Name = "Ulubey" },
             }
         };
 
@@ -1622,15 +1623,15 @@ public static class CityDistrictSeed
             {
                 new() { Id = Guid.NewGuid(), Name = "Bahçesaray" },
                 new() { Id = Guid.NewGuid(), Name = "Başkale" },
-                new() { Id = Guid.NewGuid(), Name = "Edremi̇t" },
-                new() { Id = Guid.NewGuid(), Name = "Erci̇ş" },
+                new() { Id = Guid.NewGuid(), Name = "Edremit" },
+                new() { Id = Guid.NewGuid(), Name = "Erciş" },
                 new() { Id = Guid.NewGuid(), Name = "Gevaş" },
-                new() { Id = Guid.NewGuid(), Name = "Gürpinar" },
+                new() { Id = Guid.NewGuid(), Name = "Gürpınar" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
-                new() { Id = Guid.NewGuid(), Name = "Muradi̇ye" },
+                new() { Id = Guid.NewGuid(), Name = "Muradiye" },
                 new() { Id = Guid.NewGuid(), Name = "Saray" },
                 new() { Id = Guid.NewGuid(), Name = "Tuşba" },
-                new() { Id = Guid.NewGuid(), Name = "Çaldiran" },
+                new() { Id = Guid.NewGuid(), Name = "Çaldıran" },
                 new() { Id = Guid.NewGuid(), Name = "Çatak" },
                 new() { Id = Guid.NewGuid(), Name = "Özalp" },
                 new() { Id = Guid.NewGuid(), Name = "İpekyolu" }
@@ -1645,12 +1646,12 @@ public static class CityDistrictSeed
             Name = "YALOVA",
             Districts = new List<District>
             {
-                new() { Id = Guid.NewGuid(), Name = "Altinova" },
+                new() { Id = Guid.NewGuid(), Name = "Altınova" },
                 new() { Id = Guid.NewGuid(), Name = "Armutlu" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
                 new() { Id = Guid.NewGuid(), Name = "Termal" },
-                new() { Id = Guid.NewGuid(), Name = "Çinarcik" },
-                new() { Id = Guid.NewGuid(), Name = "Çi̇ftli̇kköy" }
+                new() { Id = Guid.NewGuid(), Name = "Çiftlikköy" },
+                new() { Id = Guid.NewGuid(), Name = "Çınarcık" }
             }
         };
 
@@ -1662,20 +1663,20 @@ public static class CityDistrictSeed
             Name = "YOZGAT",
             Districts = new List<District>
             {
-                new() { Id = Guid.NewGuid(), Name = "Akdağmadeni̇" },
-                new() { Id = Guid.NewGuid(), Name = "Aydincik" },
-                new() { Id = Guid.NewGuid(), Name = "Boğazliyan" },
-                new() { Id = Guid.NewGuid(), Name = "Kadişehri̇" },
+                new() { Id = Guid.NewGuid(), Name = "Akdağmadeni" },
+                new() { Id = Guid.NewGuid(), Name = "Aydıncık" },
+                new() { Id = Guid.NewGuid(), Name = "Boğazlıyan" },
+                new() { Id = Guid.NewGuid(), Name = "Kadışehri" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
                 new() { Id = Guid.NewGuid(), Name = "Saraykent" },
-                new() { Id = Guid.NewGuid(), Name = "Sarikaya" },
+                new() { Id = Guid.NewGuid(), Name = "Sarıkaya" },
                 new() { Id = Guid.NewGuid(), Name = "Sorgun" },
-                new() { Id = Guid.NewGuid(), Name = "Yeni̇fakili" },
+                new() { Id = Guid.NewGuid(), Name = "Yenifakılı" },
                 new() { Id = Guid.NewGuid(), Name = "Yerköy" },
-                new() { Id = Guid.NewGuid(), Name = "Çandir" },
-                new() { Id = Guid.NewGuid(), Name = "Çayiralan" },
+                new() { Id = Guid.NewGuid(), Name = "Çandır" },
+                new() { Id = Guid.NewGuid(), Name = "Çayıralan" },
                 new() { Id = Guid.NewGuid(), Name = "Çekerek" },
-                new() { Id = Guid.NewGuid(), Name = "Şefaatli̇" }
+                new() { Id = Guid.NewGuid(), Name = "Şefaatli" }
             }
         };
 
@@ -1687,11 +1688,11 @@ public static class CityDistrictSeed
             Name = "ZONGULDAK",
             Districts = new List<District>
             {
-                new() { Id = Guid.NewGuid(), Name = "Alapli" },
+                new() { Id = Guid.NewGuid(), Name = "Alaplı" },
                 new() { Id = Guid.NewGuid(), Name = "Devrek" },
-                new() { Id = Guid.NewGuid(), Name = "Ereğli̇" },
+                new() { Id = Guid.NewGuid(), Name = "Ereğli" },
                 new() { Id = Guid.NewGuid(), Name = "Gökçebey" },
-                new() { Id = Guid.NewGuid(), Name = "Ki̇li̇mli̇" },
+                new() { Id = Guid.NewGuid(), Name = "Kilimli" },
                 new() { Id = Guid.NewGuid(), Name = "Kozlu" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
                 new() { Id = Guid.NewGuid(), Name = "Çaycuma" }
@@ -1706,17 +1707,17 @@ public static class CityDistrictSeed
             Name = "ÇANAKKALE",
             Districts = new List<District>
             {
-                new() { Id = Guid.NewGuid(), Name = "Ayvacik" },
-                new() { Id = Guid.NewGuid(), Name = "Bayrami̇ç" },
-                new() { Id = Guid.NewGuid(), Name = "Bi̇ga" },
+                new() { Id = Guid.NewGuid(), Name = "Ayvacık" },
+                new() { Id = Guid.NewGuid(), Name = "Bayramiç" },
+                new() { Id = Guid.NewGuid(), Name = "Biga" },
                 new() { Id = Guid.NewGuid(), Name = "Bozcaada" },
                 new() { Id = Guid.NewGuid(), Name = "Eceabat" },
-                new() { Id = Guid.NewGuid(), Name = "Ezi̇ne" },
-                new() { Id = Guid.NewGuid(), Name = "Geli̇bolu" },
+                new() { Id = Guid.NewGuid(), Name = "Ezine" },
+                new() { Id = Guid.NewGuid(), Name = "Gelibolu" },
                 new() { Id = Guid.NewGuid(), Name = "Gökçeada" },
-                new() { Id = Guid.NewGuid(), Name = "Lapseki̇" },
+                new() { Id = Guid.NewGuid(), Name = "Lapseki" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
-                new() { Id = Guid.NewGuid(), Name = "Yeni̇ce" },
+                new() { Id = Guid.NewGuid(), Name = "Yenice" },
                 new() { Id = Guid.NewGuid(), Name = "Çan" }
             }
         };
@@ -1731,14 +1732,14 @@ public static class CityDistrictSeed
             {
                 new() { Id = Guid.NewGuid(), Name = "Atkaracalar" },
                 new() { Id = Guid.NewGuid(), Name = "Bayramören" },
-                new() { Id = Guid.NewGuid(), Name = "Eldi̇van" },
+                new() { Id = Guid.NewGuid(), Name = "Eldivan" },
                 new() { Id = Guid.NewGuid(), Name = "Ilgaz" },
-                new() { Id = Guid.NewGuid(), Name = "Kizilirmak" },
                 new() { Id = Guid.NewGuid(), Name = "Korgun" },
                 new() { Id = Guid.NewGuid(), Name = "Kurşunlu" },
+                new() { Id = Guid.NewGuid(), Name = "Kızılırmak" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
                 new() { Id = Guid.NewGuid(), Name = "Orta" },
-                new() { Id = Guid.NewGuid(), Name = "Yaprakli" },
+                new() { Id = Guid.NewGuid(), Name = "Yapraklı" },
                 new() { Id = Guid.NewGuid(), Name = "Çerkeş" },
                 new() { Id = Guid.NewGuid(), Name = "Şabanözü" }
             }
@@ -1756,16 +1757,16 @@ public static class CityDistrictSeed
                 new() { Id = Guid.NewGuid(), Name = "Bayat" },
                 new() { Id = Guid.NewGuid(), Name = "Boğazkale" },
                 new() { Id = Guid.NewGuid(), Name = "Dodurga" },
-                new() { Id = Guid.NewGuid(), Name = "Kargi" },
-                new() { Id = Guid.NewGuid(), Name = "Laçi̇n" },
-                new() { Id = Guid.NewGuid(), Name = "Meci̇tözü" },
+                new() { Id = Guid.NewGuid(), Name = "Kargı" },
+                new() { Id = Guid.NewGuid(), Name = "Laçin" },
+                new() { Id = Guid.NewGuid(), Name = "Mecitözü" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
                 new() { Id = Guid.NewGuid(), Name = "Ortaköy" },
-                new() { Id = Guid.NewGuid(), Name = "Osmancik" },
+                new() { Id = Guid.NewGuid(), Name = "Osmancık" },
                 new() { Id = Guid.NewGuid(), Name = "Oğuzlar" },
                 new() { Id = Guid.NewGuid(), Name = "Sungurlu" },
                 new() { Id = Guid.NewGuid(), Name = "Uğurludağ" },
-                new() { Id = Guid.NewGuid(), Name = "İski̇li̇p" }
+                new() { Id = Guid.NewGuid(), Name = "İskilip" }
             }
         };
 
@@ -1779,45 +1780,45 @@ public static class CityDistrictSeed
             {
                 new() { Id = Guid.NewGuid(), Name = "Adalar" },
                 new() { Id = Guid.NewGuid(), Name = "Arnavutköy" },
-                new() { Id = Guid.NewGuid(), Name = "Ataşehi̇r" },
-                new() { Id = Guid.NewGuid(), Name = "Avcilar" },
-                new() { Id = Guid.NewGuid(), Name = "Bahçeli̇evler" },
-                new() { Id = Guid.NewGuid(), Name = "Bakirköy" },
+                new() { Id = Guid.NewGuid(), Name = "Ataşehir" },
+                new() { Id = Guid.NewGuid(), Name = "Avcılar" },
+                new() { Id = Guid.NewGuid(), Name = "Bahçelievler" },
+                new() { Id = Guid.NewGuid(), Name = "Bakırköy" },
                 new() { Id = Guid.NewGuid(), Name = "Bayrampaşa" },
-                new() { Id = Guid.NewGuid(), Name = "Bağcilar" },
-                new() { Id = Guid.NewGuid(), Name = "Başakşehi̇r" },
+                new() { Id = Guid.NewGuid(), Name = "Bağcılar" },
+                new() { Id = Guid.NewGuid(), Name = "Başakşehir" },
                 new() { Id = Guid.NewGuid(), Name = "Beykoz" },
-                new() { Id = Guid.NewGuid(), Name = "Beyli̇kdüzü" },
+                new() { Id = Guid.NewGuid(), Name = "Beylikdüzü" },
                 new() { Id = Guid.NewGuid(), Name = "Beyoğlu" },
-                new() { Id = Guid.NewGuid(), Name = "Beşi̇ktaş" },
+                new() { Id = Guid.NewGuid(), Name = "Beşiktaş" },
                 new() { Id = Guid.NewGuid(), Name = "Büyükçekmece" },
-                new() { Id = Guid.NewGuid(), Name = "Emi̇nönü" },
+                new() { Id = Guid.NewGuid(), Name = "Eminönü" },
                 new() { Id = Guid.NewGuid(), Name = "Esenler" },
                 new() { Id = Guid.NewGuid(), Name = "Esenyurt" },
                 new() { Id = Guid.NewGuid(), Name = "Eyüpsultan" },
-                new() { Id = Guid.NewGuid(), Name = "Fati̇h" },
-                new() { Id = Guid.NewGuid(), Name = "Gazi̇osmanpaşa" },
+                new() { Id = Guid.NewGuid(), Name = "Fatih" },
+                new() { Id = Guid.NewGuid(), Name = "Gaziosmanpaşa" },
                 new() { Id = Guid.NewGuid(), Name = "Güngören" },
-                new() { Id = Guid.NewGuid(), Name = "Kadiköy" },
+                new() { Id = Guid.NewGuid(), Name = "Kadıköy" },
                 new() { Id = Guid.NewGuid(), Name = "Kartal" },
-                new() { Id = Guid.NewGuid(), Name = "Kağithane" },
+                new() { Id = Guid.NewGuid(), Name = "Kağıthane" },
                 new() { Id = Guid.NewGuid(), Name = "Küçükçekmece" },
                 new() { Id = Guid.NewGuid(), Name = "Maltepe" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
-                new() { Id = Guid.NewGuid(), Name = "Pendi̇k" },
+                new() { Id = Guid.NewGuid(), Name = "Pendik" },
                 new() { Id = Guid.NewGuid(), Name = "Sancaktepe" },
-                new() { Id = Guid.NewGuid(), Name = "Sariyer" },
-                new() { Id = Guid.NewGuid(), Name = "Si̇li̇vri̇" },
-                new() { Id = Guid.NewGuid(), Name = "Sultanbeyli̇" },
-                new() { Id = Guid.NewGuid(), Name = "Sultangazi̇" },
+                new() { Id = Guid.NewGuid(), Name = "Sarıyer" },
+                new() { Id = Guid.NewGuid(), Name = "Silivri" },
+                new() { Id = Guid.NewGuid(), Name = "Sultanbeyli" },
+                new() { Id = Guid.NewGuid(), Name = "Sultangazi" },
                 new() { Id = Guid.NewGuid(), Name = "Tuzla" },
-                new() { Id = Guid.NewGuid(), Name = "Zeyti̇nburnu" },
+                new() { Id = Guid.NewGuid(), Name = "Zeytinburnu" },
                 new() { Id = Guid.NewGuid(), Name = "Çatalca" },
                 new() { Id = Guid.NewGuid(), Name = "Çekmeköy" },
-                new() { Id = Guid.NewGuid(), Name = "Ümrani̇ye" },
+                new() { Id = Guid.NewGuid(), Name = "Ümraniye" },
                 new() { Id = Guid.NewGuid(), Name = "Üsküdar" },
-                new() { Id = Guid.NewGuid(), Name = "Şi̇le" },
-                new() { Id = Guid.NewGuid(), Name = "Şi̇şli̇" }
+                new() { Id = Guid.NewGuid(), Name = "Şile" },
+                new() { Id = Guid.NewGuid(), Name = "Şişli" }
             }
         };
 
@@ -1829,37 +1830,37 @@ public static class CityDistrictSeed
             Name = "İZMİR",
             Districts = new List<District>
             {
-                new() { Id = Guid.NewGuid(), Name = "Ali̇ağa" },
+                new() { Id = Guid.NewGuid(), Name = "Aliağa" },
                 new() { Id = Guid.NewGuid(), Name = "Balçova" },
-                new() { Id = Guid.NewGuid(), Name = "Bayindir" },
-                new() { Id = Guid.NewGuid(), Name = "Bayrakli" },
+                new() { Id = Guid.NewGuid(), Name = "Bayraklı" },
+                new() { Id = Guid.NewGuid(), Name = "Bayındır" },
                 new() { Id = Guid.NewGuid(), Name = "Bergama" },
                 new() { Id = Guid.NewGuid(), Name = "Beydağ" },
                 new() { Id = Guid.NewGuid(), Name = "Bornova" },
                 new() { Id = Guid.NewGuid(), Name = "Buca" },
-                new() { Id = Guid.NewGuid(), Name = "Di̇ki̇li̇" },
+                new() { Id = Guid.NewGuid(), Name = "Dikili" },
                 new() { Id = Guid.NewGuid(), Name = "Foça" },
-                new() { Id = Guid.NewGuid(), Name = "Gazi̇emi̇r" },
+                new() { Id = Guid.NewGuid(), Name = "Gaziemir" },
                 new() { Id = Guid.NewGuid(), Name = "Güzelbahçe" },
                 new() { Id = Guid.NewGuid(), Name = "Karabağlar" },
                 new() { Id = Guid.NewGuid(), Name = "Karaburun" },
-                new() { Id = Guid.NewGuid(), Name = "Karşiyaka" },
+                new() { Id = Guid.NewGuid(), Name = "Karşıyaka" },
                 new() { Id = Guid.NewGuid(), Name = "Kemalpaşa" },
-                new() { Id = Guid.NewGuid(), Name = "Kinik" },
-                new() { Id = Guid.NewGuid(), Name = "Ki̇raz" },
+                new() { Id = Guid.NewGuid(), Name = "Kiraz" },
                 new() { Id = Guid.NewGuid(), Name = "Konak" },
+                new() { Id = Guid.NewGuid(), Name = "Kınık" },
                 new() { Id = Guid.NewGuid(), Name = "Menderes" },
                 new() { Id = Guid.NewGuid(), Name = "Menemen" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
-                new() { Id = Guid.NewGuid(), Name = "Narlidere" },
-                new() { Id = Guid.NewGuid(), Name = "Seferi̇hi̇sar" },
+                new() { Id = Guid.NewGuid(), Name = "Narlıdere" },
+                new() { Id = Guid.NewGuid(), Name = "Seferihisar" },
                 new() { Id = Guid.NewGuid(), Name = "Selçuk" },
-                new() { Id = Guid.NewGuid(), Name = "Ti̇re" },
-                new() { Id = Guid.NewGuid(), Name = "Torbali" },
+                new() { Id = Guid.NewGuid(), Name = "Tire" },
+                new() { Id = Guid.NewGuid(), Name = "Torbalı" },
                 new() { Id = Guid.NewGuid(), Name = "Urla" },
                 new() { Id = Guid.NewGuid(), Name = "Çeşme" },
-                new() { Id = Guid.NewGuid(), Name = "Çi̇ğli̇" },
-                new() { Id = Guid.NewGuid(), Name = "Ödemi̇ş" }
+                new() { Id = Guid.NewGuid(), Name = "Çiğli" },
+                new() { Id = Guid.NewGuid(), Name = "Ödemiş" }
             }
         };
 
@@ -1872,19 +1873,19 @@ public static class CityDistrictSeed
             Districts = new List<District>
             {
                 new() { Id = Guid.NewGuid(), Name = "Akçakale" },
-                new() { Id = Guid.NewGuid(), Name = "Bi̇reci̇k" },
+                new() { Id = Guid.NewGuid(), Name = "Birecik" },
                 new() { Id = Guid.NewGuid(), Name = "Bozova" },
-                new() { Id = Guid.NewGuid(), Name = "Ceylanpinar" },
-                new() { Id = Guid.NewGuid(), Name = "Eyyübi̇ye" },
-                new() { Id = Guid.NewGuid(), Name = "Halfeti̇" },
-                new() { Id = Guid.NewGuid(), Name = "Hali̇li̇ye" },
+                new() { Id = Guid.NewGuid(), Name = "Ceylanpınar" },
+                new() { Id = Guid.NewGuid(), Name = "Eyyübiye" },
+                new() { Id = Guid.NewGuid(), Name = "Halfeti" },
+                new() { Id = Guid.NewGuid(), Name = "Haliliye" },
                 new() { Id = Guid.NewGuid(), Name = "Harran" },
-                new() { Id = Guid.NewGuid(), Name = "Hi̇lvan" },
+                new() { Id = Guid.NewGuid(), Name = "Hilvan" },
                 new() { Id = Guid.NewGuid(), Name = "Karaköprü" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
-                new() { Id = Guid.NewGuid(), Name = "Si̇verek" },
+                new() { Id = Guid.NewGuid(), Name = "Siverek" },
                 new() { Id = Guid.NewGuid(), Name = "Suruç" },
-                new() { Id = Guid.NewGuid(), Name = "Vi̇ranşehi̇r" }
+                new() { Id = Guid.NewGuid(), Name = "Viranşehir" }
             }
         };
 
@@ -1897,12 +1898,12 @@ public static class CityDistrictSeed
             Districts = new List<District>
             {
                 new() { Id = Guid.NewGuid(), Name = "Beytüşşebap" },
-                new() { Id = Guid.NewGuid(), Name = "Ci̇zre" },
+                new() { Id = Guid.NewGuid(), Name = "Cizre" },
                 new() { Id = Guid.NewGuid(), Name = "Güçlükonak" },
                 new() { Id = Guid.NewGuid(), Name = "Merkez" },
-                new() { Id = Guid.NewGuid(), Name = "Si̇lopi̇" },
+                new() { Id = Guid.NewGuid(), Name = "Silopi" },
                 new() { Id = Guid.NewGuid(), Name = "Uludere" },
-                new() { Id = Guid.NewGuid(), Name = "İdi̇l" }
+                new() { Id = Guid.NewGuid(), Name = "İdil" }
             }
         };
 
