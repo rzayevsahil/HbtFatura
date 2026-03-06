@@ -28,6 +28,8 @@ export class InvoiceFormComponent implements OnInit {
   customerDropdownOpen = false;
   error = '';
   saving = false;
+  activeItemIndex: number | null = null;
+  activeItemField: 'code' | 'description' | null = null;
 
   get items(): FormArray {
     return this.form.get('items') as FormArray;
@@ -101,15 +103,19 @@ export class InvoiceFormComponent implements OnInit {
           exchangeRate: inv.exchangeRate
         });
         this.items.clear();
-        inv.items.forEach(it => this.items.push(this.fb.nonNullable.group({
-          productId: [it.productId ?? null],
-          description: [it.description],
-          quantity: [it.quantity],
-          unitPrice: [it.unitPrice],
-          vatRate: [it.vatRate],
-          discountPercent: [it.discountPercent ?? 0],
-          sortOrder: [it.sortOrder]
-        })));
+        inv.items.forEach(it => {
+          const p = this.products.find(x => x.id === it.productId);
+          this.items.push(this.fb.nonNullable.group({
+            productId: [it.productId ?? null],
+            productCode: [p?.code || ''],
+            description: [it.description],
+            quantity: [it.quantity],
+            unitPrice: [it.unitPrice],
+            vatRate: [it.vatRate],
+            discountPercent: [it.discountPercent ?? 0],
+            sortOrder: [it.sortOrder]
+          }));
+        });
       });
     }
   }
@@ -117,6 +123,7 @@ export class InvoiceFormComponent implements OnInit {
   createItemGroup(): FormGroup {
     return this.fb.nonNullable.group({
       productId: [null as string | null],
+      productCode: [''],
       description: [''],
       quantity: [1],
       unitPrice: [0],
@@ -126,17 +133,29 @@ export class InvoiceFormComponent implements OnInit {
     });
   }
 
-  onProductSelect(i: number): void {
+  onProductSelect(i: number, p: ProductDto): void {
     const g = this.items.at(i);
-    const productId = g.get('productId')?.value as string | null;
-    if (!productId) return;
-    const p = this.products.find((x: ProductDto) => x.id === productId);
-    if (p) {
-      g.patchValue({
-        description: p.name,
-        unitPrice: p.unitPrice
-      });
-    }
+    g.patchValue({
+      productId: p.id,
+      productCode: p.code,
+      description: p.name,
+      unitPrice: p.unitPrice
+    });
+    this.activeItemIndex = null;
+    this.activeItemField = null;
+  }
+
+  onItemInput(index: number, field: 'code' | 'description'): void {
+    this.activeItemIndex = index;
+    this.activeItemField = field;
+  }
+
+  getFilteredItems(searchText: string): ProductDto[] {
+    const t = searchText?.trim().toLowerCase();
+    if (!t) return [];
+    return this.products.filter(p =>
+      (p.code?.toLowerCase().includes(t)) || (p.name?.toLowerCase().includes(t))
+    ).slice(0, 10);
   }
 
   addItem(): void {
@@ -170,6 +189,11 @@ export class InvoiceFormComponent implements OnInit {
   onDocumentClick(e: MouseEvent): void {
     if (this.customerDropdownOpen && this.customerDropdownWrap?.nativeElement && !this.customerDropdownWrap.nativeElement.contains(e.target as Node)) {
       this.customerDropdownOpen = false;
+    }
+    const target = e.target as HTMLElement;
+    if (!target.closest('.autocomplete-container')) {
+      this.activeItemIndex = null;
+      this.activeItemField = null;
     }
   }
 

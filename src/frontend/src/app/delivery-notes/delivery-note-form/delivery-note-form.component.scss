@@ -5,8 +5,23 @@
   margin-bottom: 1.5rem;
 }
 
-.btn { padding: 0.625rem 1.25rem; font-size: 0.9375rem; font-weight: 600; border-radius: var(--radius-sm, 6px); text-decoration: none; cursor: pointer; border: none; display: inline-flex; align-items: center; }
-.btn-default { background: var(--color-surface); color: var(--color-text); border: 1px solid var(--color-border); }
+.btn {
+  padding: 0.625rem 1.25rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  border-radius: var(--radius-sm, 6px);
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+}
+
+.btn-default {
+  background: var(--color-surface);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+}
 
 .card {
   margin-bottom: 1.5rem;
@@ -161,12 +176,29 @@
   font-weight: 600;
   color: var(--color-text-muted);
 
-  .item-col-product { grid-column: 1; }
-  .item-col-desc { grid-column: 2; }
-  .item-col-qty { grid-column: 3; }
-  .item-col-price { grid-column: 4; }
-  .item-col-vat { grid-column: 5; }
-  .item-col-action { grid-column: 6; }
+  .item-col-product {
+    grid-column: 1;
+  }
+
+  .item-col-desc {
+    grid-column: 2;
+  }
+
+  .item-col-qty {
+    grid-column: 3;
+  }
+
+  .item-col-price {
+    grid-column: 4;
+  }
+
+  .item-col-vat {
+    grid-column: 5;
+  }
+
+  .item-col-action {
+    grid-column: 6;
+  }
 }
 
 .item-row {
@@ -244,4 +276,60 @@
 
 .error-msg {
   margin-top: 0.5rem;
+}
+
+.autocomplete-container {
+  position: relative;
+  width: 100%;
+
+  input {
+    width: 100%;
+    box-sizing: border-box;
+  }
+}
+
+.autocomplete-results {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-md);
+  z-index: 1000;
+  max-height: 200px;
+  overflow-y: auto;
+  margin-top: 2px;
+}
+
+.autocomplete-item {
+  padding: 0.625rem 0.875rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover {
+    background: var(--color-background);
+    color: var(--color-primary);
+  }
+
+  strong {
+    color: var(--color-primary);
+    font-weight: 600;
+  }
+}
+
+.desc-cell {
+  input {
+    width: 100%;
+  }
 }

@@ -30,6 +30,8 @@ export class OrderFormComponent implements OnInit {
   /** Arama kutusu sadece dropdown içinde (fatura cari gibi) */
   customerSearchText = '';
   customerDropdownOpen = false;
+  activeItemIndex: number | null = null;
+  activeItemField: 'code' | 'description' | null = null;
 
   get items(): FormArray {
     return this.form.get('items') as FormArray;
@@ -90,14 +92,18 @@ export class OrderFormComponent implements OnInit {
           status: 0
         });
         this.items.clear();
-        o.items.forEach((it, idx) => this.items.push(this.fb.nonNullable.group({
-          productId: [it.productId ?? null],
-          description: [it.description],
-          quantity: [it.quantity],
-          unitPrice: [it.unitPrice],
-          vatRate: [it.vatRate],
-          sortOrder: [idx]
-        })));
+        o.items.forEach((it, idx) => {
+          const p = this.products.find(x => x.id === it.productId);
+          this.items.push(this.fb.nonNullable.group({
+            productId: [it.productId ?? null],
+            productCode: [p?.code || ''],
+            description: [it.description],
+            quantity: [it.quantity],
+            unitPrice: [it.unitPrice],
+            vatRate: [it.vatRate],
+            sortOrder: [idx]
+          }));
+        });
       });
     }
   }
@@ -117,11 +123,17 @@ export class OrderFormComponent implements OnInit {
     if (this.customerDropdownOpen && this.customerDropdownWrap?.nativeElement && !this.customerDropdownWrap.nativeElement.contains(e.target as Node)) {
       this.customerDropdownOpen = false;
     }
+    const target = e.target as HTMLElement;
+    if (!target.closest('.autocomplete-container')) {
+      this.activeItemIndex = null;
+      this.activeItemField = null;
+    }
   }
 
   createItemGroup(): FormGroup {
     return this.fb.nonNullable.group({
       productId: [null as string | null],
+      productCode: [''],
       description: [''],
       quantity: [1],
       unitPrice: [0],
@@ -130,17 +142,29 @@ export class OrderFormComponent implements OnInit {
     });
   }
 
-  onProductSelect(i: number): void {
+  onProductSelect(i: number, p: ProductDto): void {
     const g = this.items.at(i);
-    const productId = g.get('productId')?.value as string | null;
-    if (!productId) return;
-    const p = this.products.find(x => x.id === productId);
-    if (p) {
-      g.patchValue({
-        description: p.name,
-        unitPrice: p.unitPrice
-      });
-    }
+    g.patchValue({
+      productId: p.id,
+      productCode: p.code,
+      description: p.name,
+      unitPrice: p.unitPrice
+    });
+    this.activeItemIndex = null;
+    this.activeItemField = null;
+  }
+
+  onItemInput(index: number, field: 'code' | 'description'): void {
+    this.activeItemIndex = index;
+    this.activeItemField = field;
+  }
+
+  getFilteredItems(searchText: string): ProductDto[] {
+    const t = searchText?.trim().toLowerCase();
+    if (!t) return [];
+    return this.products.filter(p =>
+      (p.code?.toLowerCase().includes(t)) || (p.name?.toLowerCase().includes(t))
+    ).slice(0, 10);
   }
 
   /** datetime-local input için değer: "yyyy-MM-ddTHH:mm". */

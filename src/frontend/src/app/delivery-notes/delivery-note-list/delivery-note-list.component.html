@@ -3,6 +3,11 @@
 </div>
 <div class="toolbar">
   <label class="toolbar-field">
+    <span class="toolbar-label">Ara (İrsaliye No/Cari)</span>
+    <input [(ngModel)]="searchText" type="text" placeholder="İrsaliye no veya cari..." (keyup.enter)="load()"
+      class="toolbar-input" />
+  </label>
+  <label class="toolbar-field">
     <span class="toolbar-label">Başlangıç tarihi</span>
     <input [(ngModel)]="searchDateFrom" type="date" class="toolbar-input" />
   </label>
@@ -19,11 +24,6 @@
       <option [ngValue]="3">Faturalandı</option>
       <option [ngValue]="2">İptal</option>
     </select>
-  </label>
-  <label class="toolbar-field">
-    <span class="toolbar-label">Ara (No/Cari)</span>
-    <input [(ngModel)]="searchText" type="text" placeholder="İrsaliye no veya cari..." (keyup.enter)="load()"
-      class="toolbar-input" />
   </label>
   <div class="toolbar-field toolbar-field-btn">
     <span class="toolbar-label">&nbsp;</span>
