@@ -17,9 +17,9 @@ import { ToastrService } from 'ngx-toastr';
 export class BankAccountFormComponent implements OnInit {
   form = this.fb.nonNullable.group({
     name: ['', Validators.required],
-    iban: [''],
-    bankName: [''],
-    currency: ['TRY'],
+    iban: ['', [Validators.required, Validators.minLength(32), Validators.maxLength(32)]],
+    bankName: ['', Validators.required],
+    currency: ['TRY', Validators.required],
     isActive: [true],
     firmId: [null as string | null]
   });
@@ -36,7 +36,7 @@ export class BankAccountFormComponent implements OnInit {
     private firmApi: FirmService,
     public auth: AuthService,
     private toastr: ToastrService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.id = this.route.snapshot.paramMap.get('id');
@@ -54,6 +54,33 @@ export class BankAccountFormComponent implements OnInit {
         isActive: b.isActive
       }));
     }
+  }
+
+  onIbanInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    let value = input.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+
+    if (value.length > 0 && !value.startsWith('TR')) {
+      if (value.startsWith('T')) value = 'TR' + value.substring(1);
+      else value = 'TR' + value;
+    } else if (value.length === 0) {
+      value = 'TR';
+    }
+
+    const prefix = value.substring(0, 2);
+    const rest = value.substring(2).replace(/[^0-9]/g, '');
+    value = prefix + rest;
+
+    if (value.length > 26) value = value.substring(0, 26);
+
+    let formatted = '';
+    for (let i = 0; i < value.length; i++) {
+      if (i > 0 && i % 4 === 0) formatted += ' ';
+      formatted += value[i];
+    }
+
+    this.form.patchValue({ iban: formatted }, { emitEvent: false });
+    input.value = formatted;
   }
 
   onSubmit(): void {

@@ -5,15 +5,15 @@
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <div class="form-grid">
       @if (auth.user()?.role === 'SuperAdmin' && !id) {
-        <div class="row">
-          <label>Firma</label>
-          <select formControlName="firmId" required>
-            <option [ngValue]="null">Firma seçin</option>
-            @for (f of firms; track f.id) {
-              <option [ngValue]="f.id">{{ f.name }}</option>
-            }
-          </select>
-        </div>
+      <div class="row">
+        <label>Firma</label>
+        <select formControlName="firmId" required>
+          <option [ngValue]="null">Firma seçin</option>
+          @for (f of firms; track f.id) {
+          <option [ngValue]="f.id">{{ f.name }}</option>
+          }
+        </select>
+      </div>
       }
       <div class="row">
         <label>Hesap adı</label>
@@ -21,21 +21,22 @@
       </div>
       <div class="row">
         <label>Banka adı</label>
-        <input formControlName="bankName" placeholder="Banka adı" />
+        <input formControlName="bankName" placeholder="Banka adı" required />
       </div>
       <div class="row">
         <label>IBAN</label>
-        <input formControlName="iban" placeholder="TR00 0000 0000 0000 0000 0000 00" />
+        <input formControlName="iban" placeholder="TR00 0000 0000 0000 0000 0000 00" (input)="onIbanInput($event)"
+          required />
       </div>
       <div class="row">
         <label>Para birimi</label>
-        <input formControlName="currency" placeholder="TRY" />
+        <input formControlName="currency" placeholder="TRY" required />
       </div>
       @if (id) {
-        <div class="row">
-          <label>Aktif</label>
-          <input type="checkbox" formControlName="isActive" />
-        </div>
+      <div class="row">
+        <label>Aktif</label>
+        <input type="checkbox" formControlName="isActive" />
+      </div>
       }
       @if (error) { <p class="error-msg">{{ error }}</p> }
     </div>
