@@ -1,6 +1,6 @@
 <div class="page-header">
-  <h1 class="page-title">Yeni Çalışan</h1>
-  <p class="page-subtitle">Firmanıza yeni çalışan hesabı ekleyin.</p>
+  <h1 class="page-title">{{ id ? 'Çalışanı Düzenle' : 'Yeni Çalışan' }}</h1>
+  <p class="page-subtitle">{{ id ? 'Çalışan bilgilerini güncelleyin.' : 'Firmanıza yeni çalışan hesabı ekleyin.' }}</p>
 </div>
 <div class="card">
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
@@ -12,6 +12,9 @@
       <div class="row">
         <label>Şifre</label>
         <input type="password" formControlName="password" placeholder="En az 6 karakter" />
+        @if (id) {
+        <small class="help-text">Şifreyi değiştirmek istemiyorsanız boş bırakın.</small>
+        }
       </div>
       <div class="row">
         <label>Ad Soyad</label>
@@ -20,7 +23,9 @@
       @if (error) { <p class="error-msg">{{ error }}</p> }
     </div>
     <div class="actions">
-      <button type="submit" [disabled]="form.invalid || saving">Oluştur</button>
+      <button class="btn btn-primary" type="submit" [disabled]="form.invalid || saving">
+        {{ id ? 'Güncelle' : 'Oluştur' }}
+      </button>
       <a routerLink="/employees">İptal</a>
     </div>
   </form>

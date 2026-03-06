@@ -11,7 +11,7 @@ export interface PagedResult<T> {
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   get<T>(path: string, params?: Record<string, string | number | boolean | undefined>): Observable<T> {
     let httpParams = new HttpParams();
@@ -35,8 +35,8 @@ export class ApiService {
     return this.http.patch<T>(path, body);
   }
 
-  delete(path: string): Observable<void> {
-    return this.http.delete<void>(path);
+  delete<T = void>(path: string): Observable<T> {
+    return this.http.delete<T>(path);
   }
 
   getBlob(path: string): Observable<Blob> {

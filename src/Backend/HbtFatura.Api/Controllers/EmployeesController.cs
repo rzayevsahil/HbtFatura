@@ -38,4 +38,34 @@ public class EmployeesController : ControllerBase
             return BadRequest(new { message = ex.Message });
         }
     }
+
+    [HttpGet("{id}")]
+    public async Task<ActionResult<EmployeeListDto>> GetById(Guid id, CancellationToken ct)
+    {
+        var dto = await _service.GetByIdAsync(id, ct);
+        if (dto == null) return NotFound();
+        return Ok(dto);
+    }
+
+    [HttpPut("{id}")]
+    public async Task<ActionResult<EmployeeListDto>> Update(Guid id, [FromBody] UpdateEmployeeRequest request, CancellationToken ct)
+    {
+        try
+        {
+            var dto = await _service.UpdateAsync(id, request, ct);
+            return Ok(dto);
+        }
+        catch (ArgumentException ex) { return BadRequest(new { message = ex.Message }); }
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(Guid id, CancellationToken ct)
+    {
+        try
+        {
+            await _service.DeleteAsync(id, ct);
+            return NoContent();
+        }
+        catch (ArgumentException ex) { return BadRequest(new { message = ex.Message }); }
+    }
 }

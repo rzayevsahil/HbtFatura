@@ -32,6 +32,7 @@ export const routes: Routes = [
   { path: 'firms/:id', loadComponent: () => import('./firms/firm-detail/firm-detail.component').then(m => m.FirmDetailComponent), canActivate: [authGuard] },
   { path: 'employees', loadComponent: () => import('./employees/employee-list/employee-list.component').then(m => m.EmployeeListComponent), canActivate: [authGuard] },
   { path: 'employees/new', loadComponent: () => import('./employees/employee-form/employee-form.component').then(m => m.EmployeeFormComponent), canActivate: [authGuard] },
+  { path: 'employees/:id/edit', loadComponent: () => import('./employees/employee-form/employee-form.component').then(m => m.EmployeeFormComponent), canActivate: [authGuard] },
   { path: 'cash-registers', loadComponent: () => import('./cash-registers/cash-register-list/cash-register-list.component').then(m => m.CashRegisterListComponent), canActivate: [authGuard] },
   { path: 'cash-registers/new', loadComponent: () => import('./cash-registers/cash-register-form/cash-register-form.component').then(m => m.CashRegisterFormComponent), canActivate: [authGuard] },
   { path: 'cash-registers/:id', loadComponent: () => import('./cash-registers/cash-register-detail/cash-register-detail.component').then(m => m.CashRegisterDetailComponent), canActivate: [authGuard] },

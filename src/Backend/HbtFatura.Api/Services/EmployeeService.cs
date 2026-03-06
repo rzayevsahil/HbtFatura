@@ -87,4 +87,69 @@ public class EmployeeService : IEmployeeService
             CreatedAt = user.CreatedAt
         };
     }
+
+    public async Task<EmployeeListDto?> GetByIdAsync(Guid id, CancellationToken ct = default)
+    {
+        return await ScopeQuery()
+            .Where(u => u.Id == id)
+            .Select(u => new EmployeeListDto
+            {
+                Id = u.Id,
+                Email = u.Email ?? "",
+                FullName = u.FullName,
+                CreatedAt = u.CreatedAt
+            })
+            .FirstOrDefaultAsync(ct);
+    }
+
+    public async Task<EmployeeListDto> UpdateAsync(Guid id, UpdateEmployeeRequest request, CancellationToken ct = default)
+    {
+        var user = await ScopeQuery().FirstOrDefaultAsync(u => u.Id == id, ct);
+        if (user == null)
+            throw new ArgumentException("Çalışan bulunamadı.");
+
+        var email = request.Email.Trim().ToLowerInvariant();
+        if (user.Email != email)
+        {
+            var existing = await _userManager.FindByEmailAsync(email);
+            if (existing != null && existing.Id != user.Id)
+                throw new ArgumentException("Bu e-posta adresi başka bir kullanıcı tarafından kullanılıyor.");
+            
+            user.Email = email;
+            user.UserName = email;
+        }
+
+        user.FullName = request.FullName.Trim();
+        
+        var result = await _userManager.UpdateAsync(user);
+        if (!result.Succeeded)
+            throw new ArgumentException(string.Join(" ", result.Errors.Select(e => e.Description)));
+
+        if (!string.IsNullOrWhiteSpace(request.Password))
+        {
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var passResult = await _userManager.ResetPasswordAsync(user, token, request.Password);
+            if (!passResult.Succeeded)
+                throw new ArgumentException("Şifre güncellenemedi: " + string.Join(" ", passResult.Errors.Select(e => e.Description)));
+        }
+
+        return new EmployeeListDto
+        {
+            Id = user.Id,
+            Email = user.Email ?? "",
+            FullName = user.FullName,
+            CreatedAt = user.CreatedAt
+        };
+    }
+
+    public async Task DeleteAsync(Guid id, CancellationToken ct = default)
+    {
+        var user = await ScopeQuery().FirstOrDefaultAsync(u => u.Id == id, ct);
+        if (user == null)
+            throw new ArgumentException("Çalışan bulunamadı.");
+
+        var result = await _userManager.DeleteAsync(user);
+        if (!result.Succeeded)
+            throw new ArgumentException(string.Join(" ", result.Errors.Select(e => e.Description)));
+    }
 }
