@@ -113,7 +113,8 @@
       </div>
       <div class="row">
         <label>IBAN</label>
-        <input formControlName="iban" placeholder="TR00 0000 0000 0000 0000 0000 00" [readonly]="isReadOnly()" />
+        <input formControlName="iban" placeholder="TR00 0000 0000 0000 0000 0000 00" (input)="onIbanInput($event)"
+          [readonly]="isReadOnly()" />
       </div>
       <div class="row">
         <label>Firma Logosu</label>

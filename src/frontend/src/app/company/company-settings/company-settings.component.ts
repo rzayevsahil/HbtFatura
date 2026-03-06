@@ -29,7 +29,7 @@ export class CompanySettingsComponent implements OnInit {
     phone: ['', [Validators.required]],
     email: ['', [Validators.required, Validators.email]],
     website: [''],
-    iban: ['', [Validators.required]],
+    iban: ['', [Validators.required, Validators.minLength(32), Validators.maxLength(32)]],
     bankName: ['', [Validators.required]],
     logoUrl: [null as string | null]
   });
@@ -255,6 +255,37 @@ export class CompanySettingsComponent implements OnInit {
       };
       reader.readAsDataURL(file);
     }
+  }
+
+  onIbanInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    let value = input.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+
+    // Always start with TR
+    if (value.length > 0 && !value.startsWith('TR')) {
+      if (value.startsWith('T')) value = 'TR' + value.substring(1);
+      else value = 'TR' + value;
+    } else if (value.length === 0) {
+      value = 'TR';
+    }
+
+    // Keep only TR and numbers
+    const prefix = value.substring(0, 2);
+    const rest = value.substring(2).replace(/[^0-9]/g, '');
+    value = prefix + rest;
+
+    // Limit to 26 characters (TR + 24 digits)
+    if (value.length > 26) value = value.substring(0, 26);
+
+    // Add spaces every 4 characters
+    let formatted = '';
+    for (let i = 0; i < value.length; i++) {
+      if (i > 0 && i % 4 === 0) formatted += ' ';
+      formatted += value[i];
+    }
+
+    this.form.patchValue({ iban: formatted }, { emitEvent: false });
+    input.value = formatted;
   }
 
   getLogoUrl(): string | null {
