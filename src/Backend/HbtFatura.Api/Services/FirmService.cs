@@ -32,7 +32,7 @@ public class FirmService : IFirmService
 
     public async Task<FirmDto?> GetByIdAsync(Guid id, CancellationToken ct = default)
     {
-        if (!_currentUser.IsSuperAdmin)
+        if (!_currentUser.IsSuperAdmin && _currentUser.FirmId != id)
             return null;
         var firm = await _db.Firms.FindAsync(new object[] { id }, ct);
         return firm == null ? null : new FirmDto { Id = firm.Id, Name = firm.Name, CreatedAt = firm.CreatedAt };
@@ -40,7 +40,7 @@ public class FirmService : IFirmService
 
     public async Task<IReadOnlyList<FirmUserDto>> GetUsersByFirmIdAsync(Guid firmId, CancellationToken ct = default)
     {
-        if (!_currentUser.IsSuperAdmin)
+        if (!_currentUser.IsSuperAdmin && _currentUser.FirmId != firmId)
             return Array.Empty<FirmUserDto>();
 
         var query = from u in _db.Users

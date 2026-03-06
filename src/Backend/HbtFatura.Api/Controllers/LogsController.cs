@@ -3,12 +3,13 @@ using Microsoft.AspNetCore.Mvc;
 using HbtFatura.Api.Entities;
 using HbtFatura.Api.Services;
 using HbtFatura.Api.DTOs.Customers;
+using HbtFatura.Api.Constants;
 
 namespace HbtFatura.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize(Roles = "SuperAdmin")]
+[Authorize(Roles = Roles.SuperAdmin)]
 public class LogsController : ControllerBase
 {
     private readonly ILogService _logService;

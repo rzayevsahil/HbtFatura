@@ -8,7 +8,7 @@ namespace HbtFatura.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize(Roles = Roles.FirmAdmin)]
+[Authorize(Roles = Roles.FirmAdmin + "," + Roles.SuperAdmin)]
 public class EmployeesController : ControllerBase
 {
     private readonly IEmployeeService _service;

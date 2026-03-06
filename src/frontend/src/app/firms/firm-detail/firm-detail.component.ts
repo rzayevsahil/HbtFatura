@@ -4,6 +4,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FirmService, FirmDto, FirmUserDto } from '../../services/firm.service';
 import { CompanyService, CompanySettingsDto } from '../../services/company.service';
 import { environment } from '../../../environments/environment';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-firm-detail',
@@ -20,23 +21,32 @@ export class FirmDetailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private firmApi: FirmService,
-    private companyApi: CompanyService
+    private companyApi: CompanyService,
+    public auth: AuthService
   ) { }
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
-      this.firmApi.getById(id).subscribe(f => {
-        this.firm = f;
-        this.companyApi.get(f.id).subscribe({
-          next: c => (this.company = c),
-          error: () => (this.company = null)
-        });
-        this.firmApi.getFirmUsers(f.id).subscribe({
-          next: list => (this.firmUsers = list),
-          error: () => (this.firmUsers = [])
-        });
+      this.firmApi.getById(id).subscribe({
+        next: f => {
+          this.firm = f;
+          this.companyApi.get(f.id).subscribe({
+            next: c => (this.company = c),
+            error: () => (this.company = null)
+          });
+          this.firmApi.getFirmUsers(f.id).subscribe({
+            next: list => (this.firmUsers = list),
+            error: () => (this.firmUsers = [])
+          });
+        },
+        error: () => {
+          // If firm not found or unauthorized, go back
+          window.history.back();
+        }
       });
+    } else {
+      window.history.back();
     }
   }
 

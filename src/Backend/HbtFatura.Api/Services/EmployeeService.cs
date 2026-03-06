@@ -20,21 +20,27 @@ public class EmployeeService : IEmployeeService
         _currentUser = currentUser;
     }
 
+    private IQueryable<ApplicationUser> ScopeQuery(Guid? firmIdFilter = null)
+    {
+        var roleIdQuery = _db.Roles.Where(r => r.Name == Roles.Employee).Select(r => r.Id);
+        var baseQuery = _db.Users
+            .Join(_db.UserRoles, u => u.Id, ur => ur.UserId, (u, ur) => new { u, ur })
+            .Where(x => roleIdQuery.Contains(x.ur.RoleId))
+            .Select(x => x.u);
+
+        if (_currentUser.IsSuperAdmin)
+        {
+            if (firmIdFilter.HasValue)
+                return baseQuery.Where(u => u.FirmId == firmIdFilter.Value);
+            return baseQuery;
+        }
+
+        return baseQuery.Where(u => u.FirmId == _currentUser.FirmId);
+    }
+
     public async Task<IReadOnlyList<EmployeeListDto>> GetByFirmAsync(CancellationToken ct = default)
     {
-        if (!_currentUser.FirmId.HasValue)
-            return Array.Empty<EmployeeListDto>();
-        var roleId = await _db.Roles.Where(r => r.Name == Roles.Employee).Select(r => r.Id).FirstOrDefaultAsync(ct);
-        if (roleId == default)
-            return Array.Empty<EmployeeListDto>();
-
-        var employeeUserIds = await _db.UserRoles
-            .Where(ur => ur.RoleId == roleId)
-            .Select(ur => ur.UserId)
-            .ToListAsync(ct);
-
-        return await _db.Users
-            .Where(u => u.FirmId == _currentUser.FirmId && employeeUserIds.Contains(u.Id))
+        return await ScopeQuery()
             .OrderBy(u => u.FullName)
             .Select(u => new EmployeeListDto
             {
@@ -48,8 +54,12 @@ public class EmployeeService : IEmployeeService
 
     public async Task<EmployeeListDto> CreateAsync(CreateEmployeeRequest request, CancellationToken ct = default)
     {
-        if (!_currentUser.IsFirmAdmin || !_currentUser.FirmId.HasValue)
-            throw new UnauthorizedAccessException("Only FirmAdmin can add employees.");
+        if (!_currentUser.IsFirmAdmin && !_currentUser.IsSuperAdmin)
+            throw new UnauthorizedAccessException("Unauthorized to create employees.");
+
+        var effectiveFirmId = _currentUser.IsSuperAdmin ? (request.FirmId ?? _currentUser.FirmId) : _currentUser.FirmId;
+        if (!effectiveFirmId.HasValue)
+            throw new ArgumentException("FirmId is required.");
 
         var email = request.Email.Trim().ToLowerInvariant();
         if (await _userManager.FindByEmailAsync(email) != null)
@@ -62,7 +72,7 @@ public class EmployeeService : IEmployeeService
             Email = email,
             FullName = request.FullName.Trim(),
             CreatedAt = DateTime.UtcNow,
-            FirmId = _currentUser.FirmId.Value
+            FirmId = effectiveFirmId.Value
         };
         var result = await _userManager.CreateAsync(user, request.Password);
         if (!result.Succeeded)

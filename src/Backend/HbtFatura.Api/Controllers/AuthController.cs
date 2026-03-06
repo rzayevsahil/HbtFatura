@@ -34,7 +34,7 @@ public class AuthController : ControllerBase
         }
         catch (UnauthorizedAccessException ex)
         {
-            return Unauthorized(new { message = ex.Message });
+            return Forbid();
         }
         catch (ArgumentException ex)
         {

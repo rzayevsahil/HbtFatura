@@ -8,7 +8,7 @@ namespace HbtFatura.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize(Roles = Roles.SuperAdmin)]
+[Authorize]
 public class FirmsController : ControllerBase
 {
     private readonly IFirmService _service;
@@ -19,6 +19,7 @@ public class FirmsController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Roles = Roles.SuperAdmin)]
     public async Task<ActionResult<IReadOnlyList<FirmDto>>> GetAll(CancellationToken ct)
     {
         var list = await _service.GetAllAsync(ct);
@@ -41,6 +42,7 @@ public class FirmsController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = Roles.SuperAdmin)]
     public async Task<ActionResult<FirmDto>> Create([FromBody] CreateFirmRequest request, CancellationToken ct)
     {
         try
@@ -55,6 +57,7 @@ public class FirmsController : ControllerBase
     }
 
     [HttpPut("{id:guid}")]
+    [Authorize(Roles = Roles.SuperAdmin)]
     public async Task<ActionResult<FirmDto>> Update(Guid id, [FromBody] UpdateFirmRequest request, CancellationToken ct)
     {
         var dto = await _service.UpdateAsync(id, request, ct);

@@ -1,13 +1,14 @@
-@if (auth.isAuthenticated()) {
-<div class="layout">
-  @if (auth.loggingOut()) {
-  <div class="logout-overlay">
-    <div class="logout-card">
-      <div class="spinner"></div>
-      <p>Oturum kapatılıyor...</p>
-    </div>
+@if (auth.loggingOut()) {
+<div class="logout-overlay">
+  <div class="logout-card">
+    <div class="spinner"></div>
+    <p>Oturum kapatılıyor...</p>
   </div>
-  }
+</div>
+}
+
+<div [class.layout]="auth.isAuthenticated()">
+  @if (auth.isAuthenticated()) {
   <header class="header">
     <span class="header-brand">HBT Fatura</span>
     <div class="header-right">
@@ -31,6 +32,7 @@
       }
     </div>
   </header>
+
   <aside class="sidebar">
     <nav class="sidebar-nav">
       @if (auth.user()?.role === 'SuperAdmin') {
@@ -56,12 +58,13 @@
       <a routerLink="/reports" routerLinkActive="active">Raporlar</a>
       <a routerLink="/cheques" routerLinkActive="active">Çek/Senet</a>
       }
-      <a routerLink="/company" routerLinkActive="active">Firma Bilgileri</a>
+      <a [routerLink]="['/firms', auth.user()?.firmId]" routerLinkActive="active">Firma Bilgileri</a>
       }
     </nav>
   </aside>
-  <main class="main-content"><router-outlet /></main>
+  }
+
+  <main class="main-content">
+    <router-outlet />
+  </main>
 </div>
-} @else {
-<main class="main-content"><router-outlet /></main>
-}

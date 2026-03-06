@@ -40,14 +40,51 @@ export class ProfileComponent implements OnInit {
             next: (res) => {
                 this.profile = res;
                 this.model.fullName = res.fullName;
-                this.model.phoneNumber = res.phoneNumber || '';
+                this.model.phoneNumber = res.phoneNumber ? this.applyPhoneFormat(res.phoneNumber) : '';
                 this.loading = false;
             },
             error: () => {
-                this.toastr.error('Profil bilgileri yüklenemedi.');
+                if (!this.auth.loggingOut() && this.auth.isAuthenticated()) {
+                    this.toastr.error('Profil bilgileri yüklenemedi.');
+                }
                 this.loading = false;
             }
         });
+    }
+
+    onPhoneInput(event: Event): void {
+        const input = event.target as HTMLInputElement;
+        let value = input.value.replace(/[^0-9]/g, '');
+
+        if (value.length > 0 && !value.startsWith('0')) {
+            value = '0' + value;
+        } else if (value.length === 0) {
+            value = '0';
+        }
+
+        if (value.length > 11) value = value.substring(0, 11);
+
+        let formatted = '';
+        for (let i = 0; i < value.length; i++) {
+            if (i === 1 || i === 4 || i === 7 || i === 9) formatted += ' ';
+            formatted += value[i];
+        }
+
+        this.model.phoneNumber = formatted.trim();
+        input.value = formatted.trim();
+    }
+
+    private applyPhoneFormat(value: string): string {
+        let cleaned = value.replace(/[^0-9]/g, '');
+        if (cleaned.length > 11) cleaned = cleaned.substring(0, 11);
+        if (cleaned.length > 0 && !cleaned.startsWith('0')) cleaned = '0' + cleaned;
+
+        let formatted = '';
+        for (let i = 0; i < cleaned.length; i++) {
+            if (i === 1 || i === 4 || i === 7 || i === 9) formatted += ' ';
+            formatted += cleaned[i];
+        }
+        return formatted.trim();
     }
 
     save(): void {

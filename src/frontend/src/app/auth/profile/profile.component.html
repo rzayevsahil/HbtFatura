@@ -36,7 +36,7 @@
                 <div class="form-group">
                     <label for="phoneNumber">Telefon</label>
                     <input type="text" id="phoneNumber" name="phoneNumber" [(ngModel)]="model.phoneNumber"
-                        placeholder="Telefon numarası giriniz">
+                        (input)="onPhoneInput($event)" placeholder="0XXX XXX XX XX">
                 </div>
             </div>
 

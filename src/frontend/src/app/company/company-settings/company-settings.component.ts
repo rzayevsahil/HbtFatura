@@ -155,22 +155,22 @@ export class CompanySettingsComponent implements OnInit {
         this.selectedCityName = c.cityName ?? '';
         this.selectedDistrictName = c.districtName ?? '';
         this.selectedOfficeName = c.taxOfficeName ?? '';
+        this.loading = false;
 
-        // Restore cascading dropdowns
+        // Restore cascading dropdowns in background
         if (c.cityId) {
-          this.taxService.getDistricts(c.cityId).subscribe(districts => {
-            this.districts = districts;
-            if (c.districtId) {
-              this.taxService.getOffices(c.cityId!, c.districtId).subscribe(offices => {
-                this.offices = offices;
-                this.loading = false;
-              });
-            } else {
-              this.loading = false;
-            }
+          this.taxService.getDistricts(c.cityId).subscribe({
+            next: districts => {
+              this.districts = districts;
+              if (c.districtId) {
+                this.taxService.getOffices(c.cityId!, c.districtId).subscribe({
+                  next: offices => this.offices = offices,
+                  error: () => { }
+                });
+              }
+            },
+            error: () => { }
           });
-        } else {
-          this.loading = false;
         }
       },
       error: () => {
