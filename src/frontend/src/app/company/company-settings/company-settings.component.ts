@@ -26,9 +26,9 @@ export class CompanySettingsComponent implements OnInit {
     taxOfficeId: [null as string | null, [Validators.required]],
     taxNumber: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(11)]],
     address: ['', [Validators.required]],
-    phone: ['', [Validators.required]],
+    phone: ['', [Validators.required, Validators.minLength(15), Validators.maxLength(15)]],
     email: ['', [Validators.required, Validators.email]],
-    website: [''],
+    website: ['', [Validators.pattern('^(https?:\\/\\/)?([\\da-z.-]+)\\.([a-z.]{2,6})([\\/\\w .-]*)*\\/?$')]],
     iban: ['', [Validators.required, Validators.minLength(32), Validators.maxLength(32)]],
     bankName: ['', [Validators.required]],
     logoUrl: [null as string | null]
@@ -286,6 +286,50 @@ export class CompanySettingsComponent implements OnInit {
 
     this.form.patchValue({ iban: formatted }, { emitEvent: false });
     input.value = formatted;
+  }
+
+  onPhoneInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    let value = input.value.replace(/[^0-9]/g, '');
+
+    // Always start with 0
+    if (value.length > 0 && !value.startsWith('0')) {
+      value = '0' + value;
+    } else if (value.length === 0) {
+      value = '0';
+    }
+
+    if (value.length > 11) value = value.substring(0, 11);
+
+    // Format: 0XXX XXX XX XX
+    let formatted = '';
+    for (let i = 0; i < value.length; i++) {
+      if (i === 1 || i === 4 || i === 7 || i === 9) formatted += ' ';
+      formatted += value[i];
+    }
+
+    this.form.patchValue({ phone: formatted.trim() }, { emitEvent: false });
+    input.value = formatted.trim();
+  }
+
+  onWebsiteInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    let value = input.value.trim().toLowerCase();
+
+    // Optionally prefix with https:// if not present and something is typed
+    if (value.length > 0 && !value.startsWith('http')) {
+      // Just some basic hinting/auto-correction
+      // But we better keep the form value updated
+    }
+    this.form.patchValue({ website: value }, { emitEvent: false });
+  }
+
+  onTaxNumberInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    let value = input.value.replace(/[^0-9]/g, '');
+    if (value.length > 11) value = value.substring(0, 11);
+    this.form.patchValue({ taxNumber: value }, { emitEvent: false });
+    input.value = value;
   }
 
   getLogoUrl(): string | null {

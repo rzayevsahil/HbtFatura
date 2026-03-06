@@ -89,7 +89,8 @@
       </div>
       <div class="row">
         <label>Vergi No / TC</label>
-        <input formControlName="taxNumber" placeholder="10 haneli" [readonly]="isReadOnly()" />
+        <input formControlName="taxNumber" placeholder="10 haneli" (input)="onTaxNumberInput($event)"
+          [readonly]="isReadOnly()" />
       </div>
       <div class="row">
         <label>Adres</label>
@@ -97,7 +98,8 @@
       </div>
       <div class="row">
         <label>Telefon</label>
-        <input formControlName="phone" placeholder="0xxx xxx xx xx" [readonly]="isReadOnly()" />
+        <input formControlName="phone" placeholder="0xxx xxx xx xx" (input)="onPhoneInput($event)"
+          [readonly]="isReadOnly()" />
       </div>
       <div class="row">
         <label>E-posta</label>
@@ -105,7 +107,8 @@
       </div>
       <div class="row">
         <label>Web Adresi</label>
-        <input type="text" formControlName="website" placeholder="www.ornek.com" [readonly]="isReadOnly()" />
+        <input type="text" formControlName="website" placeholder="www.ornek.com" (input)="onWebsiteInput($event)"
+          [readonly]="isReadOnly()" />
       </div>
       <div class="row">
         <label>Banka Adı</label>
