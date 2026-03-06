@@ -36,7 +36,7 @@ public class InvoiceService : IInvoiceService
         return _db.Invoices.Where(i => i.UserId == _currentUser.UserId);
     }
 
-    public async Task<PagedResult<InvoiceListDto>> GetPagedAsync(int page, int pageSize, DateTime? dateFrom, DateTime? dateTo, InvoiceStatus? status, InvoiceType? invoiceType, Guid? customerId, Guid? firmId, CancellationToken ct = default)
+    public async Task<PagedResult<InvoiceListDto>> GetPagedAsync(int page, int pageSize, DateTime? dateFrom, DateTime? dateTo, InvoiceStatus? status, InvoiceType? invoiceType, Guid? customerId, string? search, Guid? firmId, CancellationToken ct = default)
     {
         var query = ScopeQuery(firmId);
         if (dateFrom.HasValue) query = query.Where(x => x.InvoiceDate >= dateFrom.Value.Date);
@@ -44,6 +44,12 @@ public class InvoiceService : IInvoiceService
         if (status.HasValue) query = query.Where(x => x.Status == status.Value);
         if (invoiceType.HasValue) query = query.Where(x => x.InvoiceType == invoiceType.Value);
         if (customerId.HasValue) query = query.Where(x => x.CustomerId == customerId.Value);
+        
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            var s = search.Trim().ToLower();
+            query = query.Where(x => x.InvoiceNumber.ToLower().Contains(s) || x.CustomerTitle.ToLower().Contains(s));
+        }
 
         var total = await query.CountAsync(ct);
         var items = await query
@@ -421,7 +427,7 @@ public class InvoiceService : IInvoiceService
                     Type = cariType,
                     Amount = invoice.GrandTotal,
                     Currency = invoice.Currency,
-                    Description = $"Fatura {invoice.InvoiceNumber}",
+                    Description = invoice.InvoiceNumber,
                     ReferenceType = ReferenceType.Fatura,
                     ReferenceId = id,
                     CreatedAt = DateTime.UtcNow

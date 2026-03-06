@@ -70,12 +70,13 @@ export class OrderService {
   private base = '/api/orders';
   constructor(private api: ApiService) { }
 
-  getPaged(params: { page: number; pageSize: number; dateFrom?: string; dateTo?: string; status?: number; customerId?: string }): Observable<PagedResult<OrderListDto>> {
+  getPaged(params: { page: number; pageSize: number; dateFrom?: string; dateTo?: string; status?: number; customerId?: string; search?: string }): Observable<PagedResult<OrderListDto>> {
     const p: Record<string, string | number> = { page: params.page, pageSize: params.pageSize };
     if (params.dateFrom) p['dateFrom'] = params.dateFrom;
     if (params.dateTo) p['dateTo'] = params.dateTo;
     if (params.status !== undefined) p['status'] = params.status;
     if (params.customerId) p['customerId'] = params.customerId;
+    if (params.search) p['search'] = params.search;
     return this.api.get<PagedResult<OrderListDto>>(this.base, p);
   }
 

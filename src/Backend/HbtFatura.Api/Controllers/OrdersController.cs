@@ -27,12 +27,13 @@ public class OrdersController : ControllerBase
         [FromQuery] DateTime? dateTo = null,
         [FromQuery] OrderStatus? status = null,
         [FromQuery] Guid? customerId = null,
+        [FromQuery] string? search = null,
         [FromQuery] Guid? firmId = null,
         CancellationToken ct = default)
     {
         if (page < 1) page = 1;
         if (pageSize < 1 || pageSize > 100) pageSize = 20;
-        var result = await _service.GetPagedAsync(page, pageSize, dateFrom, dateTo, status, customerId, firmId, ct);
+        var result = await _service.GetPagedAsync(page, pageSize, dateFrom, dateTo, status, customerId, search, firmId, ct);
         return Ok(result);
     }
 

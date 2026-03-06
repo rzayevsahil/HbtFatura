@@ -33,13 +33,19 @@ public class OrderService : IOrderService
         return _db.Orders.Where(o => o.UserId == _currentUser.UserId);
     }
 
-    public async Task<PagedResult<OrderListDto>> GetPagedAsync(int page, int pageSize, DateTime? dateFrom, DateTime? dateTo, OrderStatus? status, Guid? customerId, Guid? firmId, CancellationToken ct = default)
+    public async Task<PagedResult<OrderListDto>> GetPagedAsync(int page, int pageSize, DateTime? dateFrom, DateTime? dateTo, OrderStatus? status, Guid? customerId, string? search, Guid? firmId, CancellationToken ct = default)
     {
         var query = ScopeQuery(firmId);
         if (dateFrom.HasValue) query = query.Where(x => x.OrderDate >= dateFrom.Value.Date);
         if (dateTo.HasValue) query = query.Where(x => x.OrderDate < dateTo.Value.Date.AddDays(1));
         if (status.HasValue) query = query.Where(x => x.Status == status.Value);
         if (customerId.HasValue) query = query.Where(x => x.CustomerId == customerId.Value);
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            var s = search.Trim().ToLower();
+            query = query.Where(x => x.OrderNumber.ToLower().Contains(s) || (x.Customer != null && x.Customer.Title.ToLower().Contains(s)));
+        }
 
         var total = await query.CountAsync(ct);
         var orders = await query

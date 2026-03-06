@@ -6,7 +6,7 @@ namespace HbtFatura.Api.Services;
 
 public interface IDeliveryNoteService
 {
-    Task<PagedResult<DeliveryNoteListDto>> GetPagedAsync(int page, int pageSize, DateTime? dateFrom, DateTime? dateTo, DeliveryNoteStatus? status, Guid? customerId, Guid? orderId, Guid? firmId, CancellationToken ct = default);
+    Task<PagedResult<DeliveryNoteListDto>> GetPagedAsync(int page, int pageSize, DateTime? dateFrom, DateTime? dateTo, DeliveryNoteStatus? status, Guid? customerId, Guid? orderId, string? search, Guid? firmId, CancellationToken ct = default);
     Task<DeliveryNoteDto?> GetByIdAsync(Guid id, CancellationToken ct = default);
     Task<DeliveryNoteDto> CreateAsync(CreateDeliveryNoteRequest request, CancellationToken ct = default);
     Task<DeliveryNoteDto?> CreateFromOrderAsync(Guid orderId, DateTime deliveryDate, CancellationToken ct = default);

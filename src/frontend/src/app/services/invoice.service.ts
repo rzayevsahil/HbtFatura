@@ -92,13 +92,14 @@ export class InvoiceService {
   private base = '/api/invoices';
   constructor(private api: ApiService) { }
 
-  getPaged(params: { page: number; pageSize: number; dateFrom?: string; dateTo?: string; status?: number; invoiceType?: number; customerId?: string }): Observable<PagedResult<InvoiceListDto>> {
+  getPaged(params: { page: number; pageSize: number; dateFrom?: string; dateTo?: string; status?: number; invoiceType?: number; customerId?: string; search?: string }): Observable<PagedResult<InvoiceListDto>> {
     const p: Record<string, string | number> = { page: params.page, pageSize: params.pageSize };
     if (params.dateFrom) p['dateFrom'] = params.dateFrom;
     if (params.dateTo) p['dateTo'] = params.dateTo;
     if (params.status !== undefined) p['status'] = params.status;
     if (params.invoiceType !== undefined) p['invoiceType'] = params.invoiceType;
     if (params.customerId) p['customerId'] = params.customerId;
+    if (params.search) p['search'] = params.search;
     return this.api.get<PagedResult<InvoiceListDto>>(this.base, p);
   }
 

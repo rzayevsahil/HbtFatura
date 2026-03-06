@@ -21,6 +21,7 @@ export class InvoiceListComponent implements OnInit {
   searchDateTo = '';
   searchStatus: InvoiceStatus | null = null;
   searchInvoiceType: number | null = null;
+  searchText = '';
   loading = false;
 
   constructor(private api: InvoiceService, private router: Router, private toastr: ToastrService) { }
@@ -44,6 +45,7 @@ export class InvoiceListComponent implements OnInit {
     if (this.searchDateTo) params.dateTo = this.searchDateTo;
     if (this.searchStatus !== null) params.status = this.searchStatus;
     if (this.searchInvoiceType !== null) params.invoiceType = this.searchInvoiceType;
+    if (this.searchText) params.search = this.searchText;
     this.api.getPaged(params).subscribe({
       next: res => {
         this.items = res.items;

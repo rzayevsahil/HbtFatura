@@ -87,13 +87,14 @@ export class DeliveryNoteService {
     return this.api.put<DeliveryNoteDto>(`${this.base}/${id}`, req);
   }
 
-  getPaged(params: { page: number; pageSize: number; dateFrom?: string; dateTo?: string; status?: number; customerId?: string; orderId?: string }): Observable<PagedResult<DeliveryNoteListDto>> {
+  getPaged(params: { page: number; pageSize: number; dateFrom?: string; dateTo?: string; status?: number; customerId?: string; orderId?: string; search?: string }): Observable<PagedResult<DeliveryNoteListDto>> {
     const p: Record<string, string | number> = { page: params.page, pageSize: params.pageSize };
     if (params.dateFrom) p['dateFrom'] = params.dateFrom;
     if (params.dateTo) p['dateTo'] = params.dateTo;
     if (params.status !== undefined) p['status'] = params.status;
     if (params.customerId) p['customerId'] = params.customerId;
     if (params.orderId) p['orderId'] = params.orderId;
+    if (params.search) p['search'] = params.search;
     return this.api.get<PagedResult<DeliveryNoteListDto>>(this.base, p);
   }
 

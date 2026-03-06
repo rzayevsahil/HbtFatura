@@ -28,12 +28,13 @@ public class DeliveryNotesController : ControllerBase
         [FromQuery] DeliveryNoteStatus? status = null,
         [FromQuery] Guid? customerId = null,
         [FromQuery] Guid? orderId = null,
+        [FromQuery] string? search = null,
         [FromQuery] Guid? firmId = null,
         CancellationToken ct = default)
     {
         if (page < 1) page = 1;
         if (pageSize < 1 || pageSize > 100) pageSize = 20;
-        var result = await _service.GetPagedAsync(page, pageSize, dateFrom, dateTo, status, customerId, orderId, firmId, ct);
+        var result = await _service.GetPagedAsync(page, pageSize, dateFrom, dateTo, status, customerId, orderId, search, firmId, ct);
         return Ok(result);
     }
 

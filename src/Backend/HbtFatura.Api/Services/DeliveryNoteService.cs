@@ -34,7 +34,7 @@ public class DeliveryNoteService : IDeliveryNoteService
         return _db.DeliveryNotes.Where(d => d.UserId == _currentUser.UserId);
     }
 
-    public async Task<PagedResult<DeliveryNoteListDto>> GetPagedAsync(int page, int pageSize, DateTime? dateFrom, DateTime? dateTo, DeliveryNoteStatus? status, Guid? customerId, Guid? orderId, Guid? firmId, CancellationToken ct = default)
+    public async Task<PagedResult<DeliveryNoteListDto>> GetPagedAsync(int page, int pageSize, DateTime? dateFrom, DateTime? dateTo, DeliveryNoteStatus? status, Guid? customerId, Guid? orderId, string? search, Guid? firmId, CancellationToken ct = default)
     {
         var query = ScopeQuery(firmId);
         if (dateFrom.HasValue) query = query.Where(x => x.DeliveryDate >= dateFrom.Value.Date);
@@ -42,6 +42,12 @@ public class DeliveryNoteService : IDeliveryNoteService
         if (status.HasValue) query = query.Where(x => x.Status == status.Value);
         if (customerId.HasValue) query = query.Where(x => x.CustomerId == customerId.Value);
         if (orderId.HasValue) query = query.Where(x => x.OrderId == orderId.Value);
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            var s = search.Trim().ToLower();
+            query = query.Where(x => x.DeliveryNumber.ToLower().Contains(s) || (x.Customer != null && x.Customer.Title.ToLower().Contains(s)));
+        }
 
         var total = await query.CountAsync(ct);
         var list = await query
