@@ -6,6 +6,7 @@ import { BankAccountService } from '../../services/bank-account.service';
 import { FirmService, FirmDto } from '../../services/firm.service';
 import { AuthService } from '../../core/services/auth.service';
 import { ToastrService } from 'ngx-toastr';
+import { IbanFormatter } from '../../core/utils/iban-formatter';
 
 @Component({
   selector: 'app-bank-account-form',
@@ -48,7 +49,7 @@ export class BankAccountFormComponent implements OnInit {
     if (this.id) {
       this.api.getById(this.id).subscribe(b => this.form.patchValue({
         name: b.name,
-        iban: b.iban ?? '',
+        iban: b.iban ? IbanFormatter.format(b.iban) : '',
         bankName: b.bankName ?? '',
         currency: b.currency,
         isActive: b.isActive
@@ -57,30 +58,8 @@ export class BankAccountFormComponent implements OnInit {
   }
 
   onIbanInput(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    let value = input.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
-
-    if (value.length > 0 && !value.startsWith('TR')) {
-      if (value.startsWith('T')) value = 'TR' + value.substring(1);
-      else value = 'TR' + value;
-    } else if (value.length === 0) {
-      value = 'TR';
-    }
-
-    const prefix = value.substring(0, 2);
-    const rest = value.substring(2).replace(/[^0-9]/g, '');
-    value = prefix + rest;
-
-    if (value.length > 26) value = value.substring(0, 26);
-
-    let formatted = '';
-    for (let i = 0; i < value.length; i++) {
-      if (i > 0 && i % 4 === 0) formatted += ' ';
-      formatted += value[i];
-    }
-
+    const formatted = IbanFormatter.handleInput(event);
     this.form.patchValue({ iban: formatted }, { emitEvent: false });
-    input.value = formatted;
   }
 
   onSubmit(): void {

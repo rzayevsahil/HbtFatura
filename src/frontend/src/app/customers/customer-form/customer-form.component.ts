@@ -7,6 +7,7 @@ import { CustomerService } from '../../services/customer.service';
 import { MainAccountCodeService, MainAccountCodeDto } from '../../services/main-account-code.service';
 import { TaxOfficeService, CityResponse, DistrictResponse, TaxOfficeDto } from '../../services/tax-office.service';
 import { ToastrService } from 'ngx-toastr';
+import { PhoneFormatter } from '../../core/utils/phone-formatter';
 
 @Component({
   selector: 'app-customer-form',
@@ -167,7 +168,7 @@ export class CustomerFormComponent implements OnInit {
           taxOfficeId: c.taxOfficeId,
           postalCode: c.postalCode ?? '',
           country: c.country ?? '',
-          phone: c.phone ? this.applyPhoneFormat(c.phone) : '',
+          phone: c.phone ? PhoneFormatter.format(c.phone) : '',
           email: c.email ?? '',
           website: c.website ?? ''
         });
@@ -242,39 +243,8 @@ export class CustomerFormComponent implements OnInit {
   }
 
   onPhoneInput(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    let value = input.value.replace(/[^0-9]/g, '');
-
-    if (value.length > 0 && !value.startsWith('0')) {
-      value = '0' + value;
-    } else if (value.length === 0) {
-      value = '0';
-    }
-
-    if (value.length > 11) value = value.substring(0, 11);
-
-    let formatted = '';
-    for (let i = 0; i < value.length; i++) {
-      if (i === 1 || i === 4 || i === 7 || i === 9) formatted += ' ';
-      formatted += value[i];
-    }
-
-    const trimmed = formatted.trim();
-    this.form.patchValue({ phone: trimmed });
-    input.value = trimmed;
-  }
-
-  private applyPhoneFormat(value: string): string {
-    let cleaned = value.replace(/[^0-9]/g, '');
-    if (cleaned.length > 11) cleaned = cleaned.substring(0, 11);
-    if (cleaned.length > 0 && !cleaned.startsWith('0')) cleaned = '0' + cleaned;
-
-    let formatted = '';
-    for (let i = 0; i < cleaned.length; i++) {
-      if (i === 1 || i === 4 || i === 7 || i === 9) formatted += ' ';
-      formatted += cleaned[i];
-    }
-    return formatted.trim();
+    const formatted = PhoneFormatter.handleInput(event);
+    this.form.patchValue({ phone: formatted });
   }
 
   onSubmit(): void {

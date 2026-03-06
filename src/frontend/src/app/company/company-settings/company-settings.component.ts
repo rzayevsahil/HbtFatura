@@ -7,6 +7,8 @@ import { TaxOfficeService, TaxOfficeDto, CityResponse, DistrictResponse } from '
 import { AuthService } from '../../core/services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { environment } from '../../../environments/environment';
+import { PhoneFormatter } from '../../core/utils/phone-formatter';
+import { IbanFormatter } from '../../core/utils/iban-formatter';
 
 @Component({
   selector: 'app-company-settings',
@@ -147,7 +149,7 @@ export class CompanySettingsComponent implements OnInit {
           phone: c.phone ?? '',
           email: c.email ?? '',
           website: c.website ?? '',
-          iban: c.iban ?? '',
+          iban: c.iban ? IbanFormatter.format(c.iban) : 'TR',
           bankName: c.bankName ?? '',
           logoUrl: c.logoUrl ?? null
         });
@@ -258,58 +260,13 @@ export class CompanySettingsComponent implements OnInit {
   }
 
   onIbanInput(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    let value = input.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
-
-    // Always start with TR
-    if (value.length > 0 && !value.startsWith('TR')) {
-      if (value.startsWith('T')) value = 'TR' + value.substring(1);
-      else value = 'TR' + value;
-    } else if (value.length === 0) {
-      value = 'TR';
-    }
-
-    // Keep only TR and numbers
-    const prefix = value.substring(0, 2);
-    const rest = value.substring(2).replace(/[^0-9]/g, '');
-    value = prefix + rest;
-
-    // Limit to 26 characters (TR + 24 digits)
-    if (value.length > 26) value = value.substring(0, 26);
-
-    // Add spaces every 4 characters
-    let formatted = '';
-    for (let i = 0; i < value.length; i++) {
-      if (i > 0 && i % 4 === 0) formatted += ' ';
-      formatted += value[i];
-    }
-
+    const formatted = IbanFormatter.handleInput(event);
     this.form.patchValue({ iban: formatted }, { emitEvent: false });
-    input.value = formatted;
   }
 
   onPhoneInput(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    let value = input.value.replace(/[^0-9]/g, '');
-
-    // Always start with 0
-    if (value.length > 0 && !value.startsWith('0')) {
-      value = '0' + value;
-    } else if (value.length === 0) {
-      value = '0';
-    }
-
-    if (value.length > 11) value = value.substring(0, 11);
-
-    // Format: 0XXX XXX XX XX
-    let formatted = '';
-    for (let i = 0; i < value.length; i++) {
-      if (i === 1 || i === 4 || i === 7 || i === 9) formatted += ' ';
-      formatted += value[i];
-    }
-
-    this.form.patchValue({ phone: formatted.trim() }, { emitEvent: false });
-    input.value = formatted.trim();
+    const formatted = PhoneFormatter.handleInput(event);
+    this.form.patchValue({ phone: formatted }, { emitEvent: false });
   }
 
   onWebsiteInput(event: Event): void {
