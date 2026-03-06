@@ -14,10 +14,13 @@ public class CustomerDto
     public string? CityName { get; set; }
     public Guid? DistrictId { get; set; }
     public string? DistrictName { get; set; }
+    public Guid? TaxOfficeId { get; set; }
+    public string? TaxOfficeName { get; set; }
     public string? PostalCode { get; set; }
     public string? Country { get; set; }
     public string? Phone { get; set; }
     public string? Email { get; set; }
+    public string? Website { get; set; }
     public decimal Balance { get; set; }
 }
 
@@ -39,10 +42,12 @@ public class CreateCustomerRequest
     public string? Address { get; set; }
     public Guid? CityId { get; set; }
     public Guid? DistrictId { get; set; }
+    public Guid? TaxOfficeId { get; set; }
     public string? PostalCode { get; set; }
     public string? Country { get; set; }
     public string? Phone { get; set; }
     public string? Email { get; set; }
+    public string? Website { get; set; }
 }
 
 public class AccountTransactionDto

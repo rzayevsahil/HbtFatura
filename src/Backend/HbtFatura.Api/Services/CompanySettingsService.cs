@@ -68,6 +68,7 @@ public class CompanySettingsService : ICompanySettingsService
         entity.Address = request.Address?.Trim();
         entity.Phone = request.Phone?.Trim();
         entity.Email = request.Email?.Trim();
+        entity.Website = request.Website?.Trim();
         entity.IBAN = request.IBAN?.Trim();
         entity.BankName = request.BankName?.Trim();
         
@@ -128,6 +129,7 @@ public class CompanySettingsService : ICompanySettingsService
         Address = e.Address,
         Phone = e.Phone,
         Email = e.Email,
+        Website = e.Website,
         IBAN = e.IBAN,
         BankName = e.BankName,
         LogoUrl = e.LogoUrl

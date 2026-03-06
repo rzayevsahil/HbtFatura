@@ -44,6 +44,8 @@ export interface InvoiceDto {
   customerAddress?: string;
   customerPhone?: string;
   customerEmail?: string;
+  customerWebsite?: string;
+  customerTaxOffice?: string;
   subTotal: number;
   totalVat: number;
   grandTotal: number;
@@ -78,6 +80,8 @@ export interface CreateInvoiceRequest {
   customerAddress?: string;
   customerPhone?: string;
   customerEmail?: string;
+  customerWebsite?: string;
+  customerTaxOffice?: string;
   currency: string;
   exchangeRate: number;
   items: InvoiceItemInputDto[];

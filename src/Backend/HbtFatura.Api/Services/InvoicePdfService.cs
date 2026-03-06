@@ -86,10 +86,15 @@ public class InvoicePdfService : IInvoicePdfService
                                 
                                 foreach(var line in addressLines) inner.Item().Text(line).FontSize(8);
 
-                                if (!string.IsNullOrEmpty(company?.Phone)) inner.Item().Text($"Tel: {company.Phone}").FontSize(8);
+                                if (!string.IsNullOrEmpty(company?.Website)) inner.Item().Text($"Web: {company.Website}").FontSize(8);
                                 if (!string.IsNullOrEmpty(company?.Email)) inner.Item().Text($"E-Posta: {company.Email}").FontSize(8);
+                                if (!string.IsNullOrEmpty(company?.Phone)) inner.Item().Text($"Tel: {company.Phone}").FontSize(8);
                                 if (!string.IsNullOrEmpty(company?.TaxOffice?.Name)) inner.Item().Text($"Vergi Dairesi: {company.TaxOffice.Name}").FontSize(8);
-                                if (!string.IsNullOrEmpty(company?.TaxNumber)) inner.Item().Text($"VKN/TCKN: {company.TaxNumber}").FontSize(8);
+                                if (!string.IsNullOrEmpty(company?.TaxNumber)) 
+                                {
+                                    var label = (company.TaxNumber.Length == 11) ? "TCKN" : "VKN";
+                                    inner.Item().Text($"{label}: {company.TaxNumber}").FontSize(8);
+                                }
                             });
 
                             // Add bottom line for Sender Info
@@ -190,9 +195,15 @@ public class InvoicePdfService : IInvoicePdfService
                                 if (!string.IsNullOrEmpty(invoice.CustomerCity)) customerCityDistrict += (customerCityDistrict != "" ? " / " : "") + invoice.CustomerCity;
                                 if (!string.IsNullOrEmpty(customerCityDistrict)) inner.Item().Text(customerCityDistrict).FontSize(8);
                                 
-                                if (!string.IsNullOrEmpty(invoice.CustomerPhone)) inner.Item().Text($"Tel: {invoice.CustomerPhone}").FontSize(8);
+                                if (!string.IsNullOrEmpty(invoice.CustomerWebsite)) inner.Item().Text($"Web: {invoice.CustomerWebsite}").FontSize(8);
                                 if (!string.IsNullOrEmpty(invoice.CustomerEmail)) inner.Item().Text($"E-Posta: {invoice.CustomerEmail}").FontSize(8);
-                                if (!string.IsNullOrEmpty(invoice.CustomerTaxNumber)) inner.Item().Text($"VKN: {invoice.CustomerTaxNumber}").FontSize(8);
+                                if (!string.IsNullOrEmpty(invoice.CustomerPhone)) inner.Item().Text($"Tel: {invoice.CustomerPhone}").FontSize(8);
+                                if (!string.IsNullOrEmpty(invoice.CustomerTaxOffice)) inner.Item().Text($"Vergi Dairesi: {invoice.CustomerTaxOffice}").FontSize(8);
+                                if (!string.IsNullOrEmpty(invoice.CustomerTaxNumber)) 
+                                {
+                                    var label = (invoice.CustomerTaxNumber.Length == 11) ? "TCKN" : "VKN";
+                                    inner.Item().Text($"{label}: {invoice.CustomerTaxNumber}").FontSize(8);
+                                }
                             });
 
                             // Bottom line - expand to full 40% column width

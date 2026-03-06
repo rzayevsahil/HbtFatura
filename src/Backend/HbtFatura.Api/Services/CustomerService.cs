@@ -65,10 +65,13 @@ public class CustomerService : ICustomerService
                 CityName = x.City != null ? x.City.Name : null,
                 DistrictId = x.DistrictId,
                 DistrictName = x.District != null ? x.District.Name : null,
+                TaxOfficeId = x.TaxOfficeId,
+                TaxOfficeName = x.TaxOffice != null ? x.TaxOffice.Name : null,
                 PostalCode = x.PostalCode,
                 Country = x.Country,
                 Phone = x.Phone,
                 Email = x.Email,
+                Website = x.Website,
                 CreatedAt = x.CreatedAt,
                 Balance = 0
             })
@@ -119,10 +122,13 @@ public class CustomerService : ICustomerService
                 CityName = x.City != null ? x.City.Name : null,
                 DistrictId = x.DistrictId,
                 DistrictName = x.District != null ? x.District.Name : null,
+                TaxOfficeId = x.TaxOfficeId,
+                TaxOfficeName = x.TaxOffice != null ? x.TaxOffice.Name : null,
                 PostalCode = x.PostalCode,
                 Country = x.Country,
                 Phone = x.Phone,
                 Email = x.Email,
+                Website = x.Website,
                 Balance = 0
             })
             .ToListAsync(ct);
@@ -133,6 +139,7 @@ public class CustomerService : ICustomerService
         var entity = await ScopeQuery()
             .Include(x => x.City)
             .Include(x => x.District)
+            .Include(x => x.TaxOffice)
             .FirstOrDefaultAsync(x => x.Id == id, ct);
         if (entity == null) return null;
         var dto = MapToDto(entity);
@@ -216,10 +223,12 @@ public class CustomerService : ICustomerService
             Address = request.Address?.Trim(),
             CityId = request.CityId,
             DistrictId = request.DistrictId,
+            TaxOfficeId = request.TaxOfficeId,
             PostalCode = request.PostalCode?.Trim(),
             Country = request.Country?.Trim(),
             Phone = request.Phone?.Trim(),
             Email = request.Email?.Trim(),
+            Website = request.Website?.Trim(),
             CreatedAt = DateTime.UtcNow,
             CreatedBy = userId
         };
@@ -242,10 +251,12 @@ public class CustomerService : ICustomerService
         entity.Address = request.Address?.Trim();
         entity.CityId = request.CityId;
         entity.DistrictId = request.DistrictId;
+        entity.TaxOfficeId = request.TaxOfficeId;
         entity.PostalCode = request.PostalCode?.Trim();
         entity.Country = request.Country?.Trim();
         entity.Phone = request.Phone?.Trim();
         entity.Email = request.Email?.Trim();
+        entity.Website = request.Website?.Trim();
         entity.UpdatedAt = DateTime.UtcNow;
         entity.UpdatedBy = _currentUser.UserId;
         await _db.SaveChangesAsync(ct);
@@ -278,10 +289,13 @@ public class CustomerService : ICustomerService
         CityName = e.City?.Name,
         DistrictId = e.DistrictId,
         DistrictName = e.District?.Name,
+        TaxOfficeId = e.TaxOfficeId,
+        TaxOfficeName = e.TaxOffice?.Name,
         PostalCode = e.PostalCode,
         Country = e.Country,
         Phone = e.Phone,
         Email = e.Email,
+        Website = e.Website,
         Balance = 0
     };
 }

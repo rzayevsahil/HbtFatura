@@ -99,6 +99,8 @@ public class InvoiceService : IInvoiceService
         string? customerAddress = request.CustomerAddress;
         string? customerPhone = request.CustomerPhone;
         string? customerEmail = request.CustomerEmail;
+        string? customerWebsite = request.CustomerWebsite;
+        string? customerTaxOffice = request.CustomerTaxOffice;
         string? customerCity = null;
         string? customerDistrict = null;
         Guid? customerId = request.CustomerId;
@@ -116,6 +118,8 @@ public class InvoiceService : IInvoiceService
                 customerAddress = customer.Address;
                 customerCity = customer.City?.Name;
                 customerDistrict = customer.District?.Name;
+                customerTaxOffice = customer.TaxOffice?.Name;
+                customerWebsite = customer.Website;
                 customerPhone = customer.Phone;
                 customerEmail = customer.Email;
             }
@@ -138,6 +142,8 @@ public class InvoiceService : IInvoiceService
             CustomerAddress = customerAddress,
             CustomerCity = customerCity,
             CustomerDistrict = customerDistrict,
+            CustomerTaxOffice = customerTaxOffice,
+            CustomerWebsite = customerWebsite,
             CustomerPhone = customerPhone,
             CustomerEmail = customerEmail,
             Currency = request.Currency,
@@ -192,6 +198,8 @@ public class InvoiceService : IInvoiceService
                 .ThenInclude(c => c.City)
             .Include(x => x.Customer)
                 .ThenInclude(c => c.District)
+            .Include(x => x.Customer)
+                .ThenInclude(c => c.TaxOffice)
             .Include(x => x.Items.OrderBy(i => i.SortOrder))
                 .ThenInclude(i => i.Product)
             .FirstOrDefaultAsync(x => x.Id == deliveryNoteId, ct);
@@ -209,6 +217,8 @@ public class InvoiceService : IInvoiceService
         var customerAddress = dn.Customer?.Address;
         var customerCity = dn.Customer?.City?.Name;
         var customerDistrict = dn.Customer?.District?.Name;
+        var customerTaxOffice = dn.Customer?.TaxOffice?.Name;
+        var customerWebsite = dn.Customer?.Website;
         var customerPhone = dn.Customer?.Phone;
         var customerEmail = dn.Customer?.Email;
 
@@ -229,6 +239,8 @@ public class InvoiceService : IInvoiceService
             CustomerAddress = customerAddress,
             CustomerCity = customerCity,
             CustomerDistrict = customerDistrict,
+            CustomerTaxOffice = customerTaxOffice,
+            CustomerWebsite = customerWebsite,
             CustomerPhone = customerPhone,
             CustomerEmail = customerEmail,
             Currency = "TRY",
@@ -292,6 +304,8 @@ public class InvoiceService : IInvoiceService
 
         invoice.CustomerTaxNumber = request.CustomerTaxNumber;
         invoice.CustomerAddress = request.CustomerAddress;
+        invoice.CustomerTaxOffice = request.CustomerTaxOffice;
+        invoice.CustomerWebsite = request.CustomerWebsite;
         invoice.CustomerPhone = request.CustomerPhone;
         invoice.CustomerEmail = request.CustomerEmail;
         invoice.Currency = request.Currency;
@@ -301,13 +315,15 @@ public class InvoiceService : IInvoiceService
 
         if (request.CustomerId.HasValue)
         {
-            var customer = await _db.Customers.FirstOrDefaultAsync(c => c.Id == request.CustomerId && (c.UserId == invoice.UserId || (_currentUser.IsFirmAdmin && c.User != null && c.User.FirmId == _currentUser.FirmId)), ct);
+            var customer = await _db.Customers.Include(c => c.TaxOffice).FirstOrDefaultAsync(c => c.Id == request.CustomerId && (c.UserId == invoice.UserId || (_currentUser.IsFirmAdmin && c.User != null && c.User.FirmId == _currentUser.FirmId)), ct);
             if (customer != null)
             {
                 invoice.CustomerId = customer.Id;
                 invoice.CustomerTitle = customer.Title;
                 invoice.CustomerTaxNumber = customer.TaxNumber;
                 invoice.CustomerAddress = customer.Address;
+                invoice.CustomerTaxOffice = customer.TaxOffice?.Name;
+                invoice.CustomerWebsite = customer.Website;
                 invoice.CustomerPhone = customer.Phone;
                 invoice.CustomerEmail = customer.Email;
             }
@@ -488,6 +504,8 @@ public class InvoiceService : IInvoiceService
         CustomerAddress = inv.CustomerAddress,
         CustomerPhone = inv.CustomerPhone,
         CustomerEmail = inv.CustomerEmail,
+        CustomerTaxOffice = inv.CustomerTaxOffice,
+        CustomerWebsite = inv.CustomerWebsite,
         SubTotal = inv.SubTotal,
         TotalVat = inv.TotalVat,
         GrandTotal = inv.GrandTotal,

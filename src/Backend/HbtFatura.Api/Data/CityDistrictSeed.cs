@@ -20,6 +20,7 @@ public static class CityDistrictSeed
             Name = "ADANA",
             Districts = new List<District>
             {
+                new() { Id = Guid.NewGuid(), Name = "Merkez" },
                 new() { Id = Guid.NewGuid(), Name = "Aladağ" },
                 new() { Id = Guid.NewGuid(), Name = "Ceyhan" },
                 new() { Id = Guid.NewGuid(), Name = "Feke" },
@@ -132,6 +133,7 @@ public static class CityDistrictSeed
             Name = "ANKARA",
             Districts = new List<District>
             {
+                new() { Id = Guid.NewGuid(), Name = "Merkez" },
                 new() { Id = Guid.NewGuid(), Name = "Akyurt" },
                 new() { Id = Guid.NewGuid(), Name = "Altindağ" },
                 new() { Id = Guid.NewGuid(), Name = "Ayaş" },
@@ -404,6 +406,7 @@ public static class CityDistrictSeed
             Name = "BURSA",
             Districts = new List<District>
             {
+                new() { Id = Guid.NewGuid(), Name = "Merkez" },
                 new() { Id = Guid.NewGuid(), Name = "Büyükorhan" },
                 new() { Id = Guid.NewGuid(), Name = "Gemli̇k" },
                 new() { Id = Guid.NewGuid(), Name = "Gürsu" },
@@ -940,6 +943,7 @@ public static class CityDistrictSeed
             Name = "KAYSERİ",
             Districts = new List<District>
             {
+                new() { Id = Guid.NewGuid(), Name = "Merkez" },
                 new() { Id = Guid.NewGuid(), Name = "Akkişla" },
                 new() { Id = Guid.NewGuid(), Name = "Bünyan" },
                 new() { Id = Guid.NewGuid(), Name = "Develi̇" },
@@ -1048,6 +1052,7 @@ public static class CityDistrictSeed
             Name = "KONYA",
             Districts = new List<District>
             {
+                new() { Id = Guid.NewGuid(), Name = "Merkez" },
                 new() { Id = Guid.NewGuid(), Name = "Ahirli" },
                 new() { Id = Guid.NewGuid(), Name = "Akören" },
                 new() { Id = Guid.NewGuid(), Name = "Akşehi̇r" },
@@ -1798,6 +1803,7 @@ public static class CityDistrictSeed
                 new() { Id = Guid.NewGuid(), Name = "Kağithane" },
                 new() { Id = Guid.NewGuid(), Name = "Küçükçekmece" },
                 new() { Id = Guid.NewGuid(), Name = "Maltepe" },
+                new() { Id = Guid.NewGuid(), Name = "Merkez" },
                 new() { Id = Guid.NewGuid(), Name = "Pendi̇k" },
                 new() { Id = Guid.NewGuid(), Name = "Sancaktepe" },
                 new() { Id = Guid.NewGuid(), Name = "Sariyer" },
@@ -1844,6 +1850,7 @@ public static class CityDistrictSeed
                 new() { Id = Guid.NewGuid(), Name = "Konak" },
                 new() { Id = Guid.NewGuid(), Name = "Menderes" },
                 new() { Id = Guid.NewGuid(), Name = "Menemen" },
+                new() { Id = Guid.NewGuid(), Name = "Merkez" },
                 new() { Id = Guid.NewGuid(), Name = "Narlidere" },
                 new() { Id = Guid.NewGuid(), Name = "Seferi̇hi̇sar" },
                 new() { Id = Guid.NewGuid(), Name = "Selçuk" },

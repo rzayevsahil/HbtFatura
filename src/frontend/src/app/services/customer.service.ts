@@ -15,10 +15,13 @@ export interface CustomerDto {
   cityName?: string | null;
   districtId?: string | null;
   districtName?: string | null;
+  taxOfficeId?: string | null;
+  taxOfficeName?: string | null;
   postalCode?: string;
   country?: string;
   phone?: string;
   email?: string;
+  website?: string;
   balance: number;
 }
 

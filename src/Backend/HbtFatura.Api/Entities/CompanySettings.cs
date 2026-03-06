@@ -10,6 +10,7 @@ public class CompanySettings
     public string? Address { get; set; }
     public string? Phone { get; set; }
     public string? Email { get; set; }
+    public string? Website { get; set; }
     public string? IBAN { get; set; }
     public string? BankName { get; set; }
     public string? LogoUrl { get; set; }

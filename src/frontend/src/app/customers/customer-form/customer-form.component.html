@@ -111,6 +111,30 @@
         </div>
       </div>
       <div class="row">
+        <label>Vergi Dairesi</label>
+        <div class="custom-select" [class.disabled]="!form.get('districtId')?.value">
+          <button type="button" class="select-trigger" (click)="toggleTaxOfficeDropdown(); $event.stopPropagation()"
+            [disabled]="!form.get('districtId')?.value">
+            {{ selectedTaxOfficeName || 'Vergi dairesi seçin' }}
+          </button>
+          @if (taxOfficeDropdownOpen) {
+          <div class="select-panel">
+            <input type="text" class="select-search" placeholder="Bölge ara..." [value]="taxOfficeSearchText"
+              (input)="taxOfficeSearchText = $any($event.target).value" (click)="$event.stopPropagation()" />
+            <div class="options-list">
+              <button type="button" class="option" (click)="selectTaxOffice(null)">Vergi dairesi seçin</button>
+              @for (office of filteredTaxOffices; track office.id) {
+              <button type="button" class="option" (click)="selectTaxOffice(office)">{{ office.name }}</button>
+              }
+              @if (filteredTaxOffices.length === 0 && taxOfficeSearchText) {
+              <div class="option empty">Sonuç bulunamadı</div>
+              }
+            </div>
+          </div>
+          }
+        </div>
+      </div>
+      <div class="row">
         <label>Posta kodu</label>
         <input formControlName="postalCode" placeholder="Posta kodu" />
       </div>
@@ -125,6 +149,10 @@
       <div class="row">
         <label>E-posta</label>
         <input type="email" formControlName="email" placeholder="cari@ornek.com" />
+      </div>
+      <div class="row">
+        <label>Web Adresi</label>
+        <input type="text" formControlName="website" placeholder="www.ornek.com" />
       </div>
       @if (error) { <p class="error-msg">{{ error }}</p> }
     </div>

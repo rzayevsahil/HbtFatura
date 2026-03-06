@@ -88,7 +88,7 @@
         </div>
       </div>
       <div class="row">
-        <label>Vergi No</label>
+        <label>Vergi No / TC</label>
         <input formControlName="taxNumber" placeholder="10 haneli" [readonly]="isReadOnly()" />
       </div>
       <div class="row">
@@ -102,6 +102,10 @@
       <div class="row">
         <label>E-posta</label>
         <input type="email" formControlName="email" placeholder="firma@ornek.com" [readonly]="isReadOnly()" />
+      </div>
+      <div class="row">
+        <label>Web Adresi</label>
+        <input type="text" formControlName="website" placeholder="www.ornek.com" [readonly]="isReadOnly()" />
       </div>
       <div class="row">
         <label>Banka Adı</label>

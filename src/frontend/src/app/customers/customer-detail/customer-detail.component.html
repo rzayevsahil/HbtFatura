@@ -44,6 +44,10 @@
     <dt>İl / İlçe</dt>
     <dd>{{ joinCityDistrict(customer.cityName, customer.districtName) }}</dd>
     }
+    @if (customer.taxOfficeName) {
+    <dt>Vergi Dairesi</dt>
+    <dd>{{ customer.taxOfficeName }}</dd>
+    }
     @if (customer.postalCode) {
     <dt>Posta kodu</dt>
     <dd>{{ customer.postalCode }}</dd>
@@ -59,6 +63,11 @@
     @if (customer.email) {
     <dt>E-posta</dt>
     <dd><a [href]="'mailto:' + customer.email">{{ customer.email }}</a></dd>
+    }
+    @if (customer.website) {
+    <dt>Web Adresi</dt>
+    <dd><a [href]="customer.website.startsWith('http') ? customer.website : 'https://' + customer.website"
+        target="_blank">{{ customer.website }}</a></dd>
     }
   </dl>
 </section>

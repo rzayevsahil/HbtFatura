@@ -15,8 +15,10 @@ public class InvoiceDto
     public string CustomerTitle { get; set; } = string.Empty;
     public string? CustomerTaxNumber { get; set; }
     public string? CustomerAddress { get; set; }
+    public string? CustomerTaxOffice { get; set; }
     public string? CustomerPhone { get; set; }
     public string? CustomerEmail { get; set; }
+    public string? CustomerWebsite { get; set; }
     public decimal SubTotal { get; set; }
     public decimal TotalVat { get; set; }
     public decimal GrandTotal { get; set; }
@@ -51,8 +53,10 @@ public class CreateInvoiceRequest
     public string CustomerTitle { get; set; } = string.Empty;
     public string? CustomerTaxNumber { get; set; }
     public string? CustomerAddress { get; set; }
+    public string? CustomerTaxOffice { get; set; }
     public string? CustomerPhone { get; set; }
     public string? CustomerEmail { get; set; }
+    public string? CustomerWebsite { get; set; }
     public string Currency { get; set; } = "TRY";
     public decimal ExchangeRate { get; set; } = 1;
     public List<InvoiceItemInputDto> Items { get; set; } = new();

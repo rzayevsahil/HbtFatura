@@ -71,6 +71,8 @@ export class InvoiceFormComponent implements OnInit {
       customerAddress: ['', Validators.required],
       customerPhone: [''],
       customerEmail: [''],
+      customerWebsite: [''],
+      customerTaxOffice: [''],
       invoiceDate: [this.formatDateForInput(new Date()), Validators.required],
       currency: ['TRY'],
       exchangeRate: [1],
@@ -92,6 +94,8 @@ export class InvoiceFormComponent implements OnInit {
           customerAddress: inv.customerAddress ?? '',
           customerPhone: inv.customerPhone ?? '',
           customerEmail: inv.customerEmail ?? '',
+          customerWebsite: inv.customerWebsite ?? '',
+          customerTaxOffice: inv.customerTaxOffice ?? '',
           invoiceDate: inv.invoiceDate ? this.formatDateForInput(new Date(inv.invoiceDate)) : '',
           currency: inv.currency,
           exchangeRate: inv.exchangeRate
@@ -178,7 +182,9 @@ export class InvoiceFormComponent implements OnInit {
         customerTaxNumber: c.taxNumber ?? '',
         customerAddress: c.address ?? '',
         customerPhone: c.phone ?? '',
-        customerEmail: c.email ?? ''
+        customerEmail: c.email ?? '',
+        customerWebsite: c.website ?? '',
+        customerTaxOffice: c.taxOfficeName ?? ''
       });
     }
   }
@@ -196,6 +202,8 @@ export class InvoiceFormComponent implements OnInit {
       customerAddress: v.customerAddress || undefined,
       customerPhone: v.customerPhone || undefined,
       customerEmail: v.customerEmail || undefined,
+      customerWebsite: v.customerWebsite || undefined,
+      customerTaxOffice: v.customerTaxOffice || undefined,
       currency: v.currency,
       exchangeRate: v.exchangeRate,
       items: v.items.map((it: any, i: number) => ({

@@ -5,7 +5,7 @@ import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angu
 import { taxNumberValidator } from '../../core/validators/tax-number.validator';
 import { CustomerService } from '../../services/customer.service';
 import { MainAccountCodeService, MainAccountCodeDto } from '../../services/main-account-code.service';
-import { TaxOfficeService, CityResponse, DistrictResponse } from '../../services/tax-office.service';
+import { TaxOfficeService, CityResponse, DistrictResponse, TaxOfficeDto } from '../../services/tax-office.service';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -33,6 +33,11 @@ export class CustomerFormComponent implements OnInit {
   districtSearchText = '';
   districtDropdownOpen = false;
 
+  taxOffices: TaxOfficeDto[] = [];
+  selectedTaxOfficeName = '';
+  taxOfficeSearchText = '';
+  taxOfficeDropdownOpen = false;
+
   get filteredCities(): CityResponse[] {
     const t = this.citySearchText?.trim().toLocaleLowerCase('tr');
     if (!t) return this.cities;
@@ -43,6 +48,12 @@ export class CustomerFormComponent implements OnInit {
     const t = this.districtSearchText?.trim().toLocaleLowerCase('tr');
     if (!t) return this.districts;
     return this.districts.filter(d => d.name.toLocaleLowerCase('tr').includes(t));
+  }
+
+  get filteredTaxOffices(): TaxOfficeDto[] {
+    const t = this.taxOfficeSearchText?.trim().toLocaleLowerCase('tr');
+    if (!t) return this.taxOffices;
+    return this.taxOffices.filter(o => o.name.toLocaleLowerCase('tr').includes(t));
   }
 
   get filteredMainAccountCodes(): MainAccountCodeDto[] {
@@ -65,10 +76,12 @@ export class CustomerFormComponent implements OnInit {
     address: [''],
     cityId: [null as string | null],
     districtId: [null as string | null],
+    taxOfficeId: [null as string | null],
     postalCode: [''],
     country: [''],
     phone: [''],
-    email: ['']
+    email: [''],
+    website: ['']
   });
   id: string | null = null;
   error = '';
@@ -90,6 +103,7 @@ export class CustomerFormComponent implements OnInit {
     if (!this.el.nativeElement.contains(e.target)) {
       this.cityDropdownOpen = false;
       this.districtDropdownOpen = false;
+      this.taxOfficeDropdownOpen = false;
     }
   }
 
@@ -103,7 +117,16 @@ export class CustomerFormComponent implements OnInit {
     if (!this.form.get('cityId')?.value) return;
     this.districtDropdownOpen = !this.districtDropdownOpen;
     this.cityDropdownOpen = false;
+    this.taxOfficeDropdownOpen = false;
     if (this.districtDropdownOpen) this.districtSearchText = '';
+  }
+
+  toggleTaxOfficeDropdown(): void {
+    if (!this.form.get('districtId')?.value) return;
+    this.taxOfficeDropdownOpen = !this.taxOfficeDropdownOpen;
+    this.cityDropdownOpen = false;
+    this.districtDropdownOpen = false;
+    if (this.taxOfficeDropdownOpen) this.taxOfficeSearchText = '';
   }
 
   selectCity(city: CityResponse | null): void {
@@ -112,9 +135,14 @@ export class CustomerFormComponent implements OnInit {
   }
 
   selectDistrict(district: DistrictResponse | null): void {
-    this.selectedDistrictName = district?.name || '';
-    this.form.patchValue({ districtId: district?.id || null });
+    this.onDistrictChange(district?.id || null, district?.name || '');
     this.districtDropdownOpen = false;
+  }
+
+  selectTaxOffice(office: TaxOfficeDto | null): void {
+    this.selectedTaxOfficeName = office?.name || '';
+    this.form.patchValue({ taxOfficeId: office?.id || null });
+    this.taxOfficeDropdownOpen = false;
   }
 
   ngOnInit(): void {
@@ -136,10 +164,12 @@ export class CustomerFormComponent implements OnInit {
           address: c.address ?? '',
           cityId: c.cityId,
           districtId: c.districtId,
+          taxOfficeId: c.taxOfficeId,
           postalCode: c.postalCode ?? '',
           country: c.country ?? '',
           phone: c.phone ?? '',
-          email: c.email ?? ''
+          email: c.email ?? '',
+          website: c.website ?? ''
         });
 
         if (c.cityId) {
@@ -148,6 +178,14 @@ export class CustomerFormComponent implements OnInit {
           this.taxOfficeApi.getDistricts(c.cityId).subscribe(res => {
             this.districts = res;
             this.form.patchValue({ districtId: c.districtId });
+
+            if (c.cityId && c.districtId) {
+              this.selectedTaxOfficeName = c.taxOfficeName ?? '';
+              this.taxOfficeApi.getOffices(c.cityId, c.districtId).subscribe(offices => {
+                this.taxOffices = offices;
+                this.form.patchValue({ taxOfficeId: c.taxOfficeId });
+              });
+            }
           });
         }
         this.onMainAccountCodesLoaded();
@@ -158,11 +196,26 @@ export class CustomerFormComponent implements OnInit {
   onCityChange(id: string | null, name: string): void {
     this.selectedCityName = name;
     this.selectedDistrictName = '';
+    this.selectedTaxOfficeName = '';
     this.districts = [];
+    this.taxOffices = [];
     this.districtSearchText = '';
-    this.form.patchValue({ cityId: id, districtId: null });
+    this.taxOfficeSearchText = '';
+    this.form.patchValue({ cityId: id, districtId: null, taxOfficeId: null });
     if (id) {
       this.taxOfficeApi.getDistricts(id).subscribe(res => this.districts = res);
+    }
+  }
+
+  onDistrictChange(id: string | null, name: string): void {
+    this.selectedDistrictName = name;
+    this.selectedTaxOfficeName = '';
+    this.taxOffices = [];
+    this.taxOfficeSearchText = '';
+    this.form.patchValue({ districtId: id, taxOfficeId: null });
+    const cityId = this.form.get('cityId')?.value;
+    if (cityId && id) {
+      this.taxOfficeApi.getOffices(cityId, id).subscribe(res => this.taxOffices = res);
     }
   }
 
@@ -207,10 +260,12 @@ export class CustomerFormComponent implements OnInit {
       address: v.address?.trim() ?? '',
       cityId: v.cityId,
       districtId: v.districtId,
+      taxOfficeId: v.taxOfficeId,
       postalCode: v.postalCode?.trim() ?? '',
       country: v.country?.trim() ?? '',
       phone: v.phone?.trim() ?? '',
-      email: v.email?.trim() ?? ''
+      email: v.email?.trim() ?? '',
+      website: v.website?.trim() ?? ''
     };
     if (this.id) {
       this.api.update(this.id, payload).subscribe({

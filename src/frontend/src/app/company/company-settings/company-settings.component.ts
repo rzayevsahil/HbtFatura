@@ -28,6 +28,7 @@ export class CompanySettingsComponent implements OnInit {
     address: ['', [Validators.required]],
     phone: ['', [Validators.required]],
     email: ['', [Validators.required, Validators.email]],
+    website: [''],
     iban: ['', [Validators.required]],
     bankName: ['', [Validators.required]],
     logoUrl: [null as string | null]
@@ -145,6 +146,7 @@ export class CompanySettingsComponent implements OnInit {
           address: c.address ?? '',
           phone: c.phone ?? '',
           email: c.email ?? '',
+          website: c.website ?? '',
           iban: c.iban ?? '',
           bankName: c.bankName ?? '',
           logoUrl: c.logoUrl ?? null
