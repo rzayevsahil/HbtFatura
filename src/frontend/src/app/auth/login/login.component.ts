@@ -27,7 +27,13 @@ export class LoginComponent {
     this.error = '';
     this.loading = true;
     this.auth.login(this.form.getRawValue().email, this.form.getRawValue().password).subscribe({
-      next: () => window.location.href = '/invoices',
+      next: (res) => {
+        if (res.user.role === 'SuperAdmin') {
+          window.location.href = '/firms';
+        } else {
+          window.location.href = '/invoices';
+        }
+      },
       error: (e) => {
         const msg = e.error?.message
           ?? (e.status === 0 ? 'API\'ye bağlanılamadı. Backend çalışıyor mu?' : 'E-posta veya şifre hatalı.');
