@@ -102,7 +102,7 @@ public class InvoicePdfService : IInvoicePdfService
                         });
 
                         // 2. Logo & e-FATURA (Center)
-                        r.RelativeItem(2).TranslateY(10).Column(c =>
+                        r.RelativeItem(2).TranslateY(20).Column(c =>
                         {
                             string? gibLogoPath = null;
                             var logoFileName = "logos/giblogo.png";
@@ -284,7 +284,7 @@ public class InvoicePdfService : IInvoicePdfService
                     {
                         r.RelativeItem().Text(""); // Empty space on the left
 
-                        r.ConstantItem(270).Table(t =>
+                        r.ConstantItem(245).Table(t =>
                         {
                             t.ColumnsDefinition(c => { c.RelativeColumn(); c.ConstantColumn(110); });
                             
