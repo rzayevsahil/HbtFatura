@@ -100,8 +100,14 @@ public class DeliveryNoteService : IDeliveryNoteService
         if (customerTitle == null) throw new Exception("Geçerli bir cari seçilmelidir.");
         if (request.OrderId.HasValue)
         {
-            var order = await _db.Orders.Where(o => o.Id == request.OrderId).Select(o => new { o.OrderNumber }).FirstOrDefaultAsync(ct);
-            orderNumber = order?.OrderNumber;
+            var order = await _db.Orders.FirstOrDefaultAsync(o => o.Id == request.OrderId.Value, ct);
+            if (order != null)
+            {
+                order.Status = OrderStatus.TamamiTeslim;
+                order.UpdatedAt = DateTime.UtcNow;
+                order.UpdatedBy = userId;
+                orderNumber = order.OrderNumber;
+            }
         }
 
         var dn = new DeliveryNote

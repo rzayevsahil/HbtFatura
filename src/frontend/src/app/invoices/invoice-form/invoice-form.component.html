@@ -13,6 +13,35 @@
             <option [ngValue]="1">Alış</option>
           </select>
         </div>
+        @if (!id) {
+        <div class="row" #dnDropdownWrap>
+          <label>İrsaliye Bağla</label>
+          <div class="customer-select">
+            <button type="button" class="customer-select-trigger"
+              (click)="toggleDnDropdown(); $event.stopPropagation()">
+              {{ selectedDeliveryNoteNumber }}
+            </button>
+            @if (dnDropdownOpen) {
+            <div class="customer-select-panel">
+              <input type="text" class="customer-search" placeholder="İrsaliye no veya cari ara..."
+                [(ngModel)]="dnSearchText" [ngModelOptions]="{standalone: true}" (click)="$event.stopPropagation()" />
+              <div class="customer-options-list">
+                <button type="button" class="customer-option" (click)="selectDeliveryNote(null)">Seçiniz
+                  (Bağlama)</button>
+                @for (dn of filteredDeliveryNotes; track dn.id) {
+                <button type="button" class="customer-option" (click)="selectDeliveryNote(dn.id)">
+                  {{ dn.deliveryNumber }} — {{ dn.customerTitle }}
+                </button>
+                }
+                @if (filteredDeliveryNotes.length === 0 && dnSearchText) {
+                <div class="customer-option empty">Sonuç bulunamadı</div>
+                }
+              </div>
+            </div>
+            }
+          </div>
+        </div>
+        }
         <div class="row" #customerDropdownWrap>
           <label>Cari</label>
           <div class="customer-select">

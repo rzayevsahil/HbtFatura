@@ -61,6 +61,7 @@ export class OrderDetailComponent implements OnInit {
   /** Onaylandı / Kısmi Teslim iken irsaliyeye aktarılabilir. */
   canSendToDeliveryNote(): boolean {
     if (!this.order) return false;
+    if (this.order.deliveryNoteId) return false;
     const s = this.order.status;
     return s === 3 || s === 4 || s === 'Onaylandi' || s === 'KismiTeslim';
   }

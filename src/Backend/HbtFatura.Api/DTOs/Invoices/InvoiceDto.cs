@@ -59,6 +59,7 @@ public class CreateInvoiceRequest
     public string? CustomerWebsite { get; set; }
     public string Currency { get; set; } = "TRY";
     public decimal ExchangeRate { get; set; } = 1;
+    public Guid? DeliveryNoteId { get; set; }
     public List<InvoiceItemInputDto> Items { get; set; } = new();
 }
 

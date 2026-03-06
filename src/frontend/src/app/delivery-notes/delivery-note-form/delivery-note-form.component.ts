@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { DeliveryNoteService, CreateDeliveryNoteRequest, UpdateDeliveryNoteRequest, DeliveryNoteItemInputDto } from '../../services/delivery-note.service';
 import { CustomerService, CustomerDto } from '../../services/customer.service';
 import { ProductService, ProductDto } from '../../services/product.service';
+import { OrderService, OrderListDto } from '../../services/order.service';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -17,6 +18,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class DeliveryNoteFormComponent implements OnInit {
   @ViewChild('customerDropdownWrap') customerDropdownWrap?: ElementRef<HTMLElement>;
+  @ViewChild('orderDropdownWrap') orderDropdownWrap?: ElementRef<HTMLElement>;
 
   form: FormGroup;
   id: string | null = null;
@@ -31,6 +33,9 @@ export class DeliveryNoteFormComponent implements OnInit {
   saving = false;
   activeItemIndex: number | null = null;
   activeItemField: 'code' | 'description' | null = null;
+  confirmedOrders: OrderListDto[] = [];
+  orderSearchText = '';
+  orderDropdownOpen = false;
 
   get items(): FormArray {
     return this.form.get('items') as FormArray;
@@ -57,6 +62,22 @@ export class DeliveryNoteFormComponent implements OnInit {
     );
   }
 
+  get filteredOrders(): OrderListDto[] {
+    const q = (this.orderSearchText || '').trim().toLowerCase();
+    if (!q) return this.confirmedOrders;
+    return this.confirmedOrders.filter(o =>
+      o.orderNumber.toLowerCase().includes(q) ||
+      (o.customerTitle || '').toLowerCase().includes(q)
+    );
+  }
+
+  get selectedOrderNumber(): string {
+    const oid = this.form.get('orderId')?.value;
+    if (!oid) return 'Seçiniz';
+    const o = this.confirmedOrders.find(x => x.id === oid);
+    return o ? `${o.orderNumber} (${o.customerTitle})` : 'Seçiniz';
+  }
+
   /** Düzenlemede salt okunur durum etiketi (API sayı veya string dönebilir). */
   statusLabel(s: string | number | undefined): string {
     if (s === undefined || s === null) return '';
@@ -73,10 +94,12 @@ export class DeliveryNoteFormComponent implements OnInit {
     private deliveryNoteApi: DeliveryNoteService,
     private customerApi: CustomerService,
     private productApi: ProductService,
+    private orderApi: OrderService,
     private toastr: ToastrService
   ) {
     this.form = this.fb.nonNullable.group({
       customerId: this.fb.control<string | null>(null, Validators.required),
+      orderId: [null as string | null],
       deliveryDate: [this.toDatetimeLocalValue(new Date()), Validators.required],
       deliveryType: [0 as number, Validators.required],
       items: this.fb.array([this.createItemGroup()])
@@ -87,6 +110,15 @@ export class DeliveryNoteFormComponent implements OnInit {
     this.customerApi.getDropdown().subscribe(list => this.customers = list);
     this.productApi.getDropdown().subscribe(list => this.products = list);
     this.id = this.route.snapshot.paramMap.get('id');
+
+    // Onaylanan veya kısmi teslim edilen siparişleri getir
+    this.orderApi.getPaged({ page: 1, pageSize: 100, status: 3 }).subscribe(res => {
+      this.confirmedOrders = [...this.confirmedOrders, ...res.items];
+    });
+    this.orderApi.getPaged({ page: 1, pageSize: 100, status: 4 }).subscribe(res => {
+      this.confirmedOrders = [...this.confirmedOrders, ...res.items];
+    });
+
     if (this.id) {
       this.deliveryNoteApi.getById(this.id).subscribe({
         next: dn => {
@@ -103,6 +135,7 @@ export class DeliveryNoteFormComponent implements OnInit {
             this.items.push(this.fb.nonNullable.group({
               productId: [it.productId ?? null],
               productCode: [p?.code || ''],
+              orderItemId: [it.orderItemId ?? null],
               description: [it.description],
               quantity: [it.quantity],
               unitPrice: [it.unitPrice],
@@ -120,6 +153,7 @@ export class DeliveryNoteFormComponent implements OnInit {
     return this.fb.nonNullable.group({
       productId: [null as string | null],
       productCode: [''],
+      orderItemId: [null as string | null],
       description: [''],
       quantity: [1],
       unitPrice: [0],
@@ -171,6 +205,47 @@ export class DeliveryNoteFormComponent implements OnInit {
     this.customerDropdownOpen = false;
   }
 
+  toggleOrderDropdown(): void {
+    this.orderDropdownOpen = !this.orderDropdownOpen;
+    if (this.orderDropdownOpen) this.orderSearchText = '';
+  }
+
+  selectOrder(orderId: string | null): void {
+    this.orderDropdownOpen = false;
+    if (!orderId) {
+      this.form.patchValue({ orderId: null });
+      return;
+    }
+
+    this.orderApi.getById(orderId).subscribe({
+      next: o => {
+        this.form.patchValue({
+          customerId: o.customerId ?? null,
+          orderId: o.id,
+          deliveryType: o.orderType ?? 0
+        });
+        this.items.clear();
+        o.items.forEach(it => {
+          this.items.push(this.fb.nonNullable.group({
+            productId: [it.productId ?? null],
+            productCode: [it.productCode || ''],
+            orderItemId: [it.id],
+            description: [it.description],
+            quantity: [it.quantity],
+            unitPrice: [it.unitPrice],
+            vatRate: [it.vatRate],
+            sortOrder: [it.sortOrder]
+          }));
+        });
+        if (this.items.length === 0) {
+          this.addItem();
+        }
+        this.toastr.info(`${o.orderNumber} nolu sipariş bilgileri aktarıldı.`);
+      },
+      error: () => this.toastr.error('Sipariş bilgileri yüklenemedi.')
+    });
+  }
+
   /** datetime-local input için değer: "yyyy-MM-ddTHH:mm". */
   toDatetimeLocalValue(date: string | Date): string {
     if (!date) return '';
@@ -195,6 +270,9 @@ export class DeliveryNoteFormComponent implements OnInit {
     if (this.customerDropdownOpen && this.customerDropdownWrap?.nativeElement && !this.customerDropdownWrap.nativeElement.contains(e.target as Node)) {
       this.customerDropdownOpen = false;
     }
+    if (this.orderDropdownOpen && this.orderDropdownWrap?.nativeElement && !this.orderDropdownWrap.nativeElement.contains(e.target as Node)) {
+      this.orderDropdownOpen = false;
+    }
     const target = e.target as HTMLElement;
     if (!target.closest('.autocomplete-container')) {
       this.activeItemIndex = null;
@@ -208,7 +286,7 @@ export class DeliveryNoteFormComponent implements OnInit {
     const v = this.form.getRawValue();
     const itemDtos: DeliveryNoteItemInputDto[] = v.items.map((it: any, i: number) => ({
       productId: it.productId ?? undefined,
-      orderItemId: undefined,
+      orderItemId: it.orderItemId ?? undefined,
       description: it.description ?? '',
       quantity: Number(it.quantity),
       unitPrice: Number(it.unitPrice),
@@ -236,7 +314,7 @@ export class DeliveryNoteFormComponent implements OnInit {
     } else {
       const req: CreateDeliveryNoteRequest = {
         customerId: v.customerId ?? undefined,
-        orderId: undefined,
+        orderId: v.orderId ?? undefined,
         deliveryDate: this.toDeliveryDateApiValue(v.deliveryDate),
         deliveryType: v.deliveryType ?? 0,
         items: itemDtos

@@ -158,6 +158,20 @@ public class InvoiceService : IInvoiceService
             CreatedBy = userId
         };
 
+        if (request.DeliveryNoteId.HasValue)
+        {
+            var dn = await _db.DeliveryNotes.FirstOrDefaultAsync(d => d.Id == request.DeliveryNoteId.Value, ct);
+            if (dn != null)
+            {
+                invoice.SourceType = ReferenceType.Irsaliye;
+                invoice.SourceId = dn.Id;
+                dn.InvoiceId = invoice.Id;
+                dn.Status = DeliveryNoteStatus.Faturalandi;
+                dn.UpdatedAt = DateTime.UtcNow;
+                dn.UpdatedBy = userId;
+            }
+        }
+
         var sortOrder = 0;
         foreach (var item in request.Items)
         {

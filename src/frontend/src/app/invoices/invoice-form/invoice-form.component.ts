@@ -7,6 +7,7 @@ import { taxNumberValidator } from '../../core/validators/tax-number.validator';
 import { InvoiceService, CreateInvoiceRequest, InvoiceItemInputDto } from '../../services/invoice.service';
 import { CustomerService, CustomerDto } from '../../services/customer.service';
 import { ProductService, ProductDto } from '../../services/product.service';
+import { DeliveryNoteService, DeliveryNoteListDto } from '../../services/delivery-note.service';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -18,6 +19,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class InvoiceFormComponent implements OnInit {
   @ViewChild('customerDropdownWrap') customerDropdownWrap?: ElementRef<HTMLElement>;
+  @ViewChild('dnDropdownWrap') dnDropdownWrap?: ElementRef<HTMLElement>;
 
   form: FormGroup;
   id: string | null = null;
@@ -30,6 +32,9 @@ export class InvoiceFormComponent implements OnInit {
   saving = false;
   activeItemIndex: number | null = null;
   activeItemField: 'code' | 'description' | null = null;
+  confirmedDeliveryNotes: DeliveryNoteListDto[] = [];
+  dnSearchText = '';
+  dnDropdownOpen = false;
 
   get items(): FormArray {
     return this.form.get('items') as FormArray;
@@ -56,6 +61,22 @@ export class InvoiceFormComponent implements OnInit {
     );
   }
 
+  get filteredDeliveryNotes(): DeliveryNoteListDto[] {
+    const q = (this.dnSearchText || '').trim().toLowerCase();
+    if (!q) return this.confirmedDeliveryNotes;
+    return this.confirmedDeliveryNotes.filter(dn =>
+      dn.deliveryNumber.toLowerCase().includes(q) ||
+      (dn.customerTitle || '').toLowerCase().includes(q)
+    );
+  }
+
+  get selectedDeliveryNoteNumber(): string {
+    const dnid = this.form.get('deliveryNoteId')?.value;
+    if (!dnid) return 'Seçiniz';
+    const dn = this.confirmedDeliveryNotes.find(x => x.id === dnid);
+    return dn ? `${dn.deliveryNumber} (${dn.customerTitle})` : 'Seçiniz';
+  }
+
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
@@ -63,11 +84,13 @@ export class InvoiceFormComponent implements OnInit {
     private invoiceApi: InvoiceService,
     private customerApi: CustomerService,
     private productApi: ProductService,
+    private deliveryNoteApi: DeliveryNoteService,
     private toastr: ToastrService
   ) {
     this.form = this.fb.nonNullable.group({
       invoiceType: [0 as number, Validators.required], // 0=Satış, 1=Alış
       customerId: this.fb.control<string | null>(null),
+      deliveryNoteId: [null as string | null],
       customerTitle: ['', Validators.required],
       customerTaxNumber: ['', [Validators.required, taxNumberValidator()]],
       customerAddress: ['', Validators.required],
@@ -86,6 +109,12 @@ export class InvoiceFormComponent implements OnInit {
     this.customerApi.getDropdown().subscribe(list => this.customers = list);
     this.productApi.getDropdown().subscribe(list => this.products = list);
     this.id = this.route.snapshot.paramMap.get('id');
+
+    // Onaylanan (faturaya hazır) irsaliyeleri getir
+    this.deliveryNoteApi.getPaged({ page: 1, pageSize: 100, status: 1 }).subscribe(res => {
+      this.confirmedDeliveryNotes = res.items;
+    });
+
     if (this.id) {
       this.invoiceApi.getById(this.id).subscribe(inv => {
         this.form.patchValue({
@@ -177,6 +206,64 @@ export class InvoiceFormComponent implements OnInit {
     this.customerDropdownOpen = false;
   }
 
+  toggleDnDropdown(): void {
+    this.dnDropdownOpen = !this.dnDropdownOpen;
+    if (this.dnDropdownOpen) this.dnSearchText = '';
+  }
+
+  selectDeliveryNote(dnId: string | null): void {
+    this.dnDropdownOpen = false;
+    if (!dnId) {
+      this.form.patchValue({ deliveryNoteId: null });
+      return;
+    }
+
+    this.deliveryNoteApi.getById(dnId).subscribe({
+      next: dn => {
+        this.form.patchValue({
+          customerId: dn.customerId ?? null,
+          deliveryNoteId: dn.id,
+          invoiceType: dn.deliveryType ?? 0,
+        });
+
+        // Müşteri detaylarını çek
+        if (dn.customerId) {
+          const c = this.customers.find(x => x.id === dn.customerId);
+          if (c) {
+            this.form.patchValue({
+              customerTitle: c.title,
+              customerTaxNumber: c.taxNumber ?? '',
+              customerAddress: c.address ?? '',
+              customerPhone: c.phone ?? '',
+              customerEmail: c.email ?? '',
+              customerWebsite: c.website ?? '',
+              customerTaxOffice: c.taxOfficeName ?? ''
+            });
+          }
+        }
+
+        this.items.clear();
+        dn.items.forEach(it => {
+          this.items.push(this.fb.nonNullable.group({
+            productId: [it.productId ?? null],
+            productCode: [it.productCode || ''],
+            description: [it.description],
+            quantity: [it.quantity],
+            unitPrice: [it.unitPrice],
+            vatRate: [it.vatRate],
+            discountPercent: [0],
+            sortOrder: [it.sortOrder]
+          }));
+        });
+        if (this.items.length === 0) {
+          this.addItem();
+        }
+        this.toastr.info(`${dn.deliveryNumber} nolu irsaliye bilgileri aktarıldı.`);
+      },
+      error: () => this.toastr.error('İrsaliye bilgileri yüklenemedi.')
+    });
+  }
+
   @HostListener('document:keydown', ['$event'])
   onKeyDown(e: KeyboardEvent): void {
     if (e.key === 'F9' && !this.saving && this.form.valid && !['INPUT', 'TEXTAREA', 'SELECT'].includes((e.target as HTMLElement)?.tagName)) {
@@ -189,6 +276,9 @@ export class InvoiceFormComponent implements OnInit {
   onDocumentClick(e: MouseEvent): void {
     if (this.customerDropdownOpen && this.customerDropdownWrap?.nativeElement && !this.customerDropdownWrap.nativeElement.contains(e.target as Node)) {
       this.customerDropdownOpen = false;
+    }
+    if (this.dnDropdownOpen && this.dnDropdownWrap?.nativeElement && !this.dnDropdownWrap.nativeElement.contains(e.target as Node)) {
+      this.dnDropdownOpen = false;
     }
     const target = e.target as HTMLElement;
     if (!target.closest('.autocomplete-container')) {
@@ -230,6 +320,7 @@ export class InvoiceFormComponent implements OnInit {
       customerTaxOffice: v.customerTaxOffice || undefined,
       currency: v.currency,
       exchangeRate: v.exchangeRate,
+      deliveryNoteId: v.deliveryNoteId ?? undefined,
       items: v.items.map((it: any, i: number) => ({
         productId: it.productId ?? undefined,
         description: it.description,

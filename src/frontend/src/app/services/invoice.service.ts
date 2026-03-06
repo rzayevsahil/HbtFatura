@@ -84,6 +84,7 @@ export interface CreateInvoiceRequest {
   customerTaxOffice?: string;
   currency: string;
   exchangeRate: number;
+  deliveryNoteId?: string;
   items: InvoiceItemInputDto[];
 }
 
