@@ -5,10 +5,10 @@ import { LookupService, LookupDto, LookupGroupDto } from '../../core/services/lo
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
-    selector: 'app-lookup-list',
-    standalone: true,
-    imports: [CommonModule, FormsModule],
-    template: `
+  selector: 'app-lookup-list',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
+  template: `
     <div class="page-header">
       <div class="header-content">
         <h1 class="page-title">Sistem Tanımları <span class="subtitle">(KeyValues)</span></h1>
@@ -77,7 +77,7 @@ import { ToastrService } from 'ngx-toastr';
 
     <!-- Modal Form -->
     @if (showForm) {
-      <div class="modal-overlay" (click)="showForm = false">
+      <div class="modal-overlay">
         <div class="modal-card" (click)="$event.stopPropagation()">
           <div class="modal-header">
             <h3>{{ editId ? 'Tanım Düzenle' : 'Yeni Tanım Ekle' }}</h3>
@@ -135,7 +135,7 @@ import { ToastrService } from 'ngx-toastr';
       </div>
     }
   `,
-    styles: [`
+  styles: [`
     .header-content { flex: 1; }
     .subtitle { font-weight: 300; opacity: 0.7; font-size: 0.9em; }
     .page-description { color: #666; margin-top: 4px; font-size: 0.95rem; }
@@ -206,70 +206,70 @@ import { ToastrService } from 'ngx-toastr';
   `]
 })
 export class LookupListComponent implements OnInit {
-    rawLookups = signal<LookupDto[]>([]);
-    groups = signal<LookupGroupDto[]>([]);
-    showForm = false;
-    saving = false;
-    editId: string | null = null;
-    model: Partial<LookupDto> = {};
+  rawLookups = signal<LookupDto[]>([]);
+  groups = signal<LookupGroupDto[]>([]);
+  showForm = false;
+  saving = false;
+  editId: string | null = null;
+  model: Partial<LookupDto> = {};
 
-    constructor(private service: LookupService, private toastr: ToastrService) { }
+  constructor(private service: LookupService, private toastr: ToastrService) { }
 
-    ngOnInit(): void {
+  ngOnInit(): void {
+    this.refresh();
+    this.service.loadGroups().subscribe(g => this.groups.set(g));
+  }
+
+  refresh(): void {
+    this.service.load().subscribe(list => this.rawLookups.set(list));
+  }
+
+  isNewGroup(item: LookupDto, index: number): boolean {
+    if (index === 0) return true;
+    return item.lookupGroupId !== this.rawLookups()[index - 1].lookupGroupId;
+  }
+
+  openAdd() {
+    this.editId = null;
+    this.model = { isActive: true, sortOrder: 0 };
+    this.showForm = true;
+  }
+
+  openEdit(item: LookupDto) {
+    this.editId = item.id;
+    this.model = { ...item };
+    this.showForm = true;
+  }
+
+  save() {
+    if (!this.model.lookupGroupId) {
+      this.toastr.error('Lütfen bir grup seçiniz');
+      return;
+    }
+    this.saving = true;
+    const obs = this.editId
+      ? this.service.update(this.editId, this.model)
+      : this.service.create(this.model);
+
+    obs.subscribe({
+      next: () => {
+        this.toastr.success('Kaydedildi');
+        this.showForm = false;
+        this.saving = false;
         this.refresh();
-        this.service.loadGroups().subscribe(g => this.groups.set(g));
-    }
+      },
+      error: () => {
+        this.toastr.error('Hata oluştu');
+        this.saving = false;
+      }
+    });
+  }
 
-    refresh(): void {
-        this.service.load().subscribe(list => this.rawLookups.set(list));
-    }
-
-    isNewGroup(item: LookupDto, index: number): boolean {
-        if (index === 0) return true;
-        return item.lookupGroupId !== this.rawLookups()[index - 1].lookupGroupId;
-    }
-
-    openAdd() {
-        this.editId = null;
-        this.model = { isActive: true, sortOrder: 0 };
-        this.showForm = true;
-    }
-
-    openEdit(item: LookupDto) {
-        this.editId = item.id;
-        this.model = { ...item };
-        this.showForm = true;
-    }
-
-    save() {
-        if (!this.model.lookupGroupId) {
-            this.toastr.error('Lütfen bir grup seçiniz');
-            return;
-        }
-        this.saving = true;
-        const obs = this.editId
-            ? this.service.update(this.editId, this.model)
-            : this.service.create(this.model);
-
-        obs.subscribe({
-            next: () => {
-                this.toastr.success('Kaydedildi');
-                this.showForm = false;
-                this.saving = false;
-                this.refresh();
-            },
-            error: () => {
-                this.toastr.error('Hata oluştu');
-                this.saving = false;
-            }
-        });
-    }
-
-    delete(item: LookupDto) {
-        if (!confirm(`"${item.name}" tanımını silmek istediğinize emin misiniz?`)) return;
-        this.service.delete(item.id).subscribe(() => {
-            this.toastr.success('Silindi');
-            this.refresh();
-        });
-    }
+  delete(item: LookupDto) {
+    if (!confirm(`"${item.name}" tanımını silmek istediğinize emin misiniz?`)) return;
+    this.service.delete(item.id).subscribe(() => {
+      this.toastr.success('Silindi');
+      this.refresh();
+    });
+  }
 }
