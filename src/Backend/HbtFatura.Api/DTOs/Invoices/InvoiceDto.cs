@@ -7,8 +7,8 @@ public class InvoiceDto
     public Guid Id { get; set; }
     public string InvoiceNumber { get; set; } = string.Empty;
     public DateTime InvoiceDate { get; set; }
-    public InvoiceStatus Status { get; set; }
-    public InvoiceType InvoiceType { get; set; }
+    public int Status { get; set; }
+    public int InvoiceType { get; set; }
     public InvoiceScenario Scenario { get; set; }
     public string? Ettn { get; set; }
     public Guid? CustomerId { get; set; }
@@ -36,8 +36,8 @@ public class InvoiceListDto
     public Guid Id { get; set; }
     public string InvoiceNumber { get; set; } = string.Empty;
     public DateTime InvoiceDate { get; set; }
-    public InvoiceStatus Status { get; set; }
-    public InvoiceType InvoiceType { get; set; }
+    public int Status { get; set; }
+    public int InvoiceType { get; set; }
     public string CustomerTitle { get; set; } = string.Empty;
     public decimal GrandTotal { get; set; }
     public string Currency { get; set; } = "TRY";

@@ -56,10 +56,18 @@
       <tr>
         <td><strong>{{ d.deliveryNumber }}</strong></td>
         <td>{{ d.deliveryDate | date:'dd.MM.yyyy' }}</td>
-        <td>{{ typeLabel(d.deliveryType) }}</td>
+        <td [style.color]="lookups.getColor('DeliveryNoteType', d.deliveryType)" style="font-weight: 500;">
+          {{ typeLabel(d.deliveryType) }}
+        </td>
         <td>{{ d.customerTitle || '—' }}</td>
         <td>{{ d.orderNumber || '—' }}</td>
-        <td>{{ statusLabel(d.status) }}</td>
+        <td>
+          <span class="status-badge" [style.color]="lookups.getColor('DeliveryNoteStatus', d.status)"
+            [style.borderColor]="lookups.getColor('DeliveryNoteStatus', d.status)"
+            [style.backgroundColor]="lookups.getColor('DeliveryNoteStatus', d.status) + '15'">
+            {{ statusLabel(d.status) }}
+          </span>
+        </td>
         <td>
           <div class="actions-cell">
             <a [routerLink]="['/delivery-notes', d.id]">Detay</a>

@@ -25,8 +25,8 @@ public class DeliveryNoteDto
     public string? OrderNumber { get; set; }
     public Guid? InvoiceId { get; set; }
     public DateTime DeliveryDate { get; set; }
-    public DeliveryNoteStatus Status { get; set; }
-    public InvoiceType DeliveryType { get; set; }
+    public int Status { get; set; }
+    public int DeliveryType { get; set; }
     public DateTime CreatedAt { get; set; }
     public List<DeliveryNoteItemDto> Items { get; set; } = new();
 }
@@ -36,8 +36,8 @@ public class DeliveryNoteListDto
     public Guid Id { get; set; }
     public string DeliveryNumber { get; set; } = string.Empty;
     public DateTime DeliveryDate { get; set; }
-    public DeliveryNoteStatus Status { get; set; }
-    public InvoiceType DeliveryType { get; set; }
+    public int Status { get; set; }
+    public int DeliveryType { get; set; }
     public string? CustomerTitle { get; set; }
     public string? OrderNumber { get; set; }
     public Guid? InvoiceId { get; set; }

@@ -50,8 +50,8 @@ public static class LookupSeed
         // OrderType
         if (!await db.Lookups.AnyAsync(x => x.LookupGroupId == orderTypeId))
         {
-            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = orderTypeId, Code = "0", Name = "Alınan", SortOrder = 1 });
-            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = orderTypeId, Code = "1", Name = "Verilen", SortOrder = 2 });
+            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = orderTypeId, Code = "0", Name = "Alınan", Color = "#0d9488", SortOrder = 1 });
+            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = orderTypeId, Code = "1", Name = "Verilen", Color = "#3b82f6", SortOrder = 2 });
         }
 
         // OrderStatus

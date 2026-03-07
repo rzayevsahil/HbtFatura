@@ -62,8 +62,8 @@ public class OrderService : IOrderService
             Id = o.Id,
             OrderNumber = o.OrderNumber,
             OrderDate = o.OrderDate,
-            Status = o.Status,
-            OrderType = o.OrderType,
+            Status = (int)o.Status,
+            OrderType = (int)o.OrderType,
             CustomerTitle = o.Customer != null ? o.Customer.Title : null,
             TotalAmount = o.Items.Sum(i => i.Quantity * i.UnitPrice * (1 + i.VatRate / 100m))
         }).ToList();
@@ -241,8 +241,8 @@ public class OrderService : IOrderService
         CustomerId = o.CustomerId,
         CustomerTitle = o.Customer?.Title,
         OrderDate = o.OrderDate,
-        Status = o.Status,
-        OrderType = o.OrderType,
+        Status = (int)o.Status,
+        OrderType = (int)o.OrderType,
         CreatedAt = o.CreatedAt,
         Items = o.Items.OrderBy(x => x.SortOrder).Select(x => new OrderItemDto
         {

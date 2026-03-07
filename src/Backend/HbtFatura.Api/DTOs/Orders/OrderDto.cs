@@ -21,8 +21,8 @@ public class OrderDto
     public Guid CustomerId { get; set; }
     public string? CustomerTitle { get; set; }
     public DateTime OrderDate { get; set; }
-    public OrderStatus Status { get; set; }
-    public InvoiceType OrderType { get; set; }
+    public int Status { get; set; }
+    public int OrderType { get; set; }
     public DateTime CreatedAt { get; set; }
     public Guid? DeliveryNoteId { get; set; }
     public string? DeliveryNoteNumber { get; set; }
@@ -34,8 +34,8 @@ public class OrderListDto
     public Guid Id { get; set; }
     public string OrderNumber { get; set; } = string.Empty;
     public DateTime OrderDate { get; set; }
-    public OrderStatus Status { get; set; }
-    public InvoiceType OrderType { get; set; }
+    public int Status { get; set; }
+    public int OrderType { get; set; }
     public string? CustomerTitle { get; set; }
     public decimal? TotalAmount { get; set; }
 }

@@ -62,8 +62,8 @@ public class DeliveryNoteService : IDeliveryNoteService
                 Id = x.Id,
                 DeliveryNumber = x.DeliveryNumber,
                 DeliveryDate = x.DeliveryDate,
-                Status = x.Status,
-                DeliveryType = x.DeliveryType,
+                Status = (int)x.Status,
+                DeliveryType = (int)x.DeliveryType,
                 CustomerTitle = x.Customer != null ? x.Customer.Title : null,
                 OrderNumber = x.Order != null ? x.Order.OrderNumber : null,
                 InvoiceId = x.InvoiceId
@@ -333,8 +333,8 @@ public class DeliveryNoteService : IDeliveryNoteService
         OrderNumber = d.Order?.OrderNumber,
         InvoiceId = d.InvoiceId,
         DeliveryDate = d.DeliveryDate,
-        Status = d.Status,
-        DeliveryType = d.DeliveryType,
+        Status = (int)d.Status,
+        DeliveryType = (int)d.DeliveryType,
         CreatedAt = d.CreatedAt,
         Items = d.Items.OrderBy(x => x.SortOrder).Select(x => new DeliveryNoteItemDto
         {

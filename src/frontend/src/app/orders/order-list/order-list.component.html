@@ -56,10 +56,18 @@
       <tr>
         <td><strong>{{ o.orderNumber }}</strong></td>
         <td>{{ o.orderDate | date:'dd.MM.yyyy' }}</td>
-        <td>{{ typeLabel(o.orderType) }}</td>
+        <td [style.color]="lookups.getColor('OrderType', o.orderType)" style="font-weight: 500;">
+          {{ typeLabel(o.orderType) }}
+        </td>
         <td>{{ o.customerTitle || '—' }}</td>
         <td>{{ o.totalAmount != null ? (o.totalAmount | number:'1.2-2') + ' ₺' : '—' }}</td>
-        <td>{{ statusLabel(o.status) }}</td>
+        <td>
+          <span class="status-badge" [style.color]="lookups.getColor('OrderStatus', o.status)"
+            [style.borderColor]="lookups.getColor('OrderStatus', o.status)"
+            [style.backgroundColor]="lookups.getColor('OrderStatus', o.status) + '15'">
+            {{ statusLabel(o.status) }}
+          </span>
+        </td>
         <td>
           <div class="actions-cell">
             <a [routerLink]="['/orders', o.id]">Detay</a>
