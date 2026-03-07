@@ -8,6 +8,7 @@ import { CustomerService, CustomerDto } from '../../services/customer.service';
 import { ProductService, ProductDto } from '../../services/product.service';
 import { OrderService, OrderListDto } from '../../services/order.service';
 import { ToastrService } from 'ngx-toastr';
+import { LookupService } from '../../core/services/lookup.service';
 
 @Component({
   selector: 'app-delivery-note-form',
@@ -80,11 +81,7 @@ export class DeliveryNoteFormComponent implements OnInit {
 
   /** Düzenlemede salt okunur durum etiketi (API sayı veya string dönebilir). */
   statusLabel(s: string | number | undefined): string {
-    if (s === undefined || s === null) return '';
-    const byNumber: Record<number, string> = { 0: 'Taslak', 1: 'Onaylandı', 2: 'İptal', 3: 'Faturalandı' };
-    const byString: Record<string, string> = { Taslak: 'Taslak', Onaylandi: 'Onaylandı', Iptal: 'İptal', Faturalandi: 'Faturalandı' };
-    if (typeof s === 'number') return byNumber[s] ?? '';
-    return byString[String(s)] ?? '';
+    return this.lookups.getName('DeliveryNoteStatus', s);
   }
 
   constructor(
@@ -95,7 +92,8 @@ export class DeliveryNoteFormComponent implements OnInit {
     private customerApi: CustomerService,
     private productApi: ProductService,
     private orderApi: OrderService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    public lookups: LookupService
   ) {
     this.form = this.fb.nonNullable.group({
       customerId: this.fb.control<string | null>(null, Validators.required),

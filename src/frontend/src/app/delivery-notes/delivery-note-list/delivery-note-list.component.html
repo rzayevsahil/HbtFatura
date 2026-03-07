@@ -19,10 +19,9 @@
     <span class="toolbar-label">Durum</span>
     <select [(ngModel)]="searchStatus" class="toolbar-select">
       <option [ngValue]="null">Tümü</option>
-      <option [ngValue]="0">Taslak</option>
-      <option [ngValue]="1">Onaylandı</option>
-      <option [ngValue]="3">Faturalandı</option>
-      <option [ngValue]="2">İptal</option>
+      @for (l of lookups.getGroup('DeliveryNoteStatus')(); track l.code) {
+      <option [ngValue]="+l.code">{{ l.name }}</option>
+      }
     </select>
   </label>
   <div class="toolbar-field toolbar-field-btn">

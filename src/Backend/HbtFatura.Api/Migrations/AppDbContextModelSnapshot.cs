@@ -882,6 +882,69 @@ namespace HbtFatura.Api.Migrations
                     b.ToTable("LogEntries");
                 });
 
+            modelBuilder.Entity("HbtFatura.Api.Entities.Lookup", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Color")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("LookupGroupId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LookupGroupId");
+
+                    b.HasIndex("LookupGroupId", "IsActive");
+
+                    b.ToTable("Lookups");
+                });
+
+            modelBuilder.Entity("HbtFatura.Api.Entities.LookupGroup", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DisplayName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsSystemGroup")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("LookupGroups");
+                });
+
             modelBuilder.Entity("HbtFatura.Api.Entities.MainAccountCode", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1541,6 +1604,17 @@ namespace HbtFatura.Api.Migrations
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("HbtFatura.Api.Entities.Lookup", b =>
+                {
+                    b.HasOne("HbtFatura.Api.Entities.LookupGroup", "Group")
+                        .WithMany("Lookups")
+                        .HasForeignKey("LookupGroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Group");
+                });
+
             modelBuilder.Entity("HbtFatura.Api.Entities.MainAccountCode", b =>
                 {
                     b.HasOne("HbtFatura.Api.Entities.Firm", "Firm")
@@ -1751,6 +1825,11 @@ namespace HbtFatura.Api.Migrations
             modelBuilder.Entity("HbtFatura.Api.Entities.Invoice", b =>
                 {
                     b.Navigation("Items");
+                });
+
+            modelBuilder.Entity("HbtFatura.Api.Entities.LookupGroup", b =>
+                {
+                    b.Navigation("Lookups");
                 });
 
             modelBuilder.Entity("HbtFatura.Api.Entities.Order", b =>

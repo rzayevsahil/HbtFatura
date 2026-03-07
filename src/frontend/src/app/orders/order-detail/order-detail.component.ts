@@ -4,6 +4,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { OrderService, OrderDto, OrderStatus } from '../../services/order.service';
 import { DeliveryNoteService } from '../../services/delivery-note.service';
 import { ToastrService } from 'ngx-toastr';
+import { LookupService } from '../../core/services/lookup.service';
 
 @Component({
   selector: 'app-order-detail',
@@ -22,7 +23,8 @@ export class OrderDetailComponent implements OnInit {
     private router: Router,
     private orderApi: OrderService,
     private deliveryNoteApi: DeliveryNoteService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    public lookups: LookupService
   ) { }
 
   @HostListener('document:keydown', ['$event'])
@@ -47,11 +49,7 @@ export class OrderDetailComponent implements OnInit {
 
   /** Backend bazen enum'ı sayı bazen string (örn. "Bekliyor") döner. */
   statusLabel(s: OrderStatus | string | undefined): string {
-    if (s === undefined || s === null) return '';
-    const mapByNumber: Record<number, string> = { 0: 'Bekliyor', 1: 'Tamamı Teslim', 2: 'İptal', 3: 'Onaylandı', 4: 'Kısmi Teslim' };
-    const mapByString: Record<string, string> = { Bekliyor: 'Bekliyor', TamamiTeslim: 'Tamamı Teslim', Iptal: 'İptal', Onaylandi: 'Onaylandı', KismiTeslim: 'Kısmi Teslim' };
-    if (typeof s === 'number') return mapByNumber[s] ?? '';
-    return mapByString[String(s)] ?? '';
+    return this.lookups.getName('OrderStatus', s);
   }
 
   isEditableOrder(): boolean {
@@ -67,7 +65,7 @@ export class OrderDetailComponent implements OnInit {
   }
 
   typeLabel(t: number): string {
-    return t === 1 ? 'Alış' : 'Satış';
+    return this.lookups.getName('OrderType', t);
   }
 
   setStatusOnayla(): void {

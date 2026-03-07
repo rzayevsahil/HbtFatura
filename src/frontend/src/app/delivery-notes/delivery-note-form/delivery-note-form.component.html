@@ -73,8 +73,9 @@
         <div class="row">
           <label>Tip</label>
           <select formControlName="deliveryType">
-            <option [ngValue]="0">Satış</option>
-            <option [ngValue]="1">Alış</option>
+            @for (l of lookups.getGroup('DeliveryNoteType')(); track l.code) {
+            <option [ngValue]="+l.code">{{ l.name }}</option>
+            }
           </select>
         </div>
         }

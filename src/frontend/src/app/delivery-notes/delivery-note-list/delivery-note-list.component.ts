@@ -4,6 +4,7 @@ import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { DeliveryNoteService, DeliveryNoteListDto, DeliveryNoteStatus } from '../../services/delivery-note.service';
 import { ToastrService } from 'ngx-toastr';
+import { LookupService } from '../../core/services/lookup.service';
 
 @Component({
   selector: 'app-delivery-note-list',
@@ -23,7 +24,7 @@ export class DeliveryNoteListComponent implements OnInit {
   searchText = '';
   loading = false;
 
-  constructor(private api: DeliveryNoteService, private toastr: ToastrService) { }
+  constructor(private api: DeliveryNoteService, private toastr: ToastrService, public lookups: LookupService) { }
 
   ngOnInit(): void {
     this.load();
@@ -48,15 +49,11 @@ export class DeliveryNoteListComponent implements OnInit {
 
   /** Backend bazen enum'ı sayı bazen string (örn. "Taslak") gönderebilir. */
   statusLabel(s: DeliveryNoteStatus | string | undefined): string {
-    if (s === undefined || s === null) return '';
-    const byNumber: Record<number, string> = { 0: 'Taslak', 1: 'Onaylandı', 2: 'İptal', 3: 'Faturalandı' };
-    const byString: Record<string, string> = { Taslak: 'Taslak', Onaylandi: 'Onaylandı', Iptal: 'İptal', Faturalandi: 'Faturalandı' };
-    if (typeof s === 'number') return byNumber[s] ?? '';
-    return byString[String(s)] ?? '';
+    return this.lookups.getName('DeliveryNoteStatus', s);
   }
 
   typeLabel(t: number): string {
-    return t === 1 ? 'Alış' : 'Satış';
+    return this.lookups.getName('DeliveryNoteType', t);
   }
 
   /** Taslak ve faturaya aktarılmamışsa düzenlenebilir. */

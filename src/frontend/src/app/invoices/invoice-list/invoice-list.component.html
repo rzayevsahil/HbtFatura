@@ -18,18 +18,18 @@
     <span class="toolbar-label">Durum</span>
     <select [(ngModel)]="searchStatus">
       <option [ngValue]="null">Tümü</option>
-      <option [ngValue]="0">Fatura Oluşturuldu</option>
-      <option [ngValue]="1">Onaylandı</option>
-      <option [ngValue]="2">Ödendi</option>
-      <option [ngValue]="3">İptal</option>
+      @for (l of lookups.getGroup('InvoiceStatus')(); track l.code) {
+      <option [ngValue]="+l.code">{{ l.name }}</option>
+      }
     </select>
   </label>
   <label class="toolbar-field">
     <span class="toolbar-label">Fatura Tipi</span>
     <select [(ngModel)]="searchInvoiceType">
       <option [ngValue]="null">Satış/Alış</option>
-      <option [ngValue]="0">Satış</option>
-      <option [ngValue]="1">Alış</option>
+      @for (l of lookups.getGroup('InvoiceType')(); track l.code) {
+      <option [ngValue]="+l.code">{{ l.name }}</option>
+      }
     </select>
   </label>
   <div class="toolbar-field toolbar-field-btn">

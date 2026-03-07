@@ -8,7 +8,7 @@ public class Order
     public Guid CustomerId { get; set; }
     public DateTime OrderDate { get; set; }
     public OrderStatus Status { get; set; } = OrderStatus.Bekliyor;
-    public InvoiceType OrderType { get; set; } = InvoiceType.Satis; // Satış siparişi / Alış siparişi
+    public InvoiceType OrderType { get; set; } = InvoiceType.Satis; // Alınan sipariş (0) / Verilen sipariş (1)
 
     public DateTime CreatedAt { get; set; }
     public Guid? CreatedBy { get; set; }

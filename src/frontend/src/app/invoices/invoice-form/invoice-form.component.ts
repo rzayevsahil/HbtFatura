@@ -9,6 +9,7 @@ import { CustomerService, CustomerDto } from '../../services/customer.service';
 import { ProductService, ProductDto } from '../../services/product.service';
 import { DeliveryNoteService, DeliveryNoteListDto } from '../../services/delivery-note.service';
 import { ToastrService } from 'ngx-toastr';
+import { LookupService } from '../../core/services/lookup.service';
 
 @Component({
   selector: 'app-invoice-form',
@@ -85,7 +86,8 @@ export class InvoiceFormComponent implements OnInit {
     private customerApi: CustomerService,
     private productApi: ProductService,
     private deliveryNoteApi: DeliveryNoteService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    public lookups: LookupService
   ) {
     this.form = this.fb.nonNullable.group({
       invoiceType: [0 as number, Validators.required], // 0=Satış, 1=Alış

@@ -38,12 +38,13 @@ export const routes: Routes = [
   { path: 'main-account-codes/new', loadComponent: () => import('./main-account-codes/main-account-code-form/main-account-code-form.component').then(m => m.MainAccountCodeFormComponent), canActivate: [firmBusinessGuard] },
   { path: 'main-account-codes/:id/edit', loadComponent: () => import('./main-account-codes/main-account-code-form/main-account-code-form.component').then(m => m.MainAccountCodeFormComponent), canActivate: [firmBusinessGuard] },
 
-  { path: 'company', loadComponent: () => import('./company/company-settings/company-settings.component').then(m => m.CompanySettingsComponent), canActivate: [firmBusinessGuard, companyGuard] },
+  { path: 'company', loadComponent: () => import('./company/company-settings/company-settings.component').then(m => m.CompanySettingsComponent), canActivate: [authGuard, companyGuard] },
 
   // Admin Routes
   { path: 'firms', loadComponent: () => import('./firms/firm-list/firm-list.component').then(m => m.FirmListComponent), canActivate: [authGuard, superAdminGuard] },
   { path: 'firms/new', loadComponent: () => import('./firms/firm-form/firm-form.component').then(m => m.FirmFormComponent), canActivate: [authGuard, superAdminGuard] },
   { path: 'firms/:id', loadComponent: () => import('./firms/firm-detail/firm-detail.component').then(m => m.FirmDetailComponent), canActivate: [authGuard] },
+  { path: 'lookups', loadComponent: () => import('./lookups/lookup-list/lookup-list.component').then(m => m.LookupListComponent), canActivate: [authGuard, superAdminGuard] },
 
   { path: 'employees', loadComponent: () => import('./employees/employee-list/employee-list.component').then(m => m.EmployeeListComponent), canActivate: [firmBusinessGuard] },
   { path: 'employees/new', loadComponent: () => import('./employees/employee-form/employee-form.component').then(m => m.EmployeeFormComponent), canActivate: [firmBusinessGuard] },

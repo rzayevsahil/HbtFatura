@@ -72,6 +72,21 @@ namespace HbtFatura.Api.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "LookupGroups",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    DisplayName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsSystemGroup = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LookupGroups", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -236,6 +251,29 @@ namespace HbtFatura.Api.Migrations
                         principalTable: "Firms",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Lookups",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    LookupGroupId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Code = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Color = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SortOrder = table.Column<int>(type: "int", nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Lookups", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Lookups_LookupGroups_LookupGroupId",
+                        column: x => x.LookupGroupId,
+                        principalTable: "LookupGroups",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1081,6 +1119,22 @@ namespace HbtFatura.Api.Migrations
                 column: "Timestamp");
 
             migrationBuilder.CreateIndex(
+                name: "IX_LookupGroups_Name",
+                table: "LookupGroups",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Lookups_LookupGroupId",
+                table: "Lookups",
+                column: "LookupGroupId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Lookups_LookupGroupId_IsActive",
+                table: "Lookups",
+                columns: new[] { "LookupGroupId", "IsActive" });
+
+            migrationBuilder.CreateIndex(
                 name: "IX_MainAccountCodes_Code",
                 table: "MainAccountCodes",
                 column: "Code",
@@ -1210,6 +1264,9 @@ namespace HbtFatura.Api.Migrations
                 name: "LogEntries");
 
             migrationBuilder.DropTable(
+                name: "Lookups");
+
+            migrationBuilder.DropTable(
                 name: "MainAccountCodes");
 
             migrationBuilder.DropTable(
@@ -1235,6 +1292,9 @@ namespace HbtFatura.Api.Migrations
 
             migrationBuilder.DropTable(
                 name: "Invoices");
+
+            migrationBuilder.DropTable(
+                name: "LookupGroups");
 
             migrationBuilder.DropTable(
                 name: "Orders");

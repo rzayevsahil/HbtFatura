@@ -34,10 +34,24 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid
     public DbSet<TaxOffice> TaxOffices => Set<TaxOffice>();
     public DbSet<City> Cities => Set<City>();
     public DbSet<District> Districts => Set<District>();
+    public DbSet<LookupGroup> LookupGroups => Set<LookupGroup>();
+    public DbSet<Lookup> Lookups => Set<Lookup>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<LookupGroup>(e =>
+        {
+            e.HasIndex(x => x.Name).IsUnique();
+        });
+
+        modelBuilder.Entity<Lookup>(e =>
+        {
+            e.HasOne(x => x.Group).WithMany(x => x.Lookups).HasForeignKey(x => x.LookupGroupId).OnDelete(DeleteBehavior.Cascade);
+            e.HasIndex(x => x.LookupGroupId);
+            e.HasIndex(x => new { x.LookupGroupId, x.IsActive });
+        });
 
         modelBuilder.Entity<LogEntry>(e =>
         {

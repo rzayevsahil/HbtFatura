@@ -7,6 +7,7 @@ import { CustomerService, CustomerDto } from '../../services/customer.service';
 import { ProductService, ProductDto } from '../../services/product.service';
 import { ReportService, StockLevelsReportDto } from '../../services/report.service';
 import { ToastrService } from 'ngx-toastr';
+import { LookupService } from '../../core/services/lookup.service';
 
 @Component({
   selector: 'app-order-form',
@@ -63,7 +64,8 @@ export class OrderFormComponent implements OnInit {
     private customerApi: CustomerService,
     private productApi: ProductService,
     private reportApi: ReportService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    public lookups: LookupService
   ) {
     this.form = this.fb.nonNullable.group({
       customerId: this.fb.control<string | null>(null, Validators.required),

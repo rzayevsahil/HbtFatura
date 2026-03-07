@@ -4,6 +4,7 @@ import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { OrderService, OrderListDto, OrderStatus } from '../../services/order.service';
 import { ToastrService } from 'ngx-toastr';
+import { LookupService } from '../../core/services/lookup.service';
 
 @Component({
   selector: 'app-order-list',
@@ -23,7 +24,7 @@ export class OrderListComponent implements OnInit {
   searchText = '';
   loading = false;
 
-  constructor(private api: OrderService, private router: Router, private toastr: ToastrService) { }
+  constructor(private api: OrderService, private router: Router, private toastr: ToastrService, public lookups: LookupService) { }
 
   @HostListener('document:keydown', ['$event'])
   onKeyDown(e: KeyboardEvent): void {
@@ -55,15 +56,11 @@ export class OrderListComponent implements OnInit {
   }
 
   statusLabel(s: OrderStatus | string | undefined): string {
-    if (s === undefined || s === null) return '';
-    const mapByNumber: Record<number, string> = { 0: 'Bekliyor', 1: 'Tamamı Teslim', 2: 'İptal', 3: 'Onaylandı', 4: 'Kısmi Teslim' };
-    const mapByString: Record<string, string> = { Bekliyor: 'Bekliyor', TamamiTeslim: 'Tamamı Teslim', Iptal: 'İptal', Onaylandi: 'Onaylandı', KismiTeslim: 'Kısmi Teslim' };
-    if (typeof s === 'number') return mapByNumber[s] ?? '';
-    return mapByString[String(s)] ?? '';
+    return this.lookups.getName('OrderStatus', s);
   }
 
   typeLabel(t: number): string {
-    return t === 1 ? 'Alış' : 'Satış';
+    return this.lookups.getName('OrderType', t);
   }
 
   /** Bekliyor (düzenlenebilir) durumu: backend bazen sayı 0 bazen string "Bekliyor" dönebilir. */

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from './core/services/auth.service';
+import { LookupService } from './core/services/lookup.service';
 
 @Component({
   selector: 'app-root',
@@ -13,7 +14,9 @@ import { AuthService } from './core/services/auth.service';
 export class AppComponent {
   headerMenuOpen = false;
 
-  constructor(public auth: AuthService) {}
+  constructor(public auth: AuthService, private lookup: LookupService) {
+    this.lookup.load().subscribe();
+  }
 
   closeHeaderMenu(): void {
     this.headerMenuOpen = false;

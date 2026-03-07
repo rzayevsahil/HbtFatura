@@ -4,6 +4,7 @@ import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { InvoiceService, InvoiceListDto, InvoiceStatus } from '../../services/invoice.service';
 import { ToastrService } from 'ngx-toastr';
+import { LookupService } from '../../core/services/lookup.service';
 
 @Component({
   selector: 'app-invoice-list',
@@ -24,7 +25,7 @@ export class InvoiceListComponent implements OnInit {
   searchText = '';
   loading = false;
 
-  constructor(private api: InvoiceService, private router: Router, private toastr: ToastrService) { }
+  constructor(private api: InvoiceService, private router: Router, private toastr: ToastrService, public lookups: LookupService) { }
 
   @HostListener('document:keydown', ['$event'])
   onKeyDown(e: KeyboardEvent): void {
@@ -57,13 +58,7 @@ export class InvoiceListComponent implements OnInit {
   }
 
   statusLabel(s: any, sourceType?: string | null): string {
-    const map: any = {
-      0: 'Fatura Oluşturuldu', 'Draft': 'Fatura Oluşturuldu',
-      1: 'Onaylandı', 'Issued': 'Onaylandı',
-      2: 'Ödendi', 'Paid': 'Ödendi',
-      3: 'İptal', 'Cancelled': 'İptal'
-    };
-    return map[s] ?? (s !== null && s !== undefined ? s.toString() : '');
+    return this.lookups.getName('InvoiceStatus', s);
   }
 
   statusClass(s: any): string {
@@ -77,7 +72,7 @@ export class InvoiceListComponent implements OnInit {
   }
 
   typeLabel(t: number): string {
-    return t === 1 ? 'Alış' : 'Satış';
+    return this.lookups.getName('InvoiceType', t);
   }
 
   downloadPdf(id: string): void {

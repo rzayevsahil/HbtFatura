@@ -30,6 +30,7 @@ builder.Services.AddControllers()
     {
         options.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
         options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
     });
 
 var jwtKey = builder.Configuration["Jwt:Key"] ?? "HbtFatura-SuperSecretKey-Min32Chars!!";
@@ -146,6 +147,7 @@ using (var scope = app.Services.CreateScope())
     await MainAccountCodeSeed.SeedThpIfEmptyAsync(db);
     await CityDistrictSeed.SeedIfEmptyAsync(db);
     await TaxOfficeSeed.SeedTaxOfficesIfEmptyAsync(db);
+    await LookupSeed.SeedIfEmptyAsync(db);
 
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
