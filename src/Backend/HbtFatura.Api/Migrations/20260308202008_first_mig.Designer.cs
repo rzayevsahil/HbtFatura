@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HbtFatura.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260307025410_first_mig")]
+    [Migration("20260308202008_first_mig")]
     partial class first_mig
     {
         /// <inheritdoc />
@@ -986,6 +986,48 @@ namespace HbtFatura.Api.Migrations
                     b.ToTable("MainAccountCodes");
                 });
 
+            modelBuilder.Entity("HbtFatura.Api.Entities.Menu", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Icon")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsSystemMenu")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Label")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("ParentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("RequiredPermissionCode")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("RouterLink")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SortOrder")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ParentId");
+
+                    b.HasIndex("RequiredPermissionCode");
+
+                    b.ToTable("Menus");
+                });
+
             modelBuilder.Entity("HbtFatura.Api.Entities.Order", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1073,6 +1115,37 @@ namespace HbtFatura.Api.Migrations
                     b.ToTable("OrderItems");
                 });
 
+            modelBuilder.Entity("HbtFatura.Api.Entities.Permission", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Group")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Code")
+                        .IsUnique();
+
+                    b.HasIndex("Group");
+
+                    b.ToTable("Permissions");
+                });
+
             modelBuilder.Entity("HbtFatura.Api.Entities.Product", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1156,6 +1229,21 @@ namespace HbtFatura.Api.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("RefreshTokens");
+                });
+
+            modelBuilder.Entity("HbtFatura.Api.Entities.RolePermission", b =>
+                {
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("PermissionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("RoleId", "PermissionId");
+
+                    b.HasIndex("PermissionId");
+
+                    b.ToTable("RolePermissions");
                 });
 
             modelBuilder.Entity("HbtFatura.Api.Entities.StockMovement", b =>
@@ -1628,6 +1716,16 @@ namespace HbtFatura.Api.Migrations
                     b.Navigation("Firm");
                 });
 
+            modelBuilder.Entity("HbtFatura.Api.Entities.Menu", b =>
+                {
+                    b.HasOne("HbtFatura.Api.Entities.Menu", "Parent")
+                        .WithMany("Children")
+                        .HasForeignKey("ParentId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Parent");
+                });
+
             modelBuilder.Entity("HbtFatura.Api.Entities.Order", b =>
                 {
                     b.HasOne("HbtFatura.Api.Entities.Customer", "Customer")
@@ -1685,6 +1783,25 @@ namespace HbtFatura.Api.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("HbtFatura.Api.Entities.RolePermission", b =>
+                {
+                    b.HasOne("HbtFatura.Api.Entities.Permission", "Permission")
+                        .WithMany("RolePermissions")
+                        .HasForeignKey("PermissionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", "Role")
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Permission");
+
+                    b.Navigation("Role");
                 });
 
             modelBuilder.Entity("HbtFatura.Api.Entities.StockMovement", b =>
@@ -1835,9 +1952,19 @@ namespace HbtFatura.Api.Migrations
                     b.Navigation("Lookups");
                 });
 
+            modelBuilder.Entity("HbtFatura.Api.Entities.Menu", b =>
+                {
+                    b.Navigation("Children");
+                });
+
             modelBuilder.Entity("HbtFatura.Api.Entities.Order", b =>
                 {
                     b.Navigation("Items");
+                });
+
+            modelBuilder.Entity("HbtFatura.Api.Entities.Permission", b =>
+                {
+                    b.Navigation("RolePermissions");
                 });
 
             modelBuilder.Entity("HbtFatura.Api.Entities.Product", b =>

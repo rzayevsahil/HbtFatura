@@ -16,4 +16,5 @@ public class UserDto
     public string Role { get; set; } = string.Empty;
     public Guid? FirmId { get; set; }
     public string? FirmName { get; set; }
+    public List<string> Permissions { get; set; } = new();
 }

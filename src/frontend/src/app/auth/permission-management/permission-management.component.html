@@ -1,0 +1,140 @@
+<div class="permission-container">
+    <div class="header-section">
+        <h1>Rol ve Yetki Yönetimi</h1>
+        <p>Sistemdeki rollerin erişebileceği modülleri ve yetkileri buradan yönetebilirsiniz.</p>
+    </div>
+
+    <div class="content-grid">
+        <!-- Role List -->
+        <div class="roles-sidebar">
+            <div class="sidebar-header">
+                <h3>Roller</h3>
+                <button class="btn-icon mini" (click)="openRoleModal()" title="Yeni Rol">
+                    <span class="material-icons">add</span>
+                </button>
+            </div>
+            <div class="role-list">
+                @for (role of roles(); track role.id) {
+                <div class="role-item-wrapper" [class.active]="selectedRoleId() === role.id">
+                    <button type="button" class="role-item" (click)="selectRole(role.id)">
+                        {{ role.name }}
+                    </button>
+                    <div class="role-actions" *ngIf="role.name !== 'SuperAdmin'">
+                        <button class="btn-icon mini" (click)="openRoleModal(role)">
+                            <span class="material-icons">edit</span>
+                        </button>
+                        <button class="btn-icon mini" (click)="deleteRole(role.id)">
+                            <span class="material-icons">delete</span>
+                        </button>
+                    </div>
+                </div>
+                }
+            </div>
+        </div>
+
+        <!-- Permission Matrix -->
+        <div class="permissions-panel">
+            @if (selectedRoleId()) {
+            <div class="panel-header">
+                <h2>{{ getSelectedRoleName() }} Yetkileri</h2>
+                <div class="actions">
+                    <button class="btn btn-secondary" (click)="openPermModal()" style="margin-right: 12px;">
+                        <span class="material-icons">add</span> Yeni Yetki
+                    </button>
+                    <button type="button" class="btn btn-primary" (click)="saveRolePermissions()"
+                        [disabled]="saving() || getSelectedRoleName() === 'SuperAdmin'">
+                        {{ saving() ? 'Kaydediliyor...' : 'Değişiklikleri Kaydet' }}
+                    </button>
+                </div>
+            </div>
+
+            @if (getSelectedRoleName() === 'SuperAdmin') {
+            <div class="alert alert-info">
+                SuperAdmin rolü tüm yetkilere sahiptir ve bu yetkiler değiştirilemez.
+            </div>
+            }
+
+            <div class="permission-groups">
+                @for (group of groupedPermissions(); track group.group) {
+                <div class="permission-group">
+                    <div class="group-title">{{ group.group }}</div>
+                    <div class="group-perms">
+                        @for (perm of group.perms; track perm.id) {
+                        <div class="perm-item-wrapper">
+                            <label class="perm-checkbox" [class.disabled]="getSelectedRoleName() === 'SuperAdmin'">
+                                <input type="checkbox" [checked]="isPermissionSelected(perm.code)"
+                                    (change)="togglePermission(perm.code)"
+                                    [disabled]="getSelectedRoleName() === 'SuperAdmin'">
+                                <span class="checkbox-custom"></span>
+                                <div class="perm-info">
+                                    <span class="perm-name">{{ perm.name }}</span>
+                                    <span class="perm-code">{{ perm.code }}</span>
+                                </div>
+                            </label>
+                            <button class="btn-icon mini delete-perm" *ngIf="getSelectedRoleName() !== 'SuperAdmin'"
+                                (click)="deletePermission(perm.id)">
+                                <span class="material-icons">delete</span>
+                            </button>
+                        </div>
+                        }
+                    </div>
+                </div>
+                }
+            </div>
+            } @else {
+            <div class="empty-state">
+                <span class="material-icons">security</span>
+                <p>Yönetmek istediğiniz rolü soldaki listeden seçiniz.</p>
+            </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Role Modal -->
+<div class="modal-backdrop" *ngIf="showRoleModal()" (click)="showRoleModal.set(false)">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <h2>{{ editingRole()?.id ? 'Rol Düzenle' : 'Yeni Rol Oluştur' }}</h2>
+            <button class="btn-close" (click)="showRoleModal.set(false)">&times;</button>
+        </div>
+        <div class="modal-body" *ngIf="editingRole()">
+            <div class="form-group">
+                <label>Rol Adı</label>
+                <input type="text" [(ngModel)]="editingRole()!.name" placeholder="Örn: Muhasebe, Depo">
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" (click)="showRoleModal.set(false)">Vazgeç</button>
+            <button class="btn btn-primary" (click)="saveRole()">Kaydet</button>
+        </div>
+    </div>
+</div>
+
+<!-- Permission Modal -->
+<div class="modal-backdrop" *ngIf="showPermModal()" (click)="showPermModal.set(false)">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <h2>Yeni Yetki Tanımla</h2>
+            <button class="btn-close" (click)="showPermModal.set(false)">&times;</button>
+        </div>
+        <div class="modal-body" *ngIf="editingPerm()">
+            <div class="form-group">
+                <label>Grup Adı</label>
+                <input type="text" [(ngModel)]="editingPerm()!.group" placeholder="Örn: Faturalar, Ayarlar">
+            </div>
+            <div class="form-group">
+                <label>Yetki Adı</label>
+                <input type="text" [(ngModel)]="editingPerm()!.name" placeholder="Örn: Faturayı İptal Et">
+            </div>
+            <div class="form-group">
+                <label>Yetki Kodu (Tekil Olmalı)</label>
+                <input type="text" [(ngModel)]="editingPerm()!.code" placeholder="Örn: Invoices.Cancel">
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" (click)="showPermModal.set(false)">Vazgeç</button>
+            <button class="btn btn-primary" (click)="savePermission()">Kaydet</button>
+        </div>
+    </div>
+</div>

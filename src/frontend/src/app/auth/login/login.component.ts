@@ -28,11 +28,7 @@ export class LoginComponent {
     this.loading = true;
     this.auth.login(this.form.getRawValue().email, this.form.getRawValue().password).subscribe({
       next: (res) => {
-        if (res.user.role === 'SuperAdmin') {
-          window.location.href = '/firms';
-        } else {
-          window.location.href = '/invoices';
-        }
+        window.location.href = '/dashboard';
       },
       error: (e) => {
         const msg = e.error?.message

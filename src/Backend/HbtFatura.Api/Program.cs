@@ -8,6 +8,8 @@ using Microsoft.OpenApi.Models;
 using HbtFatura.Api.Data;
 using HbtFatura.Api.Entities;
 using HbtFatura.Api.Services;
+using HbtFatura.Api.Authorization;
+using Microsoft.AspNetCore.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -79,6 +81,8 @@ builder.Services.AddRateLimiter(options =>
 });
 
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
+builder.Services.AddScoped<IAuthorizationHandler, PermissionHandler>();
 builder.Services.AddScoped<ICurrentUserContext, CurrentUserContext>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ICompanySettingsService, CompanySettingsService>();
@@ -152,7 +156,7 @@ using (var scope = app.Services.CreateScope())
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
     var config = scope.ServiceProvider.GetRequiredService<IConfiguration>();
-    await RoleSeed.SeedRolesAsync(roleManager);
+    await RoleSeed.SeedRolesAsync(roleManager, db);
     await RoleSeed.BootstrapSuperAdminIfEmptyAsync(userManager, config);
 }
 

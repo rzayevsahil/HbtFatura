@@ -5,9 +5,9 @@
   @if (firm) {
   <h1 class="page-title">{{ firm.name }}</h1>
   <p class="page-subtitle">Oluşturulma: {{ firm.createdAt | date:'dd.MM.yyyy' }}</p>
-  @if (auth.user()?.role === 'SuperAdmin' || (auth.user()?.role === 'FirmAdmin' && auth.user()?.firmId === firm.id)) {
+  @if (auth.user()?.role === 'SuperAdmin' || auth.user()?.role === 'FirmAdmin') {
   <div class="actions">
-    <a [routerLink]="['/company']" [queryParams]="{ firmId: firm.id }" class="btn btn-primary">Firma bilgilerini
+    <a [routerLink]="['/settings/edit']" [queryParams]="{ firmId: firm.id }" class="btn btn-primary">Firma bilgilerini
       düzenle</a>
   </div>
   }

@@ -1,0 +1,178 @@
+<div class="dashboard-container">
+    @if (loading()) {
+    <div class="loading-container">
+        <div class="spinner"></div>
+        <p>Veriler yükleniyor...</p>
+    </div>
+    } @else if (data()) {
+    <!-- Welcome Section -->
+    <header class="dashboard-header animate-fade-in">
+        <div class="welcome">
+            <h1>Hoş Geldiniz, {{ auth.user()?.fullName }} 👋</h1>
+            <p>{{ auth.user()?.role === 'SuperAdmin' ? 'Sistem Yönetim Paneli' : (auth.user()?.firmName || 'HBT Fatura
+                Panel') }} — {{ '2026-03-08' | date:'dd MMMM yyyy' }}</p>
+        </div>
+        <div class="header-actions">
+            @if (auth.user()?.role === 'SuperAdmin') {
+            <a routerLink="/firms/new" class="btn btn-primary btn-with-icon">
+                <span class="material-icons">add_business</span>
+                Yeni Firma Tanımla
+            </a>
+            } @else {
+            <a routerLink="/invoices/new" class="btn btn-primary btn-with-icon">
+                <span class="material-icons">add</span>
+                Yeni Fatura Oluştur
+            </a>
+            }
+        </div>
+    </header>
+
+    <!-- Statistics Cards -->
+    <div class="stats-grid">
+        @for (stat of data()?.stats; track stat.label; let i = $index) {
+        <div class="stat-card" [style.--delay]="i * 100 + 'ms'">
+            <div class="stat-icon-wrapper" [class]="stat.color">
+                <span class="material-icons">{{ stat.icon }}</span>
+            </div>
+            <div class="stat-content">
+                <span class="stat-label">{{ stat.label }}</span>
+                <div class="stat-value-group">
+                    <span class="stat-value">{{ stat.value }}</span>
+                    @if (stat.trend) {
+                    <span class="stat-trend"
+                        [class.positive]="stat.trend.startsWith('+') || stat.trend.includes('Bu Ay') || stat.trend.includes('Kayıtlı') || stat.trend.includes('Aktif')"
+                        [class.negative]="stat.trend.startsWith('-') || stat.trend.includes('Adet') || stat.trend.includes('Kritik')">
+                        {{ stat.trend }}
+                    </span>
+                    }
+                </div>
+            </div>
+        </div>
+        }
+    </div>
+
+    <!-- Main Grid: Recent Content and Activities -->
+    <div class="main-grid">
+        <!-- Recent Table (Recent Firms for SuperAdmin, Recent Invoices for Others) -->
+        <section class="card recent-content animate-slide-up">
+            <div class="card-header">
+                <h2>{{ auth.user()?.role === 'SuperAdmin' ? 'Son Kayıtlı Firmalar' : 'Son Faturalar' }}</h2>
+                <a [routerLink]="auth.user()?.role === 'SuperAdmin' ? '/firms' : '/invoices'" class="link-muted">Tümünü
+                    Gör</a>
+            </div>
+            <div class="table-responsive">
+                <table class="dashboard-table">
+                    <thead>
+                        @if (auth.user()?.role === 'SuperAdmin') {
+                        <tr>
+                            <th>Vergi No</th>
+                            <th>Firma Adı</th>
+                            <th>Kayıt Tarihi</th>
+                            <th>Durum</th>
+                        </tr>
+                        } @else {
+                        <tr>
+                            <th>Fatura No</th>
+                            <th>Alıcı / Müşteri</th>
+                            <th>Tutar</th>
+                            <th>Tarih</th>
+                            <th>Durum</th>
+                        </tr>
+                        }
+                    </thead>
+                    <tbody>
+                        @for (inv of data()?.recentInvoices; track inv.id) {
+                        <tr>
+                            <td class="id-cell">{{ inv.id }}</td>
+                            <td>{{ inv.customer }}</td>
+                            @if (auth.user()?.role !== 'SuperAdmin') {
+                            <td class="amount-cell">{{ inv.amount }}</td>
+                            }
+                            <td>{{ inv.date }}</td>
+                            <td>
+                                <span class="status-badge"
+                                    [class.bg-success]="inv.status === 'Ödendi' || inv.status === 'Aktif'"
+                                    [class.bg-warning]="inv.status === 'Gönderildi'"
+                                    [class.bg-danger]="inv.status === 'İptal'"
+                                    [class.bg-info]="inv.status === 'Taslak'">
+                                    {{ inv.status }}
+                                </span>
+                            </td>
+                        </tr>
+                        }
+                        @if (data()?.recentInvoices?.length === 0) {
+                        <tr>
+                            <td [attr.colspan]="auth.user()?.role === 'SuperAdmin' ? 4 : 5"
+                                style="text-align: center; padding: 2rem; color: #94a3b8;">
+                                Veri bulunamadı.
+                            </td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Sidebar Cards: Actions & Activities -->
+        <aside class="dashboard-sidebar">
+            <!-- Quick Actions -->
+            <section class="card quick-actions animate-slide-up" style="--delay: 200ms">
+                <div class="card-header">
+                    <h2>Hızlı İşlemler</h2>
+                </div>
+                <div class="action-buttons">
+                    @if (auth.user()?.role === 'SuperAdmin') {
+                    <button class="action-btn" routerLink="/permissions">
+                        <div class="btn-icon bg-blue-soft"><span class="material-icons">security</span></div>
+                        <span>Yetki Yönetimi</span>
+                    </button>
+                    <button class="action-btn" routerLink="/lookups">
+                        <div class="btn-icon bg-green-soft"><span class="material-icons">settings</span></div>
+                        <span>Sistem Tanımları</span>
+                    </button>
+                    <button class="action-btn" routerLink="/logs">
+                        <div class="btn-icon bg-purple-soft"><span class="material-icons">history</span></div>
+                        <span>Sistem Logları</span>
+                    </button>
+                    } @else {
+                    <button class="action-btn" routerLink="/customers">
+                        <div class="btn-icon bg-blue-soft"><span class="material-icons">person_add</span></div>
+                        <span>Müşteri Ekle</span>
+                    </button>
+                    <button class="action-btn" routerLink="/products">
+                        <div class="btn-icon bg-green-soft"><span class="material-icons">inventory</span></div>
+                        <span>Ürün Kaydı</span>
+                    </button>
+                    <button class="action-btn" routerLink="/reports">
+                        <div class="btn-icon bg-purple-soft"><span class="material-icons">bar_chart</span></div>
+                        <span>Rapor Al</span>
+                    </button>
+                    }
+                </div>
+            </section>
+
+            <!-- Recent Activities -->
+            <section class="card activities animate-slide-up" style="--delay: 400ms">
+                <div class="card-header">
+                    <h2>{{ auth.user()?.role === 'SuperAdmin' ? 'Sistem Hareketleri' : 'Son Hareketer' }}</h2>
+                </div>
+                <div class="activity-timeline">
+                    @for (act of data()?.activities; track act.id) {
+                    <div class="activity-item">
+                        <div class="activity-icon" [class]="act.type"></div>
+                        <div class="activity-info">
+                            <span class="activity-title">{{ act.title }}</span>
+                            <p class="activity-desc">{{ act.description }}</p>
+                            <span class="activity-time">{{ act.time }}</span>
+                        </div>
+                    </div>
+                    }
+                    @if (data()?.activities?.length === 0) {
+                    <p style="padding: 1rem; color: #94a3b8; font-size: 0.8125rem;">Son hareket bulunmuyor.</p>
+                    }
+                </div>
+            </section>
+        </aside>
+    </div>
+    }
+</div>

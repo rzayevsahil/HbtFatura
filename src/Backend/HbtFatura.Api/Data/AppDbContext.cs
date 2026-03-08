@@ -36,6 +36,9 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid
     public DbSet<District> Districts => Set<District>();
     public DbSet<LookupGroup> LookupGroups => Set<LookupGroup>();
     public DbSet<Lookup> Lookups => Set<Lookup>();
+    public DbSet<Permission> Permissions => Set<Permission>();
+    public DbSet<RolePermission> RolePermissions => Set<RolePermission>();
+    public DbSet<Menu> Menus => Set<Menu>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -244,6 +247,27 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid
         {
             e.HasOne(x => x.City).WithMany(x => x.Districts).HasForeignKey(x => x.CityId).OnDelete(DeleteBehavior.Cascade);
             e.HasIndex(x => new { x.CityId, x.Name }).IsUnique();
+        });
+
+        modelBuilder.Entity<Permission>(e =>
+        {
+            e.HasIndex(x => x.Code).IsUnique();
+            e.HasIndex(x => x.Group);
+        });
+
+        modelBuilder.Entity<RolePermission>(e =>
+        {
+            e.HasKey(x => new { x.RoleId, x.PermissionId });
+            e.HasOne(x => x.Role).WithMany().HasForeignKey(x => x.RoleId).OnDelete(DeleteBehavior.Cascade);
+            e.HasOne(x => x.Permission).WithMany(x => x.RolePermissions).HasForeignKey(x => x.PermissionId).OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<Menu>(e =>
+        {
+            e.HasOne(x => x.Parent).WithMany(x => x.Children).HasForeignKey(x => x.ParentId).OnDelete(DeleteBehavior.Restrict);
+            e.HasIndex(x => x.ParentId);
+            e.HasIndex(x => x.RequiredPermissionCode);
+            e.Property(x => x.SortOrder).HasDefaultValue(0);
         });
     }
 }

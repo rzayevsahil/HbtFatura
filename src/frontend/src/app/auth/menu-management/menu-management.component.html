@@ -1,0 +1,131 @@
+<div class="menu-admin-container">
+    <div class="header-section">
+        <h1>Menü Yönetimi</h1>
+        <button class="btn btn-primary" (click)="openCreateModal()">
+            <span class="material-icons">add</span> Yeni Ana Menü Ekle
+        </button>
+    </div>
+
+    <div class="menu-list" *ngIf="!loading(); else loadingTemplate">
+        <div class="menu-table-header">
+            <div class="col-icon">İkon</div>
+            <div class="col-label">Başlık</div>
+            <div class="col-link">Rota</div>
+            <div class="col-perm">Yetki Kodu</div>
+            <div class="col-sort">Sıra</div>
+            <div class="col-status">Durum</div>
+            <div class="col-actions">İşlemler</div>
+        </div>
+
+        <ng-container *ngFor="let m of allMenus()">
+            <ng-container *ngTemplateOutlet="menuRow; context: { $implicit: m, level: 0 }"></ng-container>
+        </ng-container>
+    </div>
+
+    <ng-template #menuRow let-m let-level="level">
+        <div class="menu-item-row" [style.padding-left.px]="24 + level * 32">
+            <div class="col-icon">
+                <span class="material-icons">{{ m.icon || 'folder' }}</span>
+            </div>
+            <div class="col-label">
+                <span class="label-text">{{ m.label }}</span>
+                <span class="badge system" *ngIf="m.isSystemMenu">Sistem</span>
+            </div>
+            <div class="col-link">{{ m.routerLink }}</div>
+            <div class="col-perm">{{ m.requiredPermissionCode }}</div>
+            <div class="col-sort">{{ m.sortOrder }}</div>
+            <div class="col-status">
+                <span class="status-indicator" [class.active]="m.isActive">
+                    {{ m.isActive ? 'Aktif' : 'Pasif' }}
+                </span>
+            </div>
+            <div class="col-actions">
+                <button class="btn-icon" (click)="openCreateModal(m.id)" title="Alt Menü Ekle">
+                    <span class="material-icons text-success">add_circle</span>
+                </button>
+                <button class="btn-icon" (click)="openEditModal(m)" title="Düzenle">
+                    <span class="material-icons text-primary">edit</span>
+                </button>
+                <button class="btn-icon" (click)="deleteMenu(m.id)" [disabled]="m.isSystemMenu" title="Sil">
+                    <span class="material-icons" [class.text-danger]="!m.isSystemMenu">delete</span>
+                </button>
+            </div>
+        </div>
+
+        <ng-container *ngFor="let child of m.children">
+            <ng-container *ngTemplateOutlet="menuRow; context: { $implicit: child, level: level + 1 }"></ng-container>
+        </ng-container>
+    </ng-template>
+
+    <ng-template #loadingTemplate>
+        <div class="loading-state">
+            <p>Menüler yükleniyor...</p>
+        </div>
+    </ng-template>
+</div>
+
+<!-- Modal -->
+<div class="modal-backdrop" *ngIf="showModal()" (click)="closeModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <h2>{{ editingMenu()?.id ? 'Menü Düzenle' : 'Yeni Menü Ekle' }}</h2>
+            <button class="btn-close" (click)="closeModal()">&times;</button>
+        </div>
+
+        <div class="modal-body" *ngIf="editingMenu()">
+            <div class="form-group">
+                <label>Başlık</label>
+                <input type="text" [(ngModel)]="editingMenu()!.label" placeholder="Menü adı">
+            </div>
+
+            <div class="form-row">
+                <div class="form-group flex-1">
+                    <label>İkon (Material Icon)</label>
+                    <div class="icon-input">
+                        <span class="material-icons">{{ editingMenu()!.icon || 'help' }}</span>
+                        <input type="text" [(ngModel)]="editingMenu()!.icon" placeholder="home, settings vb.">
+                    </div>
+                </div>
+                <div class="form-group flex-1">
+                    <label>Sıralama</label>
+                    <input type="number" [(ngModel)]="editingMenu()!.sortOrder">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Rota (Router Link)</label>
+                <input type="text" [(ngModel)]="editingMenu()!.routerLink" placeholder="/dashboard, /invoices vb.">
+            </div>
+
+            <div class="form-group">
+                <label>Gerekli Yetki Kodu</label>
+                <select [(ngModel)]="editingMenu()!.requiredPermissionCode">
+                    <option value="">Yetki Gerekmiyor</option>
+                    <option *ngFor="let p of permissions()" [value]="p.code">{{ p.group }} - {{ p.name }} ({{ p.code }})
+                    </option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Üst Menü</label>
+                <select [(ngModel)]="editingMenu()!.parentId">
+                    <option [value]="undefined">Ana Menü</option>
+                    <ng-container *ngFor="let m of flatMenus()">
+                        <option *ngIf="m.id !== editingMenu()!.id" [value]="m.id">{{ m.label }}</option>
+                    </ng-container>
+                </select>
+            </div>
+
+            <div class="form-group checkbox-group">
+                <label>
+                    <input type="checkbox" [(ngModel)]="editingMenu()!.isActive"> Aktif mi?
+                </label>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn btn-secondary" (click)="closeModal()">Vazgeç</button>
+            <button class="btn btn-primary" (click)="save()">Kaydet</button>
+        </div>
+    </div>
+</div>

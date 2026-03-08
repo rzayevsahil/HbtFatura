@@ -26,7 +26,11 @@ export class FirmDetailComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('id');
+    let id = this.route.snapshot.paramMap.get('id');
+    if (!id && this.auth.user()?.firmId) {
+      id = this.auth.user()?.firmId!;
+    }
+
     if (id) {
       this.firmApi.getById(id).subscribe({
         next: f => {

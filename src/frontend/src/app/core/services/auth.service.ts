@@ -10,6 +10,7 @@ export interface User {
   role: string;
   firmId: string | null;
   firmName: string | null;
+  permissions: string[];
 }
 
 export interface AuthResponse {

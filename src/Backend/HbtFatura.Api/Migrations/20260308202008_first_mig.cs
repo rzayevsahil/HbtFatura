@@ -87,6 +87,46 @@ namespace HbtFatura.Api.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Menus",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ParentId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    Label = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Icon = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RouterLink = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SortOrder = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
+                    RequiredPermissionCode = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    IsSystemMenu = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Menus", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Menus_Menus_ParentId",
+                        column: x => x.ParentId,
+                        principalTable: "Menus",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Permissions",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Group = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Code = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Permissions", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -272,6 +312,30 @@ namespace HbtFatura.Api.Migrations
                         name: "FK_Lookups_LookupGroups_LookupGroupId",
                         column: x => x.LookupGroupId,
                         principalTable: "LookupGroups",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RolePermissions",
+                columns: table => new
+                {
+                    RoleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PermissionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RolePermissions", x => new { x.RoleId, x.PermissionId });
+                    table.ForeignKey(
+                        name: "FK_RolePermissions_AspNetRoles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "AspNetRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_RolePermissions_Permissions_PermissionId",
+                        column: x => x.PermissionId,
+                        principalTable: "Permissions",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -1154,6 +1218,16 @@ namespace HbtFatura.Api.Migrations
                 filter: "[FirmId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Menus_ParentId",
+                table: "Menus",
+                column: "ParentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Menus_RequiredPermissionCode",
+                table: "Menus",
+                column: "RequiredPermissionCode");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_OrderItems_OrderId",
                 table: "OrderItems",
                 column: "OrderId");
@@ -1175,6 +1249,17 @@ namespace HbtFatura.Api.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Permissions_Code",
+                table: "Permissions",
+                column: "Code",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Permissions_Group",
+                table: "Permissions",
+                column: "Group");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Products_FirmId",
                 table: "Products",
                 column: "FirmId");
@@ -1194,6 +1279,11 @@ namespace HbtFatura.Api.Migrations
                 name: "IX_RefreshTokens_UserId",
                 table: "RefreshTokens",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RolePermissions_PermissionId",
+                table: "RolePermissions",
+                column: "PermissionId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_StockMovements_ProductId",
@@ -1270,13 +1360,16 @@ namespace HbtFatura.Api.Migrations
                 name: "MainAccountCodes");
 
             migrationBuilder.DropTable(
+                name: "Menus");
+
+            migrationBuilder.DropTable(
                 name: "RefreshTokens");
 
             migrationBuilder.DropTable(
-                name: "StockMovements");
+                name: "RolePermissions");
 
             migrationBuilder.DropTable(
-                name: "AspNetRoles");
+                name: "StockMovements");
 
             migrationBuilder.DropTable(
                 name: "CashRegisters");
@@ -1295,6 +1388,12 @@ namespace HbtFatura.Api.Migrations
 
             migrationBuilder.DropTable(
                 name: "LookupGroups");
+
+            migrationBuilder.DropTable(
+                name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "Permissions");
 
             migrationBuilder.DropTable(
                 name: "Orders");

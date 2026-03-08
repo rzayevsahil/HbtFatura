@@ -146,7 +146,9 @@
   gap: 0.125rem;
 
   a {
-    display: block;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
     padding: 0.625rem 1.5rem;
     text-decoration: none;
     color: var(--color-text-muted);
@@ -154,6 +156,15 @@
     font-size: 0.9375rem;
     transition: color 0.15s, background 0.15s;
     border-left: 3px solid transparent;
+
+    .nav-icon {
+      font-size: 1.25rem;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
     &:hover {
       color: var(--color-primary);
