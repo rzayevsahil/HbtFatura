@@ -4,7 +4,7 @@ import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CustomerService, CustomerListDto } from '../../services/customer.service';
 import { ToastrService } from 'ngx-toastr';
-
+import { AuthService } from '../../core/services/auth.service';
 import { ConfirmModalComponent } from '../../shared/confirm-modal/confirm-modal.component';
 
 @Component({
@@ -24,7 +24,11 @@ export class CustomerListComponent implements OnInit {
   showDeleteModal = false;
   deletingCustomer: { id: string, title: string } | null = null;
 
-  constructor(private api: CustomerService, private toastr: ToastrService) { }
+  constructor(
+    private api: CustomerService,
+    private toastr: ToastrService,
+    public auth: AuthService
+  ) { }
 
   ngOnInit(): void {
     this.load();

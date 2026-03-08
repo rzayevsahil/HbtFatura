@@ -128,4 +128,11 @@ export class AuthService {
     localStorage.setItem(this.refreshKey, res.refreshToken);
     localStorage.setItem(this.storageKey, JSON.stringify(res));
   }
+
+  hasPermission(code: string): boolean {
+    const user = this.currentUser();
+    if (!user) return false;
+    if (user.role === 'SuperAdmin') return true;
+    return user.permissions.includes(code);
+  }
 }

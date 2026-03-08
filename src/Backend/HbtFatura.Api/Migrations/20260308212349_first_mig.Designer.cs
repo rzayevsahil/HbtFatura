@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HbtFatura.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260308202008_first_mig")]
+    [Migration("20260308212349_first_mig")]
     partial class first_mig
     {
         /// <inheritdoc />

@@ -4,7 +4,9 @@
 <div class="toolbar">
   <input [(ngModel)]="search" placeholder="Hesap adı, banka, IBAN ile ara..." (keyup.enter)="search = search" />
   <button type="button">Ara</button>
+  @if (auth.hasPermission('Banking.Edit')) {
   <a routerLink="/bank-accounts/new" class="btn btn-primary">Yeni Banka Hesabı</a>
+  }
 </div>
 <div class="card table-wrap" style="position: relative; min-height: 200px;">
   @if (loading) {
@@ -34,8 +36,10 @@
         <td>
           <div class="actions-cell">
             <a [routerLink]="['/bank-accounts', b.id]">Detay</a>
+            @if (auth.hasPermission('Banking.Edit')) {
             <a [routerLink]="['/bank-accounts', b.id, 'edit']">Düzenle</a>
             <button type="button" (click)="onDeleteClick(b.id, b.name)">Sil</button>
+            }
           </div>
         </td>
       </tr>
