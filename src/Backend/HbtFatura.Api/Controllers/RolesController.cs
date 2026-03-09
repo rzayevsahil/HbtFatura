@@ -1,4 +1,5 @@
 using HbtFatura.Api.DTOs.Permissions;
+using HbtFatura.Api.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -11,9 +12,9 @@ namespace HbtFatura.Api.Controllers;
 [Route("api/[controller]")]
 public class RolesController : ControllerBase
 {
-    private readonly RoleManager<IdentityRole<Guid>> _roleManager;
+    private readonly RoleManager<ApplicationRole> _roleManager;
 
-    public RolesController(RoleManager<IdentityRole<Guid>> roleManager)
+    public RolesController(RoleManager<ApplicationRole> roleManager)
     {
         _roleManager = roleManager;
     }
@@ -26,36 +27,39 @@ public class RolesController : ControllerBase
             .Select(r => new RoleDto
             {
                 Id = r.Id,
-                Name = r.Name ?? ""
+                Name = r.Name ?? "",
+                DisplayName = r.DisplayName
             })
             .ToListAsync();
     }
 
     [HttpPost]
-    public async Task<ActionResult<RoleDto>> CreateRole([FromBody] string name)
+    public async Task<ActionResult<RoleDto>> CreateRole([FromBody] RoleDto dto)
     {
-        if (string.IsNullOrWhiteSpace(name)) return BadRequest("Role name is required.");
+        if (string.IsNullOrWhiteSpace(dto.Name)) return BadRequest("Role name is required.");
         
-        if (await _roleManager.RoleExistsAsync(name))
+        if (await _roleManager.RoleExistsAsync(dto.Name))
             return BadRequest("Role already exists.");
 
-        var role = new IdentityRole<Guid>(name);
+        var role = new ApplicationRole(dto.Name) { DisplayName = dto.DisplayName };
         var result = await _roleManager.CreateAsync(role);
 
         if (!result.Succeeded) return BadRequest(result.Errors);
 
-        return Ok(new RoleDto { Id = role.Id, Name = role.Name ?? "" });
+        return Ok(new RoleDto { Id = role.Id, Name = role.Name ?? "", DisplayName = role.DisplayName });
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateRole(Guid id, [FromBody] string name)
+    public async Task<IActionResult> UpdateRole(Guid id, [FromBody] RoleDto dto)
     {
         var role = await _roleManager.FindByIdAsync(id.ToString());
         if (role == null) return NotFound();
 
-        if (role.Name == "SuperAdmin") return BadRequest("SuperAdmin role cannot be renamed.");
+        if (role.Name == "SuperAdmin" && dto.Name != "SuperAdmin") 
+            return BadRequest("SuperAdmin role cannot be renamed.");
 
-        role.Name = name;
+        role.Name = dto.Name;
+        role.DisplayName = dto.DisplayName;
         var result = await _roleManager.UpdateAsync(role);
 
         if (!result.Succeeded) return BadRequest(result.Errors);

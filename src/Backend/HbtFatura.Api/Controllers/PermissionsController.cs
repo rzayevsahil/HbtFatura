@@ -14,9 +14,9 @@ namespace HbtFatura.Api.Controllers;
 public class PermissionsController : ControllerBase
 {
     private readonly AppDbContext _db;
-    private readonly RoleManager<IdentityRole<Guid>> _roleManager;
+    private readonly RoleManager<ApplicationRole> _roleManager;
 
-    public PermissionsController(AppDbContext db, RoleManager<IdentityRole<Guid>> roleManager)
+    public PermissionsController(AppDbContext db, RoleManager<ApplicationRole> roleManager)
     {
         _db = db;
         _roleManager = roleManager;
@@ -100,7 +100,8 @@ public class PermissionsController : ControllerBase
             .Select(r => new RoleDto
             {
                 Id = r.Id,
-                Name = r.Name ?? ""
+                Name = r.Name ?? "",
+                DisplayName = r.DisplayName
             })
             .ToListAsync();
     }

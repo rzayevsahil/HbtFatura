@@ -13,6 +13,7 @@ export interface PermissionDto {
 export interface RoleDto {
     id: string;
     name: string;
+    displayName?: string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -55,16 +56,12 @@ export class PermissionService {
         return this.http.get<RoleDto[]>('/api/roles');
     }
 
-    createRole(name: string): Observable<RoleDto> {
-        return this.http.post<RoleDto>('/api/roles', JSON.stringify(name), {
-            headers: { 'Content-Type': 'application/json' }
-        });
+    createRole(role: Partial<RoleDto>): Observable<RoleDto> {
+        return this.http.post<RoleDto>('/api/roles', role);
     }
 
-    updateRole(id: string, name: string): Observable<void> {
-        return this.http.put<void>(`/api/roles/${id}`, JSON.stringify(name), {
-            headers: { 'Content-Type': 'application/json' }
-        });
+    updateRole(id: string, role: Partial<RoleDto>): Observable<void> {
+        return this.http.put<void>(`/api/roles/${id}`, role);
     }
 
     deleteRole(id: string): Observable<void> {

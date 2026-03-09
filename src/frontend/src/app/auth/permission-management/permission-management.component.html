@@ -17,7 +17,10 @@
                 @for (role of roles(); track role.id) {
                 <div class="role-item-wrapper" [class.active]="selectedRoleId() === role.id">
                     <button type="button" class="role-item" (click)="selectRole(role.id)">
-                        {{ role.name }}
+                        <div class="role-label-group">
+                            <span class="role-display">{{ role.displayName || role.name }}</span>
+                            <small class="role-technical">{{ role.name }}</small>
+                        </div>
                     </button>
                     <div class="role-actions" *ngIf="role.name !== 'SuperAdmin'">
                         <button class="btn-icon mini" (click)="openRoleModal(role)">
@@ -100,8 +103,15 @@
         </div>
         <div class="modal-body" *ngIf="editingRole()">
             <div class="form-group">
-                <label>Rol Adı</label>
-                <input type="text" [(ngModel)]="editingRole()!.name" placeholder="Örn: Muhasebe, Depo">
+                <label>Görünen Ad (Ekran için)</label>
+                <input type="text" [(ngModel)]="editingRole()!.displayName" placeholder="Örn: Muhasebe Sorumlusu">
+            </div>
+            <div class="form-group">
+                <label>Sistem Adı (Kod ve Yetki için)</label>
+                <input type="text" [(ngModel)]="editingRole()!.name" placeholder="Örn: Muhasebe, Depo"
+                    [disabled]="editingRole()?.name === 'SuperAdmin'">
+                <small class="help-text" *ngIf="editingRole()?.name !== 'SuperAdmin'">Dikkat: Sistem adını değiştirmek
+                    yetki kontrollerini bozabilir.</small>
             </div>
         </div>
         <div class="modal-footer">

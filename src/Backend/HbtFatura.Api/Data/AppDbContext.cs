@@ -6,7 +6,7 @@ using System.Text.Json;
 
 namespace HbtFatura.Api.Data;
 
-public class AppDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
+public class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, Guid>
 {
     public AppDbContext(DbContextOptions<AppDbContext> options)
         : base(options) { }

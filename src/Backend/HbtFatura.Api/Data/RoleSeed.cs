@@ -7,19 +7,33 @@ namespace HbtFatura.Api.Data;
 
 public static class RoleSeed
 {
-    public static async Task SeedRolesAsync(RoleManager<IdentityRole<Guid>> roleManager, AppDbContext db, CancellationToken ct = default)
+    public static async Task SeedRolesAsync(RoleManager<ApplicationRole> roleManager, AppDbContext db, CancellationToken ct = default)
     {
-        foreach (var roleName in new[] { Roles.SuperAdmin, Roles.FirmAdmin, Roles.Employee })
+        var rolesToSeed = new (string Name, string Display)[]
         {
-            if (await roleManager.RoleExistsAsync(roleName))
-                continue;
-            await roleManager.CreateAsync(new IdentityRole<Guid>(roleName));
+            (Roles.SuperAdmin, "Super Admin"),
+            (Roles.FirmAdmin, "Firma Yöneticisi"),
+            (Roles.Employee, "Çalışan")
+        };
+
+        foreach (var (name, display) in rolesToSeed)
+        {
+            var role = await roleManager.FindByNameAsync(name);
+            if (role == null)
+            {
+                await roleManager.CreateAsync(new ApplicationRole(name) { DisplayName = display });
+            }
+            else if (string.IsNullOrEmpty(role.DisplayName))
+            {
+                role.DisplayName = display;
+                await roleManager.UpdateAsync(role);
+            }
         }
 
         await SeedPermissionsAndMenusAsync(roleManager, db, ct);
     }
 
-    private static async Task SeedPermissionsAndMenusAsync(RoleManager<IdentityRole<Guid>> roleManager, AppDbContext db, CancellationToken ct)
+    private static async Task SeedPermissionsAndMenusAsync(RoleManager<ApplicationRole> roleManager, AppDbContext db, CancellationToken ct)
     {
         // 1. Permissions
         var permissions = new List<Permission>

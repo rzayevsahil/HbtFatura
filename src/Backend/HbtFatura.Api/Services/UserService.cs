@@ -2,17 +2,20 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using HbtFatura.Api.DTOs.Users;
 using HbtFatura.Api.Entities;
+using HbtFatura.Api.Data;
 
 namespace HbtFatura.Api.Services;
 
 public class UserService : IUserService
 {
     private readonly UserManager<ApplicationUser> _userManager;
+    private readonly AppDbContext _db;
     private readonly ILogService _log;
 
-    public UserService(UserManager<ApplicationUser> userManager, ILogService log)
+    public UserService(UserManager<ApplicationUser> userManager, AppDbContext db, ILogService log)
     {
         _userManager = userManager;
+        _db = db;
         _log = log;
     }
 
@@ -23,12 +26,22 @@ public class UserService : IUserService
 
         if (user == null) return null;
 
+        var roles = await _userManager.GetRolesAsync(user);
+        var roleName = roles.FirstOrDefault() ?? "";
+        
+        var roleDisplayName = await _db.Roles
+            .Where(r => r.Name == roleName)
+            .Select(r => r.DisplayName)
+            .FirstOrDefaultAsync(ct);
+
         return new UserProfileDto
         {
             Id = user.Id,
             Email = user.Email ?? string.Empty,
             FullName = user.FullName,
-            PhoneNumber = user.PhoneNumber
+            PhoneNumber = user.PhoneNumber,
+            Role = roleName,
+            RoleDisplayName = roleDisplayName
         };
     }
 

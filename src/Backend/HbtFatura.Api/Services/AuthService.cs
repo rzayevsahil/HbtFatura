@@ -146,12 +146,18 @@ public class AuthService : IAuthService
     private async Task<AuthResponse> BuildAuthResponseAsync(ApplicationUser user, string? ipAddress, CancellationToken ct)
     {
         var roles = await _userManager.GetRolesAsync(user);
-        var role = roles.FirstOrDefault() ?? "";
+        var roleName = roles.FirstOrDefault() ?? "";
+        
+        var roleDisplayName = await _db.Roles
+            .Where(r => r.Name == roleName)
+            .Select(r => r.DisplayName)
+            .FirstOrDefaultAsync(ct);
+
         var userWithFirm = await _db.Users.Include(x => x.Firm).FirstOrDefaultAsync(x => x.Id == user.Id, ct);
         var firmName = userWithFirm?.Firm?.Name;
 
         var userPermissions = new List<string>();
-        if (role == Roles.SuperAdmin)
+        if (roleName == Roles.SuperAdmin)
         {
             userPermissions = await _db.Permissions.Select(p => p.Code).ToListAsync(ct);
         }
@@ -164,7 +170,7 @@ public class AuthService : IAuthService
                                      select p.Code).ToListAsync(ct);
         }
 
-        var accessToken = GenerateAccessToken(user, role, firmName);
+        var accessToken = GenerateAccessToken(user, roleName, firmName);
         var refreshTokenEntity = await CreateRefreshTokenAsync(user.Id, ipAddress, ct);
         var expiresAt = DateTime.UtcNow.AddMinutes(GetAccessTokenExpirationMinutes());
         return new AuthResponse
@@ -177,7 +183,8 @@ public class AuthService : IAuthService
                 Id = user.Id,
                 Email = user.Email ?? "",
                 FullName = user.FullName,
-                Role = role,
+                Role = roleName,
+                RoleDisplayName = roleDisplayName,
                 FirmId = user.FirmId,
                 FirmName = firmName,
                 Permissions = userPermissions

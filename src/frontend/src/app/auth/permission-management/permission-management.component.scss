@@ -96,6 +96,32 @@
             color: #475569;
             font-weight: 500;
             cursor: pointer;
+
+            .role-label-group {
+                display: flex;
+                flex-direction: column;
+                gap: 2px;
+
+                .role-display {
+                    font-size: 14px;
+                    display: block;
+                }
+
+                .role-technical {
+                    font-size: 11px;
+                    color: #94a3b8;
+                    display: block;
+                    font-family: monospace;
+                    text-transform: none;
+                }
+            }
+        }
+
+        .help-text {
+            font-size: 12px;
+            color: #ef4444;
+            margin-top: 4px;
+            display: block;
         }
     }
 

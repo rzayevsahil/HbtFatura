@@ -16,7 +16,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>
+builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
 {
     options.Password.RequireDigit = true;
     options.Password.RequireLowercase = true;
@@ -153,7 +153,7 @@ using (var scope = app.Services.CreateScope())
     await TaxOfficeSeed.SeedTaxOfficesIfEmptyAsync(db);
     await LookupSeed.SeedIfEmptyAsync(db);
 
-    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
     var config = scope.ServiceProvider.GetRequiredService<IConfiguration>();
     await RoleSeed.SeedRolesAsync(roleManager, db);

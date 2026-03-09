@@ -7,6 +7,8 @@ export interface UserProfileDto {
     email: string;
     fullName: string;
     phoneNumber?: string;
+    role: string;
+    roleDisplayName?: string;
 }
 
 export interface UpdateProfileRequest {

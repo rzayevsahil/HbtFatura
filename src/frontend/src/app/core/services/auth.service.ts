@@ -8,6 +8,7 @@ export interface User {
   email: string;
   fullName: string;
   role: string;
+  roleDisplayName?: string;
   firmId: string | null;
   firmName: string | null;
   permissions: string[];

@@ -14,6 +14,7 @@ public class UserDto
     public string Email { get; set; } = string.Empty;
     public string FullName { get; set; } = string.Empty;
     public string Role { get; set; } = string.Empty;
+    public string? RoleDisplayName { get; set; }
     public Guid? FirmId { get; set; }
     public string? FirmName { get; set; }
     public List<string> Permissions { get; set; } = new();

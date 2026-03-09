@@ -23,7 +23,7 @@ export class PermissionManagementComponent implements OnInit {
 
     // CRUD Modals
     showRoleModal = signal(false);
-    editingRole = signal<{ id?: string, name: string } | null>(null);
+    editingRole = signal<{ id?: string, name: string, displayName?: string } | null>(null);
 
     showPermModal = signal(false);
     editingPerm = signal<Partial<PermissionDto> | null>(null);
@@ -110,7 +110,7 @@ export class PermissionManagementComponent implements OnInit {
 
     // Role CRUD
     openRoleModal(role?: RoleDto) {
-        this.editingRole.set(role ? { ...role } : { name: '' });
+        this.editingRole.set(role ? { ...role } : { name: '', displayName: '' });
         this.showRoleModal.set(true);
     }
 
@@ -119,7 +119,7 @@ export class PermissionManagementComponent implements OnInit {
         if (!role || !role.name) return;
 
         if (role.id) {
-            this.permService.updateRole(role.id, role.name).subscribe({
+            this.permService.updateRole(role.id, role).subscribe({
                 next: () => {
                     this.toastr.success('Rol güncellendi.');
                     this.loadInitialData();
@@ -128,7 +128,7 @@ export class PermissionManagementComponent implements OnInit {
                 error: (err) => this.toastr.error(err.error?.message || 'Rol güncellenemedi.')
             });
         } else {
-            this.permService.createRole(role.name).subscribe({
+            this.permService.createRole(role).subscribe({
                 next: () => {
                     this.toastr.success('Rol oluşturuldu.');
                     this.loadInitialData();
@@ -188,6 +188,7 @@ export class PermissionManagementComponent implements OnInit {
     }
 
     getSelectedRoleName(): string {
-        return this.roles().find(r => r.id === this.selectedRoleId())?.name || '';
+        const role = this.roles().find(r => r.id === this.selectedRoleId());
+        return role?.displayName || role?.name || '';
     }
 }
