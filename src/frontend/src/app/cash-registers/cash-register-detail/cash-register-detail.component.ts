@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { CashRegisterService, CashRegisterDto, CashTransactionDto } from '../../services/cash-register.service';
-import { PagedResult } from '../../core/services/api.service';
+import { CashRegisterService } from '../../services/cash-register.service';
+import { CashRegisterDto, CashTransactionDto, PagedResult } from '../../core/models';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({

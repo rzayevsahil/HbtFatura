@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AccountService, UserProfileDto, UpdateProfileRequest } from '../../services/account.service';
+import { AccountService } from '../../services/account.service';
+import { UserProfileDto, UpdateProfileRequest } from '../../core/models';
 import { AuthService } from '../../core/services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { PhoneFormatter } from '../../core/utils/phone-formatter';

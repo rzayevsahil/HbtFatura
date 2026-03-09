@@ -2,7 +2,8 @@ import { Component, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { InvoiceService, InvoiceDto, InvoiceScenario } from '../../services/invoice.service';
+import { InvoiceService } from '../../services/invoice.service';
+import { InvoiceDto, InvoiceScenario } from '../../core/models';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({

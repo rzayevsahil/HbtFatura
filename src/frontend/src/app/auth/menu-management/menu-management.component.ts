@@ -1,8 +1,9 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { MenuItem, MenuService } from '../../core/services/menu.service';
-import { PermissionService, PermissionDto } from '../../core/services/permission.service';
+import { MenuService } from '../../core/services/menu.service';
+import { PermissionService } from '../../core/services/permission.service';
+import { MenuItem, PermissionDto } from '../../core/models';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({

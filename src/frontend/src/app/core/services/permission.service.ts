@@ -3,18 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 
-export interface PermissionDto {
-    id: string;
-    group: string;
-    code: string;
-    name: string;
-}
-
-export interface RoleDto {
-    id: string;
-    name: string;
-    displayName?: string;
-}
+import { PermissionDto, RoleDto } from '../models';
 
 @Injectable({ providedIn: 'root' })
 export class PermissionService {

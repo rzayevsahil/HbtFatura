@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { ChequeService, ChequeOrPromissoryDto } from '../../services/cheque.service';
+import { ChequeService } from '../../services/cheque.service';
+import { ChequeOrPromissoryDto } from '../../core/models';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -20,7 +21,7 @@ export class ChequeDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private api: ChequeService,
     private toastr: ToastrService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');

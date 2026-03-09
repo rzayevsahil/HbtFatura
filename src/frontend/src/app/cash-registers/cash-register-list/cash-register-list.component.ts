@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { CashRegisterService, CashRegisterDto } from '../../services/cash-register.service';
+import { CashRegisterService } from '../../services/cash-register.service';
+import { CashRegisterDto } from '../../core/models';
 import { AuthService } from '../../core/services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 

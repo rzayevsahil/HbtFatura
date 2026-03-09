@@ -2,10 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { ProductService, ProductListDto } from '../../services/product.service';
+import { ProductService } from '../../services/product.service';
+import { ProductListDto, PagedResult } from '../../core/models';
 import { AuthService } from '../../core/services/auth.service';
 import { ToastrService } from 'ngx-toastr';
-import { PagedResult } from '../../core/services/api.service';
 
 import { ConfirmModalComponent } from '../../shared/confirm-modal/confirm-modal.component';
 

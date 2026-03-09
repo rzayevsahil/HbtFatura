@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { FirmService, FirmDto } from '../../services/firm.service';
+import { FirmService } from '../../services/firm.service';
+import { FirmDto } from '../../core/models';
 
 @Component({
   selector: 'app-firm-list',
@@ -13,7 +14,7 @@ import { FirmService, FirmDto } from '../../services/firm.service';
 export class FirmListComponent implements OnInit {
   items: FirmDto[] = [];
 
-  constructor(private api: FirmService) {}
+  constructor(private api: FirmService) { }
 
   ngOnInit(): void {
     this.load();

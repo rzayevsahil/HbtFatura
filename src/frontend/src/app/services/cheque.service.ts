@@ -1,51 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ApiService, PagedResult } from '../core/services/api.service';
-
-export interface ChequeOrPromissoryDto {
-  id: string;
-  firmId: string;
-  type: number;
-  customerId: string;
-  customerTitle: string;
-  amount: number;
-  issueDate: string;
-  dueDate: string;
-  status: number;
-  referenceType?: string;
-  referenceId?: string;
-  bankAccountId?: string;
-  bankAccountName?: string;
-  createdAt: string;
-}
-
-export interface CreateChequeOrPromissoryRequest {
-  type: number;
-  customerId: string;
-  amount: number;
-  issueDate: string;
-  dueDate: string;
-  referenceType?: string;
-  referenceId?: string;
-  bankAccountId?: string;
-  firmId?: string;
-}
-
-export interface UpdateChequeOrPromissoryRequest {
-  type: number;
-  customerId: string;
-  amount: number;
-  issueDate: string;
-  dueDate: string;
-  referenceType?: string;
-  referenceId?: string;
-  bankAccountId?: string;
-}
+import { ApiService } from '../core/services/api.service';
+import {
+  PagedResult, ChequeOrPromissoryDto, CreateChequeOrPromissoryRequest,
+  UpdateChequeOrPromissoryRequest
+} from '../core/models';
 
 @Injectable({ providedIn: 'root' })
 export class ChequeService {
   private base = '/api/cheque-or-promissories';
-  constructor(private api: ApiService) {}
+  constructor(private api: ApiService) { }
 
   getPaged(
     page: number,

@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CashRegisterService } from '../../services/cash-register.service';
-import { FirmService, FirmDto } from '../../services/firm.service';
+import { FirmService } from '../../services/firm.service';
+import { FirmDto, CashRegisterDto } from '../../core/models';
 import { AuthService } from '../../core/services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 
@@ -34,7 +35,7 @@ export class CashRegisterFormComponent implements OnInit {
     private firmApi: FirmService,
     public auth: AuthService,
     private toastr: ToastrService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.id = this.route.snapshot.paramMap.get('id');

@@ -2,33 +2,12 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService } from '../core/services/api.service';
 
-export interface MainAccountCodeDto {
-  id: string;
-  firmId?: string | null;
-  code: string;
-  name: string;
-  sortOrder: number;
-  createdAt: string;
-  isSystem?: boolean;
-}
-
-export interface CreateMainAccountCodeRequest {
-  code: string;
-  name: string;
-  sortOrder?: number;
-  firmId?: string;
-}
-
-export interface UpdateMainAccountCodeRequest {
-  code: string;
-  name: string;
-  sortOrder?: number;
-}
+import { MainAccountCodeDto, CreateMainAccountCodeRequest, UpdateMainAccountCodeRequest } from '../core/models';
 
 @Injectable({ providedIn: 'root' })
 export class MainAccountCodeService {
   private base = '/api/mainaccountcodes';
-  constructor(private api: ApiService) {}
+  constructor(private api: ApiService) { }
 
   getByFirm(firmId?: string): Observable<MainAccountCodeDto[]> {
     return this.api.get<MainAccountCodeDto[]>(this.base, firmId ? { firmId } : undefined);

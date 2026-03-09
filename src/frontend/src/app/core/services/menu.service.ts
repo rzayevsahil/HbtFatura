@@ -3,18 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { AuthService } from './auth.service';
 import { Observable, of, tap } from 'rxjs';
 
-export interface MenuItem {
-    id: string;
-    parentId?: string;
-    label: string;
-    icon?: string;
-    routerLink?: string;
-    sortOrder: number;
-    requiredPermissionCode?: string;
-    isActive: boolean;
-    isSystemMenu: boolean;
-    children: MenuItem[];
-}
+import { MenuItem } from '../models';
 
 @Injectable({ providedIn: 'root' })
 export class MenuService {

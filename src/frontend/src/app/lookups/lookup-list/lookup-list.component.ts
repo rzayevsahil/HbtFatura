@@ -1,7 +1,8 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { LookupService, LookupDto, LookupGroupDto } from '../../core/services/lookup.service';
+import { LookupService } from '../../core/services/lookup.service';
+import { LookupDto, LookupGroupDto } from '../../core/models';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({

@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { LogService, LogEntry } from '../../services/log.service';
+import { LogService } from '../../services/log.service';
+import { LogEntry, LogLevel } from '../../core/models';
 
 @Component({
     selector: 'app-log-list',
@@ -18,7 +19,7 @@ export class LogListComponent implements OnInit {
     loading = false;
 
     // Filters
-    level = '';
+    level: LogLevel | '' = '';
     module = '';
     dateFrom = '';
     dateTo = '';

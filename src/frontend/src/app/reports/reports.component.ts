@@ -1,10 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ReportService, CariExtractReportDto, CashSummaryReportDto, BankSummaryReportDto, StockLevelsReportDto, InvoiceReportDto } from '../services/report.service';
-import { CustomerService, CustomerDto } from '../services/customer.service';
-import { CashRegisterService, CashRegisterDto } from '../services/cash-register.service';
-import { BankAccountService, BankAccountDto } from '../services/bank-account.service';
+import { ReportService } from '../services/report.service';
+import { CustomerService } from '../services/customer.service';
+import { CashRegisterService } from '../services/cash-register.service';
+import { BankAccountService } from '../services/bank-account.service';
+import {
+  CariExtractReportDto, CashSummaryReportDto, BankSummaryReportDto,
+  StockLevelsReportDto, InvoiceReportDto, CustomerDto,
+  CashRegisterDto, BankAccountDto
+} from '../core/models';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -52,7 +57,7 @@ export class ReportsComponent implements OnInit {
     private cashApi: CashRegisterService,
     private bankApi: BankAccountService,
     private toastr: ToastrService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.customerApi.getDropdown().subscribe(c => this.customers = c);

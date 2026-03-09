@@ -1,19 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ApiService, PagedResult } from '../core/services/api.service';
-
-export interface LogEntry {
-    id: string;
-    timestamp: string;
-    level: string;
-    message: string;
-    action?: string;
-    module?: string;
-    userId?: string;
-    userFullName?: string;
-    ipAddress?: string;
-    details?: string;
-}
+import { ApiService } from '../core/services/api.service';
+import { PagedResult, LogEntry } from '../core/models';
 
 @Injectable({ providedIn: 'root' })
 export class LogService {

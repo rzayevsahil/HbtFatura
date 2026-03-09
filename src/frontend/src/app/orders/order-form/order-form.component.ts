@@ -2,10 +2,11 @@ import { Component, OnInit, HostListener, ViewChild, ElementRef } from '@angular
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators, FormsModule } from '@angular/forms';
-import { OrderService, CreateOrderRequest, UpdateOrderRequest, OrderStatus } from '../../services/order.service';
-import { CustomerService, CustomerDto } from '../../services/customer.service';
-import { ProductService, ProductDto } from '../../services/product.service';
-import { ReportService, StockLevelsReportDto } from '../../services/report.service';
+import { OrderService } from '../../services/order.service';
+import { CustomerService } from '../../services/customer.service';
+import { ProductService } from '../../services/product.service';
+import { ReportService } from '../../services/report.service';
+import { CustomerDto, ProductDto, StockLevelsReportDto, CreateOrderRequest, UpdateOrderRequest, OrderStatus, OrderItemInputDto } from '../../core/models';
 import { ToastrService } from 'ngx-toastr';
 import { LookupService } from '../../core/services/lookup.service';
 

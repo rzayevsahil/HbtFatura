@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { FirmService, FirmDto, FirmUserDto } from '../../services/firm.service';
-import { CompanyService, CompanySettingsDto } from '../../services/company.service';
+import { FirmService } from '../../services/firm.service';
+import { CompanyService } from '../../services/company.service';
+import { FirmDto, FirmUserDto, CompanySettingsDto } from '../../core/models';
 import { environment } from '../../../environments/environment';
 import { AuthService } from '../../core/services/auth.service';
 

@@ -2,12 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { ProductService, ProductDto, StockMovementDto } from '../../services/product.service';
-import { PagedResult } from '../../core/services/api.service';
+import { ProductService } from '../../services/product.service';
+import { ProductDto, StockMovementDto, PagedResult, StockMovementType } from '../../core/models';
 import { ToastrService } from 'ngx-toastr';
-
-const STOCK_GIRIS = 1;
-const STOCK_CIKIS = 2;
 
 @Component({
   selector: 'app-product-detail',
@@ -25,7 +22,12 @@ export class ProductDetailComponent implements OnInit {
   dateFrom = '';
   dateTo = '';
   showAddModal = false;
-  newMovement = { date: '', type: STOCK_GIRIS, quantity: 0, description: '' };
+  newMovement: { date: string, type: StockMovementType, quantity: number, description: string } = {
+    date: '',
+    type: 1,
+    quantity: 0,
+    description: ''
+  };
 
   constructor(
     private route: ActivatedRoute,
@@ -61,7 +63,7 @@ export class ProductDetailComponent implements OnInit {
     const pad = (n: number) => n.toString().padStart(2, '0');
     const d = new Date();
     const dateVal = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
-    this.newMovement = { date: dateVal, type: STOCK_GIRIS, quantity: 0, description: 'Manuel giriş/çıkış' };
+    this.newMovement = { date: dateVal, type: 1, quantity: 0, description: 'Manuel giriş/çıkış' };
     this.showAddModal = true;
   }
 
@@ -73,7 +75,7 @@ export class ProductDetailComponent implements OnInit {
     const id = this.route.snapshot.paramMap.get('id');
     if (!id || this.newMovement.quantity <= 0) return;
 
-    if (this.newMovement.type === STOCK_CIKIS && this.newMovement.quantity > (this.product?.stockQuantity ?? 0)) {
+    if (this.newMovement.type === 2 && this.newMovement.quantity > (this.product?.stockQuantity ?? 0)) {
       this.toastr.warning('Yetersiz stok! Mevcut stoktan fazla çıkış yapamazsınız.');
       return;
     }
@@ -95,6 +97,6 @@ export class ProductDetailComponent implements OnInit {
   }
 
   typeLabel(type: number): string {
-    return type === STOCK_GIRIS ? 'Giriş' : type === STOCK_CIKIS ? 'Çıkış' : 'Transfer';
+    return type === 1 ? 'Giriş' : type === 2 ? 'Çıkış' : 'Transfer';
   }
 }

@@ -3,23 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, tap, catchError, of } from 'rxjs';
 
-export interface User {
-  id: string;
-  email: string;
-  fullName: string;
-  role: string;
-  roleDisplayName?: string;
-  firmId: string | null;
-  firmName: string | null;
-  permissions: string[];
-}
-
-export interface AuthResponse {
-  accessToken: string;
-  refreshToken: string;
-  expiresAt: string;
-  user: User;
-}
+import { User, AuthResponse } from '../models';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {

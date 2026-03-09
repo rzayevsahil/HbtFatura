@@ -1,6 +1,7 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PermissionDto, PermissionService, RoleDto } from '../../core/services/permission.service';
+import { PermissionService } from '../../core/services/permission.service';
+import { PermissionDto, RoleDto } from '../../core/models';
 import { ToastrService } from 'ngx-toastr';
 import { FormsModule } from '@angular/forms';
 

@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { BankAccountService, BankAccountDto, BankTransactionDto } from '../../services/bank-account.service';
-import { PagedResult } from '../../core/services/api.service';
+import { BankAccountService } from '../../services/bank-account.service';
+import { BankAccountDto, BankTransactionDto, PagedResult } from '../../core/models';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({

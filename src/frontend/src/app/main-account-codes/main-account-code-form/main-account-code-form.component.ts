@@ -2,8 +2,9 @@ import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MainAccountCodeService, MainAccountCodeDto } from '../../services/main-account-code.service';
-import { FirmService, FirmDto } from '../../services/firm.service';
+import { MainAccountCodeService } from '../../services/main-account-code.service';
+import { FirmService } from '../../services/firm.service';
+import { MainAccountCodeDto, FirmDto, CreateMainAccountCodeRequest, UpdateMainAccountCodeRequest } from '../../core/models';
 import { AuthService } from '../../core/services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 
@@ -41,7 +42,7 @@ export class MainAccountCodeFormComponent implements OnInit {
     private firmApi: FirmService,
     public auth: AuthService,
     private toastr: ToastrService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.id = this.isModal ? this.editId : this.route.snapshot.paramMap.get('id');

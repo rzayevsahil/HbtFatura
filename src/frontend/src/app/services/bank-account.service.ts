@@ -1,55 +1,16 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ApiService, PagedResult } from '../core/services/api.service';
-
-export interface BankAccountDto {
-  id: string;
-  firmId: string;
-  name: string;
-  iban?: string;
-  bankName?: string;
-  currency: string;
-  isActive: boolean;
-  createdAt: string;
-  balance: number;
-}
-
-export interface BankTransactionDto {
-  id: string;
-  date: string;
-  type: number;
-  amount: number;
-  description: string;
-  referenceType: string;
-  createdAt: string;
-}
-
-export interface CreateBankAccountRequest {
-  name: string;
-  iban?: string;
-  bankName?: string;
-  currency?: string;
-  firmId?: string;
-}
-
-export interface UpdateBankAccountRequest {
-  name: string;
-  iban?: string;
-  bankName?: string;
-  isActive: boolean;
-}
-
-export interface CreateBankTransactionRequest {
-  date: string;
-  type: number;
-  amount: number;
-  description: string;
-}
+import { ApiService } from '../core/services/api.service';
+import {
+  PagedResult, BankAccountDto, BankTransactionDto,
+  CreateBankAccountRequest, UpdateBankAccountRequest,
+  CreateBankTransactionRequest
+} from '../core/models';
 
 @Injectable({ providedIn: 'root' })
 export class BankAccountService {
   private base = '/api/bankaccounts';
-  constructor(private api: ApiService) {}
+  constructor(private api: ApiService) { }
 
   getAll(firmId?: string): Observable<BankAccountDto[]> {
     return this.api.get<BankAccountDto[]>(this.base, firmId ? { firmId } : undefined);

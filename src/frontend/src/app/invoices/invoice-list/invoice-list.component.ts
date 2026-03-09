@@ -2,11 +2,12 @@ import { Component, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { InvoiceService, InvoiceListDto, InvoiceStatus } from '../../services/invoice.service';
+import { InvoiceService } from '../../services/invoice.service';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../../core/services/auth.service';
 import { LookupService } from '../../core/services/lookup.service';
-import { EmployeeService, EmployeeListDto } from '../../services/employee.service';
+import { EmployeeService } from '../../services/employee.service';
+import { InvoiceListDto, InvoiceStatus, EmployeeListDto } from '../../core/models';
 
 @Component({
   selector: 'app-invoice-list',

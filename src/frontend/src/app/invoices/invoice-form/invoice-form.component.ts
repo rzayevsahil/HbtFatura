@@ -4,10 +4,11 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { taxNumberValidator } from '../../core/validators/tax-number.validator';
-import { InvoiceService, CreateInvoiceRequest, InvoiceItemInputDto } from '../../services/invoice.service';
-import { CustomerService, CustomerDto } from '../../services/customer.service';
-import { ProductService, ProductDto } from '../../services/product.service';
-import { DeliveryNoteService, DeliveryNoteListDto } from '../../services/delivery-note.service';
+import { InvoiceService } from '../../services/invoice.service';
+import { CustomerService } from '../../services/customer.service';
+import { ProductService } from '../../services/product.service';
+import { DeliveryNoteService } from '../../services/delivery-note.service';
+import { CreateInvoiceRequest, InvoiceItemInputDto, CustomerDto, ProductDto, DeliveryNoteListDto } from '../../core/models';
 import { ToastrService } from 'ngx-toastr';
 import { LookupService } from '../../core/services/lookup.service';
 

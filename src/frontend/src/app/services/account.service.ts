@@ -2,21 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService } from '../core/services/api.service';
 
-export interface UserProfileDto {
-    id: string;
-    email: string;
-    fullName: string;
-    phoneNumber?: string;
-    role: string;
-    roleDisplayName?: string;
-}
-
-export interface UpdateProfileRequest {
-    fullName: string;
-    phoneNumber?: string;
-    currentPassword?: string;
-    newPassword?: string;
-}
+import { UserProfileDto, UpdateProfileRequest } from '../core/models';
 
 @Injectable({ providedIn: 'root' })
 export class AccountService {

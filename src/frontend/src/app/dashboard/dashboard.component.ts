@@ -2,7 +2,8 @@ import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../core/services/auth.service';
-import { DashboardService, DashboardData } from '../services/dashboard.service';
+import { DashboardService } from '../services/dashboard.service';
+import { DashboardData } from '../core/models';
 
 @Component({
     selector: 'app-dashboard',

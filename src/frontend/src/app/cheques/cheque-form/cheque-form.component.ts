@@ -3,8 +3,9 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ChequeService } from '../../services/cheque.service';
-import { CustomerService, CustomerDto } from '../../services/customer.service';
-import { BankAccountService, BankAccountDto } from '../../services/bank-account.service';
+import { CustomerService } from '../../services/customer.service';
+import { BankAccountService } from '../../services/bank-account.service';
+import { ChequeOrPromissoryDto, CreateChequeOrPromissoryRequest, UpdateChequeOrPromissoryRequest, CustomerDto, BankAccountDto } from '../../core/models';
 import { AuthService } from '../../core/services/auth.service';
 import { FirmService } from '../../services/firm.service';
 import { ToastrService } from 'ngx-toastr';
@@ -43,7 +44,7 @@ export class ChequeFormComponent implements OnInit {
     private bankApi: BankAccountService,
     private firmApi: FirmService,
     private toastr: ToastrService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.customerApi.getDropdown().subscribe(c => this.customers = c);

@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { CustomerService, CustomerDto, AccountTransactionDto } from '../../services/customer.service';
-import { PagedResult } from '../../core/services/api.service';
+import { CustomerService } from '../../services/customer.service';
+import { CustomerDto, AccountTransactionDto, PagedResult } from '../../core/models';
 
 @Component({
   selector: 'app-customer-detail',

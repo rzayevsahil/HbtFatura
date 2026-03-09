@@ -2,18 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService } from '../core/services/api.service';
 
-export interface EmployeeListDto {
-  id: string;
-  email: string;
-  fullName: string;
-  createdAt: string;
-}
-
-export interface CreateEmployeeRequest {
-  email: string;
-  password: string;
-  fullName: string;
-}
+import { EmployeeListDto, CreateEmployeeRequest } from '../core/models';
 
 @Injectable({ providedIn: 'root' })
 export class EmployeeService {

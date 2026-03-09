@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { EmployeeService, EmployeeListDto } from '../../services/employee.service';
+import { EmployeeService } from '../../services/employee.service';
+import { EmployeeListDto } from '../../core/models';
 
 @Component({
   selector: 'app-employee-list',

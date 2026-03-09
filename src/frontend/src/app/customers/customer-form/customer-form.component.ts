@@ -4,8 +4,9 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { taxNumberValidator } from '../../core/validators/tax-number.validator';
 import { CustomerService } from '../../services/customer.service';
-import { MainAccountCodeService, MainAccountCodeDto } from '../../services/main-account-code.service';
-import { TaxOfficeService, CityResponse, DistrictResponse, TaxOfficeDto } from '../../services/tax-office.service';
+import { MainAccountCodeService } from '../../services/main-account-code.service';
+import { TaxOfficeService } from '../../services/tax-office.service';
+import { MainAccountCodeDto, CityResponse, DistrictResponse, TaxOfficeDto, CustomerDto } from '../../core/models';
 import { ToastrService } from 'ngx-toastr';
 import { PhoneFormatter } from '../../core/utils/phone-formatter';
 

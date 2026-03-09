@@ -1,7 +1,8 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { OrderService, OrderDto, OrderStatus } from '../../services/order.service';
+import { OrderService } from '../../services/order.service';
+import { OrderDto, OrderStatus } from '../../core/models';
 import { DeliveryNoteService } from '../../services/delivery-note.service';
 import { ToastrService } from 'ngx-toastr';
 import { LookupService } from '../../core/services/lookup.service';

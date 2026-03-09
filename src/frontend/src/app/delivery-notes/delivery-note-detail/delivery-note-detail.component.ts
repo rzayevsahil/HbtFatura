@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { DeliveryNoteService, DeliveryNoteDto, DeliveryNoteStatus } from '../../services/delivery-note.service';
+import { DeliveryNoteService } from '../../services/delivery-note.service';
+import { DeliveryNoteDto, DeliveryNoteStatus } from '../../core/models';
 import { InvoiceService } from '../../services/invoice.service';
 import { ToastrService } from 'ngx-toastr';
 

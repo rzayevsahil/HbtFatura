@@ -2,10 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { ChequeService, ChequeOrPromissoryDto } from '../../services/cheque.service';
+import { ChequeService } from '../../services/cheque.service';
 import { CustomerService } from '../../services/customer.service';
 import { ToastrService } from 'ngx-toastr';
-import { PagedResult } from '../../core/services/api.service';
+import { ChequeOrPromissoryDto, PagedResult } from '../../core/models';
 
 @Component({
   selector: 'app-cheque-list',
@@ -27,7 +27,7 @@ export class ChequeListComponent implements OnInit {
   constructor(
     private api: ChequeService,
     private toastr: ToastrService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.load();

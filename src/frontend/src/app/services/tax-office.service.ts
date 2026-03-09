@@ -2,22 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService } from '../core/services/api.service';
 
-export interface CityResponse {
-    id: string;
-    name: string;
-}
-
-export interface DistrictResponse {
-    id: string;
-    name: string;
-}
-
-export interface TaxOfficeDto {
-    id: string;
-    city: string;
-    district: string;
-    name: string;
-}
+import { CityResponse, DistrictResponse, TaxOfficeDto } from '../core/models';
 
 @Injectable({ providedIn: 'root' })
 export class TaxOfficeService {

@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CustomerService, CustomerDto } from '../../services/customer.service';
-import { CashRegisterService, CashRegisterDto } from '../../services/cash-register.service';
-import { BankAccountService, BankAccountDto } from '../../services/bank-account.service';
+import { CustomerService } from '../../services/customer.service';
+import { CashRegisterService } from '../../services/cash-register.service';
+import { BankAccountService } from '../../services/bank-account.service';
 import { AccountPaymentService } from '../../services/account-payment.service';
-import { InvoiceService, InvoiceListDto } from '../../services/invoice.service';
+import { InvoiceService } from '../../services/invoice.service';
+import { CustomerDto, CashRegisterDto, BankAccountDto, InvoiceListDto, AccountPaymentMethod, AccountPaymentType } from '../../core/models';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -43,7 +44,7 @@ export class AccountPaymentFormComponent implements OnInit {
     private paymentApi: AccountPaymentService,
     private invoiceApi: InvoiceService,
     private toastr: ToastrService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.customerApi.getDropdown().subscribe(c => this.customers = c);
@@ -96,11 +97,11 @@ export class AccountPaymentFormComponent implements OnInit {
       customerId: v.customerId,
       amount: v.amount,
       date: v.date,
-      paymentMethod: v.paymentMethod,
+      paymentMethod: v.paymentMethod as AccountPaymentMethod,
       cashRegisterId: v.paymentMethod === 'Kasa' ? v.cashRegisterId || undefined : undefined,
       bankAccountId: v.paymentMethod === 'Banka' ? v.bankAccountId || undefined : undefined,
       description: v.description || (v.type === 'Tahsilat' ? 'Tahsilat' : 'Ödeme'),
-      type: v.type,
+      type: v.type as AccountPaymentType,
       invoiceId: v.invoiceId || undefined
     }).subscribe({
       next: () => {

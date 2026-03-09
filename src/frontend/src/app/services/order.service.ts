@@ -1,71 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ApiService, PagedResult } from '../core/services/api.service';
-
-export type OrderStatus = 0 | 1 | 2 | 3 | 4; // Bekliyor, TamamiTeslim, Iptal, Onaylandi, KismiTeslim
-export type InvoiceType = 0 | 1; // 0: Alınan, 1: Verilen
-
-export interface OrderItemDto {
-  id: string;
-  productId?: string;
-  productCode?: string;
-  description: string;
-  quantity: number;
-  unitPrice: number;
-  vatRate: number;
-  sortOrder: number;
-}
-
-export interface OrderDto {
-  id: string;
-  orderNumber: string;
-  customerId?: string;
-  customerTitle?: string;
-  orderDate: string;
-  status: OrderStatus | string;
-  orderType: InvoiceType;
-  createdAt: string;
-  deliveryNoteId?: string;
-  deliveryNoteNumber?: string;
-  items: OrderItemDto[];
-}
-
-/** Backend bazen enum'ı sayı bazen string (örn. "Bekliyor") gönderebilir. */
-export interface OrderListDto {
-  id: string;
-  orderNumber: string;
-  orderDate: string;
-  status: OrderStatus | string;
-  orderType: InvoiceType;
-  customerTitle?: string;
-  totalAmount?: number;
-  createdByUserId: string;
-}
-
-export interface OrderItemInputDto {
-  productId?: string;
-  description: string;
-  quantity: number;
-  unitPrice: number;
-  vatRate: number;
-  sortOrder: number;
-}
-
-export interface CreateOrderRequest {
-  customerId?: string;
-  orderDate: string;
-  orderType?: InvoiceType;
-  items: OrderItemInputDto[];
-}
-
-export interface UpdateOrderRequest {
-  customerId?: string;
-  orderDate: string;
-  /** Sadece Bekliyor (0) veya Onaylandı (3) atanabilir. */
-  status?: OrderStatus;
-  items: OrderItemInputDto[];
-}
-
+import { ApiService } from '../core/services/api.service';
+import {
+  PagedResult, OrderStatus, InvoiceType, OrderItemDto,
+  OrderDto, OrderListDto, OrderItemInputDto,
+  CreateOrderRequest, UpdateOrderRequest
+} from '../core/models';
 @Injectable({ providedIn: 'root' })
 export class OrderService {
   private base = '/api/orders';
