@@ -26,15 +26,15 @@ public class ReportService : IReportService
     {
         var q = _db.Customers.IgnoreQueryFilters().Where(x => !x.IsDeleted);
         if (_currentUser.IsSuperAdmin) return q;
-        if (_currentUser.IsFirmAdmin && _currentUser.FirmId.HasValue)
-            return q.Where(x => x.User != null && x.User.FirmId == _currentUser.FirmId);
+        if (_currentUser.FirmId.HasValue)
+            return q.Where(x => x.User != null && x.User.FirmId == _currentUser.FirmId.Value);
         return q.Where(x => x.UserId == _currentUser.UserId);
     }
 
     private IQueryable<CashRegister> CashScope()
     {
         if (_currentUser.IsSuperAdmin) return _db.CashRegisters.AsQueryable();
-        if (_currentUser.IsFirmAdmin && _currentUser.FirmId.HasValue)
+        if (_currentUser.FirmId.HasValue)
             return _db.CashRegisters.Where(x => x.FirmId == _currentUser.FirmId.Value);
         return _db.CashRegisters.Where(x => false);
     }
@@ -42,7 +42,7 @@ public class ReportService : IReportService
     private IQueryable<BankAccount> BankScope()
     {
         if (_currentUser.IsSuperAdmin) return _db.BankAccounts.AsQueryable();
-        if (_currentUser.IsFirmAdmin && _currentUser.FirmId.HasValue)
+        if (_currentUser.FirmId.HasValue)
             return _db.BankAccounts.Where(x => x.FirmId == _currentUser.FirmId.Value);
         return _db.BankAccounts.Where(x => false);
     }
@@ -55,7 +55,7 @@ public class ReportService : IReportService
             if (firmId.HasValue) return q.Where(x => x.FirmId == firmId.Value);
             return q;
         }
-        if (_currentUser.IsFirmAdmin && _currentUser.FirmId.HasValue)
+        if (_currentUser.FirmId.HasValue)
             return q.Where(x => x.FirmId == _currentUser.FirmId.Value);
         return q.Where(x => false);
     }
@@ -63,7 +63,7 @@ public class ReportService : IReportService
     private IQueryable<Invoice> InvoiceScope()
     {
         if (_currentUser.IsSuperAdmin) return _db.Invoices.AsQueryable();
-        if (_currentUser.IsFirmAdmin && _currentUser.FirmId.HasValue)
+        if (_currentUser.FirmId.HasValue)
             return _db.Invoices.Where(i => i.User != null && i.User.FirmId == _currentUser.FirmId.Value);
         return _db.Invoices.Where(i => i.UserId == _currentUser.UserId);
     }

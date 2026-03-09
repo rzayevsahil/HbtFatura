@@ -28,7 +28,7 @@ public class CashRegisterService : ICashRegisterService
                 return _db.CashRegisters.Where(x => x.FirmId == firmIdFilter.Value);
             return _db.CashRegisters.AsQueryable();
         }
-        if (_currentUser.IsFirmAdmin && _currentUser.FirmId.HasValue)
+        if (_currentUser.FirmId.HasValue)
             return _db.CashRegisters.Where(x => x.FirmId == _currentUser.FirmId.Value);
         return _db.CashRegisters.Where(x => false);
     }
@@ -85,7 +85,7 @@ public class CashRegisterService : ICashRegisterService
         Guid firmId;
         if (_currentUser.IsSuperAdmin && request.FirmId.HasValue)
             firmId = request.FirmId.Value;
-        else if (_currentUser.IsFirmAdmin && _currentUser.FirmId.HasValue)
+        else if (_currentUser.FirmId.HasValue)
             firmId = _currentUser.FirmId.Value;
         else
             throw new UnauthorizedAccessException("Firm context required.");

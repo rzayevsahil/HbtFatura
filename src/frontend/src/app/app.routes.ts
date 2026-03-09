@@ -46,16 +46,36 @@ export const routes: Routes = [
     loadComponent: () => import('./orders/order-form/order-form.component').then(m => m.OrderFormComponent),
     canActivate: [authGuard, PermissionGuard], data: { permission: 'Orders.Create' }
   },
+  {
+    path: 'orders/:id',
+    loadComponent: () => import('./orders/order-detail/order-detail.component').then(m => m.OrderDetailComponent),
+    canActivate: [authGuard, PermissionGuard], data: { permission: 'Orders.View' }
+  },
+  {
+    path: 'orders/:id/edit',
+    loadComponent: () => import('./orders/order-form/order-form.component').then(m => m.OrderFormComponent),
+    canActivate: [authGuard, PermissionGuard], data: { permission: 'Orders.Edit' }
+  },
 
   {
     path: 'delivery-notes',
     loadComponent: () => import('./delivery-notes/delivery-note-list/delivery-note-list.component').then(m => m.DeliveryNoteListComponent),
-    canActivate: [authGuard, PermissionGuard], data: { permission: 'Invoices.View' }
+    canActivate: [authGuard, PermissionGuard], data: { permission: 'DeliveryNotes.View' }
   },
   {
     path: 'delivery-notes/new',
     loadComponent: () => import('./delivery-notes/delivery-note-form/delivery-note-form.component').then(m => m.DeliveryNoteFormComponent),
-    canActivate: [authGuard, PermissionGuard], data: { permission: 'Invoices.Create' }
+    canActivate: [authGuard, PermissionGuard], data: { permission: 'DeliveryNotes.Create' }
+  },
+  {
+    path: 'delivery-notes/:id',
+    loadComponent: () => import('./delivery-notes/delivery-note-detail/delivery-note-detail.component').then(m => m.DeliveryNoteDetailComponent),
+    canActivate: [authGuard, PermissionGuard], data: { permission: 'DeliveryNotes.View' }
+  },
+  {
+    path: 'delivery-notes/:id/edit',
+    loadComponent: () => import('./delivery-notes/delivery-note-form/delivery-note-form.component').then(m => m.DeliveryNoteFormComponent),
+    canActivate: [authGuard, PermissionGuard], data: { permission: 'DeliveryNotes.Edit' }
   },
 
   {
@@ -72,6 +92,21 @@ export const routes: Routes = [
     path: 'customers/:id/edit',
     loadComponent: () => import('./customers/customer-form/customer-form.component').then(m => m.CustomerFormComponent),
     canActivate: [authGuard, PermissionGuard], data: { permission: 'Customers.Edit' }
+  },
+  {
+    path: 'main-account-codes',
+    loadComponent: () => import('./main-account-codes/main-account-code-list/main-account-code-list.component').then(m => m.MainAccountCodeListComponent),
+    canActivate: [authGuard, PermissionGuard], data: { permission: 'MainAccountCodes.View' }
+  },
+  {
+    path: 'main-account-codes/new',
+    loadComponent: () => import('./main-account-codes/main-account-code-form/main-account-code-form.component').then(m => m.MainAccountCodeFormComponent),
+    canActivate: [authGuard, PermissionGuard], data: { permission: 'MainAccountCodes.Edit' }
+  },
+  {
+    path: 'main-account-codes/:id/edit',
+    loadComponent: () => import('./main-account-codes/main-account-code-form/main-account-code-form.component').then(m => m.MainAccountCodeFormComponent),
+    canActivate: [authGuard, PermissionGuard], data: { permission: 'MainAccountCodes.Edit' }
   },
   {
     path: 'payments',

@@ -8,7 +8,7 @@ namespace HbtFatura.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize(Roles = Roles.FirmAdmin + "," + Roles.SuperAdmin)]
+[Authorize]
 public class EmployeesController : ControllerBase
 {
     private readonly IEmployeeService _service;
@@ -26,8 +26,10 @@ public class EmployeesController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = Roles.FirmAdmin + "," + Roles.SuperAdmin)]
     public async Task<ActionResult<EmployeeListDto>> Create([FromBody] CreateEmployeeRequest request, CancellationToken ct)
     {
+        // ... handled in service but double check with attribute
         try
         {
             var dto = await _service.CreateAsync(request, ct);
@@ -48,6 +50,7 @@ public class EmployeesController : ControllerBase
     }
 
     [HttpPut("{id}")]
+    [Authorize(Roles = Roles.FirmAdmin + "," + Roles.SuperAdmin)]
     public async Task<ActionResult<EmployeeListDto>> Update(Guid id, [FromBody] UpdateEmployeeRequest request, CancellationToken ct)
     {
         try
@@ -59,6 +62,7 @@ public class EmployeesController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [Authorize(Roles = Roles.FirmAdmin + "," + Roles.SuperAdmin)]
     public async Task<IActionResult> Delete(Guid id, CancellationToken ct)
     {
         try

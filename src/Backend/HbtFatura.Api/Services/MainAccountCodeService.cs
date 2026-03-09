@@ -25,7 +25,7 @@ public class MainAccountCodeService : IMainAccountCodeService
                 return _db.MainAccountCodes.Where(x => x.FirmId == firmIdFilter.Value);
             return _db.MainAccountCodes.Where(x => x.FirmId != null);
         }
-        if (_currentUser.IsFirmAdmin && _currentUser.FirmId.HasValue)
+        if (_currentUser.FirmId.HasValue)
             return _db.MainAccountCodes.Where(x => x.FirmId == _currentUser.FirmId.Value);
         return _db.MainAccountCodes.Where(x => false);
     }

@@ -29,8 +29,9 @@ public class DeliveryNoteService : IDeliveryNoteService
                 return _db.DeliveryNotes.Where(d => d.User != null && d.User.FirmId == firmIdFilter.Value);
             return _db.DeliveryNotes.AsQueryable();
         }
-        if (_currentUser.IsFirmAdmin)
-            return _db.DeliveryNotes.Where(d => d.User != null && d.User.FirmId == _currentUser.FirmId);
+        if (_currentUser.FirmId.HasValue)
+            return _db.DeliveryNotes.Where(d => d.User != null && d.User.FirmId == _currentUser.FirmId.Value);
+
         return _db.DeliveryNotes.Where(d => d.UserId == _currentUser.UserId);
     }
 
@@ -94,7 +95,7 @@ public class DeliveryNoteService : IDeliveryNoteService
         Guid? orderId = request.OrderId;
         string? orderNumber = null;
         var customer = await _db.Customers
-            .Where(c => c.Id == request.CustomerId && (c.UserId == userId || (_currentUser.IsFirmAdmin && c.User != null && c.User.FirmId == _currentUser.FirmId)))
+            .Where(c => c.Id == request.CustomerId && (c.UserId == userId || (_currentUser.FirmId.HasValue && c.User != null && c.User.FirmId == _currentUser.FirmId.Value)))
             .Select(c => new { c.Title })
             .FirstOrDefaultAsync(ct);
         customerTitle = customer?.Title;
@@ -158,7 +159,7 @@ public class DeliveryNoteService : IDeliveryNoteService
             .Include(x => x.Items.OrderBy(i => i.SortOrder))
             .FirstOrDefaultAsync(x => x.Id == orderId, ct);
         if (order == null) return null;
-        if (!_currentUser.IsSuperAdmin && !(_currentUser.IsFirmAdmin && order.User?.FirmId == _currentUser.FirmId) && order.UserId != _currentUser.UserId)
+        if (!_currentUser.IsSuperAdmin && !(_currentUser.FirmId.HasValue && order.User?.FirmId == _currentUser.FirmId.Value) && order.UserId != _currentUser.UserId)
             return null;
         if (order.Status == OrderStatus.TamamiTeslim || order.Status == OrderStatus.KismiTeslim)
             throw new InvalidOperationException("Bu sipariş zaten irsaliyeye dönüştürülmüş veya kısmen teslim edilmiş.");

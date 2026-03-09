@@ -28,8 +28,9 @@ public class CustomerService : ICustomerService
                 return baseQuery.Where(x => x.User != null && x.User.FirmId == firmIdFilter.Value);
             return baseQuery;
         }
-        if (_currentUser.IsFirmAdmin)
-            return baseQuery.Where(x => x.User != null && x.User.FirmId == _currentUser.FirmId);
+        if (_currentUser.FirmId.HasValue)
+            return baseQuery.Where(x => x.User != null && x.User.FirmId == _currentUser.FirmId.Value);
+
         return baseQuery.Where(x => x.UserId == _currentUser.UserId);
     }
 

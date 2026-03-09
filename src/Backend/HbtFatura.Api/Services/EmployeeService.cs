@@ -22,17 +22,13 @@ public class EmployeeService : IEmployeeService
 
     private IQueryable<ApplicationUser> ScopeQuery(Guid? firmIdFilter = null)
     {
-        var roleIdQuery = _db.Roles.Where(r => r.Name == Roles.Employee).Select(r => r.Id);
-        var baseQuery = _db.Users
-            .Join(_db.UserRoles, u => u.Id, ur => ur.UserId, (u, ur) => new { u, ur })
-            .Where(x => roleIdQuery.Contains(x.ur.RoleId))
-            .Select(x => x.u);
+        var baseQuery = _db.Users.AsQueryable();
 
         if (_currentUser.IsSuperAdmin)
         {
             if (firmIdFilter.HasValue)
                 return baseQuery.Where(u => u.FirmId == firmIdFilter.Value);
-            return baseQuery;
+            return baseQuery.Where(u => u.FirmId != null); // SuperAdmin see all firm users
         }
 
         return baseQuery.Where(u => u.FirmId == _currentUser.FirmId);

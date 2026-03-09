@@ -31,8 +31,9 @@ public class InvoiceService : IInvoiceService
                 return _db.Invoices.Where(i => i.User != null && i.User.FirmId == firmIdFilter.Value);
             return _db.Invoices.AsQueryable();
         }
-        if (_currentUser.IsFirmAdmin)
-            return _db.Invoices.Where(i => i.User != null && i.User.FirmId == _currentUser.FirmId);
+        if (_currentUser.FirmId.HasValue)
+            return _db.Invoices.Where(i => i.User != null && i.User.FirmId == _currentUser.FirmId.Value);
+
         return _db.Invoices.Where(i => i.UserId == _currentUser.UserId);
     }
 
@@ -118,7 +119,7 @@ public class InvoiceService : IInvoiceService
                 .Include(c => c.City)
                 .Include(c => c.District)
                 .Include(c => c.TaxOffice)
-                .FirstOrDefaultAsync(c => c.Id == request.CustomerId && (c.UserId == userId || (_currentUser.IsFirmAdmin && c.User != null && c.User.FirmId == _currentUser.FirmId)), ct);
+                .FirstOrDefaultAsync(c => c.Id == request.CustomerId && (c.UserId == userId || (_currentUser.FirmId.HasValue && c.User != null && c.User.FirmId == _currentUser.FirmId.Value)), ct);
             if (customer != null)
             {
                 customerTitle = customer.Title;
@@ -226,7 +227,7 @@ public class InvoiceService : IInvoiceService
                 .ThenInclude(i => i.Product)
             .FirstOrDefaultAsync(x => x.Id == deliveryNoteId, ct);
         if (dn == null) return null;
-        if (!_currentUser.IsSuperAdmin && !(_currentUser.IsFirmAdmin && dn.User?.FirmId == _currentUser.FirmId) && dn.UserId != _currentUser.UserId)
+        if (!_currentUser.IsSuperAdmin && !(_currentUser.FirmId.HasValue && dn.User?.FirmId == _currentUser.FirmId.Value) && dn.UserId != _currentUser.UserId)
             return null;
         if (dn.Status != DeliveryNoteStatus.Onaylandi)
             throw new InvalidOperationException("Sadece onaylanmış irsaliyelerden fatura oluşturulabilir.");
@@ -337,7 +338,7 @@ public class InvoiceService : IInvoiceService
 
         if (request.CustomerId.HasValue)
         {
-            var customer = await _db.Customers.Include(c => c.TaxOffice).FirstOrDefaultAsync(c => c.Id == request.CustomerId && (c.UserId == invoice.UserId || (_currentUser.IsFirmAdmin && c.User != null && c.User.FirmId == _currentUser.FirmId)), ct);
+            var customer = await _db.Customers.Include(c => c.TaxOffice).FirstOrDefaultAsync(c => c.Id == request.CustomerId && (c.UserId == invoice.UserId || (_currentUser.FirmId.HasValue && c.User != null && c.User.FirmId == _currentUser.FirmId.Value)), ct);
             if (customer != null)
             {
                 invoice.CustomerId = customer.Id;

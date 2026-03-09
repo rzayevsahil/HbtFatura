@@ -28,8 +28,9 @@ public class OrderService : IOrderService
                 return _db.Orders.Where(o => o.User != null && o.User.FirmId == firmIdFilter.Value);
             return _db.Orders.AsQueryable();
         }
-        if (_currentUser.IsFirmAdmin)
-            return _db.Orders.Where(o => o.User != null && o.User.FirmId == _currentUser.FirmId);
+        if (_currentUser.FirmId.HasValue)
+            return _db.Orders.Where(o => o.User != null && o.User.FirmId == _currentUser.FirmId.Value);
+
         return _db.Orders.Where(o => o.UserId == _currentUser.UserId);
     }
 
@@ -101,7 +102,7 @@ public class OrderService : IOrderService
 
         string? customerTitle = null;
         var customer = await _db.Customers
-            .Where(c => c.Id == request.CustomerId && (c.UserId == userId || (_currentUser.IsFirmAdmin && c.User != null && c.User.FirmId == _currentUser.FirmId)))
+            .Where(c => c.Id == request.CustomerId && (c.UserId == userId || (_currentUser.FirmId.HasValue && c.User != null && c.User.FirmId == _currentUser.FirmId.Value)))
             .Select(c => new { c.Title })
             .FirstOrDefaultAsync(ct);
         customerTitle = customer?.Title;

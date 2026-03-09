@@ -28,13 +28,13 @@ public class AccountPaymentService : IAccountPaymentService
 
         var customer = await _db.Customers.IgnoreQueryFilters()
             .Where(c => !c.IsDeleted && c.Id == request.CustomerId)
-            .Where(c => _currentUser.IsSuperAdmin || (_currentUser.IsFirmAdmin && c.User != null && c.User.FirmId == _currentUser.FirmId) || c.UserId == _currentUser.UserId)
+            .Where(c => _currentUser.IsSuperAdmin || (_currentUser.FirmId.HasValue && c.User != null && c.User.FirmId == _currentUser.FirmId.Value) || c.UserId == _currentUser.UserId)
             .FirstOrDefaultAsync(ct);
         if (customer == null)
             throw new ArgumentException("Customer not found or access denied.");
 
         var userId = customer.UserId;
-        if (_currentUser.IsFirmAdmin && _currentUser.FirmId.HasValue)
+        if (_currentUser.FirmId.HasValue)
             userId = _currentUser.UserId;
 
         if (request.Amount <= 0)

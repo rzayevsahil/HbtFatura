@@ -28,7 +28,7 @@ public class BankAccountService : IBankAccountService
                 return _db.BankAccounts.Where(x => x.FirmId == firmIdFilter.Value);
             return _db.BankAccounts.AsQueryable();
         }
-        if (_currentUser.IsFirmAdmin && _currentUser.FirmId.HasValue)
+        if (_currentUser.FirmId.HasValue)
             return _db.BankAccounts.Where(x => x.FirmId == _currentUser.FirmId.Value);
         return _db.BankAccounts.Where(x => false);
     }
@@ -89,7 +89,7 @@ public class BankAccountService : IBankAccountService
         Guid firmId;
         if (_currentUser.IsSuperAdmin && request.FirmId.HasValue)
             firmId = request.FirmId.Value;
-        else if (_currentUser.IsFirmAdmin && _currentUser.FirmId.HasValue)
+        else if (_currentUser.FirmId.HasValue)
             firmId = _currentUser.FirmId.Value;
         else
             throw new UnauthorizedAccessException("Firm context required.");

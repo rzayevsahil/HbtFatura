@@ -39,6 +39,8 @@ public static class RoleSeed
         var permissions = new List<Permission>
         {
             new() { Id = Guid.NewGuid(), Group = "Sistem", Code = "Dashboard.View", Name = "Dashboard Görüntüle" },
+            new() { Id = Guid.NewGuid(), Group = "Sistem", Code = "Logs.View", Name = "Logları Görüntüle" },
+
             new() { Id = Guid.NewGuid(), Group = "Faturalar", Code = "Invoices.View", Name = "Görüntüle" },
             new() { Id = Guid.NewGuid(), Group = "Faturalar", Code = "Invoices.Create", Name = "Oluştur" },
             new() { Id = Guid.NewGuid(), Group = "Faturalar", Code = "Invoices.Edit", Name = "Düzenle" },
@@ -57,35 +59,40 @@ public static class RoleSeed
             new() { Id = Guid.NewGuid(), Group = "Ürünler", Code = "Products.View", Name = "Görüntüle" },
             new() { Id = Guid.NewGuid(), Group = "Ürünler", Code = "Products.Edit", Name = "Düzenle" },
             
-            new() { Id = Guid.NewGuid(), Group = "Tanımlamalar", Code = "Lookups.View", Name = "Sistem Tanımları Görüntüle" },
-            new() { Id = Guid.NewGuid(), Group = "Tanımlamalar", Code = "Lookups.Edit", Name = "Sistem Tanımları Düzenle" },
+            new() { Id = Guid.NewGuid(), Group = "Tanımlamalar", Code = "Lookups.View", Name = "Görüntüle" },
+            new() { Id = Guid.NewGuid(), Group = "Tanımlamalar", Code = "Lookups.Edit", Name = "Düzenle" },
             
-            new() { Id = Guid.NewGuid(), Group = "Yetkilendirme", Code = "Roles.View", Name = "Rolleri Görüntüle" },
-            new() { Id = Guid.NewGuid(), Group = "Yetkilendirme", Code = "Roles.Edit", Name = "Rolleri Düzenle" },
+            new() { Id = Guid.NewGuid(), Group = "Yetkilendirme", Code = "Roles.View", Name = "Görüntüle" },
+            new() { Id = Guid.NewGuid(), Group = "Yetkilendirme", Code = "Roles.Edit", Name = "Düzenle" },
             
-            new() { Id = Guid.NewGuid(), Group = "Menü Yönetimi", Code = "Menus.View", Name = "Menüleri Görüntüle" },
-            new() { Id = Guid.NewGuid(), Group = "Menü Yönetimi", Code = "Menus.Edit", Name = "Menüleri Düzenle" },
+            new() { Id = Guid.NewGuid(), Group = "Menü Yönetimi", Code = "Menus.View", Name = "Görüntüle" },
+            new() { Id = Guid.NewGuid(), Group = "Menü Yönetimi", Code = "Menus.Edit", Name = "Düzenle" },
             
-            new() { Id = Guid.NewGuid(), Group = "Firma Yönetimi", Code = "Firms.View", Name = "Firmaları Görüntüle" },
-            new() { Id = Guid.NewGuid(), Group = "Firma Yönetimi", Code = "Firms.Edit", Name = "Firmaları Düzenle" },
+            new() { Id = Guid.NewGuid(), Group = "Firma Yönetimi", Code = "Firms.View", Name = "Görüntüle" },
+            new() { Id = Guid.NewGuid(), Group = "Firma Yönetimi", Code = "Firms.Edit", Name = "Düzenle" },
             
-            new() { Id = Guid.NewGuid(), Group = "Personel Yönetimi", Code = "Employees.View", Name = "Personelleri Görüntüle" },
-            new() { Id = Guid.NewGuid(), Group = "Personel Yönetimi", Code = "Employees.Edit", Name = "Personelleri Düzenle" },
+            new() { Id = Guid.NewGuid(), Group = "Personel Yönetimi", Code = "Employees.View", Name = "Görüntüle" },
+            new() { Id = Guid.NewGuid(), Group = "Personel Yönetimi", Code = "Employees.Edit", Name = "Düzenle" },
             
-            new() { Id = Guid.NewGuid(), Group = "Cari Yönetimi", Code = "Customers.View", Name = "Carileri Görüntüle" },
-            new() { Id = Guid.NewGuid(), Group = "Cari Yönetimi", Code = "Customers.Edit", Name = "Carileri Düzenle" },
+            new() { Id = Guid.NewGuid(), Group = "Cari Yönetimi", Code = "Customers.View", Name = "Görüntüle" },
+            new() { Id = Guid.NewGuid(), Group = "Cari Yönetimi", Code = "Customers.Edit", Name = "Düzenle" },
+
+            new() { Id = Guid.NewGuid(), Group = "Hesap Kodları", Code = "MainAccountCodes.View", Name = "Görüntüle" },
+            new() { Id = Guid.NewGuid(), Group = "Hesap Kodları", Code = "MainAccountCodes.Edit", Name = "Düzenle" },
             
-            new() { Id = Guid.NewGuid(), Group = "Finans", Code = "Banking.View", Name = "Banka İşlemleri Görüntüle" },
-            new() { Id = Guid.NewGuid(), Group = "Finans", Code = "Banking.Edit", Name = "Banka İşlemleri Düzenle" },
-            new() { Id = Guid.NewGuid(), Group = "Finans", Code = "Cash.View", Name = "Kasa İşlemleri Görüntüle" },
-            new() { Id = Guid.NewGuid(), Group = "Finans", Code = "Cash.Edit", Name = "Kasa İşlemleri Düzenle" },
-            new() { Id = Guid.NewGuid(), Group = "Finans", Code = "Payments.View", Name = "Tahsilat/Ödemeleri Görüntüle" },
-            new() { Id = Guid.NewGuid(), Group = "Finans", Code = "Cheques.View", Name = "Çek/Senet Yönetimi" },
-            new() { Id = Guid.NewGuid(), Group = "Finans", Code = "Cheques.Edit", Name = "Çek/Senet Düzenle" },
+            new() { Id = Guid.NewGuid(), Group = "Banka Yönetimi", Code = "Banking.View", Name = "Görüntüle" },
+            new() { Id = Guid.NewGuid(), Group = "Banka Yönetimi", Code = "Banking.Edit", Name = "Düzenle" },
+
+            new() { Id = Guid.NewGuid(), Group = "Kasa Yönetimi", Code = "Cash.View", Name = "Görüntüle" },
+            new() { Id = Guid.NewGuid(), Group = "Kasa Yönetimi", Code = "Cash.Edit", Name = "Düzenle" },
+
+            new() { Id = Guid.NewGuid(), Group = "Tahsilat/Ödemeleri Yönetimi", Code = "Payments.View", Name = "Görüntüle" },
+
+            new() { Id = Guid.NewGuid(), Group = "Çek/Senet Yönetimi", Code = "Cheques.View", Name = "Görüntüle" },
+            new() { Id = Guid.NewGuid(), Group = "Çek/Senet Yönetimi", Code = "Cheques.Edit", Name = "Düzenle" },
             
-            new() { Id = Guid.NewGuid(), Group = "Raporlar", Code = "Reports.View", Name = "Raporları Görüntüle" },
+            new() { Id = Guid.NewGuid(), Group = "Raporlar", Code = "Reports.View", Name = "Görüntüle" },
             
-            new() { Id = Guid.NewGuid(), Group = "Sistem", Code = "Logs.View", Name = "Logları Görüntüle" },
             new() { Id = Guid.NewGuid(), Group = "Şirket Profili", Code = "CompanyProfile.View", Name = "Görüntüle" },
             new() { Id = Guid.NewGuid(), Group = "Şirket Profili", Code = "CompanyProfile.Edit", Name = "Düzenle" }
         };
@@ -133,7 +140,7 @@ public static class RoleSeed
             var firmPermCodes = new[] 
             { 
                 "Dashboard.View", "Invoices.", "Orders.", "DeliveryNotes.", "Products.", 
-                "Employees.", "Customers.", "Banking.", "Cash.", "Payments.", "Cheques.", 
+                "Employees.", "Customers.", "MainAccountCodes.", "Banking.", "Cash.", "Payments.", "Cheques.", 
                 "Reports.View", "CompanyProfile."
             };
             var firmPerms = allPerms.Where(x => firmPermCodes.Any(code => x.Code.StartsWith(code))).ToList();
@@ -162,7 +169,7 @@ public static class RoleSeed
             var empPermCodes = new[] 
             { 
                 "Dashboard.View", "Invoices.", "Orders.", "DeliveryNotes.", "Products.", 
-                "Employees.", "Customers.", "Banking.", "Cash.", "Payments.", "Cheques.", 
+                "Customers.", "MainAccountCodes.", "Banking.", "Cash.", "Payments.", "Cheques.", 
                 "Reports.View", "CompanyProfile.View" // Note: ONLY View for CompanyProfile
             };
             var empPerms = allPerms.Where(x => empPermCodes.Any(code => x.Code.StartsWith(code))).ToList();
@@ -196,6 +203,7 @@ public static class RoleSeed
             new() { Label = "İrsaliyeler", Icon = "local_shipping", RouterLink = "/delivery-notes", SortOrder = 4, RequiredPermissionCode = "DeliveryNotes.View" },
             new() { Label = "Ürünler", Icon = "inventory_2", RouterLink = "/products", SortOrder = 5, RequiredPermissionCode = "Products.View" },
             new() { Label = "Cari Kartlar", Icon = "people", RouterLink = "/customers", SortOrder = 6, RequiredPermissionCode = "Customers.View" },
+            new() { Label = "Hesap Kodları", Icon = "inventory", RouterLink = "/main-account-codes", SortOrder = 6, RequiredPermissionCode = "MainAccountCodes.View" },
             new() { Label = "Tahsilat / Ödeme", Icon = "account_balance_wallet", RouterLink = "/payments", SortOrder = 7, RequiredPermissionCode = "Payments.View" },
             new() { Label = "Kasa Yönetimi", Icon = "point_of_sale", RouterLink = "/cash-registers", SortOrder = 8, RequiredPermissionCode = "Cash.View" },
             new() { Label = "Banka Yönetimi", Icon = "account_balance", RouterLink = "/bank-accounts", SortOrder = 9, RequiredPermissionCode = "Banking.View" },
