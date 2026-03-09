@@ -39,6 +39,7 @@ export interface OrderListDto {
   orderType: InvoiceType;
   customerTitle?: string;
   totalAmount?: number;
+  createdByUserId: string;
 }
 
 export interface OrderItemInputDto {

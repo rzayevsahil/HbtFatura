@@ -4,7 +4,9 @@ import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { DeliveryNoteService, DeliveryNoteListDto, DeliveryNoteStatus } from '../../services/delivery-note.service';
 import { ToastrService } from 'ngx-toastr';
+import { AuthService } from '../../core/services/auth.service';
 import { LookupService } from '../../core/services/lookup.service';
+import { EmployeeService } from '../../services/employee.service';
 
 @Component({
   selector: 'app-delivery-note-list',
@@ -23,11 +25,25 @@ export class DeliveryNoteListComponent implements OnInit {
   searchStatus: DeliveryNoteStatus | null = null;
   searchText = '';
   loading = false;
+  usersMap: Record<string, string> = {};
 
-  constructor(private api: DeliveryNoteService, private toastr: ToastrService, public lookups: LookupService) { }
+  constructor(
+    private api: DeliveryNoteService,
+    private toastr: ToastrService,
+    public lookups: LookupService,
+    private userService: EmployeeService,
+    public auth: AuthService
+  ) { }
 
   ngOnInit(): void {
+    this.loadUsers();
     this.load();
+  }
+
+  loadUsers(): void {
+    this.userService.getAll().subscribe(list => {
+      this.usersMap = list.reduce((acc, u) => ({ ...acc, [u.id]: u.fullName }), {});
+    });
   }
 
   load(): void {
@@ -50,6 +66,10 @@ export class DeliveryNoteListComponent implements OnInit {
   /** Backend bazen enum'ı sayı bazen string (örn. "Taslak") gönderebilir. */
   statusLabel(s: DeliveryNoteStatus | string | undefined): string {
     return this.lookups.getName('DeliveryNoteStatus', s);
+  }
+
+  getUserName(id: string): string {
+    return this.usersMap[id] ?? '—';
   }
 
   typeLabel(t: number): string {

@@ -757,6 +757,12 @@ namespace HbtFatura.Api.Migrations
                 {
                     table.PrimaryKey("PK_Invoices", x => x.Id);
                     table.ForeignKey(
+                        name: "FK_Invoices_AspNetUsers_CreatedBy",
+                        column: x => x.CreatedBy,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
                         name: "FK_Invoices_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
@@ -789,6 +795,12 @@ namespace HbtFatura.Api.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Orders", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Orders_AspNetUsers_CreatedBy",
+                        column: x => x.CreatedBy,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Orders_AspNetUsers_UserId",
                         column: x => x.UserId,
@@ -858,6 +870,12 @@ namespace HbtFatura.Api.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_DeliveryNotes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_DeliveryNotes_AspNetUsers_CreatedBy",
+                        column: x => x.CreatedBy,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_DeliveryNotes_AspNetUsers_UserId",
                         column: x => x.UserId,
@@ -1120,6 +1138,11 @@ namespace HbtFatura.Api.Migrations
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_DeliveryNotes_CreatedBy",
+                table: "DeliveryNotes",
+                column: "CreatedBy");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_DeliveryNotes_CustomerId",
                 table: "DeliveryNotes",
                 column: "CustomerId");
@@ -1155,6 +1178,11 @@ namespace HbtFatura.Api.Migrations
                 name: "IX_InvoiceItems_ProductId",
                 table: "InvoiceItems",
                 column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Invoices_CreatedBy",
+                table: "Invoices",
+                column: "CreatedBy");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Invoices_CustomerId",
@@ -1236,6 +1264,11 @@ namespace HbtFatura.Api.Migrations
                 name: "IX_OrderItems_ProductId",
                 table: "OrderItems",
                 column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Orders_CreatedBy",
+                table: "Orders",
+                column: "CreatedBy");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_CustomerId",

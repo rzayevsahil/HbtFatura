@@ -41,6 +41,7 @@ public class Invoice
     public byte[]? RowVersion { get; set; }
 
     public ApplicationUser User { get; set; } = null!;
+    public ApplicationUser? Creator { get; set; }
     public Customer? Customer { get; set; }
     public ICollection<InvoiceItem> Items { get; set; } = new List<InvoiceItem>();
 }

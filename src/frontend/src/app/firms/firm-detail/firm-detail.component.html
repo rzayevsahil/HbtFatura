@@ -5,7 +5,7 @@
   @if (firm) {
   <h1 class="page-title">{{ firm.name }}</h1>
   <p class="page-subtitle">Oluşturulma: {{ firm.createdAt | date:'dd.MM.yyyy' }}</p>
-  @if (auth.user()?.role === 'SuperAdmin' || auth.user()?.role === 'FirmAdmin') {
+  @if (auth.hasPermission('Settings.Edit')) {
   <div class="actions">
     <a [routerLink]="['/settings/edit']" [queryParams]="{ firmId: firm.id }" class="btn btn-primary">Firma bilgilerini
       düzenle</a>

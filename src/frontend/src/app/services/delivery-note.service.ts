@@ -43,6 +43,7 @@ export interface DeliveryNoteListDto {
   customerTitle?: string;
   orderNumber?: string;
   invoiceId?: string | null;
+  createdByUserId: string;
 }
 
 export interface CreateDeliveryNoteFromOrderRequest {

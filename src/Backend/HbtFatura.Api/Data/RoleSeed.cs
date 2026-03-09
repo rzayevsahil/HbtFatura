@@ -24,7 +24,7 @@ public static class RoleSeed
         // 1. Permissions
         var permissions = new List<Permission>
         {
-            new() { Id = Guid.NewGuid(), Group = "Sistem", Code = "Dashboard.View", Name = "Panel Görüntüle" },
+            new() { Id = Guid.NewGuid(), Group = "Sistem", Code = "Dashboard.View", Name = "Dashboard Görüntüle" },
             new() { Id = Guid.NewGuid(), Group = "Faturalar", Code = "Invoices.View", Name = "Görüntüle" },
             new() { Id = Guid.NewGuid(), Group = "Faturalar", Code = "Invoices.Create", Name = "Oluştur" },
             new() { Id = Guid.NewGuid(), Group = "Faturalar", Code = "Invoices.Edit", Name = "Düzenle" },
@@ -32,6 +32,13 @@ public static class RoleSeed
             
             new() { Id = Guid.NewGuid(), Group = "Siparişler", Code = "Orders.View", Name = "Görüntüle" },
             new() { Id = Guid.NewGuid(), Group = "Siparişler", Code = "Orders.Create", Name = "Oluştur" },
+            new() { Id = Guid.NewGuid(), Group = "Siparişler", Code = "Orders.Edit", Name = "Düzenle" },
+            new() { Id = Guid.NewGuid(), Group = "Siparişler", Code = "Orders.Delete", Name = "Sil" },
+            
+            new() { Id = Guid.NewGuid(), Group = "İrsaliyeler", Code = "DeliveryNotes.View", Name = "Görüntüle" },
+            new() { Id = Guid.NewGuid(), Group = "İrsaliyeler", Code = "DeliveryNotes.Create", Name = "Oluştur" },
+            new() { Id = Guid.NewGuid(), Group = "İrsaliyeler", Code = "DeliveryNotes.Edit", Name = "Düzenle" },
+            new() { Id = Guid.NewGuid(), Group = "İrsaliyeler", Code = "DeliveryNotes.Delete", Name = "Sil" },
             
             new() { Id = Guid.NewGuid(), Group = "Ürünler", Code = "Products.View", Name = "Görüntüle" },
             new() { Id = Guid.NewGuid(), Group = "Ürünler", Code = "Products.Edit", Name = "Düzenle" },
@@ -65,7 +72,8 @@ public static class RoleSeed
             new() { Id = Guid.NewGuid(), Group = "Raporlar", Code = "Reports.View", Name = "Raporları Görüntüle" },
             
             new() { Id = Guid.NewGuid(), Group = "Sistem", Code = "Logs.View", Name = "Logları Görüntüle" },
-            new() { Id = Guid.NewGuid(), Group = "Ayarlar", Code = "Settings.View", Name = "Ayarları Görüntüle" }
+            new() { Id = Guid.NewGuid(), Group = "Firma Bilgileri", Code = "Settings.View", Name = "Görüntüle" },
+            new() { Id = Guid.NewGuid(), Group = "Firma Bilgileri", Code = "Settings.Edit", Name = "Düzenle" }
         };
 
         foreach (var p in permissions)
@@ -80,7 +88,7 @@ public static class RoleSeed
         var superAdminRole = await roleManager.FindByNameAsync(Roles.SuperAdmin);
         if (superAdminRole != null)
         {
-            var adminPermCodes = new[] { "Dashboard.View", "Lookups.", "Roles.", "Menus.", "Logs.", "Firms." };
+            var adminPermCodes = new[] { "Dashboard.View", "Lookups.", "Roles.", "Menus.", "Logs.", "Firms.", "Settings.Edit" };
             var adminPerms = allPerms.Where(x => adminPermCodes.Any(code => x.Code.StartsWith(code))).ToList();
 
             // Add missing permissions
@@ -112,6 +120,7 @@ public static class RoleSeed
                 x.Code == "Dashboard.View" || 
                 x.Code.StartsWith("Invoices") || 
                 x.Code.StartsWith("Orders") || 
+                x.Code.StartsWith("DeliveryNotes") || 
                 x.Code.StartsWith("Products") || 
                 x.Code.StartsWith("Employees") || 
                 x.Code.StartsWith("Customers") || 
@@ -121,6 +130,7 @@ public static class RoleSeed
                 x.Code.StartsWith("Cheques") || 
                 x.Code == "Reports.View" || 
                 x.Code == "Settings.View" || 
+                x.Code == "Settings.Edit" || 
                 x.Code == "Firms.Edit").ToList();
             foreach (var p in firmPerms)
             {
@@ -132,7 +142,7 @@ public static class RoleSeed
         var employeeRole = await roleManager.FindByNameAsync(Roles.Employee);
         if (employeeRole != null)
         {
-            var empPerms = allPerms.Where(x => x.Code == "Dashboard.View" || x.Code == "Invoices.View" || x.Code == "Orders.View" || x.Code == "Products.View" || x.Code == "Settings.View").ToList();
+            var empPerms = allPerms.Where(x => x.Code == "Dashboard.View" || x.Code == "Invoices.View" || x.Code == "Orders.View" || x.Code == "DeliveryNotes.View" || x.Code == "Products.View" || x.Code == "Settings.View").ToList();
             foreach (var p in empPerms)
             {
                 if (!await db.RolePermissions.AnyAsync(x => x.RoleId == employeeRole.Id && x.PermissionId == p.Id, ct))
@@ -147,7 +157,7 @@ public static class RoleSeed
             new() { Label = "Dashboard", Icon = "dashboard", RouterLink = "/dashboard", SortOrder = 1, RequiredPermissionCode = "Dashboard.View" },
             new() { Label = "Faturalar", Icon = "receipt", RouterLink = "/invoices", SortOrder = 2, RequiredPermissionCode = "Invoices.View" },
             new() { Label = "Siparişler", Icon = "shopping_cart", RouterLink = "/orders", SortOrder = 3, RequiredPermissionCode = "Orders.View" },
-            new() { Label = "İrsaliyeler", Icon = "local_shipping", RouterLink = "/delivery-notes", SortOrder = 4, RequiredPermissionCode = "Invoices.View" },
+            new() { Label = "İrsaliyeler", Icon = "local_shipping", RouterLink = "/delivery-notes", SortOrder = 4, RequiredPermissionCode = "DeliveryNotes.View" },
             new() { Label = "Ürünler", Icon = "inventory_2", RouterLink = "/products", SortOrder = 5, RequiredPermissionCode = "Products.View" },
             new() { Label = "Cari Kartlar", Icon = "people", RouterLink = "/customers", SortOrder = 6, RequiredPermissionCode = "Customers.View" },
             new() { Label = "Tahsilat / Ödeme", Icon = "account_balance_wallet", RouterLink = "/payments", SortOrder = 7, RequiredPermissionCode = "Payments.View" },

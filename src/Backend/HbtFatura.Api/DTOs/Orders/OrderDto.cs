@@ -38,6 +38,7 @@ public class OrderListDto
     public int OrderType { get; set; }
     public string? CustomerTitle { get; set; }
     public decimal? TotalAmount { get; set; }
+    public Guid CreatedByUserId { get; set; }
 }
 
 public class OrderItemInputDto

@@ -4,7 +4,9 @@ import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { InvoiceService, InvoiceListDto, InvoiceStatus } from '../../services/invoice.service';
 import { ToastrService } from 'ngx-toastr';
+import { AuthService } from '../../core/services/auth.service';
 import { LookupService } from '../../core/services/lookup.service';
+import { EmployeeService, EmployeeListDto } from '../../services/employee.service';
 
 @Component({
   selector: 'app-invoice-list',
@@ -24,8 +26,16 @@ export class InvoiceListComponent implements OnInit {
   searchInvoiceType: number | null = null;
   searchText = '';
   loading = false;
+  usersMap: Record<string, string> = {};
 
-  constructor(private api: InvoiceService, private router: Router, private toastr: ToastrService, public lookups: LookupService) { }
+  constructor(
+    private api: InvoiceService,
+    private router: Router,
+    private toastr: ToastrService,
+    public lookups: LookupService,
+    private userService: EmployeeService,
+    public auth: AuthService
+  ) { }
 
   @HostListener('document:keydown', ['$event'])
   onKeyDown(e: KeyboardEvent): void {
@@ -36,7 +46,14 @@ export class InvoiceListComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.loadUsers();
     this.load();
+  }
+
+  loadUsers(): void {
+    this.userService.getAll().subscribe(list => {
+      this.usersMap = list.reduce((acc, u) => ({ ...acc, [u.id]: u.fullName }), {});
+    });
   }
 
   load(): void {
@@ -59,6 +76,10 @@ export class InvoiceListComponent implements OnInit {
 
   statusLabel(s: any, sourceType?: string | null): string {
     return this.lookups.getName('InvoiceStatus', s);
+  }
+
+  getUserName(id: string): string {
+    return this.usersMap[id] ?? '—';
   }
 
   statusClass(s: any): string {

@@ -66,7 +66,8 @@ public class DeliveryNoteService : IDeliveryNoteService
                 DeliveryType = (int)x.DeliveryType,
                 CustomerTitle = x.Customer != null ? x.Customer.Title : null,
                 OrderNumber = x.Order != null ? x.Order.OrderNumber : null,
-                InvoiceId = x.InvoiceId
+                InvoiceId = x.InvoiceId,
+                CreatedByUserId = x.UserId
             })
             .ToListAsync(ct);
         return new PagedResult<DeliveryNoteListDto> { Items = list, TotalCount = total, Page = page, PageSize = pageSize };

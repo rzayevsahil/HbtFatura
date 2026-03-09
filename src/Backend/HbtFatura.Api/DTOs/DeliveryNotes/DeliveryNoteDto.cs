@@ -41,6 +41,7 @@ public class DeliveryNoteListDto
     public string? CustomerTitle { get; set; }
     public string? OrderNumber { get; set; }
     public Guid? InvoiceId { get; set; }
+    public Guid CreatedByUserId { get; set; }
 }
 
 public class DeliveryNoteItemInputDto

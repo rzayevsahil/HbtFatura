@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HbtFatura.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260308212349_first_mig")]
+    [Migration("20260309001721_first_mig")]
     partial class first_mig
     {
         /// <inheritdoc />
@@ -573,6 +573,8 @@ namespace HbtFatura.Api.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CreatedBy");
+
                     b.HasIndex("CustomerId");
 
                     b.HasIndex("OrderId");
@@ -775,6 +777,8 @@ namespace HbtFatura.Api.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CreatedBy");
 
                     b.HasIndex("CustomerId");
 
@@ -1066,6 +1070,8 @@ namespace HbtFatura.Api.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CreatedBy");
 
                     b.HasIndex("CustomerId");
 
@@ -1599,6 +1605,11 @@ namespace HbtFatura.Api.Migrations
 
             modelBuilder.Entity("HbtFatura.Api.Entities.DeliveryNote", b =>
                 {
+                    b.HasOne("HbtFatura.Api.Entities.ApplicationUser", "Creator")
+                        .WithMany()
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("HbtFatura.Api.Entities.Customer", "Customer")
                         .WithMany()
                         .HasForeignKey("CustomerId")
@@ -1615,6 +1626,8 @@ namespace HbtFatura.Api.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Creator");
 
                     b.Navigation("Customer");
 
@@ -1661,6 +1674,11 @@ namespace HbtFatura.Api.Migrations
 
             modelBuilder.Entity("HbtFatura.Api.Entities.Invoice", b =>
                 {
+                    b.HasOne("HbtFatura.Api.Entities.ApplicationUser", "Creator")
+                        .WithMany()
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("HbtFatura.Api.Entities.Customer", "Customer")
                         .WithMany("Invoices")
                         .HasForeignKey("CustomerId")
@@ -1671,6 +1689,8 @@ namespace HbtFatura.Api.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Creator");
 
                     b.Navigation("Customer");
 
@@ -1728,6 +1748,11 @@ namespace HbtFatura.Api.Migrations
 
             modelBuilder.Entity("HbtFatura.Api.Entities.Order", b =>
                 {
+                    b.HasOne("HbtFatura.Api.Entities.ApplicationUser", "Creator")
+                        .WithMany()
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("HbtFatura.Api.Entities.Customer", "Customer")
                         .WithMany()
                         .HasForeignKey("CustomerId")
@@ -1739,6 +1764,8 @@ namespace HbtFatura.Api.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Creator");
 
                     b.Navigation("Customer");
 

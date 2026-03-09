@@ -158,7 +158,7 @@ export const routes: Routes = [
   {
     path: 'settings/edit',
     loadComponent: () => import('./company/company-settings/company-settings.component').then(m => m.CompanySettingsComponent),
-    canActivate: [authGuard, PermissionGuard], data: { permission: 'Firms.Edit' }
+    canActivate: [authGuard, PermissionGuard], data: { permission: 'Settings.Edit' }
   },
   {
     path: 'logs',

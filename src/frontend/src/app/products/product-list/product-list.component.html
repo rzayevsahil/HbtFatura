@@ -4,7 +4,9 @@
 <div class="toolbar">
   <input type="text" [(ngModel)]="search" placeholder="Kod, ad, barkod..." (keyup.enter)="applySearch()" />
   <button type="button" (click)="applySearch()">Ara</button>
+  @if (auth.hasPermission('Products.Edit')) {
   <a routerLink="/products/new" class="btn btn-primary">Yeni Ürün</a>
+  }
 </div>
 <div class="card table-wrap" style="position: relative; min-height: 200px;">
   @if (loading) {
@@ -34,8 +36,10 @@
         <td>
           <div class="actions-cell">
             <a [routerLink]="['/products', p.id]">Detay</a>
+            @if (auth.hasPermission('Products.Edit')) {
             <a [routerLink]="['/products', p.id, 'edit']">Düzenle</a>
             <button type="button" (click)="onDeleteClick(p.id, p.name)">Sil</button>
+            }
           </div>
         </td>
       </tr>

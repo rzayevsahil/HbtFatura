@@ -4,7 +4,9 @@ import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { OrderService, OrderListDto, OrderStatus } from '../../services/order.service';
 import { ToastrService } from 'ngx-toastr';
+import { AuthService } from '../../core/services/auth.service';
 import { LookupService } from '../../core/services/lookup.service';
+import { EmployeeService } from '../../services/employee.service';
 
 @Component({
   selector: 'app-order-list',
@@ -23,8 +25,16 @@ export class OrderListComponent implements OnInit {
   searchStatus: OrderStatus | null = null;
   searchText = '';
   loading = false;
+  usersMap: Record<string, string> = {};
 
-  constructor(private api: OrderService, private router: Router, private toastr: ToastrService, public lookups: LookupService) { }
+  constructor(
+    private api: OrderService,
+    private router: Router,
+    private toastr: ToastrService,
+    public lookups: LookupService,
+    private userService: EmployeeService,
+    public auth: AuthService
+  ) { }
 
   @HostListener('document:keydown', ['$event'])
   onKeyDown(e: KeyboardEvent): void {
@@ -35,7 +45,14 @@ export class OrderListComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.loadUsers();
     this.load();
+  }
+
+  loadUsers(): void {
+    this.userService.getAll().subscribe(list => {
+      this.usersMap = list.reduce((acc, u) => ({ ...acc, [u.id]: u.fullName }), {});
+    });
   }
 
   load(): void {
@@ -57,6 +74,10 @@ export class OrderListComponent implements OnInit {
 
   statusLabel(s: OrderStatus | string | undefined): string {
     return this.lookups.getName('OrderStatus', s);
+  }
+
+  getUserName(id: string): string {
+    return this.usersMap[id] ?? '—';
   }
 
   typeLabel(t: number): string {
