@@ -151,14 +151,14 @@ export const routes: Routes = [
     canActivate: [authGuard, PermissionGuard], data: { permission: 'Lookups.View' }
   },
   {
-    path: 'settings',
+    path: 'company/profile',
     loadComponent: () => import('./firms/firm-detail/firm-detail.component').then(m => m.FirmDetailComponent),
-    canActivate: [authGuard, PermissionGuard], data: { permission: 'Settings.View' }
+    canActivate: [authGuard, PermissionGuard], data: { permission: 'CompanyProfile.View' }
   },
   {
-    path: 'settings/edit',
+    path: 'company/profile/edit',
     loadComponent: () => import('./company/company-settings/company-settings.component').then(m => m.CompanySettingsComponent),
-    canActivate: [authGuard, PermissionGuard], data: { permission: 'Settings.Edit' }
+    canActivate: [authGuard, PermissionGuard], data: { permission: 'CompanyProfile.Edit' }
   },
   {
     path: 'logs',

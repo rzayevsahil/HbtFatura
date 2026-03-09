@@ -72,8 +72,8 @@ public static class RoleSeed
             new() { Id = Guid.NewGuid(), Group = "Raporlar", Code = "Reports.View", Name = "Raporları Görüntüle" },
             
             new() { Id = Guid.NewGuid(), Group = "Sistem", Code = "Logs.View", Name = "Logları Görüntüle" },
-            new() { Id = Guid.NewGuid(), Group = "Firma Bilgileri", Code = "Settings.View", Name = "Görüntüle" },
-            new() { Id = Guid.NewGuid(), Group = "Firma Bilgileri", Code = "Settings.Edit", Name = "Düzenle" }
+            new() { Id = Guid.NewGuid(), Group = "Şirket Profili", Code = "CompanyProfile.View", Name = "Görüntüle" },
+            new() { Id = Guid.NewGuid(), Group = "Şirket Profili", Code = "CompanyProfile.Edit", Name = "Düzenle" }
         };
 
         foreach (var p in permissions)
@@ -88,7 +88,7 @@ public static class RoleSeed
         var superAdminRole = await roleManager.FindByNameAsync(Roles.SuperAdmin);
         if (superAdminRole != null)
         {
-            var adminPermCodes = new[] { "Dashboard.View", "Lookups.", "Roles.", "Menus.", "Logs.", "Firms.", "Settings.Edit" };
+            var adminPermCodes = new[] { "Dashboard.View", "Lookups.", "Roles.", "Menus.", "Logs.", "Firms.", "CompanyProfile.Edit" };
             var adminPerms = allPerms.Where(x => adminPermCodes.Any(code => x.Code.StartsWith(code))).ToList();
 
             // Add missing permissions
@@ -116,37 +116,59 @@ public static class RoleSeed
         var firmAdminRole = await roleManager.FindByNameAsync(Roles.FirmAdmin);
         if (firmAdminRole != null)
         {
-            var firmPerms = allPerms.Where(x => 
-                x.Code == "Dashboard.View" || 
-                x.Code.StartsWith("Invoices") || 
-                x.Code.StartsWith("Orders") || 
-                x.Code.StartsWith("DeliveryNotes") || 
-                x.Code.StartsWith("Products") || 
-                x.Code.StartsWith("Employees") || 
-                x.Code.StartsWith("Customers") || 
-                x.Code.StartsWith("Banking") || 
-                x.Code.StartsWith("Cash") || 
-                x.Code.StartsWith("Payments") || 
-                x.Code.StartsWith("Cheques") || 
-                x.Code == "Reports.View" || 
-                x.Code == "Settings.View" || 
-                x.Code == "Settings.Edit" || 
-                x.Code == "Firms.Edit").ToList();
+            var firmPermCodes = new[] 
+            { 
+                "Dashboard.View", "Invoices.", "Orders.", "DeliveryNotes.", "Products.", 
+                "Employees.", "Customers.", "Banking.", "Cash.", "Payments.", "Cheques.", 
+                "Reports.View", "CompanyProfile."
+            };
+            var firmPerms = allPerms.Where(x => firmPermCodes.Any(code => x.Code.StartsWith(code))).ToList();
+
             foreach (var p in firmPerms)
             {
                 if (!await db.RolePermissions.AnyAsync(x => x.RoleId == firmAdminRole.Id && x.PermissionId == p.Id, ct))
                     db.RolePermissions.Add(new RolePermission { RoleId = firmAdminRole.Id, PermissionId = p.Id });
+            }
+
+            // Remove unwanted permissions if they exist (like Firms.Edit)
+            var currentFirmPerms = await db.RolePermissions.Where(x => x.RoleId == firmAdminRole.Id).ToListAsync(ct);
+            foreach (var rp in currentFirmPerms)
+            {
+                var perm = allPerms.FirstOrDefault(p => p.Id == rp.PermissionId);
+                if (perm == null || !firmPermCodes.Any(code => perm.Code.StartsWith(code)))
+                {
+                    db.RolePermissions.Remove(rp);
+                }
             }
         }
 
         var employeeRole = await roleManager.FindByNameAsync(Roles.Employee);
         if (employeeRole != null)
         {
-            var empPerms = allPerms.Where(x => x.Code == "Dashboard.View" || x.Code == "Invoices.View" || x.Code == "Orders.View" || x.Code == "DeliveryNotes.View" || x.Code == "Products.View" || x.Code == "Settings.View").ToList();
+            var empPermCodes = new[] 
+            { 
+                "Dashboard.View", "Invoices.", "Orders.", "DeliveryNotes.", "Products.", 
+                "Employees.", "Customers.", "Banking.", "Cash.", "Payments.", "Cheques.", 
+                "Reports.View", "CompanyProfile.View" // Note: ONLY View for CompanyProfile
+            };
+            var empPerms = allPerms.Where(x => empPermCodes.Any(code => x.Code.StartsWith(code))).ToList();
+
             foreach (var p in empPerms)
             {
                 if (!await db.RolePermissions.AnyAsync(x => x.RoleId == employeeRole.Id && x.PermissionId == p.Id, ct))
                     db.RolePermissions.Add(new RolePermission { RoleId = employeeRole.Id, PermissionId = p.Id });
+            }
+
+            // Cleanup any unwanted permissions
+            var currentEmpPerms = await db.RolePermissions.Where(x => x.RoleId == employeeRole.Id).ToListAsync(ct);
+            foreach (var rp in currentEmpPerms)
+            {
+                var perm = allPerms.FirstOrDefault(p => p.Id == rp.PermissionId);
+                // Specifically ensure NO .Edit for CompanyProfile even if it starts with "CompanyProfile."
+                if (perm == null || !empPermCodes.Any(code => perm.Code.StartsWith(code)) || perm.Code == "CompanyProfile.Edit")
+                {
+                    db.RolePermissions.Remove(rp);
+                }
             }
         }
         await db.SaveChangesAsync(ct);
@@ -171,7 +193,7 @@ public static class RoleSeed
             new() { Label = "Firma Yönetimi", Icon = "business", RouterLink = "/firms", SortOrder = 104, RequiredPermissionCode = "Firms.View" },
             new() { Label = "Personel Yönetimi", Icon = "badge", RouterLink = "/employees", SortOrder = 105, RequiredPermissionCode = "Employees.View" },
             new() { Label = "Sistem Logları", Icon = "history", RouterLink = "/logs", SortOrder = 106, RequiredPermissionCode = "Logs.View" },
-            new() { Label = "Firma Bilgileri", Icon = "business", RouterLink = "/settings", SortOrder = 11, RequiredPermissionCode = "Settings.View" }
+            new() { Label = "Şirket Profili", Icon = "business", RouterLink = "/company/profile", SortOrder = 11, RequiredPermissionCode = "CompanyProfile.View" }
         };
 
         foreach (var m in menus)

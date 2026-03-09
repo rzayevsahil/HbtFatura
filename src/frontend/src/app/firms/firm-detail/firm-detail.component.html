@@ -5,9 +5,10 @@
   @if (firm) {
   <h1 class="page-title">{{ firm.name }}</h1>
   <p class="page-subtitle">Oluşturulma: {{ firm.createdAt | date:'dd.MM.yyyy' }}</p>
-  @if (auth.hasPermission('Settings.Edit')) {
+  @if (auth.hasPermission('CompanyProfile.Edit')) {
   <div class="actions">
-    <a [routerLink]="['/settings/edit']" [queryParams]="{ firmId: firm.id }" class="btn btn-primary">Firma bilgilerini
+    <a [routerLink]="['/company/profile/edit']" [queryParams]="{ firmId: firm.id }" class="btn btn-primary">Firma
+      bilgilerini
       düzenle</a>
   </div>
   }
