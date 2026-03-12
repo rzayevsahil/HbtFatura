@@ -569,6 +569,8 @@ namespace HbtFatura.Api.Migrations
                     IBAN = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     BankName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LogoUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    InvoiceSerialPrefix = table.Column<string>(type: "nvarchar(3)", maxLength: 3, nullable: true),
+                    DeliveryNoteSerialPrefix = table.Column<string>(type: "nvarchar(3)", maxLength: 3, nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },

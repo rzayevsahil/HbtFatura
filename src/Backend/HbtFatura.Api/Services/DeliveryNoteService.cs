@@ -306,7 +306,7 @@ public class DeliveryNoteService : IDeliveryNoteService
 
     private async Task<string> GetNextDeliveryNumberAsync(Guid userId, int year, CancellationToken ct)
     {
-        var prefix = "IRS";
+        var prefix = await ResolveDeliveryNotePrefixAsync(ct);
         var yearStr = year.ToString();
         var last = await _db.DeliveryNotes
             .Where(x => x.UserId == userId && x.DeliveryNumber.StartsWith(prefix + yearStr))
@@ -323,6 +323,36 @@ public class DeliveryNoteService : IDeliveryNoteService
             return $"{prefix}{yearStr}{(num + 1):D9}";
         }
         return $"{prefix}{yearStr}000000001";
+    }
+
+    private async Task<string> ResolveDeliveryNotePrefixAsync(CancellationToken ct)
+    {
+        var firmId = _currentUser.FirmId;
+        if (!firmId.HasValue)
+            return DocumentSerialPrefixHelper.GetPrefix(null, null, "IRS");
+        var settings = await _db.CompanySettings
+            .Where(x => x.FirmId == firmId.Value)
+            .Select(x => new { x.DeliveryNoteSerialPrefix, x.InvoiceSerialPrefix, x.CompanyName })
+            .FirstOrDefaultAsync(ct);
+        var otherFirmsPrefixes = await _db.CompanySettings
+            .Where(x => x.FirmId != firmId.Value)
+            .Select(x => new { x.DeliveryNoteSerialPrefix, x.CompanyName })
+            .ToListAsync(ct);
+        var otherPrefixes = otherFirmsPrefixes
+            .Select(x => DocumentSerialPrefixHelper.GetPrefix(x.DeliveryNoteSerialPrefix, x.CompanyName, "IRS"))
+            .ToList();
+        // Bu firmanın fatura serisi irsaliyede kullanılmasın (fatura ayrı, irsaliye ayrı 3 harf).
+        var thisFirmInvoicePrefix = DocumentSerialPrefixHelper.GetPrefix(settings?.InvoiceSerialPrefix, settings?.CompanyName, "FTR");
+        if (!string.IsNullOrEmpty(thisFirmInvoicePrefix))
+            otherPrefixes.Add(thisFirmInvoicePrefix);
+        var configured = DocumentSerialPrefixHelper.GetValidThreeCharPrefix(settings?.DeliveryNoteSerialPrefix);
+        if (!string.IsNullOrEmpty(configured))
+            return DocumentSerialPrefixHelper.MakeUniqueAmong(configured, otherPrefixes);
+        if (!string.IsNullOrWhiteSpace(settings?.CompanyName))
+            return DocumentSerialPrefixHelper.GetUniquePrefixFromCompanyName(settings.CompanyName, otherPrefixes);
+        return DocumentSerialPrefixHelper.MakeUniqueAmong(
+            DocumentSerialPrefixHelper.GetPrefix(null, null, "IRS"),
+            otherPrefixes);
     }
 
     private static DeliveryNoteDto MapToDto(DeliveryNote d) => new()

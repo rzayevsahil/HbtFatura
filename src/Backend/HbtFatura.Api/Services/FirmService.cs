@@ -4,6 +4,7 @@ using HbtFatura.Api.Constants;
 using HbtFatura.Api.Data;
 using HbtFatura.Api.DTOs.Firms;
 using HbtFatura.Api.Entities;
+using HbtFatura.Api.Helpers;
 
 namespace HbtFatura.Api.Services;
 
@@ -91,11 +92,18 @@ public class FirmService : IFirmService
             throw new ArgumentException(string.Join(" ", result.Errors.Select(e => e.Description)));
         await _userManager.AddToRoleAsync(adminUser, Roles.FirmAdmin);
 
+        // Firma adından fatura ve irsaliye serilerini otomatik türet (ayarlardan sonra değiştirilebilir).
+        var prefixCandidates = DocumentSerialPrefixHelper.GetPrefixCandidatesFromCompanyName(firm.Name).ToList();
+        var invoicePrefix = prefixCandidates.FirstOrDefault() ?? "FTR";
+        var deliveryNotePrefix = prefixCandidates.FirstOrDefault(c => !string.Equals(c, invoicePrefix, StringComparison.OrdinalIgnoreCase)) ?? "IRS";
+
         var companySettings = new CompanySettings
         {
             Id = Guid.NewGuid(),
             FirmId = firm.Id,
             CompanyName = firm.Name,
+            InvoiceSerialPrefix = invoicePrefix,
+            DeliveryNoteSerialPrefix = deliveryNotePrefix,
             CreatedAt = DateTime.UtcNow
         };
         _db.CompanySettings.Add(companySettings);

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HbtFatura.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260309031207_first_mig")]
+    [Migration("20260312031615_first_mig")]
     partial class first_mig
     {
         /// <inheritdoc />
@@ -432,6 +432,10 @@ namespace HbtFatura.Api.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("DeliveryNoteSerialPrefix")
+                        .HasMaxLength(3)
+                        .HasColumnType("nvarchar(3)");
+
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
@@ -440,6 +444,10 @@ namespace HbtFatura.Api.Migrations
 
                     b.Property<string>("IBAN")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("InvoiceSerialPrefix")
+                        .HasMaxLength(3)
+                        .HasColumnType("nvarchar(3)");
 
                     b.Property<string>("LogoUrl")
                         .HasColumnType("nvarchar(max)");

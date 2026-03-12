@@ -34,7 +34,9 @@ export class CompanySettingsComponent implements OnInit {
     website: ['', [Validators.pattern('^(https?:\\/\\/)?([\\da-z.-]+)\\.([a-z.]{2,6})([\\/\\w .-]*)*\\/?$')]],
     iban: ['', [Validators.required, Validators.minLength(32), Validators.maxLength(32)]],
     bankName: ['', [Validators.required]],
-    logoUrl: [null as string | null]
+    logoUrl: [null as string | null],
+    invoiceSerialPrefix: [null as string | null, [Validators.maxLength(3)]],
+    deliveryNoteSerialPrefix: [null as string | null, [Validators.maxLength(3)]]
   });
   error = '';
   saving = false;
@@ -152,7 +154,9 @@ export class CompanySettingsComponent implements OnInit {
           website: c.website ?? '',
           iban: c.iban ? IbanFormatter.format(c.iban) : 'TR',
           bankName: c.bankName ?? '',
-          logoUrl: c.logoUrl ?? null
+          logoUrl: c.logoUrl ?? null,
+          invoiceSerialPrefix: c.invoiceSerialPrefix ?? null,
+          deliveryNoteSerialPrefix: c.deliveryNoteSerialPrefix ?? null
         });
 
         this.selectedCityName = c.cityName ?? '';

@@ -86,6 +86,8 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, 
             e.HasOne(x => x.TaxOffice).WithMany().HasForeignKey(x => x.TaxOfficeId).OnDelete(DeleteBehavior.Restrict);
             e.HasIndex(x => x.FirmId).IsUnique();
             e.Property(x => x.LogoUrl).IsRequired(false);
+            e.Property(x => x.InvoiceSerialPrefix).HasMaxLength(3);
+            e.Property(x => x.DeliveryNoteSerialPrefix).HasMaxLength(3);
         });
 
         modelBuilder.Entity<Customer>(e =>

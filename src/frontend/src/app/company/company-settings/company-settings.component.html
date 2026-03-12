@@ -16,6 +16,14 @@
         <input formControlName="companyName" placeholder="Firma unvanı" [readonly]="isReadOnly()" />
       </div>
       <div class="row">
+        <label>Fatura seri (3 harf)</label>
+        <input formControlName="invoiceSerialPrefix" placeholder="Örn: FTR. Boş bırakılırsa firma adının ilk 3 harfi kullanılır." maxlength="3" [readonly]="isReadOnly()" />
+      </div>
+      <div class="row">
+        <label>İrsaliye seri (3 harf)</label>
+        <input formControlName="deliveryNoteSerialPrefix" placeholder="Örn: IRS. Boş bırakılırsa firma adının ilk 3 harfi kullanılır." maxlength="3" [readonly]="isReadOnly()" />
+      </div>
+      <div class="row">
         <label>İl</label>
         <div class="custom-select" [class.disabled]="isReadOnly()">
           <button type="button" class="select-trigger" (click)="toggleCityDropdown(); $event.stopPropagation()"

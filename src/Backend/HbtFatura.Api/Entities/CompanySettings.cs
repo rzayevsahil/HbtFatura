@@ -14,6 +14,10 @@ public class CompanySettings
     public string? IBAN { get; set; }
     public string? BankName { get; set; }
     public string? LogoUrl { get; set; }
+    /// <summary>Fatura numarası seri (3 karakter, örn: FTR). Boşsa firma adından türetilir veya varsayılan kullanılır.</summary>
+    public string? InvoiceSerialPrefix { get; set; }
+    /// <summary>İrsaliye numarası seri (3 karakter, örn: IRS). Boşsa firma adından türetilir veya varsayılan kullanılır.</summary>
+    public string? DeliveryNoteSerialPrefix { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }
 

@@ -429,6 +429,10 @@ namespace HbtFatura.Api.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("DeliveryNoteSerialPrefix")
+                        .HasMaxLength(3)
+                        .HasColumnType("nvarchar(3)");
+
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
@@ -437,6 +441,10 @@ namespace HbtFatura.Api.Migrations
 
                     b.Property<string>("IBAN")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("InvoiceSerialPrefix")
+                        .HasMaxLength(3)
+                        .HasColumnType("nvarchar(3)");
 
                     b.Property<string>("LogoUrl")
                         .HasColumnType("nvarchar(max)");

@@ -18,6 +18,10 @@ public class CompanySettingsDto
     public string? IBAN { get; set; }
     public string? BankName { get; set; }
     public string? LogoUrl { get; set; }
+    /// <summary>Fatura numarası seri (3 karakter). Boşsa firma adının ilk 3 harfi kullanılır.</summary>
+    public string? InvoiceSerialPrefix { get; set; }
+    /// <summary>İrsaliye numarası seri (3 karakter). Boşsa firma adının ilk 3 harfi kullanılır.</summary>
+    public string? DeliveryNoteSerialPrefix { get; set; }
 }
 
 public class UpdateCompanySettingsRequest
@@ -32,4 +36,8 @@ public class UpdateCompanySettingsRequest
     public string? IBAN { get; set; }
     public string? BankName { get; set; }
     public string? LogoUrl { get; set; }
+    /// <summary>Fatura seri (3 harf, opsiyonel). Örn: FTR.</summary>
+    public string? InvoiceSerialPrefix { get; set; }
+    /// <summary>İrsaliye seri (3 harf, opsiyonel). Örn: IRS.</summary>
+    public string? DeliveryNoteSerialPrefix { get; set; }
 }

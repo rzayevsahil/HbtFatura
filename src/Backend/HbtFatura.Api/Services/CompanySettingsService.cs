@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using HbtFatura.Api.Data;
 using HbtFatura.Api.DTOs.CompanySettings;
 using HbtFatura.Api.Entities;
+using HbtFatura.Api.Helpers;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
 
@@ -65,6 +66,8 @@ public class CompanySettingsService : ICompanySettingsService
         entity.CompanyName = request.CompanyName.Trim();
         entity.TaxOfficeId = request.TaxOfficeId;
         entity.TaxNumber = request.TaxNumber?.Trim();
+        entity.InvoiceSerialPrefix = NormalizeSerialPrefix(request.InvoiceSerialPrefix);
+        entity.DeliveryNoteSerialPrefix = NormalizeSerialPrefix(request.DeliveryNoteSerialPrefix);
         entity.Address = request.Address?.Trim();
         entity.Phone = request.Phone?.Trim();
         entity.Email = request.Email?.Trim();
@@ -115,6 +118,16 @@ public class CompanySettingsService : ICompanySettingsService
         return await GetByFirmIdAsync(effectiveFirmId, ct);
     }
 
+    /// <summary>Trims to max 3 chars, uppercase, normalizes Turkish to ASCII, keeps only A-Z and 0-9. Returns null if empty.</summary>
+    private static string? NormalizeSerialPrefix(string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value)) return null;
+        var normalized = DocumentSerialPrefixHelper.NormalizeTurkishToAscii(value.Trim().ToUpperInvariant());
+        var s = new string(normalized.Where(c => (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9')).ToArray());
+        if (s.Length == 0) return null;
+        return s.Length > 3 ? s.Substring(0, 3) : s;
+    }
+
     private static CompanySettingsDto MapToDto(CompanySettings e) => new()
     {
         Id = e.Id,
@@ -132,6 +145,8 @@ public class CompanySettingsService : ICompanySettingsService
         Website = e.Website,
         IBAN = e.IBAN,
         BankName = e.BankName,
-        LogoUrl = e.LogoUrl
+        LogoUrl = e.LogoUrl,
+        InvoiceSerialPrefix = e.InvoiceSerialPrefix,
+        DeliveryNoteSerialPrefix = e.DeliveryNoteSerialPrefix
     };
 }
