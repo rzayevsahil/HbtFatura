@@ -36,11 +36,15 @@ public class EmployeeService : IEmployeeService
 
     public async Task<IReadOnlyList<EmployeeListDto>> GetByFirmAsync(CancellationToken ct = default)
     {
+        if (!await _currentUser.HasPermissionAsync("Employees.View", _db, ct))
+            return Array.Empty<EmployeeListDto>();
+
         return await ScopeQuery()
             .OrderBy(u => u.FullName)
             .Select(u => new EmployeeListDto
             {
                 Id = u.Id,
+                FirmId = u.FirmId,
                 Email = u.Email ?? "",
                 FullName = u.FullName,
                 CreatedAt = u.CreatedAt
@@ -50,8 +54,8 @@ public class EmployeeService : IEmployeeService
 
     public async Task<EmployeeListDto> CreateAsync(CreateEmployeeRequest request, CancellationToken ct = default)
     {
-        if (!_currentUser.IsFirmAdmin && !_currentUser.IsSuperAdmin)
-            throw new UnauthorizedAccessException("Unauthorized to create employees.");
+        if (!await _currentUser.HasPermissionAsync("Employees.Edit", _db, ct))
+            throw new UnauthorizedAccessException("Personel oluşturma yetkiniz bulunmamaktadır.");
 
         var effectiveFirmId = _currentUser.IsSuperAdmin ? (request.FirmId ?? _currentUser.FirmId) : _currentUser.FirmId;
         if (!effectiveFirmId.HasValue)
@@ -78,6 +82,7 @@ public class EmployeeService : IEmployeeService
         return new EmployeeListDto
         {
             Id = user.Id,
+            FirmId = user.FirmId,
             Email = user.Email ?? "",
             FullName = user.FullName,
             CreatedAt = user.CreatedAt
@@ -86,11 +91,15 @@ public class EmployeeService : IEmployeeService
 
     public async Task<EmployeeListDto?> GetByIdAsync(Guid id, CancellationToken ct = default)
     {
+        if (!await _currentUser.HasPermissionAsync("Employees.View", _db, ct))
+            return null;
+
         return await ScopeQuery()
             .Where(u => u.Id == id)
             .Select(u => new EmployeeListDto
             {
                 Id = u.Id,
+                FirmId = u.FirmId,
                 Email = u.Email ?? "",
                 FullName = u.FullName,
                 CreatedAt = u.CreatedAt
@@ -100,6 +109,9 @@ public class EmployeeService : IEmployeeService
 
     public async Task<EmployeeListDto> UpdateAsync(Guid id, UpdateEmployeeRequest request, CancellationToken ct = default)
     {
+        if (!await _currentUser.HasPermissionAsync("Employees.Edit", _db, ct))
+            throw new UnauthorizedAccessException("Personel düzenleme yetkiniz bulunmamaktadır.");
+
         var user = await ScopeQuery().FirstOrDefaultAsync(u => u.Id == id, ct);
         if (user == null)
             throw new ArgumentException("Çalışan bulunamadı.");
@@ -132,6 +144,7 @@ public class EmployeeService : IEmployeeService
         return new EmployeeListDto
         {
             Id = user.Id,
+            FirmId = user.FirmId,
             Email = user.Email ?? "",
             FullName = user.FullName,
             CreatedAt = user.CreatedAt
@@ -140,6 +153,9 @@ public class EmployeeService : IEmployeeService
 
     public async Task DeleteAsync(Guid id, CancellationToken ct = default)
     {
+        if (!await _currentUser.HasPermissionAsync("Employees.Edit", _db, ct))
+            throw new UnauthorizedAccessException("Personel silme yetkiniz bulunmamaktadır.");
+
         var user = await ScopeQuery().FirstOrDefaultAsync(u => u.Id == id, ct);
         if (user == null)
             throw new ArgumentException("Çalışan bulunamadı.");

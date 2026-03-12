@@ -60,9 +60,13 @@ export class EmployeeFormComponent implements OnInit {
       : this.api.create(val);
 
     obs.subscribe({
-      next: () => {
+      next: (res: any) => {
         this.toastr.success(this.id ? 'Çalışan güncellendi.' : 'Çalışan eklendi.');
-        this.router.navigate(['/employees']);
+        if (res.firmId) {
+          this.router.navigate(['/firms', res.firmId]);
+        } else {
+          this.router.navigate(['/employees']);
+        }
       },
       error: (e: any) => {
         this.error = e.error?.message ?? 'Hata';

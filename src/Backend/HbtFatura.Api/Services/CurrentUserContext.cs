@@ -1,6 +1,8 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using HbtFatura.Api.Constants;
+using HbtFatura.Api.Data;
 
 namespace HbtFatura.Api.Services;
 
@@ -40,4 +42,18 @@ public class CurrentUserContext : ICurrentUserContext
     public bool IsSuperAdmin => Role == Roles.SuperAdmin;
     public bool IsFirmAdmin => Role == Roles.FirmAdmin;
     public bool IsEmployee => Role == Roles.Employee;
+
+    public async Task<bool> HasPermissionAsync(string permissionCode, AppDbContext db, CancellationToken ct = default)
+    {
+        if (IsSuperAdmin) return true;
+        
+        var userId = UserId;
+        if (userId == Guid.Empty) return false;
+
+        return await (from ur in db.UserRoles
+                      join rp in db.RolePermissions on ur.RoleId equals rp.RoleId
+                      join p in db.Permissions on rp.PermissionId equals p.Id
+                      where ur.UserId == userId && p.Code == permissionCode
+                      select p.Id).AnyAsync(ct);
+    }
 }
