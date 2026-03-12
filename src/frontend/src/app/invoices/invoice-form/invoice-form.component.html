@@ -8,11 +8,16 @@
       <div class="form-grid">
         <div class="row">
           <label>Fatura tipi</label>
+          @if (form.get('deliveryNoteId')?.value || invoiceSourceId) {
+          <span class="form-readonly">{{ lookups.getName('InvoiceType', form.get('invoiceType')?.value) }}</span>
+          <span class="form-hint">İrsaliyeden oluşturulduğu için tip değiştirilemez.</span>
+          } @else {
           <select formControlName="invoiceType">
             @for (l of lookups.getGroup('InvoiceType')(); track l.code) {
             <option [ngValue]="+l.code">{{ l.name }}</option>
             }
           </select>
+          }
         </div>
         @if (!id) {
         <div class="row" #dnDropdownWrap>

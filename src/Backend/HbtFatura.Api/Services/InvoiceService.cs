@@ -318,7 +318,9 @@ public class InvoiceService : IInvoiceService
         var userId = _currentUser.UserId;
 
         invoice.InvoiceDate = DateTimeHelper.NormalizeForStorage(request.InvoiceDate);
-        invoice.InvoiceType = request.InvoiceType;
+        // İrsaliyeden oluşturulmuş faturada tip değiştirilemez.
+        if (!invoice.SourceId.HasValue)
+            invoice.InvoiceType = request.InvoiceType;
         invoice.CustomerId = request.CustomerId;
         invoice.CustomerTitle = request.CustomerTitle;
         

@@ -25,6 +25,8 @@ export class InvoiceFormComponent implements OnInit {
 
   form: FormGroup;
   id: string | null = null;
+  /** İrsaliyeden oluşturulmuş faturada tip değiştirilemez. */
+  invoiceSourceId: string | null = null;
   customers: CustomerDto[] = [];
   products: ProductDto[] = [];
   productFilterText = '';
@@ -120,6 +122,7 @@ export class InvoiceFormComponent implements OnInit {
 
     if (this.id) {
       this.invoiceApi.getById(this.id).subscribe(inv => {
+        this.invoiceSourceId = inv.sourceId ?? null;
         this.form.patchValue({
           invoiceType: inv.invoiceType ?? 0,
           customerId: inv.customerId ?? null,

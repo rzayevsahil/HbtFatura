@@ -128,6 +128,7 @@ export class DeliveryNoteFormComponent implements OnInit {
           this.deliveryStatus = dn.status;
           this.form.patchValue({
             customerId: dn.customerId ?? null,
+            orderId: dn.orderId ?? null,
             deliveryDate: this.toDatetimeLocalValue(dn.deliveryDate),
             deliveryType: dn.deliveryType ?? 0
           });

@@ -69,16 +69,19 @@
           <label>İrsaliye Tarihi</label>
           <input type="datetime-local" formControlName="deliveryDate" />
         </div>
-        @if (!id) {
         <div class="row">
           <label>Tip</label>
+          @if (form.get('orderId')?.value) {
+          <span class="form-readonly">{{ lookups.getName('DeliveryNoteType', form.get('deliveryType')?.value) }}</span>
+          <span class="form-hint">Siparişten oluşturulduğu için tip değiştirilemez.</span>
+          } @else {
           <select formControlName="deliveryType">
             @for (l of lookups.getGroup('DeliveryNoteType')(); track l.code) {
             <option [ngValue]="+l.code">{{ l.name }}</option>
             }
           </select>
+          }
         </div>
-        }
         @if (id) {
         <div class="row">
           <label>Durum</label>
