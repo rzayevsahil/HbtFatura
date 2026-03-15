@@ -51,7 +51,7 @@ public class AccountPaymentService : IAccountPaymentService
             {
                 Id = Guid.NewGuid(),
                 CashRegisterId = request.CashRegisterId.Value,
-                Date = request.Date.Date,
+                Date = request.Date,
                 Type = isTahsilat ? CashTransactionType.Giris : CashTransactionType.Cikis,
                 Amount = request.Amount,
                 Description = request.Description?.Trim() ?? (isTahsilat ? "Cari tahsilat" : "Cari ödeme"),
@@ -70,7 +70,7 @@ public class AccountPaymentService : IAccountPaymentService
             {
                 Id = Guid.NewGuid(),
                 BankAccountId = request.BankAccountId.Value,
-                Date = request.Date.Date,
+                Date = request.Date,
                 Type = isTahsilat ? BankTransactionType.Giris : BankTransactionType.Cikis,
                 Amount = request.Amount,
                 Description = request.Description?.Trim() ?? (isTahsilat ? "Cari tahsilat" : "Cari ödeme"),
@@ -86,7 +86,7 @@ public class AccountPaymentService : IAccountPaymentService
             Id = Guid.NewGuid(),
             CustomerId = request.CustomerId,
             UserId = userId,
-            Date = request.Date.Date,
+            Date = request.Date,
             Type = isTahsilat ? AccountTransactionType.Borc : AccountTransactionType.Alacak,
             Amount = request.Amount,
             Currency = "TRY",

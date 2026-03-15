@@ -22,7 +22,7 @@ export class AccountPaymentFormComponent implements OnInit {
     type: ['Tahsilat' as string, Validators.required],
     customerId: ['', Validators.required],
     amount: [0, [Validators.required, Validators.min(0.01)]],
-    date: [new Date().toISOString().slice(0, 10), Validators.required],
+    dateTime: [new Date().toISOString().slice(0, 16), Validators.required],
     paymentMethod: ['Kasa' as string, Validators.required],
     cashRegisterId: [''],
     bankAccountId: [''],
@@ -93,10 +93,11 @@ export class AccountPaymentFormComponent implements OnInit {
       return;
     }
     this.saving = true;
+    const dateStr = (v.dateTime.length === 16 ? v.dateTime + ':00' : v.dateTime);
     this.paymentApi.create({
       customerId: v.customerId,
       amount: v.amount,
-      date: v.date,
+      date: dateStr,
       paymentMethod: v.paymentMethod as AccountPaymentMethod,
       cashRegisterId: v.paymentMethod === 'Kasa' ? v.cashRegisterId || undefined : undefined,
       bankAccountId: v.paymentMethod === 'Banka' ? v.bankAccountId || undefined : undefined,
