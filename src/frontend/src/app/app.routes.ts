@@ -169,6 +169,11 @@ export const routes: Routes = [
     canActivate: [authGuard, PermissionGuard], data: { permission: 'Cheques.Edit' }
   },
   {
+    path: 'cheques/:id',
+    loadComponent: () => import('./cheques/cheque-detail/cheque-detail.component').then(m => m.ChequeDetailComponent),
+    canActivate: [authGuard, PermissionGuard], data: { permission: 'Cheques.View' }
+  },
+  {
     path: 'cheques/:id/edit',
     loadComponent: () => import('./cheques/cheque-form/cheque-form.component').then(m => m.ChequeFormComponent),
     canActivate: [authGuard, PermissionGuard], data: { permission: 'Cheques.Edit' }

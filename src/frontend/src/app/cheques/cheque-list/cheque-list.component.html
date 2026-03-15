@@ -12,10 +12,9 @@
   </select>
   <select [(ngModel)]="filterStatus" (change)="applyFilter()">
     <option value="">Tüm durumlar</option>
-    <option [value]="0">Portföyde</option>
-    <option [value]="1">Tahsil edildi</option>
-    <option [value]="2">Ödendi</option>
-    <option [value]="3">Reddedildi</option>
+    @for (l of lookups.getGroup('ChequeStatus')(); track l.code) {
+    <option [value]="l.code">{{ l.name }}</option>
+    }
   </select>
   <input type="date" [(ngModel)]="filterDueFrom" (change)="applyFilter()" placeholder="Vade from" />
   <input type="date" [(ngModel)]="filterDueTo" (change)="applyFilter()" placeholder="Vade to" />

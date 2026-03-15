@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ChequeService } from '../../services/cheque.service';
+import { LookupService } from '../../core/services/lookup.service';
 import { ChequeOrPromissoryDto } from '../../core/models';
 import { ToastrService } from 'ngx-toastr';
 
@@ -20,6 +21,7 @@ export class ChequeDetailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private api: ChequeService,
+    public lookups: LookupService,
     private toastr: ToastrService
   ) { }
 
@@ -49,7 +51,6 @@ export class ChequeDetailComponent implements OnInit {
   }
 
   statusLabel(status: number): string {
-    const map: Record<number, string> = { 0: 'Portföyde', 1: 'Tahsil edildi', 2: 'Ödendi', 3: 'Reddedildi' };
-    return map[status] ?? '';
+    return this.lookups.getName('ChequeStatus', status);
   }
 }

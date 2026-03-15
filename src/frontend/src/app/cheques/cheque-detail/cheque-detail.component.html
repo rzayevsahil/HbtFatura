@@ -20,10 +20,9 @@
     <h3>Durum güncelle</h3>
     <div class="status-update">
       <select [(ngModel)]="newStatus">
-        <option [ngValue]="0">Portföyde</option>
-        <option [ngValue]="1">Tahsil edildi</option>
-        <option [ngValue]="2">Ödendi</option>
-        <option [ngValue]="3">Reddedildi</option>
+        @for (l of lookups.getGroup('ChequeStatus')(); track l.code) {
+        <option [ngValue]="+l.code">{{ l.name }}</option>
+        }
       </select>
       <button type="button" (click)="updateStatus()">Kaydet</button>
     </div>

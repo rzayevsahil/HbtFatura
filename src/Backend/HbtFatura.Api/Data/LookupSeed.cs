@@ -8,7 +8,7 @@ public static class LookupSeed
     public static async Task SeedIfEmptyAsync(AppDbContext db)
     {
         // 1. Ensure Groups exist
-        var groupNames = new[] { "OrderType", "OrderStatus", "InvoiceStatus", "DeliveryNoteStatus", "InvoiceType", "DeliveryNoteType" };
+        var groupNames = new[] { "OrderType", "OrderStatus", "InvoiceStatus", "DeliveryNoteStatus", "InvoiceType", "DeliveryNoteType", "ChequeStatus" };
         var existingGroups = await db.LookupGroups.ToListAsync();
         
         var groupsToCreate = new List<LookupGroup>();
@@ -30,6 +30,9 @@ public static class LookupSeed
         if (!existingGroups.Any(x => x.Name == "DeliveryNoteType"))
             groupsToCreate.Add(new LookupGroup { Id = Guid.NewGuid(), Name = "DeliveryNoteType", DisplayName = "İrsaliye Tipi", IsSystemGroup = true });
 
+        if (!existingGroups.Any(x => x.Name == "ChequeStatus"))
+            groupsToCreate.Add(new LookupGroup { Id = Guid.NewGuid(), Name = "ChequeStatus", DisplayName = "Çek/Senet Durumu", IsSystemGroup = true });
+
         if (groupsToCreate.Any())
         {
             await db.LookupGroups.AddRangeAsync(groupsToCreate);
@@ -44,6 +47,7 @@ public static class LookupSeed
         var deliveryNoteStatusId = existingGroups.First(x => x.Name == "DeliveryNoteStatus").Id;
         var invoiceTypeId = existingGroups.First(x => x.Name == "InvoiceType").Id;
         var deliveryNoteTypeId = existingGroups.First(x => x.Name == "DeliveryNoteType").Id;
+        var chequeStatusId = existingGroups.First(x => x.Name == "ChequeStatus").Id;
 
         var lookups = new List<Lookup>();
 
@@ -94,6 +98,15 @@ public static class LookupSeed
         {
             lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = deliveryNoteTypeId, Code = "0", Name = "Satış", Color = "#28a745", SortOrder = 1 });
             lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = deliveryNoteTypeId, Code = "1", Name = "Alış", Color = "#dc3545", SortOrder = 2 });
+        }
+
+        // ChequeStatus (Çek/Senet durumu)
+        if (!await db.Lookups.AnyAsync(x => x.LookupGroupId == chequeStatusId))
+        {
+            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = chequeStatusId, Code = "0", Name = "Portföyde", Color = "#6c757d", SortOrder = 1 });
+            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = chequeStatusId, Code = "1", Name = "Tahsil edildi", Color = "#28a745", SortOrder = 2 });
+            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = chequeStatusId, Code = "2", Name = "Ödendi", Color = "#007bff", SortOrder = 3 });
+            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = chequeStatusId, Code = "3", Name = "Reddedildi", Color = "#dc3545", SortOrder = 4 });
         }
 
         if (lookups.Any())

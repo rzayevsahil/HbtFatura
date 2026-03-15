@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ChequeService } from '../../services/cheque.service';
-import { CustomerService } from '../../services/customer.service';
+import { LookupService } from '../../core/services/lookup.service';
 import { ToastrService } from 'ngx-toastr';
 import { ChequeOrPromissoryDto, PagedResult } from '../../core/models';
 
@@ -22,12 +22,13 @@ export class ChequeListComponent implements OnInit {
   filterPortfolioNumber = '';
   filterSerialNumber = '';
   filterType: number | '' = '';
-  filterStatus: number | '' = '';
+  filterStatus: number | string | '' = '';
   filterDueFrom = '';
   filterDueTo = '';
 
   constructor(
     private api: ChequeService,
+    public lookups: LookupService,
     private toastr: ToastrService
   ) { }
 
@@ -38,7 +39,7 @@ export class ChequeListComponent implements OnInit {
   load(): void {
     this.api.getPaged(this.page, this.pageSize, {
       type: this.filterType === '' ? undefined : this.filterType,
-      status: this.filterStatus === '' ? undefined : this.filterStatus,
+      status: this.filterStatus === '' ? undefined : Number(this.filterStatus),
       dueFrom: this.filterDueFrom || undefined,
       dueTo: this.filterDueTo || undefined,
       portfolioNumber: this.filterPortfolioNumber.trim() || undefined,
@@ -73,7 +74,6 @@ export class ChequeListComponent implements OnInit {
   }
 
   statusLabel(status: number): string {
-    const map: Record<number, string> = { 0: 'Portföyde', 1: 'Tahsil edildi', 2: 'Ödendi', 3: 'Reddedildi' };
-    return map[status] ?? '';
+    return this.lookups.getName('ChequeStatus', status);
   }
 }
