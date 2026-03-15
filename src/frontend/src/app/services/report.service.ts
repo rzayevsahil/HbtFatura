@@ -58,6 +58,12 @@ export class ReportService {
     return this.api.get<StockLevelsReportDto>(`${this.base}/stock-levels`, params);
   }
 
+  downloadStockLevelsPdf(firmId?: string): Observable<Blob> {
+    const p = new URLSearchParams({ format: 'pdf' });
+    if (firmId) p.set('firmId', firmId);
+    return this.api.getBlob(`${this.base}/stock-levels?${p.toString()}`);
+  }
+
   getInvoiceReport(dateFrom?: string, dateTo?: string, customerId?: string): Observable<InvoiceReportDto> {
     const params: Record<string, string> = {};
     if (dateFrom) params['dateFrom'] = dateFrom;

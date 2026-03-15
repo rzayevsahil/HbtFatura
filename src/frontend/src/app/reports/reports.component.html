@@ -183,6 +183,7 @@
 <section class="report-section card">
   <h2>Stok raporu</h2>
   <button type="button" (click)="loadStock()" [disabled]="stockLoading">Yükle</button>
+  <button type="button" (click)="downloadStockPdf()">PDF indir</button>
   @if (stockLoading) { <p>Yükleniyor...</p> }
   @if (stockData && !stockLoading) {
   <div class="table-wrap">

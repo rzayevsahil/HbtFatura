@@ -156,6 +156,21 @@ export class ReportsComponent implements OnInit {
     });
   }
 
+  downloadStockPdf(): void {
+    this.reportApi.downloadStockLevelsPdf().subscribe({
+      next: blob => {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'stok-raporu.pdf';
+        a.click();
+        URL.revokeObjectURL(url);
+        this.toastr.success('PDF indirildi.');
+      },
+      error: e => this.toastr.error(e.error?.message ?? 'İndirilemedi.')
+    });
+  }
+
   loadInvoiceReport(): void {
     this.invoiceLoading = true;
     this.invoiceData = null;

@@ -69,8 +69,15 @@ public class ReportsController : ControllerBase
     [HttpGet("stock-levels")]
     public async Task<ActionResult<StockLevelsReportDto>> GetStockLevels(
         [FromQuery] Guid? firmId,
+        [FromQuery] string? format,
         CancellationToken ct = default)
     {
+        if (string.Equals(format, "pdf", StringComparison.OrdinalIgnoreCase))
+        {
+            var pdf = await _service.GetStockLevelsPdfAsync(firmId, ct);
+            if (pdf == null) return NotFound();
+            return File(pdf, "application/pdf", "stok-raporu.pdf");
+        }
         var data = await _service.GetStockLevelsAsync(firmId, ct);
         return Ok(data);
     }

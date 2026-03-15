@@ -239,6 +239,51 @@ public class ReportService : IReportService
         return new StockLevelsReportDto { Items = items };
     }
 
+    public async Task<byte[]?> GetStockLevelsPdfAsync(Guid? firmId, CancellationToken ct = default)
+    {
+        var data = await GetStockLevelsAsync(firmId, ct);
+        QuestPDF.Settings.License = LicenseType.Community;
+
+        var document = Document.Create(container =>
+        {
+            container.Page(page =>
+            {
+                page.Size(PageSizes.A4.Landscape());
+                page.Margin(20);
+                page.Header().Text("Stok raporu").Bold().FontSize(14);
+                page.Content().PaddingVertical(10).Column(col =>
+                {
+                    col.Item().Text($"Tarih: {DateTime.Now.ToString("dd.MM.yyyy HH:mm", CultureInfo.GetCultureInfo("tr-TR"))}");
+                    col.Item().PaddingTop(10).Table(t =>
+                    {
+                        t.ColumnsDefinition(c =>
+                        {
+                            c.ConstantColumn(100);
+                            c.RelativeColumn();
+                            c.ConstantColumn(50);
+                            c.ConstantColumn(80);
+                        });
+                        t.Header(h =>
+                        {
+                            h.Cell().Background(Colors.Grey.Lighten2).Padding(4).Text("Kod").Bold();
+                            h.Cell().Background(Colors.Grey.Lighten2).Padding(4).Text("Ad").Bold();
+                            h.Cell().Background(Colors.Grey.Lighten2).Padding(4).Text("Birim").Bold();
+                            h.Cell().Background(Colors.Grey.Lighten2).Padding(4).AlignRight().Text("Miktar").Bold();
+                        });
+                        foreach (var row in data.Items)
+                        {
+                            t.Cell().Padding(4).Text(row.Code);
+                            t.Cell().Padding(4).Text(row.Name);
+                            t.Cell().Padding(4).Text(row.Unit);
+                            t.Cell().Padding(4).AlignRight().Text(row.Quantity.ToString("N2", CultureInfo.GetCultureInfo("tr-TR")));
+                        }
+                    });
+                });
+            });
+        });
+        return document.GeneratePdf();
+    }
+
     public async Task<byte[]?> GetCariExtractPdfAsync(Guid customerId, DateTime? dateFrom, DateTime? dateTo, CancellationToken ct = default)
     {
         var data = await GetCariExtractAsync(customerId, dateFrom, dateTo, ct);
@@ -254,7 +299,8 @@ public class ReportService : IReportService
                 page.Header().Text($"Cari ekstre - {data.CustomerTitle}").Bold().FontSize(14);
                 page.Content().PaddingVertical(10).Column(col =>
                 {
-                    col.Item().Text($"Dönem: {(data.DateFrom?.ToString("d") ?? "—")} - {(data.DateTo?.ToString("d") ?? "—")}");
+                    col.Item().Text($"Dönem: {(data.DateFrom?.ToString("d", CultureInfo.GetCultureInfo("tr-TR")) ?? "—")} - {(data.DateTo?.ToString("d", CultureInfo.GetCultureInfo("tr-TR")) ?? "—")}");
+                    col.Item().Text($"Rapor tarihi: {DateTime.Now.ToString("dd.MM.yyyy HH:mm", CultureInfo.GetCultureInfo("tr-TR"))}");
                     col.Item().Text($"Açılış bakiyesi: {data.OpeningBalance:N2} ₺");
                     col.Item().PaddingTop(10).Table(t =>
                     {
@@ -364,7 +410,7 @@ public class ReportService : IReportService
         QuestPDF.Settings.License = LicenseType.Community;
 
         var title = data.CustomerTitle != null ? $"Fatura raporu - {data.CustomerTitle}" : "Fatura raporu";
-        var period = $"Dönem: {(data.DateFrom?.ToString("d", CultureInfo.GetCultureInfo("tr-TR")) ?? "—")} - {(data.DateTo?.ToString("d", CultureInfo.GetCultureInfo("tr-TR")) ?? "—")}";
+        var period = $"Dönem: {(data.DateFrom?.ToString("d", CultureInfo.GetCultureInfo("tr-TR")) ?? "—")} - {(data.DateTo?.ToString("d", CultureInfo.GetCultureInfo("tr-TR")) ?? "—")}  |  Rapor tarihi: {DateTime.Now.ToString("dd.MM.yyyy HH:mm", CultureInfo.GetCultureInfo("tr-TR"))}";
         var statusNames = new[] { "Taslak", "Kesildi", "Ödendi", "İptal" };
 
         var document = Document.Create(container =>
