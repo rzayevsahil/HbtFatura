@@ -19,6 +19,7 @@ public class BankAccountsController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Policy = "Banking.View")]
     public async Task<ActionResult<IReadOnlyList<BankAccountDto>>> GetAll([FromQuery] Guid? firmId, CancellationToken ct)
     {
         var list = await _service.GetAllAsync(firmId, ct);
@@ -26,6 +27,7 @@ public class BankAccountsController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
+    [Authorize(Policy = "Banking.View")]
     public async Task<ActionResult<BankAccountDto>> Get(Guid id, CancellationToken ct)
     {
         var dto = await _service.GetByIdAsync(id, ct);
@@ -34,6 +36,7 @@ public class BankAccountsController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Policy = "Banking.Edit")]
     public async Task<ActionResult<BankAccountDto>> Create([FromBody] CreateBankAccountRequest request, CancellationToken ct)
     {
         var dto = await _service.CreateAsync(request, ct);
@@ -41,6 +44,7 @@ public class BankAccountsController : ControllerBase
     }
 
     [HttpPut("{id:guid}")]
+    [Authorize(Policy = "Banking.Edit")]
     public async Task<ActionResult<BankAccountDto>> Update(Guid id, [FromBody] UpdateBankAccountRequest request, CancellationToken ct)
     {
         var dto = await _service.UpdateAsync(id, request, ct);
@@ -49,6 +53,7 @@ public class BankAccountsController : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
+    [Authorize(Policy = "Banking.Edit")]
     public async Task<IActionResult> Delete(Guid id, CancellationToken ct)
     {
         var ok = await _service.DeleteAsync(id, ct);
@@ -57,6 +62,7 @@ public class BankAccountsController : ControllerBase
     }
 
     [HttpGet("{id:guid}/transactions")]
+    [Authorize(Policy = "Banking.View")]
     public async Task<ActionResult<PagedResult<BankTransactionDto>>> GetTransactions(Guid id, [FromQuery] int page = 1, [FromQuery] int pageSize = 20, [FromQuery] DateTime? dateFrom = null, [FromQuery] DateTime? dateTo = null, CancellationToken ct = default)
     {
         if (page < 1) page = 1;
@@ -66,6 +72,7 @@ public class BankAccountsController : ControllerBase
     }
 
     [HttpPost("{id:guid}/transactions")]
+    [Authorize(Policy = "Banking.Edit")]
     public async Task<ActionResult<BankTransactionDto>> AddTransaction(Guid id, [FromBody] CreateBankTransactionRequest request, CancellationToken ct)
     {
         var dto = await _service.AddTransactionAsync(id, request, ct);

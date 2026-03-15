@@ -154,6 +154,11 @@ export const routes: Routes = [
     canActivate: [authGuard, PermissionGuard], data: { permission: 'Banking.Edit' }
   },
   {
+    path: 'bank-accounts/:id',
+    loadComponent: () => import('./bank-accounts/bank-account-detail/bank-account-detail.component').then(m => m.BankAccountDetailComponent),
+    canActivate: [authGuard, PermissionGuard], data: { permission: 'Banking.View' }
+  },
+  {
     path: 'cheques',
     loadComponent: () => import('./cheques/cheque-list/cheque-list.component').then(m => m.ChequeListComponent),
     canActivate: [authGuard, PermissionGuard], data: { permission: 'Cheques.View' }
