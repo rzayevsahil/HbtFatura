@@ -50,6 +50,7 @@ public class OrderService : IOrderService
 
         var total = await query.CountAsync(ct);
         var items = await query
+            .Include(x => x.User)
             .OrderByDescending(x => x.OrderDate)
             .ThenByDescending(x => x.OrderNumber)
             .Skip((page - 1) * pageSize)
@@ -63,7 +64,8 @@ public class OrderService : IOrderService
                 OrderType = (int)o.OrderType,
                 CustomerTitle = o.Customer != null ? o.Customer.Title : null,
                 TotalAmount = o.Items.Sum(i => i.Quantity * i.UnitPrice * (1 + i.VatRate / 100m)),
-                CreatedByUserId = o.UserId
+                CreatedByUserId = o.UserId,
+                CreatedByUserName = o.User != null ? o.User.FullName : null
             }).ToListAsync(ct);
 
         return new PagedResult<OrderListDto> { Items = items, TotalCount = total, Page = page, PageSize = pageSize };

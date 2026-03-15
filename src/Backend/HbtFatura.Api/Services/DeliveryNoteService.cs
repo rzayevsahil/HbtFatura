@@ -54,6 +54,7 @@ public class DeliveryNoteService : IDeliveryNoteService
         var list = await query
             .Include(x => x.Customer)
             .Include(x => x.Order)
+            .Include(x => x.User)
             .OrderByDescending(x => x.DeliveryDate)
             .ThenByDescending(x => x.DeliveryNumber)
             .Skip((page - 1) * pageSize)
@@ -68,7 +69,8 @@ public class DeliveryNoteService : IDeliveryNoteService
                 CustomerTitle = x.Customer != null ? x.Customer.Title : null,
                 OrderNumber = x.Order != null ? x.Order.OrderNumber : null,
                 InvoiceId = x.InvoiceId,
-                CreatedByUserId = x.UserId
+                CreatedByUserId = x.UserId,
+                CreatedByUserName = x.User != null ? x.User.FullName : null
             })
             .ToListAsync(ct);
         return new PagedResult<DeliveryNoteListDto> { Items = list, TotalCount = total, Page = page, PageSize = pageSize };

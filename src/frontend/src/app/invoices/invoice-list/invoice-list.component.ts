@@ -6,8 +6,7 @@ import { InvoiceService } from '../../services/invoice.service';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../../core/services/auth.service';
 import { LookupService } from '../../core/services/lookup.service';
-import { EmployeeService } from '../../services/employee.service';
-import { InvoiceListDto, InvoiceStatus, EmployeeListDto } from '../../core/models';
+import { InvoiceListDto, InvoiceStatus } from '../../core/models';
 
 @Component({
   selector: 'app-invoice-list',
@@ -27,14 +26,12 @@ export class InvoiceListComponent implements OnInit {
   searchInvoiceType: number | null = null;
   searchText = '';
   loading = false;
-  usersMap: Record<string, string> = {};
 
   constructor(
     private api: InvoiceService,
     private router: Router,
     private toastr: ToastrService,
     public lookups: LookupService,
-    private userService: EmployeeService,
     public auth: AuthService
   ) { }
 
@@ -47,14 +44,7 @@ export class InvoiceListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadUsers();
     this.load();
-  }
-
-  loadUsers(): void {
-    this.userService.getAll().subscribe(list => {
-      this.usersMap = list.reduce((acc, u) => ({ ...acc, [u.id]: u.fullName }), {});
-    });
   }
 
   load(): void {
@@ -77,10 +67,6 @@ export class InvoiceListComponent implements OnInit {
 
   statusLabel(s: any, sourceType?: string | null): string {
     return this.lookups.getName('InvoiceStatus', s);
-  }
-
-  getUserName(id: string): string {
-    return this.usersMap[id] ?? '—';
   }
 
   statusClass(s: any): string {

@@ -44,6 +44,7 @@ public class InvoiceListDto
     public bool IsGibSent { get; set; }
     public string? SourceType { get; set; }
     public Guid CreatedByUserId { get; set; }
+    public string? CreatedByUserName { get; set; }
 }
 
 public class CreateInvoiceRequest

@@ -71,7 +71,7 @@
             {{ statusLabel(o.status) }}
           </span>
         </td>
-        <td>{{ getUserName(o.createdByUserId) }}</td>
+        <td>{{ o.createdByUserName ?? '—' }}</td>
         <td>
           <div class="actions-cell">
             <a [routerLink]="['/orders', o.id]">Detay</a>

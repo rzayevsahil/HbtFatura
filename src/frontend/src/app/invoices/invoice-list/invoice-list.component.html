@@ -79,7 +79,7 @@
             {{ statusLabel(inv.status) }}
           </span>
         </td>
-        <td>{{ getUserName(inv.createdByUserId) }}</td>
+        <td>{{ inv.createdByUserName ?? '—' }}</td>
         <td>
           <div class="actions-cell">
             <a [routerLink]="['/invoices', inv.id]">Detay</a>

@@ -35,6 +35,7 @@ export interface OrderListDto {
     customerTitle?: string;
     totalAmount?: number;
     createdByUserId: string;
+    createdByUserName?: string | null;
 }
 
 export interface OrderItemInputDto {

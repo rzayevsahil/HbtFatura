@@ -54,6 +54,7 @@ public class InvoiceService : IInvoiceService
 
         var total = await query.CountAsync(ct);
         var items = await query
+            .Include(x => x.User)
             .OrderByDescending(x => x.InvoiceDate)
             .ThenByDescending(x => x.InvoiceNumber)
             .Skip((page - 1) * pageSize)
@@ -70,7 +71,8 @@ public class InvoiceService : IInvoiceService
                 Currency = x.Currency,
                 IsGibSent = x.IsGibSent,
                 SourceType = x.SourceType,
-                CreatedByUserId = x.UserId
+                CreatedByUserId = x.UserId,
+                CreatedByUserName = x.User != null ? x.User.FullName : null
             })
             .ToListAsync(ct);
         return new PagedResult<InvoiceListDto> { Items = items, TotalCount = total, Page = page, PageSize = pageSize };

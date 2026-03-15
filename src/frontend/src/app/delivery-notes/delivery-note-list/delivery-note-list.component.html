@@ -71,7 +71,7 @@
             {{ statusLabel(d.status) }}
           </span>
         </td>
-        <td>{{ getUserName(d.createdByUserId) }}</td>
+        <td>{{ d.createdByUserName ?? '—' }}</td>
         <td>
           <div class="actions-cell">
             <a [routerLink]="['/delivery-notes', d.id]">Detay</a>

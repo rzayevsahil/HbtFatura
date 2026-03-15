@@ -67,6 +67,7 @@ export interface InvoiceListDto {
     isGibSent: boolean;
     sourceType?: string | null;
     createdByUserId: string;
+    createdByUserName?: string | null;
 }
 
 export interface CreateInvoiceRequest {
