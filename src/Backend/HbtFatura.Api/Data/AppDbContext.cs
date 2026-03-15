@@ -169,6 +169,7 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, 
             e.HasOne(x => x.BankAccount).WithMany().HasForeignKey(x => x.BankAccountId).OnDelete(DeleteBehavior.SetNull);
             e.HasIndex(x => x.FirmId);
             e.HasIndex(x => new { x.FirmId, x.DueDate });
+            e.HasIndex(x => new { x.FirmId, x.PortfolioNumber }).IsUnique();
             e.Property(x => x.Amount).HasPrecision(18, 2);
         });
 

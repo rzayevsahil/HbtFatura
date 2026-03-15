@@ -345,6 +345,12 @@ namespace HbtFatura.Api.Migrations
                     b.Property<Guid?>("BankAccountId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("BordroNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("BordroType")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -360,10 +366,17 @@ namespace HbtFatura.Api.Migrations
                     b.Property<DateTime>("IssueDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("PortfolioNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<Guid?>("ReferenceId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ReferenceType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SerialNumber")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Status")
@@ -381,6 +394,9 @@ namespace HbtFatura.Api.Migrations
                     b.HasIndex("FirmId");
 
                     b.HasIndex("FirmId", "DueDate");
+
+                    b.HasIndex("FirmId", "PortfolioNumber")
+                        .IsUnique();
 
                     b.ToTable("ChequeOrPromissories");
                 });

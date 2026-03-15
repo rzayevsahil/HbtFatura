@@ -97,8 +97,11 @@
       </div>
       <div class="row">
         <label>Vergi No / TC</label>
-        <input formControlName="taxNumber" placeholder="10 haneli" (input)="onTaxNumberInput($event)"
+        <input formControlName="taxNumber" placeholder="10 veya 11 haneli" maxlength="11"
           [readonly]="isReadOnly()" />
+        @if (form.get('taxNumber')?.invalid && form.get('taxNumber')?.touched && (form.get('taxNumber')?.value?.trim() ?? '').length > 0) {
+        <span class="error-msg">{{ form.get('taxNumber')?.errors?.['taxNumber'] || 'Geçersiz vergi no veya TC.' }}</span>
+        }
       </div>
       <div class="row">
         <label>Adres</label>

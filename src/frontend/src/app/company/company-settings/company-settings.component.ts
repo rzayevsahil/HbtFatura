@@ -10,6 +10,7 @@ import { ToastrService } from 'ngx-toastr';
 import { environment } from '../../../environments/environment';
 import { PhoneFormatter } from '../../core/utils/phone-formatter';
 import { IbanFormatter } from '../../core/utils/iban-formatter';
+import { taxNumberValidator } from '../../core/validators/tax-number.validator';
 
 @Component({
   selector: 'app-company-settings',
@@ -27,7 +28,7 @@ export class CompanySettingsComponent implements OnInit {
     cityId: [null as string | null, [Validators.required]],
     districtId: [null as string | null, [Validators.required]],
     taxOfficeId: [null as string | null, [Validators.required]],
-    taxNumber: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(11)]],
+    taxNumber: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(11), taxNumberValidator({ validateTcknChecksum: true })]],
     address: ['', [Validators.required]],
     phone: ['', [Validators.required, Validators.minLength(14), Validators.maxLength(14)]],
     email: ['', [Validators.required, Validators.email]],
@@ -284,14 +285,6 @@ export class CompanySettingsComponent implements OnInit {
       // But we better keep the form value updated
     }
     this.form.patchValue({ website: value }, { emitEvent: false });
-  }
-
-  onTaxNumberInput(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    let value = input.value.replace(/[^0-9]/g, '');
-    if (value.length > 11) value = value.substring(0, 11);
-    this.form.patchValue({ taxNumber: value }, { emitEvent: false });
-    input.value = value;
   }
 
   getLogoUrl(): string | null {

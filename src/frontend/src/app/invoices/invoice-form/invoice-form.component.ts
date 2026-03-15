@@ -97,7 +97,7 @@ export class InvoiceFormComponent implements OnInit {
       customerId: this.fb.control<string | null>(null),
       deliveryNoteId: [null as string | null],
       customerTitle: ['', Validators.required],
-      customerTaxNumber: ['', [Validators.required, taxNumberValidator()]],
+      customerTaxNumber: ['', [Validators.required, Validators.maxLength(11), taxNumberValidator({ validateTcknChecksum: true })]],
       customerAddress: ['', Validators.required],
       customerPhone: [''],
       customerEmail: [''],

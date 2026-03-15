@@ -23,6 +23,13 @@
         </select>
       </div>
       <div class="row">
+        <label>Seri no</label>
+        <input type="text" formControlName="serialNumber" placeholder="Çek: banka no (7 hane), Senet: matbu seri no" />
+      </div>
+      @if (!id) {
+        <p class="hint">Portföy no kayıt sonrası sistem tarafından atanacaktır.</p>
+      }
+      <div class="row">
         <label>Cari</label>
         <select formControlName="customerId" required>
           <option value="">Cari seçin</option>

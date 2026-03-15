@@ -30,7 +30,7 @@ public class ChequeOrPromissoryService : IChequeOrPromissoryService
         return _db.ChequeOrPromissories.Where(x => false);
     }
 
-    public async Task<PagedResult<ChequeOrPromissoryDto>> GetPagedAsync(int page, int pageSize, int? type, int? status, Guid? customerId, Guid? firmId, DateTime? dueFrom, DateTime? dueTo, CancellationToken ct = default)
+    public async Task<PagedResult<ChequeOrPromissoryDto>> GetPagedAsync(int page, int pageSize, int? type, int? status, Guid? customerId, Guid? firmId, DateTime? dueFrom, DateTime? dueTo, string? portfolioNumber = null, string? serialNumber = null, CancellationToken ct = default)
     {
         var query = ScopeQuery(firmId)
             .Include(x => x.Customer)
@@ -41,10 +41,14 @@ public class ChequeOrPromissoryService : IChequeOrPromissoryService
         if (customerId.HasValue) query = query.Where(x => x.CustomerId == customerId.Value);
         if (dueFrom.HasValue) query = query.Where(x => x.DueDate >= dueFrom.Value.Date);
         if (dueTo.HasValue) query = query.Where(x => x.DueDate <= dueTo.Value.Date);
+        if (!string.IsNullOrWhiteSpace(portfolioNumber))
+            query = query.Where(x => x.PortfolioNumber != null && x.PortfolioNumber.Contains(portfolioNumber.Trim()));
+        if (!string.IsNullOrWhiteSpace(serialNumber))
+            query = query.Where(x => x.SerialNumber != null && x.SerialNumber.Contains(serialNumber.Trim()));
 
         var total = await query.CountAsync(ct);
         var items = await query
-            .OrderBy(x => x.DueDate)
+            .OrderBy(x => x.PortfolioNumber)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .Select(x => new ChequeOrPromissoryDto
@@ -52,6 +56,10 @@ public class ChequeOrPromissoryService : IChequeOrPromissoryService
                 Id = x.Id,
                 FirmId = x.FirmId,
                 Type = x.Type,
+                PortfolioNumber = x.PortfolioNumber,
+                SerialNumber = x.SerialNumber,
+                BordroNumber = x.BordroNumber,
+                BordroType = x.BordroType,
                 CustomerId = x.CustomerId,
                 CustomerTitle = x.Customer.Title,
                 Amount = x.Amount,
@@ -80,6 +88,10 @@ public class ChequeOrPromissoryService : IChequeOrPromissoryService
             Id = entity.Id,
             FirmId = entity.FirmId,
             Type = entity.Type,
+            PortfolioNumber = entity.PortfolioNumber,
+            SerialNumber = entity.SerialNumber,
+            BordroNumber = entity.BordroNumber,
+            BordroType = entity.BordroType,
             CustomerId = entity.CustomerId,
             CustomerTitle = entity.Customer.Title,
             Amount = entity.Amount,
@@ -107,11 +119,20 @@ public class ChequeOrPromissoryService : IChequeOrPromissoryService
         var hasCustomer = await _db.Customers.IgnoreQueryFilters().AnyAsync(c => c.Id == request.CustomerId && !c.IsDeleted && (c.User != null && c.User.FirmId == firmId), ct);
         if (!hasCustomer) throw new ArgumentException("Customer not found or access denied.");
 
+        var year = request.IssueDate.Year;
+        var portfolioNumber = await GetNextPortfolioNumberAsync(firmId, request.Type, year, ct);
+        var bordroType = request.Type == ChequeType.Cek ? BordroType.CekGirisi : BordroType.SenetGirisi;
+        var bordroNumber = await GetNextBordroNumberAsync(firmId, bordroType, year, ct);
+
         var entity = new ChequeOrPromissory
         {
             Id = Guid.NewGuid(),
             FirmId = firmId,
             Type = request.Type,
+            PortfolioNumber = portfolioNumber,
+            SerialNumber = string.IsNullOrWhiteSpace(request.SerialNumber) ? null : request.SerialNumber.Trim(),
+            BordroNumber = bordroNumber,
+            BordroType = bordroType,
             CustomerId = request.CustomerId,
             Amount = request.Amount,
             IssueDate = request.IssueDate.Date,
@@ -127,11 +148,48 @@ public class ChequeOrPromissoryService : IChequeOrPromissoryService
         return (await GetByIdAsync(entity.Id, ct))!;
     }
 
+    private async Task<string> GetNextPortfolioNumberAsync(Guid firmId, int type, int year, CancellationToken ct)
+    {
+        var prefix = type == ChequeType.Cek ? "CEK" : "SNT";
+        var yearStr = year.ToString();
+        var pattern = prefix + yearStr;
+        var last = await _db.ChequeOrPromissories
+            .Where(x => x.FirmId == firmId && x.PortfolioNumber.StartsWith(pattern))
+            .OrderByDescending(x => x.PortfolioNumber)
+            .Select(x => x.PortfolioNumber)
+            .FirstOrDefaultAsync(ct);
+        if (string.IsNullOrEmpty(last) || last.Length < pattern.Length + 9)
+            return $"{pattern}-000000001";
+        var seqStr = last.Length > pattern.Length + 1 ? last.Substring(pattern.Length + 1) : "";
+        if (long.TryParse(seqStr, out var num))
+            return $"{pattern}-{(num + 1):D9}";
+        return $"{pattern}-000000001";
+    }
+
+    private async Task<string> GetNextBordroNumberAsync(Guid firmId, int bordroType, int year, CancellationToken ct)
+    {
+        var prefix = bordroType == BordroType.CekGirisi ? "CG" : "SG";
+        var yearStr = year.ToString();
+        var pattern = prefix + yearStr;
+        var last = await _db.ChequeOrPromissories
+            .Where(x => x.FirmId == firmId && x.BordroType == bordroType && x.BordroNumber != null && x.BordroNumber.StartsWith(pattern))
+            .OrderByDescending(x => x.BordroNumber)
+            .Select(x => x.BordroNumber)
+            .FirstOrDefaultAsync(ct);
+        if (string.IsNullOrEmpty(last) || last.Length < pattern.Length + 9)
+            return $"{pattern}-000000001";
+        var seqStr = last.Length > pattern.Length + 1 ? last.Substring(pattern.Length + 1) : "";
+        if (long.TryParse(seqStr, out var num))
+            return $"{pattern}-{(num + 1):D9}";
+        return $"{pattern}-000000001";
+    }
+
     public async Task<ChequeOrPromissoryDto?> UpdateAsync(Guid id, UpdateChequeOrPromissoryRequest request, CancellationToken ct = default)
     {
         var entity = await ScopeQuery().FirstOrDefaultAsync(x => x.Id == id, ct);
         if (entity == null) return null;
         entity.Type = request.Type;
+        entity.SerialNumber = string.IsNullOrWhiteSpace(request.SerialNumber) ? null : request.SerialNumber.Trim();
         entity.CustomerId = request.CustomerId;
         entity.Amount = request.Amount;
         entity.IssueDate = request.IssueDate.Date;

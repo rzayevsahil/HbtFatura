@@ -28,9 +28,11 @@ public class ChequeOrPromissoriesController : ControllerBase
         [FromQuery] Guid? firmId = null,
         [FromQuery] DateTime? dueFrom = null,
         [FromQuery] DateTime? dueTo = null,
+        [FromQuery] string? portfolioNumber = null,
+        [FromQuery] string? serialNumber = null,
         CancellationToken ct = default)
     {
-        var result = await _service.GetPagedAsync(page, pageSize, type, status, customerId, firmId, dueFrom, dueTo, ct);
+        var result = await _service.GetPagedAsync(page, pageSize, type, status, customerId, firmId, dueFrom, dueTo, portfolioNumber, serialNumber, ct);
         return Ok(result);
     }
 

@@ -78,9 +78,9 @@
         </div>
         <div class="row">
           <label>Vergi No</label>
-          <input formControlName="customerTaxNumber" placeholder="10 veya 11 haneli" />
-          @if (form.get('customerTaxNumber')?.invalid && form.get('customerTaxNumber')?.touched) {
-          <span class="error-msg">{{ form.get('customerTaxNumber')?.errors?.['taxNumber'] }}</span>
+          <input formControlName="customerTaxNumber" placeholder="10 veya 11 haneli" maxlength="11" />
+          @if (form.get('customerTaxNumber')?.invalid && form.get('customerTaxNumber')?.touched && (form.get('customerTaxNumber')?.errors?.['taxNumber'] || form.get('customerTaxNumber')?.errors?.['required'])) {
+          <span class="error-msg">{{ form.get('customerTaxNumber')?.errors?.['taxNumber'] || 'Bu alan zorunludur.' }}</span>
           }
         </div>
         <div class="row">

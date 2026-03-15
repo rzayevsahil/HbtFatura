@@ -3,6 +3,8 @@
   <a routerLink="/cheques/new" class="btn btn-primary">Yeni kayıt</a>
 </div>
 <div class="card filters">
+  <input type="text" [(ngModel)]="filterPortfolioNumber" (change)="applyFilter()" placeholder="Portföy no" />
+  <input type="text" [(ngModel)]="filterSerialNumber" (change)="applyFilter()" placeholder="Seri no" />
   <select [(ngModel)]="filterType" (change)="applyFilter()">
     <option value="">Tümü</option>
     <option [value]="1">Çek</option>
@@ -23,6 +25,9 @@
   <table>
     <thead>
       <tr>
+        <th>Portföy No</th>
+        <th>Seri No</th>
+        <th>Bordro No</th>
         <th>Tip</th>
         <th>Cari</th>
         <th class="amount">Tutar</th>
@@ -34,8 +39,11 @@
     <tbody>
       @for (c of items; track c.id) {
         <tr>
+          <td><a [routerLink]="['/cheques', c.id]">{{ c.portfolioNumber }}</a></td>
+          <td>{{ c.serialNumber || '—' }}</td>
+          <td>{{ c.bordroNumber || '—' }}</td>
           <td>{{ typeLabel(c.type) }}</td>
-          <td><a [routerLink]="['/cheques', c.id]">{{ c.customerTitle }}</a></td>
+          <td>{{ c.customerTitle }}</td>
           <td class="amount">{{ c.amount | number:'1.2-2' }} ₺</td>
           <td>{{ c.dueDate | date:'shortDate' }}</td>
           <td>{{ statusLabel(c.status) }}</td>

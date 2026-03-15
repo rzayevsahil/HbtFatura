@@ -14,7 +14,7 @@ export class ChequeService {
   getPaged(
     page: number,
     pageSize: number,
-    params?: { type?: number; status?: number; customerId?: string; firmId?: string; dueFrom?: string; dueTo?: string }
+    params?: { type?: number; status?: number; customerId?: string; firmId?: string; dueFrom?: string; dueTo?: string; portfolioNumber?: string; serialNumber?: string }
   ): Observable<PagedResult<ChequeOrPromissoryDto>> {
     const p: Record<string, string | number> = { page, pageSize };
     if (params?.type != null) p['type'] = params.type;
@@ -23,6 +23,8 @@ export class ChequeService {
     if (params?.firmId) p['firmId'] = params.firmId;
     if (params?.dueFrom) p['dueFrom'] = params.dueFrom;
     if (params?.dueTo) p['dueTo'] = params.dueTo;
+    if (params?.portfolioNumber) p['portfolioNumber'] = params.portfolioNumber;
+    if (params?.serialNumber) p['serialNumber'] = params.serialNumber;
     return this.api.get<PagedResult<ChequeOrPromissoryDto>>(this.base, p);
   }
 

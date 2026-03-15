@@ -5,6 +5,10 @@ public class ChequeOrPromissoryDto
     public Guid Id { get; set; }
     public Guid FirmId { get; set; }
     public int Type { get; set; }
+    public string PortfolioNumber { get; set; } = string.Empty;
+    public string? SerialNumber { get; set; }
+    public string? BordroNumber { get; set; }
+    public int? BordroType { get; set; }
     public Guid CustomerId { get; set; }
     public string CustomerTitle { get; set; } = string.Empty;
     public decimal Amount { get; set; }
@@ -21,6 +25,7 @@ public class ChequeOrPromissoryDto
 public class CreateChequeOrPromissoryRequest
 {
     public int Type { get; set; }
+    public string? SerialNumber { get; set; }
     public Guid CustomerId { get; set; }
     public decimal Amount { get; set; }
     public DateTime IssueDate { get; set; }
@@ -39,6 +44,7 @@ public class SetChequeStatusRequest
 public class UpdateChequeOrPromissoryRequest
 {
     public int Type { get; set; }
+    public string? SerialNumber { get; set; }
     public Guid CustomerId { get; set; }
     public decimal Amount { get; set; }
     public DateTime IssueDate { get; set; }

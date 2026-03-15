@@ -20,6 +20,7 @@ import { ToastrService } from 'ngx-toastr';
 export class ChequeFormComponent implements OnInit {
   form = this.fb.nonNullable.group({
     type: [1 as number, Validators.required],
+    serialNumber: [''],
     customerId: ['', Validators.required],
     amount: [0, [Validators.required, Validators.min(0.01)]],
     issueDate: [new Date().toISOString().slice(0, 10), Validators.required],
@@ -54,6 +55,7 @@ export class ChequeFormComponent implements OnInit {
     if (this.id) {
       this.api.getById(this.id).subscribe(c => this.form.patchValue({
         type: c.type,
+        serialNumber: c.serialNumber ?? '',
         customerId: c.customerId,
         amount: c.amount,
         issueDate: c.issueDate.slice(0, 10),
@@ -69,6 +71,7 @@ export class ChequeFormComponent implements OnInit {
     const v = this.form.getRawValue();
     const payload = {
       type: v.type,
+      serialNumber: v.serialNumber?.trim() || undefined,
       customerId: v.customerId,
       amount: v.amount,
       issueDate: v.issueDate,

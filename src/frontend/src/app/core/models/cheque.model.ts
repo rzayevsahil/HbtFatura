@@ -2,6 +2,10 @@ export interface ChequeOrPromissoryDto {
     id: string;
     firmId: string;
     type: number;
+    portfolioNumber: string;
+    serialNumber?: string;
+    bordroNumber?: string;
+    bordroType?: number;
     customerId: string;
     customerTitle: string;
     amount: number;
@@ -29,6 +33,7 @@ export interface CreateChequeOrPromissoryRequest {
 
 export interface UpdateChequeOrPromissoryRequest {
     type: number;
+    serialNumber?: string;
     customerId: string;
     amount: number;
     issueDate: string;

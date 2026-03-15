@@ -687,6 +687,10 @@ namespace HbtFatura.Api.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     FirmId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Type = table.Column<int>(type: "int", nullable: false),
+                    PortfolioNumber = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    SerialNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    BordroNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    BordroType = table.Column<int>(type: "int", nullable: true),
                     CustomerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Amount = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
                     IssueDate = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -1074,6 +1078,12 @@ namespace HbtFatura.Api.Migrations
                 name: "IX_ChequeOrPromissories_FirmId_DueDate",
                 table: "ChequeOrPromissories",
                 columns: new[] { "FirmId", "DueDate" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ChequeOrPromissories_FirmId_PortfolioNumber",
+                table: "ChequeOrPromissories",
+                columns: new[] { "FirmId", "PortfolioNumber" },
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Cities_Code",

@@ -6,6 +6,9 @@
 </div>
 @if (item) {
   <div class="card info-grid">
+    <p><strong>Portföy no:</strong> {{ item.portfolioNumber }}</p>
+    <p><strong>Seri no:</strong> {{ item.serialNumber || '—' }}</p>
+    @if (item.bordroNumber) { <p><strong>Bordro no:</strong> {{ item.bordroNumber }}</p> }
     <p><strong>Cari:</strong> {{ item.customerTitle }}</p>
     <p><strong>Tutar:</strong> {{ item.amount | number:'1.2-2' }} ₺</p>
     <p><strong>Keşide:</strong> {{ item.issueDate | date:'shortDate' }}</p>

@@ -19,6 +19,8 @@ export class ChequeListComponent implements OnInit {
   totalCount = 0;
   page = 1;
   pageSize = 20;
+  filterPortfolioNumber = '';
+  filterSerialNumber = '';
   filterType: number | '' = '';
   filterStatus: number | '' = '';
   filterDueFrom = '';
@@ -38,7 +40,9 @@ export class ChequeListComponent implements OnInit {
       type: this.filterType === '' ? undefined : this.filterType,
       status: this.filterStatus === '' ? undefined : this.filterStatus,
       dueFrom: this.filterDueFrom || undefined,
-      dueTo: this.filterDueTo || undefined
+      dueTo: this.filterDueTo || undefined,
+      portfolioNumber: this.filterPortfolioNumber.trim() || undefined,
+      serialNumber: this.filterSerialNumber.trim() || undefined
     }).subscribe({
       next: (res: PagedResult<ChequeOrPromissoryDto>) => {
         this.items = res.items;

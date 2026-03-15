@@ -5,7 +5,7 @@ namespace HbtFatura.Api.Services;
 
 public interface IChequeOrPromissoryService
 {
-    Task<PagedResult<ChequeOrPromissoryDto>> GetPagedAsync(int page, int pageSize, int? type, int? status, Guid? customerId, Guid? firmId, DateTime? dueFrom, DateTime? dueTo, CancellationToken ct = default);
+    Task<PagedResult<ChequeOrPromissoryDto>> GetPagedAsync(int page, int pageSize, int? type, int? status, Guid? customerId, Guid? firmId, DateTime? dueFrom, DateTime? dueTo, string? portfolioNumber = null, string? serialNumber = null, CancellationToken ct = default);
     Task<ChequeOrPromissoryDto?> GetByIdAsync(Guid id, CancellationToken ct = default);
     Task<ChequeOrPromissoryDto> CreateAsync(CreateChequeOrPromissoryRequest request, CancellationToken ct = default);
     Task<ChequeOrPromissoryDto?> UpdateAsync(Guid id, UpdateChequeOrPromissoryRequest request, CancellationToken ct = default);
