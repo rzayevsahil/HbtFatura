@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using HbtFatura.Api.Constants;
 using HbtFatura.Api.Data;
 using HbtFatura.Api.DTOs.AccountPayment;
+using HbtFatura.Api.DTOs.Customers;
 using HbtFatura.Api.Entities;
 
 namespace HbtFatura.Api.Services;
@@ -17,6 +18,60 @@ public class AccountPaymentService : IAccountPaymentService
         _db = db;
         _currentUser = currentUser;
         this._log = _log;
+    }
+
+    private IQueryable<Guid> AllowedCustomerIds(Guid? firmIdFilter)
+    {
+        var q = _db.Customers.IgnoreQueryFilters().Where(x => !x.IsDeleted).Select(c => new { c.Id, c.UserId, FirmId = c.User != null ? c.User.FirmId : (Guid?)null });
+        if (_currentUser.IsSuperAdmin)
+        {
+            if (firmIdFilter.HasValue)
+                return q.Where(x => x.FirmId == firmIdFilter.Value).Select(x => x.Id);
+            return q.Select(x => x.Id);
+        }
+        if (_currentUser.FirmId.HasValue)
+            return q.Where(x => x.FirmId == _currentUser.FirmId.Value).Select(x => x.Id);
+        return q.Where(x => x.UserId == _currentUser.UserId).Select(x => x.Id);
+    }
+
+    public async Task<PagedResult<AccountPaymentListDto>> GetPagedAsync(int page, int pageSize, DateTime? dateFrom, DateTime? dateTo, Guid? customerId, string? type, Guid? firmId, CancellationToken ct = default)
+    {
+        var allowedIds = AllowedCustomerIds(firmId);
+        var query = _db.AccountTransactions
+            .Where(t => (t.ReferenceType == ReferenceType.Tahsilat || t.ReferenceType == ReferenceType.Odeme) && allowedIds.Contains(t.CustomerId));
+        if (dateFrom.HasValue) query = query.Where(t => t.Date >= dateFrom.Value.Date);
+        if (dateTo.HasValue) query = query.Where(t => t.Date <= dateTo.Value.Date);
+        if (customerId.HasValue) query = query.Where(t => t.CustomerId == customerId.Value);
+        if (!string.IsNullOrWhiteSpace(type))
+        {
+            var t = type.Trim();
+            if (string.Equals(t, "Tahsilat", StringComparison.OrdinalIgnoreCase))
+                query = query.Where(x => x.ReferenceType == ReferenceType.Tahsilat);
+            else if (string.Equals(t, "Odeme", StringComparison.OrdinalIgnoreCase))
+                query = query.Where(x => x.ReferenceType == ReferenceType.Odeme);
+        }
+
+        var total = await query.CountAsync(ct);
+        var items = await query
+            .Include(t => t.Customer)
+            .OrderByDescending(t => t.Date)
+            .ThenByDescending(t => t.CreatedAt)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .Select(t => new AccountPaymentListDto
+            {
+                Id = t.Id,
+                Date = t.Date,
+                Type = t.ReferenceType,
+                CustomerId = t.CustomerId,
+                CustomerTitle = t.Customer != null ? t.Customer.Title : "",
+                Amount = t.Amount,
+                Currency = t.Currency ?? "TRY",
+                Description = t.Description ?? "",
+                CreatedAt = t.CreatedAt
+            })
+            .ToListAsync(ct);
+        return new PagedResult<AccountPaymentListDto> { Items = items, TotalCount = total, Page = page, PageSize = pageSize };
     }
 
     public async Task CreateAsync(AccountPaymentRequest request, CancellationToken ct = default)

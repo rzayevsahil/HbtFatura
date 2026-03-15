@@ -1,23 +1,33 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators, FormsModule } from '@angular/forms';
 import { CustomerService } from '../../services/customer.service';
 import { CashRegisterService } from '../../services/cash-register.service';
 import { BankAccountService } from '../../services/bank-account.service';
 import { AccountPaymentService } from '../../services/account-payment.service';
 import { InvoiceService } from '../../services/invoice.service';
-import { CustomerDto, CashRegisterDto, BankAccountDto, InvoiceListDto, AccountPaymentMethod, AccountPaymentType } from '../../core/models';
+import { CustomerDto, CashRegisterDto, BankAccountDto, InvoiceListDto, AccountPaymentMethod, AccountPaymentType, AccountPaymentListDto } from '../../core/models';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-account-payment-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterLink],
   templateUrl: './account-payment-form.component.html',
   styleUrls: ['./account-payment-form.component.scss']
 })
 export class AccountPaymentFormComponent implements OnInit {
+  listItems: AccountPaymentListDto[] = [];
+  listTotalCount = 0;
+  listPage = 1;
+  listPageSize = 20;
+  listLoading = false;
+  listDateFrom = '';
+  listDateTo = '';
+  listCustomerId = '';
+  listType = '';
+
   form = this.fb.nonNullable.group({
     type: ['Tahsilat' as string, Validators.required],
     customerId: ['', Validators.required],
@@ -47,6 +57,7 @@ export class AccountPaymentFormComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.loadList();
     this.customerApi.getDropdown().subscribe(c => this.customers = c);
     this.cashApi.getAll().subscribe(c => this.cashRegisters = c.filter(x => x.isActive));
     this.bankApi.getAll().subscribe(b => this.bankAccounts = b.filter(x => x.isActive));
@@ -81,6 +92,39 @@ export class AccountPaymentFormComponent implements OnInit {
     return this.form.get('paymentMethod')?.value ?? 'Kasa';
   }
 
+  loadList(): void {
+    this.listLoading = true;
+    const params: { page: number; pageSize: number; dateFrom?: string; dateTo?: string; customerId?: string; type?: string } = {
+      page: this.listPage,
+      pageSize: this.listPageSize
+    };
+    if (this.listDateFrom) params.dateFrom = this.listDateFrom;
+    if (this.listDateTo) params.dateTo = this.listDateTo;
+    if (this.listCustomerId) params.customerId = this.listCustomerId;
+    if (this.listType) params.type = this.listType;
+    this.paymentApi.getPaged(params).subscribe({
+      next: res => {
+        this.listItems = res.items;
+        this.listTotalCount = res.totalCount;
+        this.listLoading = false;
+      },
+      error: () => { this.listLoading = false; }
+    });
+  }
+
+  applyListFilter(): void {
+    this.listPage = 1;
+    this.loadList();
+  }
+
+  listPrevPage(): void {
+    if (this.listPage > 1) { this.listPage--; this.loadList(); }
+  }
+
+  listNextPage(): void {
+    this.listPage++; this.loadList();
+  }
+
   onSubmit(): void {
     this.error = '';
     const v = this.form.getRawValue();
@@ -108,6 +152,7 @@ export class AccountPaymentFormComponent implements OnInit {
       next: () => {
         this.toastr.success(v.type === 'Tahsilat' ? 'Tahsilat kaydedildi.' : 'Ödeme kaydedildi.');
         this.form.patchValue({ amount: 0, description: '' });
+        this.loadList();
       },
       error: e => {
         this.error = e.error?.message ?? 'Hata';

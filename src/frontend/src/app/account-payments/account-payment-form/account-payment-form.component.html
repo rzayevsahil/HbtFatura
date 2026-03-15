@@ -1,7 +1,67 @@
 <div class="page-header">
-  <h1 class="page-title">Tahsilat / Ödeme Girişi</h1>
+  <h1 class="page-title">Tahsilat / Ödeme</h1>
 </div>
+
+<section class="card list-section">
+  <h2 class="section-title">Geçmiş tahsilat ve ödemeler</h2>
+  <div class="filters">
+    <input type="date" [(ngModel)]="listDateFrom" (change)="applyListFilter()" placeholder="Tarih başlangıç" />
+    <input type="date" [(ngModel)]="listDateTo" (change)="applyListFilter()" placeholder="Tarih bitiş" />
+    <select [(ngModel)]="listCustomerId" (change)="applyListFilter()">
+      <option value="">Tüm cariler</option>
+      @for (c of customers; track c.id) {
+        <option [value]="c.id">{{ c.title }}</option>
+      }
+    </select>
+    <select [(ngModel)]="listType" (change)="applyListFilter()">
+      <option value="">Tümü</option>
+      <option value="Tahsilat">Tahsilat</option>
+      <option value="Odeme">Ödeme</option>
+    </select>
+    <button type="button" (click)="applyListFilter()">Filtrele</button>
+  </div>
+  @if (listLoading) {
+    <p>Yükleniyor...</p>
+  } @else {
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Tarih</th>
+            <th>Tip</th>
+            <th>Cari</th>
+            <th class="amount">Tutar</th>
+            <th>Açıklama</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (p of listItems; track p.id) {
+            <tr>
+              <td>{{ p.date | date:'dd.MM.yyyy HH:mm' }}</td>
+              <td>{{ p.type }}</td>
+              <td>{{ p.customerTitle }}</td>
+              <td class="amount">{{ p.amount | number:'1.2-2' }} {{ p.currency }}</td>
+              <td>{{ p.description }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    @if (listTotalCount > 0) {
+      <p class="list-pagination">
+        Toplam {{ listTotalCount }} kayıt. Sayfa {{ listPage }}.
+        <button type="button" (click)="listPrevPage()" [disabled]="listPage <= 1">Önceki</button>
+        <button type="button" (click)="listNextPage()" [disabled]="listPage * listPageSize >= listTotalCount">Sonraki</button>
+      </p>
+    }
+    @if (listItems.length === 0 && !listLoading) {
+      <p class="text-muted">Kayıt bulunamadı.</p>
+    }
+  }
+</section>
+
 <div class="card">
+  <h2 class="section-title">Tahsilat / Ödeme Girişi</h2>
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <div class="form-grid">
       <div class="row">
