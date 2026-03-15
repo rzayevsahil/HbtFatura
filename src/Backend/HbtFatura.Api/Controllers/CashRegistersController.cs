@@ -20,6 +20,7 @@ public class CashRegistersController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Policy = "Cash.View")]
     public async Task<ActionResult<IReadOnlyList<CashRegisterDto>>> GetAll([FromQuery] Guid? firmId, CancellationToken ct)
     {
         var list = await _service.GetAllAsync(firmId, ct);
@@ -27,6 +28,7 @@ public class CashRegistersController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
+    [Authorize(Policy = "Cash.View")]
     public async Task<ActionResult<CashRegisterDto>> Get(Guid id, CancellationToken ct)
     {
         var dto = await _service.GetByIdAsync(id, ct);
@@ -42,6 +44,7 @@ public class CashRegistersController : ControllerBase
     }
 
     [HttpPut("{id:guid}")]
+    [Authorize(Policy = "Cash.Edit")]
     public async Task<ActionResult<CashRegisterDto>> Update(Guid id, [FromBody] UpdateCashRegisterRequest request, CancellationToken ct)
     {
         var dto = await _service.UpdateAsync(id, request, ct);
@@ -50,6 +53,7 @@ public class CashRegistersController : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
+    [Authorize(Policy = "Cash.Edit")]
     public async Task<IActionResult> Delete(Guid id, CancellationToken ct)
     {
         var ok = await _service.DeleteAsync(id, ct);
@@ -67,6 +71,7 @@ public class CashRegistersController : ControllerBase
     }
 
     [HttpPost("{id:guid}/transactions")]
+    [Authorize(Policy = "Cash.Edit")]
     public async Task<ActionResult<CashTransactionDto>> AddTransaction(Guid id, [FromBody] CreateCashTransactionRequest request, CancellationToken ct)
     {
         var dto = await _service.AddTransactionAsync(id, request, ct);
