@@ -94,6 +94,11 @@ export const routes: Routes = [
     canActivate: [authGuard, PermissionGuard], data: { permission: 'Customers.Edit' }
   },
   {
+    path: 'customers/:id',
+    loadComponent: () => import('./customers/customer-detail/customer-detail.component').then(m => m.CustomerDetailComponent),
+    canActivate: [authGuard, PermissionGuard], data: { permission: 'Customers.View' }
+  },
+  {
     path: 'main-account-codes',
     loadComponent: () => import('./main-account-codes/main-account-code-list/main-account-code-list.component').then(m => m.MainAccountCodeListComponent),
     canActivate: [authGuard, PermissionGuard], data: { permission: 'MainAccountCodes.View' }
@@ -178,6 +183,11 @@ export const routes: Routes = [
     path: 'products/:id/edit',
     loadComponent: () => import('./products/product-form/product-form.component').then(m => m.ProductFormComponent),
     canActivate: [authGuard, PermissionGuard], data: { permission: 'Products.Edit' }
+  },
+  {
+    path: 'products/:id',
+    loadComponent: () => import('./products/product-detail/product-detail.component').then(m => m.ProductDetailComponent),
+    canActivate: [authGuard, PermissionGuard], data: { permission: 'Products.View' }
   },
 
   {

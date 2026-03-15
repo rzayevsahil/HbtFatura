@@ -19,6 +19,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Policy = "Products.View")]
     public async Task<ActionResult<PagedResult<ProductListDto>>> GetPaged([FromQuery] int page = 1, [FromQuery] int pageSize = 20, [FromQuery] string? search = null, [FromQuery] Guid? firmId = null, CancellationToken ct = default)
     {
         var result = await _service.GetPagedAsync(page, pageSize, search, firmId, ct);
@@ -26,6 +27,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet("dropdown")]
+    [Authorize(Policy = "Products.View")]
     public async Task<ActionResult<List<ProductDto>>> GetDropdown([FromQuery] Guid? firmId, CancellationToken ct = default)
     {
         var list = await _service.GetListForDropdownAsync(firmId, ct);
@@ -33,6 +35,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
+    [Authorize(Policy = "Products.View")]
     public async Task<ActionResult<ProductDto>> Get(Guid id, CancellationToken ct = default)
     {
         var dto = await _service.GetByIdAsync(id, ct);
@@ -41,6 +44,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Policy = "Products.Edit")]
     public async Task<ActionResult<ProductDto>> Create([FromBody] CreateProductRequest request, CancellationToken ct = default)
     {
         var dto = await _service.CreateAsync(request, ct);
@@ -48,6 +52,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpPut("{id:guid}")]
+    [Authorize(Policy = "Products.Edit")]
     public async Task<ActionResult<ProductDto>> Update(Guid id, [FromBody] UpdateProductRequest request, CancellationToken ct = default)
     {
         var dto = await _service.UpdateAsync(id, request, ct);
@@ -56,6 +61,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
+    [Authorize(Policy = "Products.Edit")]
     public async Task<ActionResult> Delete(Guid id, CancellationToken ct = default)
     {
         var deleted = await _service.DeleteAsync(id, ct);
@@ -64,6 +70,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet("{id:guid}/movements")]
+    [Authorize(Policy = "Products.View")]
     public async Task<ActionResult<PagedResult<StockMovementDto>>> GetMovements(Guid id, [FromQuery] int page = 1, [FromQuery] int pageSize = 20, [FromQuery] DateTime? dateFrom = null, [FromQuery] DateTime? dateTo = null, CancellationToken ct = default)
     {
         var result = await _service.GetMovementsAsync(id, page, pageSize, dateFrom, dateTo, ct);
@@ -71,6 +78,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpPost("{id:guid}/movements")]
+    [Authorize(Policy = "Products.Edit")]
     public async Task<ActionResult<StockMovementDto>> AddMovement(Guid id, [FromBody] CreateStockMovementRequest request, CancellationToken ct = default)
     {
         var dto = await _service.AddMovementAsync(id, request, ct);

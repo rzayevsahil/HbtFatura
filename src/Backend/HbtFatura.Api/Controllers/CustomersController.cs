@@ -18,6 +18,7 @@ public class CustomersController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Policy = "Customers.View")]
     public async Task<ActionResult<PagedResult<CustomerListDto>>> GetPaged([FromQuery] int page = 1, [FromQuery] int pageSize = 20, [FromQuery] string? search = null, [FromQuery] Guid? firmId = null, CancellationToken ct = default)
     {
         if (page < 1) page = 1;
@@ -27,6 +28,7 @@ public class CustomersController : ControllerBase
     }
 
     [HttpGet("dropdown")]
+    [Authorize(Policy = "Customers.View")]
     public async Task<ActionResult<List<CustomerDto>>> GetDropdown(CancellationToken ct)
     {
         var list = await _service.GetListForDropdownAsync(ct);
@@ -34,6 +36,7 @@ public class CustomersController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
+    [Authorize(Policy = "Customers.View")]
     public async Task<ActionResult<CustomerDto>> Get(Guid id, CancellationToken ct)
     {
         var dto = await _service.GetByIdAsync(id, ct);
@@ -42,6 +45,7 @@ public class CustomersController : ControllerBase
     }
 
     [HttpGet("{id:guid}/balance")]
+    [Authorize(Policy = "Customers.View")]
     public async Task<ActionResult<decimal>> GetBalance(Guid id, CancellationToken ct)
     {
         var balance = await _service.GetBalanceAsync(id, ct);
@@ -49,6 +53,7 @@ public class CustomersController : ControllerBase
     }
 
     [HttpGet("{id:guid}/transactions")]
+    [Authorize(Policy = "Customers.View")]
     public async Task<ActionResult<PagedResult<AccountTransactionDto>>> GetTransactions(Guid id, [FromQuery] int page = 1, [FromQuery] int pageSize = 20, [FromQuery] DateTime? dateFrom = null, [FromQuery] DateTime? dateTo = null, CancellationToken ct = default)
     {
         if (page < 1) page = 1;
@@ -58,6 +63,7 @@ public class CustomersController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Policy = "Customers.Edit")]
     public async Task<ActionResult<CustomerDto>> Create([FromBody] CreateCustomerRequest request, CancellationToken ct)
     {
         var dto = await _service.CreateAsync(request, ct);
@@ -73,6 +79,7 @@ public class CustomersController : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
+    [Authorize(Policy = "Customers.Edit")]
     public async Task<IActionResult> Delete(Guid id, CancellationToken ct)
     {
         var ok = await _service.SoftDeleteAsync(id, ct);
