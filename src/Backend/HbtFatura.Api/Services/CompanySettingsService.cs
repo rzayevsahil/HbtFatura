@@ -63,7 +63,8 @@ public class CompanySettingsService : ICompanySettingsService
         {
             entity.UpdatedAt = DateTime.UtcNow;
         }
-        entity.CompanyName = request.CompanyName.Trim();
+        var companyName = (request.CompanyName ?? "").Trim();
+        entity.CompanyName = companyName.Length > 0 ? companyName : (entity.CompanyName ?? "");
         entity.TaxOfficeId = request.TaxOfficeId;
         entity.TaxNumber = request.TaxNumber?.Trim();
         entity.InvoiceSerialPrefix = NormalizeSerialPrefix(request.InvoiceSerialPrefix);
@@ -103,11 +104,15 @@ public class CompanySettingsService : ICompanySettingsService
         }
         else if (string.IsNullOrEmpty(request.LogoUrl))
         {
-            // Clean up if logo is removed
-            if (!string.IsNullOrEmpty(entity.LogoUrl) && entity.LogoUrl.StartsWith("/uploads/"))
+            // Clean up if logo is removed (skip file delete if WebRootPath missing or delete fails)
+            if (!string.IsNullOrEmpty(entity.LogoUrl) && entity.LogoUrl.StartsWith("/uploads/") && !string.IsNullOrEmpty(_env.WebRootPath))
             {
-                var oldPath = Path.Combine(_env.WebRootPath, entity.LogoUrl.TrimStart('/'));
-                if (File.Exists(oldPath)) File.Delete(oldPath);
+                try
+                {
+                    var oldPath = Path.Combine(_env.WebRootPath, entity.LogoUrl.TrimStart('/'));
+                    if (File.Exists(oldPath)) File.Delete(oldPath);
+                }
+                catch { /* Logoyu veritabanından kaldırmaya devam et */ }
             }
             entity.LogoUrl = null;
         }

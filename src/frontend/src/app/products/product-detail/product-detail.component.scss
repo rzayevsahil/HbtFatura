@@ -1,4 +1,6 @@
-.page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+.page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 0.5rem; }
+.page-header .back-link { color: var(--color-primary); text-decoration: none; font-weight: 500; flex-shrink: 0; }
+.page-header .back-link:hover { text-decoration: underline; }
 
 .actions {
   display: flex;
@@ -35,14 +37,62 @@
     }
   }
 }
-.info-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; }
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.75rem 1.5rem;
+  padding: 0.75rem 1rem !important;
+}
+.info-grid .unit-price { white-space: nowrap; }
+.info-grid p { margin: 0; font-size: 0.9375rem; }
 .section-title { font-size: 1rem; margin: 1.5rem 0 0.5rem; }
-.filters { display: flex; gap: 0.5rem; align-items: center; margin-bottom: 1rem; }
+.filters {
+  display: grid;
+  grid-template-columns: auto 1fr 1fr auto;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding: 0.75rem 0.75rem !important;
+
+  label {
+    white-space: nowrap;
+    font-size: 0.95rem;
+  }
+  input[type="datetime-local"] {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  button {
+    justify-self: start;
+  }
+}
 .table-wrap { overflow-x: auto; }
+.pagination { margin-top: 1rem; display: flex; gap: 0.75rem; align-items: center; }
+.pagination button:disabled { opacity: 0.5; cursor: not-allowed; }
 table { width: 100%; border-collapse: collapse; }
-th, td { padding: 0.5rem 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border, #eee); }
+.sales-table th,
+.sales-table td {
+  padding: 0.4rem 0.6rem;
+  text-align: left;
+  border-bottom: 1px solid var(--color-border, #eee);
+  font-size: 0.9375rem;
+}
+.sales-table th { font-weight: 600; font-size: 0.9375rem; }
 .amount { text-align: right; font-variant-numeric: tabular-nums; }
 .text-muted { color: var(--color-text-muted); font-size: 0.875rem; margin-top: 0.5rem; }
+
+// Bu üründen satışlar links: order / delivery note / invoice
+.sales-table a {
+  color: var(--color-primary);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.sales-table a:hover {
+  opacity: 0.85;
+}
 .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; z-index: 1000; }
 .modal { background: #fff; padding: 1.5rem; border-radius: 8px; min-width: 320px; }
 .modal h3 { margin-top: 0; }

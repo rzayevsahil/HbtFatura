@@ -62,6 +62,7 @@ public class OrderService : IOrderService
                 OrderDate = o.OrderDate,
                 Status = (int)o.Status,
                 OrderType = (int)o.OrderType,
+                CustomerId = o.CustomerId,
                 CustomerTitle = o.Customer != null ? o.Customer.Title : null,
                 TotalAmount = o.Items.Sum(i => i.Quantity * i.UnitPrice * (1 + i.VatRate / 100m)),
                 CreatedByUserId = o.UserId,

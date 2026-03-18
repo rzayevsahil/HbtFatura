@@ -34,6 +34,7 @@ export interface DeliveryNoteListDto {
     deliveryDate: string;
     status: DeliveryNoteStatus | string;
     deliveryType: InvoiceType;
+    customerId?: string;
     customerTitle?: string;
     orderNumber?: string;
     invoiceId?: string | null;

@@ -38,6 +38,7 @@ public class InvoiceListDto
     public DateTime InvoiceDate { get; set; }
     public int Status { get; set; }
     public int InvoiceType { get; set; }
+    public Guid? CustomerId { get; set; }
     public string CustomerTitle { get; set; } = string.Empty;
     public decimal GrandTotal { get; set; }
     public string Currency { get; set; } = "TRY";

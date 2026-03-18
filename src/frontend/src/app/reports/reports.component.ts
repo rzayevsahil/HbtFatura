@@ -1,21 +1,23 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { ReportService } from '../services/report.service';
 import { CustomerService } from '../services/customer.service';
 import { CashRegisterService } from '../services/cash-register.service';
 import { BankAccountService } from '../services/bank-account.service';
+import { ProductService } from '../services/product.service';
 import {
   CariExtractReportDto, CashSummaryReportDto, BankSummaryReportDto,
-  StockLevelsReportDto, InvoiceReportDto, CustomerDto,
-  CashRegisterDto, BankAccountDto
+  StockLevelsReportDto, InvoiceReportDto, MonthlyProductSalesReportDto,
+  CustomerDto, CashRegisterDto, BankAccountDto, ProductDto
 } from '../core/models';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-reports',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './reports.component.html',
   styleUrls: ['./reports.component.scss']
 })
@@ -51,11 +53,19 @@ export class ReportsComponent implements OnInit {
   invoiceData: InvoiceReportDto | null = null;
   invoiceLoading = false;
 
+  products: ProductDto[] = [];
+  monthlyDateFrom = '';
+  monthlyDateTo = '';
+  monthlyProductId = '';
+  monthlyData: MonthlyProductSalesReportDto | null = null;
+  monthlyLoading = false;
+
   constructor(
     private reportApi: ReportService,
     private customerApi: CustomerService,
     private cashApi: CashRegisterService,
     private bankApi: BankAccountService,
+    private productApi: ProductService,
     private toastr: ToastrService
   ) { }
 
@@ -63,6 +73,25 @@ export class ReportsComponent implements OnInit {
     this.customerApi.getDropdown().subscribe(c => this.customers = c);
     this.cashApi.getAll().subscribe(c => this.cashRegisters = c);
     this.bankApi.getAll().subscribe(b => this.bankAccounts = b);
+    this.productApi.getDropdown().subscribe(p => this.products = p);
+  }
+
+  loadMonthlyProductSales(): void {
+    this.monthlyLoading = true;
+    this.monthlyData = null;
+    this.reportApi.getMonthlyProductSales(
+      this.monthlyDateFrom || undefined,
+      this.monthlyDateTo || undefined,
+      this.monthlyProductId || undefined
+    ).subscribe({
+      next: data => { this.monthlyData = data; this.monthlyLoading = false; },
+      error: e => { this.toastr.error(e.error?.message ?? 'Yüklenemedi.'); this.monthlyLoading = false; }
+    });
+  }
+
+  monthName(month: number): string {
+    const names = ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'];
+    return month >= 1 && month <= 12 ? names[month - 1] : '';
   }
 
   loadCari(): void {

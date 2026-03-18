@@ -13,4 +13,5 @@ public interface IProductService
     Task<PagedResult<StockMovementDto>> GetMovementsAsync(Guid productId, int page, int pageSize, DateTime? dateFrom, DateTime? dateTo, CancellationToken ct = default);
     Task<StockMovementDto> AddMovementAsync(Guid productId, CreateStockMovementRequest request, CancellationToken ct = default);
     Task<List<ProductDto>> GetListForDropdownAsync(Guid? firmId, CancellationToken ct = default);
+    Task<List<ProductSaleRowDto>> GetProductSalesAsync(Guid productId, DateTime? dateFrom, DateTime? dateTo, CancellationToken ct = default);
 }

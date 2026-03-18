@@ -1,0 +1,78 @@
+<div class="page-header">
+  <h1 class="page-title">Tahsilat / Ödeme</h1>
+</div>
+<div class="toolbar">
+  <label class="toolbar-field">
+    <span class="toolbar-label">Başlangıç tarihi</span>
+    <input type="date" [(ngModel)]="listDateFrom" (change)="applyListFilter()" class="toolbar-input" />
+  </label>
+  <label class="toolbar-field">
+    <span class="toolbar-label">Bitiş tarihi</span>
+    <input type="date" [(ngModel)]="listDateTo" (change)="applyListFilter()" class="toolbar-input" />
+  </label>
+  <label class="toolbar-field">
+    <span class="toolbar-label">Cari</span>
+    <select [(ngModel)]="listCustomerId" (change)="applyListFilter()" class="toolbar-select">
+      <option value="">Tüm cariler</option>
+      @for (c of customers; track c.id) {
+        <option [value]="c.id">{{ c.title }}</option>
+      }
+    </select>
+  </label>
+  <label class="toolbar-field">
+    <span class="toolbar-label">Tip</span>
+    <select [(ngModel)]="listType" (change)="applyListFilter()" class="toolbar-select">
+      <option value="">Tümü</option>
+      <option value="Tahsilat">Tahsilat</option>
+      <option value="Odeme">Ödeme</option>
+    </select>
+  </label>
+  <div class="toolbar-field toolbar-field-btn">
+    <span class="toolbar-label">&nbsp;</span>
+    <button type="button" (click)="applyListFilter()">Filtrele</button>
+  </div>
+  @if (auth.hasPermission('Payments.Create')) {
+  <div class="toolbar-field toolbar-field-btn">
+    <span class="toolbar-label">&nbsp;</span>
+    <a routerLink="/payments/new" class="btn btn-primary">Ekle</a>
+  </div>
+  }
+</div>
+<div class="card table-wrap" style="position: relative; min-height: 200px;">
+  @if (listLoading) {
+  <div class="loading-overlay">
+    <div class="spinner"></div>
+  </div>
+  }
+  <table>
+    <thead>
+      <tr>
+        <th>Tarih</th>
+        <th>Tip</th>
+        <th>Cari</th>
+        <th class="amount">Tutar</th>
+        <th>Açıklama</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (p of listItems; track p.id) {
+        <tr>
+          <td>{{ p.date | date:'dd.MM.yyyy HH:mm' }}</td>
+          <td>{{ p.type }}</td>
+          <td>{{ p.customerTitle }}</td>
+          <td class="amount">{{ p.amount | number:'1.2-2' }} {{ p.currency }}</td>
+          <td>{{ p.description }}</td>
+        </tr>
+      } @empty {
+        @if (!listLoading) {
+          <tr><td colspan="5" class="text-muted">Kayıt bulunamadı.</td></tr>
+        }
+      }
+    </tbody>
+  </table>
+</div>
+<div class="pagination">
+  <span>Toplam: {{ listTotalCount }} kayıt — Sayfa {{ listPage }}</span>
+  <button type="button" (click)="listPrevPage()" [disabled]="listPage <= 1">Önceki</button>
+  <button type="button" (click)="listNextPage()" [disabled]="listPage * listPageSize >= listTotalCount">Sonraki</button>
+</div>

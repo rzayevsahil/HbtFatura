@@ -4,6 +4,7 @@ using HbtFatura.Api.Data;
 using HbtFatura.Api.DTOs.Customers;
 using HbtFatura.Api.DTOs.Product;
 using HbtFatura.Api.Entities;
+using InvoiceType = HbtFatura.Api.Entities.InvoiceType;
 
 namespace HbtFatura.Api.Services;
 
@@ -60,6 +61,7 @@ public class ProductService : IProductService
                 Unit = x.Unit,
                 StockQuantity = x.StockQuantity,
                 UnitPrice = x.UnitPrice,
+                Currency = x.Currency,
                 CreatedAt = x.CreatedAt
             })
             .ToListAsync(ct);
@@ -80,6 +82,7 @@ public class ProductService : IProductService
             Unit = entity.Unit,
             StockQuantity = entity.StockQuantity,
             UnitPrice = entity.UnitPrice,
+            Currency = entity.Currency,
             CreatedAt = entity.CreatedAt
         };
     }
@@ -106,6 +109,7 @@ public class ProductService : IProductService
             Unit = request.Unit?.Trim() ?? "Adet",
             StockQuantity = request.StockQuantity,
             UnitPrice = request.UnitPrice,
+            Currency = string.IsNullOrWhiteSpace(request.Currency) ? "TRY" : request.Currency.Trim(),
             CreatedAt = DateTime.UtcNow
         };
         _db.Products.Add(entity);
@@ -140,6 +144,7 @@ public class ProductService : IProductService
         entity.Barcode = request.Barcode?.Trim();
         entity.Unit = request.Unit?.Trim() ?? "Adet";
         entity.UnitPrice = request.UnitPrice;
+        entity.Currency = string.IsNullOrWhiteSpace(request.Currency) ? entity.Currency : request.Currency.Trim();
         
         if (request.StockQuantity < 0) throw new ArgumentException("Stok miktarı sıfırdan küçük olamaz.");
 
@@ -182,15 +187,98 @@ public class ProductService : IProductService
         if (!hasAccess) return new PagedResult<StockMovementDto> { Items = new List<StockMovementDto>(), TotalCount = 0, Page = page, PageSize = pageSize };
 
         var query = _db.StockMovements.Where(m => m.ProductId == productId);
-        if (dateFrom.HasValue) query = query.Where(m => m.Date >= dateFrom.Value.Date);
-        if (dateTo.HasValue) query = query.Where(m => m.Date <= dateTo.Value.Date);
+        if (dateFrom.HasValue)
+        {
+            var from = dateFrom.Value;
+            query = query.Where(m => m.Date >= from);
+        }
+        if (dateTo.HasValue)
+        {
+            var to = dateTo.Value;
+            query = query.Where(m => m.Date <= to);
+        }
         var total = await query.CountAsync(ct);
-        var items = await query
+
+        var movements = await query
             .OrderByDescending(m => m.Date)
             .ThenByDescending(m => m.CreatedAt)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
-            .Select(m => new StockMovementDto
+            .ToListAsync(ct);
+
+        // Referanslara göre ilgili tablo kayıtlarını topla
+        var invoiceIds = movements.Where(m => m.ReferenceType == ReferenceType.Fatura && m.ReferenceId.HasValue)
+            .Select(m => m.ReferenceId!.Value).Distinct().ToList();
+        var deliveryNoteIds = movements.Where(m => m.ReferenceType == ReferenceType.Irsaliye && m.ReferenceId.HasValue)
+            .Select(m => m.ReferenceId!.Value).Distinct().ToList();
+        var orderIds = movements.Where(m => m.ReferenceType == ReferenceType.Siparis && m.ReferenceId.HasValue)
+            .Select(m => m.ReferenceId!.Value).Distinct().ToList();
+
+        var invoices = await _db.Invoices
+            .Where(i => invoiceIds.Contains(i.Id))
+            .Select(i => new { i.Id, i.InvoiceNumber })
+            .ToListAsync(ct);
+        var invoiceDict = invoices.ToDictionary(i => i.Id);
+
+        var deliveryNotes = await _db.DeliveryNotes
+            .Where(d => deliveryNoteIds.Contains(d.Id))
+            .Select(d => new { d.Id, d.DeliveryNumber, d.OrderId })
+            .ToListAsync(ct);
+        var dnDict = deliveryNotes.ToDictionary(d => d.Id);
+
+        // İrsaliyeden oluşturulan faturaları da yakala (SourceType = Irsaliye, SourceId = dn.Id)
+        var invoicesFromDn = await _db.Invoices
+            .Where(i => i.SourceType == ReferenceType.Irsaliye && i.SourceId.HasValue && deliveryNoteIds.Contains(i.SourceId.Value))
+            .Select(i => new { i.Id, i.InvoiceNumber, SourceId = i.SourceId!.Value })
+            .ToListAsync(ct);
+        var invoiceFromDnDict = invoicesFromDn.ToDictionary(i => i.SourceId);
+
+        // Siparişler hem doğrudan stok hareketinden hem de irsaliyeden gelebilir
+        var extraOrderIdsFromDn = deliveryNotes.Where(d => d.OrderId.HasValue).Select(d => d.OrderId!.Value);
+        var allOrderIds = orderIds.Union(extraOrderIdsFromDn).Distinct().ToList();
+        var orders = await _db.Orders
+            .Where(o => allOrderIds.Contains(o.Id))
+            .Select(o => new { o.Id, o.OrderNumber })
+            .ToListAsync(ct);
+        var orderDict = orders.ToDictionary(o => o.Id);
+
+        var items = movements.Select(m =>
+        {
+            Guid? invoiceId = null;
+            string? invoiceNumber = null;
+            Guid? deliveryNoteId = null;
+            string? deliveryNumber = null;
+            Guid? orderId = null;
+            string? orderNumber = null;
+
+            if (m.ReferenceType == ReferenceType.Fatura && m.ReferenceId.HasValue && invoiceDict.TryGetValue(m.ReferenceId.Value, out var inv))
+            {
+                invoiceId = inv.Id;
+                invoiceNumber = inv.InvoiceNumber;
+            }
+            else if (m.ReferenceType == ReferenceType.Irsaliye && m.ReferenceId.HasValue && dnDict.TryGetValue(m.ReferenceId.Value, out var dn))
+            {
+                deliveryNoteId = dn.Id;
+                deliveryNumber = dn.DeliveryNumber;
+                // İrsaliyeden kesilen faturayı bul
+                if (invoiceFromDnDict.TryGetValue(dn.Id, out var invFromDn))
+                {
+                    invoiceId = invFromDn.Id;
+                    invoiceNumber = invFromDn.InvoiceNumber;
+                }
+                if (dn.OrderId.HasValue && orderDict.TryGetValue(dn.OrderId.Value, out var ordFromDn))
+                {
+                    orderId = ordFromDn.Id;
+                    orderNumber = ordFromDn.OrderNumber;
+                }
+            }
+            else if (m.ReferenceType == ReferenceType.Siparis && m.ReferenceId.HasValue && orderDict.TryGetValue(m.ReferenceId.Value, out var ord))
+            {
+                orderId = ord.Id;
+                orderNumber = ord.OrderNumber;
+            }
+
+            return new StockMovementDto
             {
                 Id = m.Id,
                 Date = m.Date,
@@ -198,9 +286,16 @@ public class ProductService : IProductService
                 Quantity = m.Quantity,
                 ReferenceType = m.ReferenceType,
                 ReferenceId = m.ReferenceId,
+                InvoiceId = invoiceId,
+                InvoiceNumber = invoiceNumber,
+                DeliveryNoteId = deliveryNoteId,
+                DeliveryNumber = deliveryNumber,
+                OrderId = orderId,
+                OrderNumber = orderNumber,
                 CreatedAt = m.CreatedAt
-            })
-            .ToListAsync(ct);
+            };
+        }).ToList();
+
         return new PagedResult<StockMovementDto> { Items = items, TotalCount = total, Page = page, PageSize = pageSize };
     }
 
@@ -263,9 +358,73 @@ public class ProductService : IProductService
                 Unit = x.Unit,
                 StockQuantity = x.StockQuantity,
                 UnitPrice = x.UnitPrice,
+                Currency = x.Currency,
                 CreatedAt = x.CreatedAt
             })
             .ToListAsync(ct);
         return list;
+    }
+
+    public async Task<List<ProductSaleRowDto>> GetProductSalesAsync(Guid productId, DateTime? dateFrom, DateTime? dateTo, CancellationToken ct = default)
+    {
+        var hasAccess = await ScopeQuery().AnyAsync(x => x.Id == productId, ct);
+        if (!hasAccess) return new List<ProductSaleRowDto>();
+
+        var query = _db.InvoiceItems
+            .Where(i => i.ProductId == productId)
+            .Join(_db.Invoices.Where(inv => inv.InvoiceType == InvoiceType.Satis), i => i.InvoiceId, inv => inv.Id, (i, inv) => new { i.Quantity, inv.InvoiceDate, inv.InvoiceNumber, inv.Id, inv.SourceType, inv.SourceId });
+        if (dateFrom.HasValue)
+        {
+            var from = dateFrom.Value.Date;
+            query = query.Where(x => x.InvoiceDate >= from);
+        }
+        if (dateTo.HasValue)
+        {
+            var toExclusive = dateTo.Value.Date.AddDays(1);
+            query = query.Where(x => x.InvoiceDate < toExclusive);
+        }
+        var rows = await query.OrderByDescending(x => x.InvoiceDate).ThenByDescending(x => x.Id).ToListAsync(ct);
+
+        var dnIds = rows.Where(x => x.SourceType == ReferenceType.Irsaliye && x.SourceId.HasValue).Select(x => x.SourceId!.Value).Distinct().ToList();
+        var dns = await _db.DeliveryNotes.Where(d => dnIds.Contains(d.Id)).Select(d => new { d.Id, d.DeliveryNumber, d.OrderId }).ToListAsync(ct);
+        var dnDict = dns.ToDictionary(d => d.Id);
+
+        var orderIds = dns.Where(d => d.OrderId.HasValue).Select(d => d.OrderId!.Value).Union(rows.Where(x => x.SourceType == ReferenceType.Siparis && x.SourceId.HasValue).Select(x => x.SourceId!.Value)).Distinct().ToList();
+        var orders = await _db.Orders.Where(o => orderIds.Contains(o.Id)).Select(o => new { o.Id, o.OrderNumber }).ToListAsync(ct);
+        var orderDict = orders.ToDictionary(o => o.Id);
+
+        return rows.Select(r =>
+        {
+            string? orderNumber = null;
+            Guid? orderId = null;
+            string? deliveryNumber = null;
+            Guid? deliveryNoteId = null;
+            if (r.SourceType == ReferenceType.Irsaliye && r.SourceId.HasValue && dnDict.TryGetValue(r.SourceId.Value, out var dn))
+            {
+                deliveryNumber = dn.DeliveryNumber;
+                deliveryNoteId = dn.Id;
+                if (dn.OrderId.HasValue && orderDict.TryGetValue(dn.OrderId.Value, out var ord))
+                {
+                    orderNumber = ord.OrderNumber;
+                    orderId = ord.Id;
+                }
+            }
+            else if (r.SourceType == ReferenceType.Siparis && r.SourceId.HasValue && orderDict.TryGetValue(r.SourceId.Value, out var ord))
+            {
+                orderNumber = ord.OrderNumber;
+                orderId = ord.Id;
+            }
+            return new ProductSaleRowDto
+            {
+                Date = r.InvoiceDate,
+                Quantity = r.Quantity,
+                InvoiceNumber = r.InvoiceNumber,
+                InvoiceId = r.Id,
+                OrderNumber = orderNumber,
+                OrderId = orderId,
+                DeliveryNumber = deliveryNumber,
+                DeliveryNoteId = deliveryNoteId
+            };
+        }).ToList();
     }
 }

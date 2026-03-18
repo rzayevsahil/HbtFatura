@@ -11,7 +11,7 @@ function buildCariExtractQuery(customerId: string, format: string, dateFrom?: st
 
 import {
   CariExtractReportDto, CashSummaryReportDto, BankSummaryReportDto,
-  StockLevelsReportDto, InvoiceReportDto
+  StockLevelsReportDto, InvoiceReportDto, MonthlyProductSalesReportDto
 } from '../core/models';
 
 @Injectable({ providedIn: 'root' })
@@ -86,5 +86,13 @@ export class ReportService {
     if (dateTo) p.set('dateTo', dateTo);
     if (customerId) p.set('customerId', customerId);
     return this.api.getBlob(`${this.base}/invoice-report?${p.toString()}`);
+  }
+
+  getMonthlyProductSales(dateFrom?: string, dateTo?: string, productId?: string): Observable<MonthlyProductSalesReportDto> {
+    const params: Record<string, string> = {};
+    if (dateFrom) params['dateFrom'] = dateFrom;
+    if (dateTo) params['dateTo'] = dateTo;
+    if (productId) params['productId'] = productId;
+    return this.api.get<MonthlyProductSalesReportDto>(`${this.base}/monthly-product-sales`, Object.keys(params).length ? params : undefined);
   }
 }

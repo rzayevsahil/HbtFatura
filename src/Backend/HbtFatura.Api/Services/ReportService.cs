@@ -8,6 +8,7 @@ using HbtFatura.Api.Constants;
 using HbtFatura.Api.Data;
 using HbtFatura.Api.DTOs.Reports;
 using HbtFatura.Api.Entities;
+//using InvoiceType = HbtFatura.Api.Entities.InvoiceType;
 
 namespace HbtFatura.Api.Services;
 
@@ -79,7 +80,7 @@ public class ReportService : IReportService
         if (dateFrom.HasValue) query = query.Where(t => t.Date >= dateFrom.Value.Date);
         if (dateTo.HasValue) query = query.Where(t => t.Date <= dateTo.Value.Date);
         var transactions = await query.OrderBy(t => t.Date).ThenBy(t => t.CreatedAt)
-            .Select(t => new { t.Date, t.Description, t.Type, t.Amount })
+            .Select(t => new { t.Date, t.Description, t.Type, t.Amount, t.Currency })
             .ToListAsync(ct);
 
         decimal openingBalance = 0;
@@ -102,24 +103,38 @@ public class ReportService : IReportService
             var borc = t.Type == AccountTransactionType.Borc ? t.Amount : 0;
             var alacak = t.Type == AccountTransactionType.Alacak ? t.Amount : 0;
             running += alacak - borc;
+            var rowCurrency = string.IsNullOrWhiteSpace(t.Currency) ? "TRY" : t.Currency.Trim();
             rows.Add(new CariExtractRowDto
             {
                 Date = t.Date,
                 Description = t.Description,
                 Borc = borc,
                 Alacak = alacak,
-                Bakiye = running
+                Bakiye = running,
+                Currency = rowCurrency
             });
+        }
+
+        var reportCurrency = rows.Count > 0 ? rows[0].Currency : "TRY";
+
+        // Dönem boşsa verideki ilk/son tarihi kullan (PDF'de "—" yerine anlamlı dönem gösterilsin)
+        DateTime? effectiveDateFrom = dateFrom;
+        DateTime? effectiveDateTo = dateTo;
+        if (rows.Count > 0)
+        {
+            if (!effectiveDateFrom.HasValue) effectiveDateFrom = rows.Min(r => r.Date).Date;
+            if (!effectiveDateTo.HasValue) effectiveDateTo = rows.Max(r => r.Date).Date;
         }
 
         return new CariExtractReportDto
         {
             CustomerId = customer.Id,
             CustomerTitle = customer.Title,
-            DateFrom = dateFrom,
-            DateTo = dateTo,
+            DateFrom = effectiveDateFrom,
+            DateTo = effectiveDateTo,
             OpeningBalance = openingBalance,
             ClosingBalance = running,
+            Currency = reportCurrency,
             Rows = rows
         };
     }
@@ -301,35 +316,41 @@ public class ReportService : IReportService
                 {
                     col.Item().Text($"Dönem: {(data.DateFrom?.ToString("d", CultureInfo.GetCultureInfo("tr-TR")) ?? "—")} - {(data.DateTo?.ToString("d", CultureInfo.GetCultureInfo("tr-TR")) ?? "—")}");
                     col.Item().Text($"Rapor tarihi: {DateTime.Now.ToString("dd.MM.yyyy HH:mm", CultureInfo.GetCultureInfo("tr-TR"))}");
-                    col.Item().Text($"Açılış bakiyesi: {data.OpeningBalance:N2} ₺");
+                    col.Item().Text($"Açılış bakiyesi: {data.OpeningBalance:N2} {data.Currency}");
                     col.Item().PaddingTop(10).Table(t =>
                     {
+                        // Sütunları yeterince geniş tut: tarih, borç/alacak/bakiye tek satırda kalsın (kayma olmasın)
                         t.ColumnsDefinition(c =>
                         {
-                            c.ConstantColumn(70);
+                            c.ConstantColumn(100);  // Tarih (dd.MM.yyyy HH:mm)
                             c.RelativeColumn();
-                            c.ConstantColumn(80);
-                            c.ConstantColumn(80);
-                            c.ConstantColumn(90);
+                            c.ConstantColumn(105);  // Borç (tutar + para birimi)
+                            c.ConstantColumn(105);  // Alacak
+                            c.ConstantColumn(105);  // Bakiye
                         });
                         t.Header(h =>
                         {
                             h.Cell().Background(Colors.Grey.Lighten2).Padding(4).Text("Tarih").Bold();
                             h.Cell().Background(Colors.Grey.Lighten2).Padding(4).Text("Açıklama").Bold();
-                            h.Cell().Background(Colors.Grey.Lighten2).Padding(4).AlignRight().Text("Borç").Bold();
-                            h.Cell().Background(Colors.Grey.Lighten2).Padding(4).AlignRight().Text("Alacak").Bold();
-                            h.Cell().Background(Colors.Grey.Lighten2).Padding(4).AlignRight().Text("Bakiye").Bold();
+                            h.Cell().Background(Colors.Grey.Lighten2).Padding(4).Text("Borç").Bold();
+                            h.Cell().Background(Colors.Grey.Lighten2).Padding(4).Text("Alacak").Bold();
+                            h.Cell().Background(Colors.Grey.Lighten2).Padding(4).Text("Bakiye").Bold();
                         });
                         foreach (var row in data.Rows)
                         {
-                            t.Cell().Padding(4).Text(row.Date.ToString("d"));
+                            var cur = string.IsNullOrWhiteSpace(row.Currency) ? "TRY" : row.Currency;
+                            var dateStr = row.Date.ToString("dd.MM.yyyy HH:mm", CultureInfo.GetCultureInfo("tr-TR"));
+                            var borcStr = row.Borc.ToString("N2", CultureInfo.GetCultureInfo("tr-TR")) + " " + cur;
+                            var alacakStr = row.Alacak.ToString("N2", CultureInfo.GetCultureInfo("tr-TR")) + " " + cur;
+                            var bakiyeStr = row.Bakiye.ToString("N2", CultureInfo.GetCultureInfo("tr-TR")) + " " + cur;
+                            t.Cell().Padding(4).Text(dateStr);
                             t.Cell().Padding(4).Text(row.Description);
-                            t.Cell().Padding(4).AlignRight().Text(row.Borc.ToString("N2"));
-                            t.Cell().Padding(4).AlignRight().Text(row.Alacak.ToString("N2"));
-                            t.Cell().Padding(4).AlignRight().Text(row.Bakiye.ToString("N2"));
+                            t.Cell().Padding(4).Text(borcStr);
+                            t.Cell().Padding(4).Text(alacakStr);
+                            t.Cell().Padding(4).Text(bakiyeStr);
                         }
                     });
-                    col.Item().PaddingTop(8).Text($"Kapanış bakiyesi: {data.ClosingBalance:N2} ₺").Bold();
+                    col.Item().PaddingTop(8).Text($"Kapanış bakiyesi: {data.ClosingBalance:N2} {data.Currency}").Bold();
                 });
             });
         });
@@ -345,24 +366,28 @@ public class ReportService : IReportService
         var ws = wb.Worksheets.Add("Cari ekstre");
         ws.Cell("A1").Value = $"Cari ekstre - {data.CustomerTitle}";
         ws.Cell("A2").Value = $"Dönem: {(data.DateFrom?.ToString("d") ?? "—")} - {(data.DateTo?.ToString("d") ?? "—")}";
-        ws.Cell("A3").Value = $"Açılış bakiyesi: {data.OpeningBalance:N2}";
+        ws.Cell("A3").Value = $"Açılış bakiyesi: {data.OpeningBalance:N2} {data.Currency}";
         ws.Cell("A5").Value = "Tarih";
         ws.Cell("B5").Value = "Açıklama";
         ws.Cell("C5").Value = "Borç";
         ws.Cell("D5").Value = "Alacak";
         ws.Cell("E5").Value = "Bakiye";
+        ws.Cell("F5").Value = "Para birimi";
         int row = 6;
         foreach (var r in data.Rows)
         {
-            ws.Cell(row, 1).Value = r.Date.ToString("d");
+            var cur = string.IsNullOrWhiteSpace(r.Currency) ? "TRY" : r.Currency;
+            ws.Cell(row, 1).Value = r.Date.ToString("dd.MM.yyyy HH:mm", CultureInfo.GetCultureInfo("tr-TR"));
             ws.Cell(row, 2).Value = r.Description;
             ws.Cell(row, 3).Value = r.Borc;
             ws.Cell(row, 4).Value = r.Alacak;
             ws.Cell(row, 5).Value = r.Bakiye;
+            ws.Cell(row, 6).Value = cur;
             row++;
         }
         ws.Cell(row, 1).Value = "Kapanış bakiyesi:";
         ws.Cell(row, 5).Value = data.ClosingBalance;
+        ws.Cell(row, 6).Value = data.Currency;
         using var ms = new MemoryStream();
         wb.SaveAs(ms, false);
         return ms.ToArray();
@@ -488,5 +513,42 @@ public class ReportService : IReportService
         using var ms = new MemoryStream();
         wb.SaveAs(ms, false);
         return ms.ToArray();
+    }
+
+    public async Task<MonthlyProductSalesReportDto> GetMonthlyProductSalesAsync(DateTime? dateFrom, DateTime? dateTo, Guid? productId, CancellationToken ct = default)
+    {
+        var invScope = InvoiceScope().Where(i => i.InvoiceType == InvoiceType.Satis);
+        var query = _db.InvoiceItems
+            .Where(i => i.ProductId != null)
+            .Join(invScope, i => i.InvoiceId, inv => inv.Id, (i, inv) => new { i.ProductId, i.Quantity, inv.InvoiceDate });
+        if (dateFrom.HasValue) query = query.Where(x => x.InvoiceDate >= dateFrom.Value.Date);
+        if (dateTo.HasValue) query = query.Where(x => x.InvoiceDate <= dateTo.Value.Date);
+        if (productId.HasValue) query = query.Where(x => x.ProductId == productId.Value);
+
+        var grouped = await query
+            .GroupBy(x => new { ProductId = x.ProductId!.Value, Year = x.InvoiceDate.Year, Month = x.InvoiceDate.Month })
+            .Select(g => new { g.Key.ProductId, g.Key.Year, g.Key.Month, QuantitySold = g.Sum(x => x.Quantity) })
+            .OrderBy(x => x.Year).ThenBy(x => x.Month).ThenBy(x => x.ProductId)
+            .ToListAsync(ct);
+
+        var ids = grouped.Select(x => x.ProductId).Distinct().ToList();
+        var products = await ProductScope(null).Where(p => ids.Contains(p.Id)).Select(p => new { p.Id, p.Code, p.Name }).ToListAsync(ct);
+        var productDict = products.ToDictionary(p => p.Id);
+
+        var items = grouped.Select(g =>
+        {
+            productDict.TryGetValue(g.ProductId, out var p);
+            return new MonthlyProductSalesRowDto
+            {
+                ProductId = g.ProductId,
+                ProductCode = p?.Code ?? "",
+                ProductName = p?.Name ?? "",
+                Year = g.Year,
+                Month = g.Month,
+                QuantitySold = g.QuantitySold
+            };
+        }).ToList();
+
+        return new MonthlyProductSalesReportDto { DateFrom = dateFrom, DateTo = dateTo, Items = items };
     }
 }

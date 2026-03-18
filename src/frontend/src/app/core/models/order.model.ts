@@ -32,6 +32,7 @@ export interface OrderListDto {
     orderDate: string;
     status: OrderStatus | string;
     orderType: InvoiceType;
+    customerId?: string;
     customerTitle?: string;
     totalAmount?: number;
     createdByUserId: string;

@@ -4,6 +4,7 @@ export interface CariExtractRowDto {
     borc: number;
     alacak: number;
     bakiye: number;
+    currency?: string;
 }
 
 export interface CariExtractReportDto {
@@ -82,4 +83,19 @@ export interface InvoiceReportDto {
     customerId?: string;
     customerTitle?: string;
     items: InvoiceReportRowDto[];
+}
+
+export interface MonthlyProductSalesRowDto {
+    productId: string;
+    productCode: string;
+    productName: string;
+    year: number;
+    month: number;
+    quantitySold: number;
+}
+
+export interface MonthlyProductSalesReportDto {
+    dateFrom?: string;
+    dateTo?: string;
+    items: MonthlyProductSalesRowDto[];
 }

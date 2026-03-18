@@ -8,6 +8,7 @@ public class CariExtractReportDto
     public DateTime? DateTo { get; set; }
     public decimal OpeningBalance { get; set; }
     public decimal ClosingBalance { get; set; }
+    public string Currency { get; set; } = "TRY";
     public List<CariExtractRowDto> Rows { get; set; } = new();
 }
 
@@ -18,4 +19,5 @@ public class CariExtractRowDto
     public decimal Borc { get; set; }
     public decimal Alacak { get; set; }
     public decimal Bakiye { get; set; }
+    public string Currency { get; set; } = "TRY";
 }

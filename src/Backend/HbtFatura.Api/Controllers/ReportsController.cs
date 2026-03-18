@@ -105,4 +105,15 @@ public class ReportsController : ControllerBase
         var data = await _service.GetInvoiceReportAsync(dateFrom, dateTo, customerId, ct);
         return Ok(data);
     }
+
+    [HttpGet("monthly-product-sales")]
+    public async Task<ActionResult<MonthlyProductSalesReportDto>> GetMonthlyProductSales(
+        [FromQuery] DateTime? dateFrom,
+        [FromQuery] DateTime? dateTo,
+        [FromQuery] Guid? productId,
+        CancellationToken ct = default)
+    {
+        var data = await _service.GetMonthlyProductSalesAsync(dateFrom, dateTo, productId, ct);
+        return Ok(data);
+    }
 }

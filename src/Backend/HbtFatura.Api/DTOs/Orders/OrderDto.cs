@@ -36,6 +36,7 @@ public class OrderListDto
     public DateTime OrderDate { get; set; }
     public int Status { get; set; }
     public int OrderType { get; set; }
+    public Guid? CustomerId { get; set; }
     public string? CustomerTitle { get; set; }
     public decimal? TotalAmount { get; set; }
     public Guid CreatedByUserId { get; set; }

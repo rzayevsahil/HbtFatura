@@ -62,7 +62,7 @@
         <td [style.color]="lookups.getColor('OrderType', o.orderType)" style="font-weight: 500;">
           {{ typeLabel(o.orderType) }}
         </td>
-        <td>{{ o.customerTitle || '—' }}</td>
+        <td>@if (o.customerId) { <a [routerLink]="['/customers', o.customerId]" class="customer-link">{{ o.customerTitle || '—' }}</a> } @else { {{ o.customerTitle || '—' }} }</td>
         <td>{{ o.totalAmount != null ? (o.totalAmount | number:'1.2-2') + ' ₺' : '—' }}</td>
         <td>
           <span class="status-badge" [style.color]="lookups.getColor('OrderStatus', o.status)"

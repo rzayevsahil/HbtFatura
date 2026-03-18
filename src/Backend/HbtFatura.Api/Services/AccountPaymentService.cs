@@ -136,16 +136,26 @@ public class AccountPaymentService : IAccountPaymentService
         else
             throw new ArgumentException("PaymentMethod must be Kasa or Banka.");
 
+        // Cari ekstre ve diğer raporlarda ödeme kaynağını net görmek için açıklamaya ödeme yöntemini ekle.
+        var baseDesc = request.Description?.Trim();
+        var methodLabel = request.PaymentMethod == "Kasa" ? "Kasa" :
+            request.PaymentMethod == "Banka" ? "Banka" : request.PaymentMethod;
+        var defaultDesc = isTahsilat ? "Tahsilat" : "Ödeme";
+        var descWithMethod = string.IsNullOrWhiteSpace(methodLabel)
+            ? (baseDesc ?? defaultDesc)
+            : $"{(baseDesc ?? defaultDesc)} ({methodLabel})";
+
         _db.AccountTransactions.Add(new AccountTransaction
         {
             Id = Guid.NewGuid(),
             CustomerId = request.CustomerId,
             UserId = userId,
             Date = request.Date,
-            Type = isTahsilat ? AccountTransactionType.Borc : AccountTransactionType.Alacak,
+            // Tahsilat = müşteri bize ödedi → Borç (bakiye düşer). Ödeme = biz müşteriye ödedik → Borç (bakiye düşer, cari ekstrede borç sütununda görünür; önceden Alacak yazılıyordu, yanlıştı).
+            Type = AccountTransactionType.Borc,
             Amount = request.Amount,
             Currency = "TRY",
-            Description = request.Description?.Trim() ?? (isTahsilat ? "Tahsilat" : "Ödeme"),
+            Description = descWithMethod,
             ReferenceType = isTahsilat ? ReferenceType.Tahsilat : ReferenceType.Odeme,
             CreatedAt = DateTime.UtcNow
         });

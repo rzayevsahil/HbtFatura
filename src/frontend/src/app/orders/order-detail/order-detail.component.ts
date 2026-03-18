@@ -95,7 +95,9 @@ export class OrderDetailComponent implements OnInit {
   createDeliveryNote(): void {
     if (!this.order || !this.canSendToDeliveryNote()) return;
     this.creatingDeliveryNote = true;
-    const deliveryDate = new Date().toISOString().slice(0, 10);
+    const d = new Date();
+    const pad = (n: number) => n.toString().padStart(2, '0');
+    const deliveryDate = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
     this.deliveryNoteApi.createFromOrder({ orderId: this.order.id, deliveryDate }).subscribe({
       next: dn => {
         this.toastr.success('İrsaliye oluşturuldu.');

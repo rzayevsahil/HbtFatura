@@ -62,7 +62,7 @@
         <td [style.color]="lookups.getColor('DeliveryNoteType', d.deliveryType)" style="font-weight: 500;">
           {{ typeLabel(d.deliveryType) }}
         </td>
-        <td>{{ d.customerTitle || '—' }}</td>
+        <td>@if (d.customerId) { <a [routerLink]="['/customers', d.customerId]" class="customer-link">{{ d.customerTitle || '—' }}</a> } @else { {{ d.customerTitle || '—' }} }</td>
         <td>{{ d.orderNumber || '—' }}</td>
         <td>
           <span class="status-badge" [style.color]="lookups.getColor('DeliveryNoteStatus', d.status)"

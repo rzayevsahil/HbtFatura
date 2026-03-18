@@ -66,6 +66,7 @@ public class InvoiceService : IInvoiceService
                 InvoiceDate = x.InvoiceDate,
                 Status = (int)x.Status,
                 InvoiceType = (int)x.InvoiceType,
+                CustomerId = x.CustomerId,
                 CustomerTitle = x.CustomerTitle,
                 GrandTotal = x.GrandTotal,
                 Currency = x.Currency,

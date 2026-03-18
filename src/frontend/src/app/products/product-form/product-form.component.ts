@@ -6,6 +6,8 @@ import { ProductService } from '../../services/product.service';
 import { AuthService } from '../../core/services/auth.service';
 import { FirmService } from '../../services/firm.service';
 import { ToastrService } from 'ngx-toastr';
+import { LookupService } from '../../core/services/lookup.service';
+import { LookupDto } from '../../core/models';
 
 @Component({
   selector: 'app-product-form',
@@ -22,10 +24,12 @@ export class ProductFormComponent implements OnInit {
     unit: ['Adet'],
     stockQuantity: [0],
     unitPrice: [0],
+    currency: ['TRY'],
     firmId: [null as string | null]
   });
   id: string | null = null;
   firms: { id: string; name: string }[] = [];
+  currencies: LookupDto[] = [];
   error = '';
   saving = false;
 
@@ -36,13 +40,18 @@ export class ProductFormComponent implements OnInit {
     private api: ProductService,
     public auth: AuthService,
     private firmApi: FirmService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private lookups: LookupService
   ) { }
 
   ngOnInit(): void {
     if (this.auth.user()?.role === 'SuperAdmin') {
       this.firmApi.getAll().subscribe(f => (this.firms = f));
     }
+    // Para birimi lookup'larını yükle
+    this.lookups.load().subscribe(list => {
+      this.currencies = list.filter(x => x.group?.name === 'Currency' && x.isActive);
+    });
     this.id = this.route.snapshot.paramMap.get('id');
     if (this.id) {
       this.api.getById(this.id).subscribe(p => this.form.patchValue({
@@ -51,7 +60,8 @@ export class ProductFormComponent implements OnInit {
         barcode: p.barcode ?? '',
         unit: p.unit ?? 'Adet',
         stockQuantity: p.stockQuantity ?? 0,
-        unitPrice: p.unitPrice ?? 0
+        unitPrice: p.unitPrice ?? 0,
+        currency: p.currency ?? 'TRY'
       }));
     }
   }
@@ -67,6 +77,7 @@ export class ProductFormComponent implements OnInit {
       unit: v.unit || 'Adet',
       stockQuantity: v.stockQuantity ?? 0,
       unitPrice: v.unitPrice ?? 0,
+      currency: (v.currency as any) || 'TRY',
       firmId: (this.auth.user()?.role === 'SuperAdmin' && v.firmId) ? v.firmId : undefined
     };
     if (this.id) {

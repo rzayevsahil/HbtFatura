@@ -66,6 +66,7 @@ public class DeliveryNoteService : IDeliveryNoteService
                 DeliveryDate = x.DeliveryDate,
                 Status = (int)x.Status,
                 DeliveryType = (int)x.DeliveryType,
+                CustomerId = x.CustomerId,
                 CustomerTitle = x.Customer != null ? x.Customer.Title : null,
                 OrderNumber = x.Order != null ? x.Order.OrderNumber : null,
                 InvoiceId = x.InvoiceId,

@@ -59,6 +59,14 @@ export class ProductDetailComponent implements OnInit {
     this.loadMovements();
   }
 
+  prevPage(): void {
+    if (this.page > 1) { this.page--; this.loadMovements(); }
+  }
+
+  nextPage(): void {
+    this.page++; this.loadMovements();
+  }
+
   openAddModal(): void {
     const pad = (n: number) => n.toString().padStart(2, '0');
     const d = new Date();

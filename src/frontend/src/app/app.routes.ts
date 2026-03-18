@@ -115,8 +115,13 @@ export const routes: Routes = [
   },
   {
     path: 'payments',
-    loadComponent: () => import('./account-payments/account-payment-form/account-payment-form.component').then(m => m.AccountPaymentFormComponent),
+    loadComponent: () => import('./account-payments/account-payment-list/account-payment-list.component').then(m => m.AccountPaymentListComponent),
     canActivate: [authGuard, PermissionGuard], data: { permission: 'Payments.View' }
+  },
+  {
+    path: 'payments/new',
+    loadComponent: () => import('./account-payments/account-payment-form/account-payment-form.component').then(m => m.AccountPaymentFormComponent),
+    canActivate: [authGuard, PermissionGuard], data: { permission: 'Payments.Create' }
   },
   {
     path: 'cash-registers',

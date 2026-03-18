@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService } from '../core/services/api.service';
-import { PagedResult, ProductDto, ProductListDto, CreateProductRequest, UpdateProductRequest, StockMovementDto, CreateStockMovementRequest } from '../core/models';
+import { PagedResult, ProductDto, ProductListDto, CreateProductRequest, UpdateProductRequest, StockMovementDto, CreateStockMovementRequest, ProductSaleRowDto } from '../core/models';
 
 @Injectable({ providedIn: 'root' })
 export class ProductService {
@@ -44,5 +44,12 @@ export class ProductService {
 
   addMovement(id: string, req: CreateStockMovementRequest): Observable<StockMovementDto> {
     return this.api.post<StockMovementDto>(`${this.base}/${id}/movements`, req);
+  }
+
+  getSales(id: string, dateFrom?: string, dateTo?: string): Observable<ProductSaleRowDto[]> {
+    const params: Record<string, string> = {};
+    if (dateFrom) params['dateFrom'] = dateFrom;
+    if (dateTo) params['dateTo'] = dateTo;
+    return this.api.get<ProductSaleRowDto[]>(`${this.base}/${id}/sales`, Object.keys(params).length ? params : undefined);
   }
 }

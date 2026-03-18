@@ -40,6 +40,14 @@
         <label>Birim Fiyat</label>
         <input type="number" formControlName="unitPrice" step="0.01" />
       </div>
+      <div class="row">
+        <label>Para Birimi</label>
+        <select formControlName="currency">
+          @for (c of currencies; track c.id) {
+          <option [value]="c.code">{{ c.name }} ({{ c.code }})</option>
+          }
+        </select>
+      </div>
       @if (error) { <p class="error-msg">{{ error }}</p> }
     </div>
     <div class="actions">

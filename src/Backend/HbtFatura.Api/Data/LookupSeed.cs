@@ -8,7 +8,7 @@ public static class LookupSeed
     public static async Task SeedIfEmptyAsync(AppDbContext db)
     {
         // 1. Ensure Groups exist
-        var groupNames = new[] { "OrderType", "OrderStatus", "InvoiceStatus", "DeliveryNoteStatus", "InvoiceType", "DeliveryNoteType", "ChequeStatus" };
+        var groupNames = new[] { "OrderType", "OrderStatus", "InvoiceStatus", "DeliveryNoteStatus", "InvoiceType", "DeliveryNoteType", "ChequeStatus", "Currency" };
         var existingGroups = await db.LookupGroups.ToListAsync();
         
         var groupsToCreate = new List<LookupGroup>();
@@ -33,6 +33,9 @@ public static class LookupSeed
         if (!existingGroups.Any(x => x.Name == "ChequeStatus"))
             groupsToCreate.Add(new LookupGroup { Id = Guid.NewGuid(), Name = "ChequeStatus", DisplayName = "Çek/Senet Durumu", IsSystemGroup = true });
 
+        if (!existingGroups.Any(x => x.Name == "Currency"))
+            groupsToCreate.Add(new LookupGroup { Id = Guid.NewGuid(), Name = "Currency", DisplayName = "Para Birimi", IsSystemGroup = true });
+
         if (groupsToCreate.Any())
         {
             await db.LookupGroups.AddRangeAsync(groupsToCreate);
@@ -48,6 +51,7 @@ public static class LookupSeed
         var invoiceTypeId = existingGroups.First(x => x.Name == "InvoiceType").Id;
         var deliveryNoteTypeId = existingGroups.First(x => x.Name == "DeliveryNoteType").Id;
         var chequeStatusId = existingGroups.First(x => x.Name == "ChequeStatus").Id;
+        var currencyGroupId = existingGroups.First(x => x.Name == "Currency").Id;
 
         var lookups = new List<Lookup>();
 
@@ -107,6 +111,14 @@ public static class LookupSeed
             lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = chequeStatusId, Code = "1", Name = "Tahsil edildi", Color = "#28a745", SortOrder = 2 });
             lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = chequeStatusId, Code = "2", Name = "Ödendi", Color = "#007bff", SortOrder = 3 });
             lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = chequeStatusId, Code = "3", Name = "Reddedildi", Color = "#dc3545", SortOrder = 4 });
+        }
+
+        // Currency (Para birimi) - TRY, USD, EUR
+        if (!await db.Lookups.AnyAsync(x => x.LookupGroupId == currencyGroupId))
+        {
+            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = currencyGroupId, Code = "TRY", Name = "Türk Lirası", Color = "#0ca678", SortOrder = 1 });
+            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = currencyGroupId, Code = "USD", Name = "Amerikan Doları", Color = "#2563eb", SortOrder = 2 });
+            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = currencyGroupId, Code = "EUR", Name = "Euro", Color = "#f59e0b", SortOrder = 3 });
         }
 
         if (lookups.Any())

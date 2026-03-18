@@ -61,6 +61,7 @@ export interface InvoiceListDto {
     invoiceDate: string;
     status: InvoiceStatus;
     invoiceType: InvoiceType;
+    customerId?: string;
     customerTitle: string;
     grandTotal: number;
     currency: string;

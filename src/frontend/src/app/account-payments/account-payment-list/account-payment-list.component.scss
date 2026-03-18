@@ -23,8 +23,8 @@
       color: var(--color-text-muted, #64748b);
     }
 
-    input,
-    select {
+    .toolbar-input,
+    .toolbar-select {
       width: 160px;
       max-width: 160px;
       padding: 0.625rem 0.875rem;
@@ -32,15 +32,6 @@
       border: 1px solid var(--color-border);
       border-radius: var(--radius-sm);
       box-sizing: border-box;
-      background: var(--color-surface);
-      color: var(--color-text);
-      transition: border-color 0.15s, box-shadow 0.15s;
-
-      &:focus {
-        outline: none;
-        border-color: var(--color-primary);
-        box-shadow: 0 0 0 3px var(--color-primary-light);
-      }
     }
   }
 
@@ -63,12 +54,21 @@
   }
 }
 
-.btn-primary {
+.btn {
   padding: 0.625rem 1.25rem;
   text-decoration: none;
   border-radius: var(--radius-sm);
   font-weight: 600;
   font-size: 0.9375rem;
+}
+
+.btn-primary {
+  background: var(--color-primary);
+  color: #fff;
+
+  &:hover {
+    opacity: 0.9;
+  }
 }
 
 .card {
@@ -78,6 +78,30 @@
 
 .table-wrap {
   overflow-x: auto;
+  position: relative;
+
+  .loading-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+  }
+
+  .spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--color-border);
+    border-top-color: var(--color-primary);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 
 table {
@@ -98,67 +122,22 @@ table {
     padding: 0.75rem 1rem;
     border-bottom: 1px solid var(--color-border);
     color: var(--color-text);
+  }
 
-    &:last-child {
-      white-space: nowrap;
-    }
+  .amount {
+    text-align: right;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
   }
 
   tbody tr:hover {
     background: #f8fafc;
   }
-}
 
-.status {
-  display: inline-block;
-  padding: 0.25rem 0.625rem;
-  border-radius: 999px;
-  font-size: 0.75rem;
-  font-weight: 600;
-
-  &.draft {
-    background: #fef3c7;
-    color: #92400e;
-  }
-
-  &.issued {
-    background: #dbeafe;
-    color: #1e40af;
-  }
-
-  &.paid {
-    background: #d1fae5;
-    color: #065f46;
-  }
-
-  &.cancelled {
-    background: #fee2e2;
-    color: #991b1b;
-  }
-}
-
-.customer-link {
-  color: var(--color-primary);
-  text-decoration: none;
-  font-weight: 500;
-  &:hover { text-decoration: underline; }
-}
-
-.actions-cell {
-  display: flex;
-  gap: 0.5rem;
-  align-items: center;
-  flex-wrap: wrap;
-
-  a {
-    color: var(--color-primary);
-    font-weight: 500;
-    text-decoration: none;
+  .text-muted {
+    color: var(--color-text-muted);
     font-size: 0.875rem;
-
-    &:hover {
-      text-decoration: underline;
-    }
+    padding: 1.5rem;
   }
 }
 
@@ -177,6 +156,13 @@ table {
     background: var(--color-surface);
     color: var(--color-text);
     border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
 
     &:hover:not(:disabled) {
       background: var(--color-background);

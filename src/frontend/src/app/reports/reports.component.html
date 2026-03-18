@@ -39,7 +39,7 @@
         @for (r of invoiceData.items; track r.id) {
         <tr>
           <td>{{ r.invoiceNumber }}</td>
-          <td>{{ r.invoiceDate | date:'shortDate' }}</td>
+          <td>{{ r.invoiceDate | date:'dd.MM.yyyy HH:mm' }}</td>
           <td>{{ r.customerTitle }}</td>
           <td>{{ statusLabel(r.status) }}</td>
           <td class="amount">{{ r.grandTotal | number:'1.2-2' }}</td>
@@ -87,11 +87,11 @@
       <tbody>
         @for (r of cariData.rows; track r.date + r.description) {
         <tr>
-          <td>{{ r.date | date:'shortDate' }}</td>
+          <td>{{ r.date | date:'dd.MM.yyyy HH:mm' }}</td>
           <td>{{ r.description }}</td>
-          <td class="amount">{{ r.borc | number:'1.2-2' }}</td>
-          <td class="amount">{{ r.alacak | number:'1.2-2' }}</td>
-          <td class="amount">{{ r.bakiye | number:'1.2-2' }}</td>
+          <td class="amount">{{ r.borc | number:'1.2-2' }} {{ r.currency }}</td>
+          <td class="amount">{{ r.alacak | number:'1.2-2' }} {{ r.currency }}</td>
+          <td class="amount">{{ r.bakiye | number:'1.2-2' }} {{ r.currency }}</td>
         </tr>
         }
       </tbody>
@@ -129,7 +129,7 @@
       <tbody>
         @for (r of cashData.rows; track r.date + r.description + r.amount) {
         <tr>
-          <td>{{ r.date | date:'shortDate' }}</td>
+          <td>{{ r.date | date:'dd.MM.yyyy HH:mm' }}</td>
           <td>{{ r.description }}</td>
           <td class="amount">{{ r.type === 1 ? '+' : '-' }}{{ r.amount | number:'1.2-2' }}</td>
         </tr>
@@ -169,7 +169,7 @@
       <tbody>
         @for (r of bankData.rows; track r.date + r.description + r.amount) {
         <tr>
-          <td>{{ r.date | date:'shortDate' }}</td>
+          <td>{{ r.date | date:'dd.MM.yyyy HH:mm' }}</td>
           <td>{{ r.description }}</td>
           <td class="amount">{{ r.type === 1 ? '+' : '-' }}{{ r.amount | number:'1.2-2' }}</td>
         </tr>
@@ -182,8 +182,10 @@
 
 <section class="report-section card">
   <h2>Stok raporu</h2>
-  <button type="button" (click)="loadStock()" [disabled]="stockLoading">Yükle</button>
-  <button type="button" (click)="downloadStockPdf()">PDF indir</button>
+  <div class="filters">
+    <button type="button" (click)="loadStock()" [disabled]="stockLoading">Yükle</button>
+    <button type="button" (click)="downloadStockPdf()">PDF indir</button>
+  </div>
   @if (stockLoading) { <p>Yükleniyor...</p> }
   @if (stockData && !stockLoading) {
   <div class="table-wrap">
@@ -199,11 +201,57 @@
       <tbody>
         @for (r of stockData.items; track r.code) {
         <tr>
-          <td>{{ r.code }}</td>
-          <td>{{ r.name }}</td>
+          <td><a [routerLink]="['/products', r.productId]" class="product-link">{{ r.code }}</a></td>
+          <td><a [routerLink]="['/products', r.productId]" class="product-link">{{ r.name }}</a></td>
           <td>{{ r.unit }}</td>
           <td class="amount">{{ r.quantity | number:'1.2-2' }}</td>
         </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  }
+</section>
+
+<section class="report-section card">
+  <h2>Ürün bazlı aylık satışlar</h2>
+  <p class="text-muted">Hangi üründen hangi ayda ne kadar satıldığını görüntüleyin. Sadece satış faturaları dikkate alınır.</p>
+  <div class="filters">
+    <input type="date" [(ngModel)]="monthlyDateFrom" placeholder="Başlangıç" />
+    <input type="date" [(ngModel)]="monthlyDateTo" placeholder="Bitiş" />
+    <select [(ngModel)]="monthlyProductId">
+      <option value="">Tüm ürünler</option>
+      @for (p of products; track p.id) {
+      <option [value]="p.id">{{ p.code }} — {{ p.name }}</option>
+      }
+    </select>
+    <button type="button" (click)="loadMonthlyProductSales()" [disabled]="monthlyLoading">Yükle</button>
+  </div>
+  @if (monthlyLoading) { <p>Yükleniyor...</p> }
+  @if (monthlyData && !monthlyLoading) {
+  <p>Toplam {{ monthlyData.items.length }} satır</p>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Kod</th>
+          <th>Ad</th>
+          <th>Yıl</th>
+          <th>Ay</th>
+          <th class="amount">Satılan miktar</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (r of monthlyData.items; track r.productId + r.year + r.month) {
+        <tr>
+          <td><a [routerLink]="['/products', r.productId]" class="product-link">{{ r.productCode }}</a></td>
+          <td><a [routerLink]="['/products', r.productId]" class="product-link">{{ r.productName }}</a></td>
+          <td>{{ r.year }}</td>
+          <td>{{ monthName(r.month) }}</td>
+          <td class="amount">{{ r.quantitySold | number:'1.2-2' }}</td>
+        </tr>
+        } @empty {
+        <tr><td colspan="5" class="text-muted">Seçilen dönemde satış kaydı yok.</td></tr>
         }
       </tbody>
     </table>

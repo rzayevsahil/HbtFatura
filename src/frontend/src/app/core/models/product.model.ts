@@ -1,4 +1,4 @@
-import { StockMovementType } from './common.model';
+import { StockMovementType, CurrencyCode } from './common.model';
 
 export interface ProductDto {
     id: string;
@@ -9,6 +9,7 @@ export interface ProductDto {
     unit: string;
     stockQuantity: number;
     unitPrice: number;
+    currency: CurrencyCode;
     createdAt: string;
 }
 
@@ -21,6 +22,7 @@ export interface CreateProductRequest {
     unit?: string;
     stockQuantity?: number;
     unitPrice?: number;
+    currency?: CurrencyCode;
     firmId?: string;
 }
 
@@ -31,6 +33,7 @@ export interface UpdateProductRequest {
     unit?: string;
     stockQuantity?: number;
     unitPrice?: number;
+    currency?: CurrencyCode;
 }
 
 export interface StockMovementDto {
@@ -40,6 +43,12 @@ export interface StockMovementDto {
     quantity: number;
     referenceType: string;
     referenceId?: string;
+    invoiceId?: string;
+    invoiceNumber?: string;
+    deliveryNoteId?: string;
+    deliveryNumber?: string;
+    orderId?: string;
+    orderNumber?: string;
     createdAt: string;
 }
 
@@ -48,4 +57,15 @@ export interface CreateStockMovementRequest {
     type: StockMovementType;
     quantity: number;
     description: string;
+}
+
+export interface ProductSaleRowDto {
+    date: string;
+    quantity: number;
+    invoiceNumber: string;
+    invoiceId?: string;
+    orderNumber?: string;
+    orderId?: string;
+    deliveryNumber?: string;
+    deliveryNoteId?: string;
 }

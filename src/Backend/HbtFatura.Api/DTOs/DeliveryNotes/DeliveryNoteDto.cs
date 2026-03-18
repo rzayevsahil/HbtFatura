@@ -38,6 +38,7 @@ public class DeliveryNoteListDto
     public DateTime DeliveryDate { get; set; }
     public int Status { get; set; }
     public int DeliveryType { get; set; }
+    public Guid? CustomerId { get; set; }
     public string? CustomerTitle { get; set; }
     public string? OrderNumber { get; set; }
     public Guid? InvoiceId { get; set; }

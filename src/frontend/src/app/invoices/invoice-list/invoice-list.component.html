@@ -70,7 +70,7 @@
         <td [style.color]="lookups.getColor('InvoiceType', inv.invoiceType)" style="font-weight: 500;">
           {{ typeLabel(inv.invoiceType) }}
         </td>
-        <td>{{ inv.customerTitle }}</td>
+        <td>@if (inv.customerId) { <a [routerLink]="['/customers', inv.customerId]" class="customer-link">{{ inv.customerTitle }}</a> } @else { {{ inv.customerTitle }} }</td>
         <td>{{ inv.grandTotal | number:'1.2-2' }} {{ inv.currency }}</td>
         <td>
           <span class="status-badge" [style.color]="lookups.getColor('InvoiceStatus', inv.status)"

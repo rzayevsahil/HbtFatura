@@ -14,4 +14,5 @@ public interface IReportService
     Task<InvoiceReportDto> GetInvoiceReportAsync(DateTime? dateFrom, DateTime? dateTo, Guid? customerId, CancellationToken ct = default);
     Task<byte[]?> GetInvoiceReportPdfAsync(DateTime? dateFrom, DateTime? dateTo, Guid? customerId, CancellationToken ct = default);
     Task<byte[]?> GetInvoiceReportExcelAsync(DateTime? dateFrom, DateTime? dateTo, Guid? customerId, CancellationToken ct = default);
+    Task<MonthlyProductSalesReportDto> GetMonthlyProductSalesAsync(DateTime? dateFrom, DateTime? dateTo, Guid? productId, CancellationToken ct = default);
 }

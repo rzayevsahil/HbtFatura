@@ -84,4 +84,12 @@ public class ProductsController : ControllerBase
         var dto = await _service.AddMovementAsync(id, request, ct);
         return CreatedAtAction(nameof(GetMovements), new { id }, dto);
     }
+
+    [HttpGet("{id:guid}/sales")]
+    [Authorize(Policy = "Products.View")]
+    public async Task<ActionResult<List<ProductSaleRowDto>>> GetSales(Guid id, [FromQuery] DateTime? dateFrom = null, [FromQuery] DateTime? dateTo = null, CancellationToken ct = default)
+    {
+        var list = await _service.GetProductSalesAsync(id, dateFrom, dateTo, ct);
+        return Ok(list);
+    }
 }

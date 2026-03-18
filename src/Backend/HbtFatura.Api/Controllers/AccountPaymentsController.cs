@@ -19,6 +19,7 @@ public class AccountPaymentsController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Policy = "Payments.View")]
     public async Task<ActionResult<PagedResult<AccountPaymentListDto>>> GetPaged(
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 20,
@@ -36,6 +37,7 @@ public class AccountPaymentsController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Policy = "Payments.Create")]
     public async Task<ActionResult> Create([FromBody] AccountPaymentRequest request, CancellationToken ct)
     {
         await _service.CreateAsync(request, ct);

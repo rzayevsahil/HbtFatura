@@ -87,6 +87,7 @@ public static class RoleSeed
             new() { Id = Guid.NewGuid(), Group = "Kasa Yönetimi", Code = "Cash.Edit", Name = "Düzenle" },
 
             new() { Id = Guid.NewGuid(), Group = "Tahsilat/Ödemeleri Yönetimi", Code = "Payments.View", Name = "Görüntüle" },
+            new() { Id = Guid.NewGuid(), Group = "Tahsilat/Ödemeleri Yönetimi", Code = "Payments.Create", Name = "Tahsilat/Ödeme girişi" },
 
             new() { Id = Guid.NewGuid(), Group = "Çek/Senet Yönetimi", Code = "Cheques.View", Name = "Görüntüle" },
             new() { Id = Guid.NewGuid(), Group = "Çek/Senet Yönetimi", Code = "Cheques.Edit", Name = "Düzenle" },
