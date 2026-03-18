@@ -126,9 +126,15 @@ table {
     }
   }
 
+  .btn-secondary {
+    background: var(--color-primary);
+    color: #fff;
+    border: none;
+  }
+
   button {
     background: var(--color-primary);
-    color: white;
+    color: #fff;
     border: none;
     cursor: pointer;
 

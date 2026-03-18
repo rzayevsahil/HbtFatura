@@ -57,7 +57,7 @@
   </div>
 </div>
 <div class="actions">
-  @if (invoice.status === 0) {
+  @if (invoice.status === 0 && invoice.sourceType !== 'Irsaliye') {
   <a [routerLink]="['/invoices', invoice.id, 'edit']" class="btn btn-secondary">Düzenle</a>
   }
 
