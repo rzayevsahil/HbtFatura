@@ -930,62 +930,77 @@ public class ReportService : IReportService
             {
                 page.Size(PageSizes.A4);
                 page.Margin(20);
-                page.Header().Text($"Sipariş detay - {order.OrderNumber}").Bold().FontSize(14);
+                page.Header().Text($"Sipariş - {order.OrderNumber}").Bold().FontSize(14);
                 page.Content().PaddingVertical(10).Column(col =>
                 {
-                    col.Item().Text($"Tarih: {order.OrderDate.ToString("dd.MM.yyyy", culture)}");
-                    col.Item().Text($"Cari: {order.Customer?.Title ?? string.Empty}");
+                    col.Item().Text($"Tarih: {order.OrderDate.ToString("dd.MM.yyyy", culture)}").FontSize(10);
+                    col.Item().Text($"Cari: {order.Customer?.Title ?? string.Empty}").FontSize(10);
                     col.Item().PaddingTop(10).Table(t =>
                     {
                         t.ColumnsDefinition(c =>
                         {
-                            c.ConstantColumn(30);
+                            c.ConstantColumn(25);
+                            c.ConstantColumn(70);
                             c.RelativeColumn();
-                            c.ConstantColumn(60);
-                            c.ConstantColumn(60);
-                            c.ConstantColumn(60);
+                            c.ConstantColumn(50);
+                            c.ConstantColumn(70);
+                            c.ConstantColumn(55);
+                            c.ConstantColumn(65);
+                            c.ConstantColumn(85);
                         });
                         t.Header(h =>
                         {
-                            h.Cell().Background(Colors.Grey.Lighten2).Padding(4).Text("#").Bold();
-                            h.Cell().Background(Colors.Grey.Lighten2).Padding(4).Text("Açıklama").Bold();
-                            h.Cell().Background(Colors.Grey.Lighten2).Padding(4).AlignRight().Text("Miktar").Bold();
-                            h.Cell().Background(Colors.Grey.Lighten2).Padding(4).AlignRight().Text("Birim Fiyat").Bold();
-                            h.Cell().Background(Colors.Grey.Lighten2).Padding(4).AlignRight().Text("Tutar").Bold();
+                            h.Cell().Background(Colors.Grey.Lighten2).Padding(3).Text("#").Bold().FontSize(9);
+                            h.Cell().Background(Colors.Grey.Lighten2).Padding(3).Text("Stok Kodu").Bold().FontSize(9);
+                            h.Cell().Background(Colors.Grey.Lighten2).Padding(3).Text("Mal Hizmet").Bold().FontSize(9);
+                            h.Cell().Background(Colors.Grey.Lighten2).Padding(3).AlignRight().Text("Miktar").Bold().FontSize(9);
+                            h.Cell().Background(Colors.Grey.Lighten2).Padding(3).AlignRight().Text("Birim Fiyat").Bold().FontSize(9);
+                            h.Cell().Background(Colors.Grey.Lighten2).Padding(3).AlignRight().Text("KDV Oranı").Bold().FontSize(9);
+                            h.Cell().Background(Colors.Grey.Lighten2).Padding(3).AlignRight().Text("KDV Tutarı").Bold().FontSize(9);
+                            h.Cell().Background(Colors.Grey.Lighten2).Padding(3).AlignRight().Text("Mal Hizmet Tutarı").Bold().FontSize(9);
                         });
                         var index = 1;
                         decimal totalNet = 0;
+                        decimal totalVat = 0;
                         foreach (var it in order.Items.OrderBy(i => i.SortOrder))
                         {
                             var qty = it.Quantity;
                             var unitPrice = it.UnitPrice;
                             var lineNet = qty * unitPrice;
+                            var lineVat = lineNet * it.VatRate / 100m;
+                            var lineTotal = lineNet + lineVat;
                             totalNet += lineNet;
-                            t.Cell().Padding(4).Text(index.ToString());
-                            t.Cell().Padding(4).Text(it.Description);
-                            t.Cell().Padding(4).AlignRight().Text(qty.ToString("N2", culture));
-                            t.Cell().Padding(4).AlignRight().Text(unitPrice.ToString("N2", culture));
-                            t.Cell().Padding(4).AlignRight().Text(lineNet.ToString("N2", culture));
+                            totalVat += lineVat;
+                            
+                            t.Cell().Padding(3).Text(index.ToString()).FontSize(9);
+                            t.Cell().Padding(3).Text(it.Product?.Code ?? "—").FontSize(9);
+                            t.Cell().Padding(3).Text(it.Description ?? "—").FontSize(9);
+                            t.Cell().Padding(3).AlignRight().Text(qty.ToString("N2", culture)).FontSize(9);
+                            t.Cell().Padding(3).AlignRight().Text(unitPrice.ToString("N2", culture)).FontSize(9);
+                            t.Cell().Padding(3).AlignRight().Text($"{it.VatRate:N0}%").FontSize(9);
+                            t.Cell().Padding(3).AlignRight().Text(lineVat.ToString("N2", culture)).FontSize(9);
+                            t.Cell().Padding(3).AlignRight().Text(lineTotal.ToString("N2", culture)).FontSize(9);
                             index++;
                         }
-                        var totalVat = order.Items.Sum(i =>
-                        {
-                            var net = i.Quantity * i.UnitPrice;
-                            return net * i.VatRate / 100m;
-                        });
                         var totalGross = totalNet + totalVat;
 
-                        t.Cell().ColumnSpan(3).PaddingTop(8).Text(string.Empty);
-                        t.Cell().PaddingTop(8).AlignRight().Text("Ara toplam:").Bold();
-                        t.Cell().PaddingTop(8).AlignRight().Text(totalNet.ToString("N2", culture)).Bold();
+                        // Boş satır
+                        t.Cell().ColumnSpan(8).PaddingTop(8).Text(string.Empty);
 
-                        t.Cell().ColumnSpan(3).Text(string.Empty);
-                        t.Cell().AlignRight().Text("KDV:").Bold();
-                        t.Cell().AlignRight().Text(totalVat.ToString("N2", culture)).Bold();
+                        // Mal Hizmet Toplam Tutarı
+                        t.Cell().ColumnSpan(5).Text(string.Empty);
+                        t.Cell().ColumnSpan(2).AlignRight().Text("Mal Hizmet Toplam Tutarı:").Bold().FontSize(9);
+                        t.Cell().AlignRight().Text($"{totalNet:N2} ₺").Bold().FontSize(9);
 
-                        t.Cell().ColumnSpan(3).Text(string.Empty);
-                        t.Cell().AlignRight().Text("Genel toplam:").Bold();
-                        t.Cell().AlignRight().Text(totalGross.ToString("N2", culture)).Bold();
+                        // Hesaplanan KDV
+                        t.Cell().ColumnSpan(5).Text(string.Empty);
+                        t.Cell().ColumnSpan(2).AlignRight().Text("Hesaplanan KDV:").Bold().FontSize(9);
+                        t.Cell().AlignRight().Text($"{totalVat:N2} ₺").Bold().FontSize(9);
+
+                        // Genel Toplam
+                        t.Cell().ColumnSpan(5).Text(string.Empty);
+                        t.Cell().ColumnSpan(2).AlignRight().Text("Genel Toplam:").Bold().FontColor(Color.FromHex("#059669")).FontSize(9);
+                        t.Cell().AlignRight().Text($"{totalGross:N2} ₺").Bold().FontColor(Color.FromHex("#059669")).FontSize(9);
                     });
                 });
             });
@@ -1012,62 +1027,77 @@ public class ReportService : IReportService
             {
                 page.Size(PageSizes.A4);
                 page.Margin(20);
-                page.Header().Text($"İrsaliye detay - {dn.DeliveryNumber}").Bold().FontSize(14);
+                page.Header().Text($"İrsaliye - {dn.DeliveryNumber}").Bold().FontSize(14);
                 page.Content().PaddingVertical(10).Column(col =>
                 {
-                    col.Item().Text($"Tarih: {dn.DeliveryDate.ToString("dd.MM.yyyy", culture)}");
-                    col.Item().Text($"Cari: {dn.Customer?.Title ?? string.Empty}");
+                    col.Item().Text($"Tarih: {dn.DeliveryDate.ToString("dd.MM.yyyy", culture)}").FontSize(10);
+                    col.Item().Text($"Cari: {dn.Customer?.Title ?? string.Empty}").FontSize(10);
                     col.Item().PaddingTop(10).Table(t =>
                     {
                         t.ColumnsDefinition(c =>
                         {
-                            c.ConstantColumn(30);
+                            c.ConstantColumn(25);
+                            c.ConstantColumn(70);
                             c.RelativeColumn();
-                            c.ConstantColumn(60);
-                            c.ConstantColumn(60);
-                            c.ConstantColumn(60);
+                            c.ConstantColumn(50);
+                            c.ConstantColumn(70);
+                            c.ConstantColumn(55);
+                            c.ConstantColumn(65);
+                            c.ConstantColumn(85);
                         });
                         t.Header(h =>
                         {
-                            h.Cell().Background(Colors.Grey.Lighten2).Padding(4).Text("#").Bold();
-                            h.Cell().Background(Colors.Grey.Lighten2).Padding(4).Text("Açıklama").Bold();
-                            h.Cell().Background(Colors.Grey.Lighten2).Padding(4).AlignRight().Text("Miktar").Bold();
-                            h.Cell().Background(Colors.Grey.Lighten2).Padding(4).AlignRight().Text("Birim Fiyat").Bold();
-                            h.Cell().Background(Colors.Grey.Lighten2).Padding(4).AlignRight().Text("Tutar").Bold();
+                            h.Cell().Background(Colors.Grey.Lighten2).Padding(3).Text("#").Bold().FontSize(9);
+                            h.Cell().Background(Colors.Grey.Lighten2).Padding(3).Text("Stok Kodu").Bold().FontSize(9);
+                            h.Cell().Background(Colors.Grey.Lighten2).Padding(3).Text("Mal Hizmet").Bold().FontSize(9);
+                            h.Cell().Background(Colors.Grey.Lighten2).Padding(3).AlignRight().Text("Miktar").Bold().FontSize(9);
+                            h.Cell().Background(Colors.Grey.Lighten2).Padding(3).AlignRight().Text("Birim Fiyat").Bold().FontSize(9);
+                            h.Cell().Background(Colors.Grey.Lighten2).Padding(3).AlignRight().Text("KDV Oranı").Bold().FontSize(9);
+                            h.Cell().Background(Colors.Grey.Lighten2).Padding(3).AlignRight().Text("KDV Tutarı").Bold().FontSize(9);
+                            h.Cell().Background(Colors.Grey.Lighten2).Padding(3).AlignRight().Text("Mal Hizmet Tutarı").Bold().FontSize(9);
                         });
                         var index = 1;
                         decimal totalNet = 0;
+                        decimal totalVat = 0;
                         foreach (var it in dn.Items.OrderBy(i => i.SortOrder))
                         {
                             var qty = it.Quantity;
                             var unitPrice = it.UnitPrice;
                             var lineNet = qty * unitPrice;
+                            var lineVat = lineNet * it.VatRate / 100m;
+                            var lineTotal = lineNet + lineVat;
                             totalNet += lineNet;
-                            t.Cell().Padding(4).Text(index.ToString());
-                            t.Cell().Padding(4).Text(it.Description);
-                            t.Cell().Padding(4).AlignRight().Text(qty.ToString("N2", culture));
-                            t.Cell().Padding(4).AlignRight().Text(unitPrice.ToString("N2", culture));
-                            t.Cell().Padding(4).AlignRight().Text(lineNet.ToString("N2", culture));
+                            totalVat += lineVat;
+                            
+                            t.Cell().Padding(3).Text(index.ToString()).FontSize(9);
+                            t.Cell().Padding(3).Text(it.Product?.Code ?? "—").FontSize(9);
+                            t.Cell().Padding(3).Text(it.Description ?? "—").FontSize(9);
+                            t.Cell().Padding(3).AlignRight().Text(qty.ToString("N2", culture)).FontSize(9);
+                            t.Cell().Padding(3).AlignRight().Text(unitPrice.ToString("N2", culture)).FontSize(9);
+                            t.Cell().Padding(3).AlignRight().Text($"{it.VatRate:N0}%").FontSize(9);
+                            t.Cell().Padding(3).AlignRight().Text(lineVat.ToString("N2", culture)).FontSize(9);
+                            t.Cell().Padding(3).AlignRight().Text(lineTotal.ToString("N2", culture)).FontSize(9);
                             index++;
                         }
-                        var totalVat = dn.Items.Sum(i =>
-                        {
-                            var net = i.Quantity * i.UnitPrice;
-                            return net * i.VatRate / 100m;
-                        });
                         var totalGross = totalNet + totalVat;
 
-                        t.Cell().ColumnSpan(3).PaddingTop(8).Text(string.Empty);
-                        t.Cell().PaddingTop(8).AlignRight().Text("Ara toplam:").Bold();
-                        t.Cell().PaddingTop(8).AlignRight().Text(totalNet.ToString("N2", culture)).Bold();
+                        // Boş satır
+                        t.Cell().ColumnSpan(8).PaddingTop(8).Text(string.Empty);
 
-                        t.Cell().ColumnSpan(3).Text(string.Empty);
-                        t.Cell().AlignRight().Text("KDV:").Bold();
-                        t.Cell().AlignRight().Text(totalVat.ToString("N2", culture)).Bold();
+                        // Mal Hizmet Toplam Tutarı
+                        t.Cell().ColumnSpan(5).Text(string.Empty);
+                        t.Cell().ColumnSpan(2).AlignRight().Text("Mal Hizmet Toplam Tutarı:").Bold().FontSize(9);
+                        t.Cell().AlignRight().Text($"{totalNet:N2} ₺").Bold().FontSize(9);
 
-                        t.Cell().ColumnSpan(3).Text(string.Empty);
-                        t.Cell().AlignRight().Text("Genel toplam:").Bold();
-                        t.Cell().AlignRight().Text(totalGross.ToString("N2", culture)).Bold();
+                        // Hesaplanan KDV
+                        t.Cell().ColumnSpan(5).Text(string.Empty);
+                        t.Cell().ColumnSpan(2).AlignRight().Text("Hesaplanan KDV:").Bold().FontSize(9);
+                        t.Cell().AlignRight().Text($"{totalVat:N2} ₺").Bold().FontSize(9);
+
+                        // Genel Toplam
+                        t.Cell().ColumnSpan(5).Text(string.Empty);
+                        t.Cell().ColumnSpan(2).AlignRight().Text("Genel Toplam:").Bold().FontColor(Color.FromHex("#059669")).FontSize(9);
+                        t.Cell().AlignRight().Text($"{totalGross:N2} ₺").Bold().FontColor(Color.FromHex("#059669")).FontSize(9);
                     });
                 });
             });
