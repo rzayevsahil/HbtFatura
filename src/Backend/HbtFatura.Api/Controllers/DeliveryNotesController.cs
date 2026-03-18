@@ -46,6 +46,14 @@ public class DeliveryNotesController : ControllerBase
         return Ok(dto);
     }
 
+    [HttpGet("{id:guid}/pdf")]
+    public async Task<IActionResult> GetDeliveryNotePdf(Guid id, [FromServices] IReportService reports, CancellationToken ct = default)
+    {
+        var pdf = await reports.GetDeliveryNoteDetailPdfAsync(id, ct);
+        if (pdf == null) return NotFound();
+        return File(pdf, "application/pdf", $"irsaliye-{id:N}.pdf");
+    }
+
     [HttpPost]
     public async Task<ActionResult<DeliveryNoteDto>> Create([FromBody] CreateDeliveryNoteRequest request, CancellationToken ct = default)
     {

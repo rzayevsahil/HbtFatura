@@ -45,6 +45,14 @@ public class OrdersController : ControllerBase
         return Ok(dto);
     }
 
+    [HttpGet("{id:guid}/pdf")]
+    public async Task<IActionResult> GetOrderPdf(Guid id, [FromServices] IReportService reports, CancellationToken ct = default)
+    {
+        var pdf = await reports.GetOrderDetailPdfAsync(id, ct);
+        if (pdf == null) return NotFound();
+        return File(pdf, "application/pdf", $"siparis-{id:N}.pdf");
+    }
+
     [HttpPost]
     public async Task<ActionResult<OrderDto>> Create([FromBody] CreateOrderRequest request, CancellationToken ct = default)
     {

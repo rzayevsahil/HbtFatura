@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { OrderService } from '../../services/order.service';
+import { ReportService } from '../../services/report.service';
 import { OrderListDto, OrderStatus } from '../../core/models';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../../core/services/auth.service';
@@ -28,6 +29,7 @@ export class OrderListComponent implements OnInit {
 
   constructor(
     private api: OrderService,
+    private reports: ReportService,
     private router: Router,
     private toastr: ToastrService,
     public lookups: LookupService,
@@ -93,5 +95,43 @@ export class OrderListComponent implements OnInit {
 
   nextPage(): void {
     this.page++; this.load();
+  }
+
+  downloadPdf(): void {
+    const dateFrom = this.searchDateFrom || undefined;
+    const dateTo = this.searchDateTo || undefined;
+    const status = this.searchStatus !== null ? this.searchStatus : undefined;
+    const search = this.searchText || undefined;
+    this.reports.downloadOrderReportPdf(dateFrom, dateTo, status, undefined, search).subscribe({
+      next: blob => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        const today = new Date();
+        const dateStr = today.toISOString().slice(0, 10);
+        a.href = url;
+        a.download = `siparis-raporu-${dateStr}.pdf`;
+        a.click();
+        window.URL.revokeObjectURL(url);
+      }
+    });
+  }
+
+  downloadExcel(): void {
+    const dateFrom = this.searchDateFrom || undefined;
+    const dateTo = this.searchDateTo || undefined;
+    const status = this.searchStatus !== null ? this.searchStatus : undefined;
+    const search = this.searchText || undefined;
+    this.reports.downloadOrderReportExcel(dateFrom, dateTo, status, undefined, search).subscribe({
+      next: blob => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        const today = new Date();
+        const dateStr = today.toISOString().slice(0, 10);
+        a.href = url;
+        a.download = `siparis-raporu-${dateStr}.xlsx`;
+        a.click();
+        window.URL.revokeObjectURL(url);
+      }
+    });
   }
 }

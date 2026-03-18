@@ -106,6 +106,60 @@ public class ReportsController : ControllerBase
         return Ok(data);
     }
 
+    [HttpGet("orders")]
+    public async Task<ActionResult<OrderReportDto>> GetOrderReport(
+        [FromQuery] DateTime? dateFrom,
+        [FromQuery] DateTime? dateTo,
+        [FromQuery] int? status,
+        [FromQuery] Guid? customerId,
+        [FromQuery] string? search,
+        [FromQuery] Guid? firmId,
+        [FromQuery] string? format,
+        CancellationToken ct = default)
+    {
+        if (string.Equals(format, "pdf", StringComparison.OrdinalIgnoreCase))
+        {
+            var pdf = await _service.GetOrderReportPdfAsync(dateFrom, dateTo, status, customerId, search, firmId, ct);
+            if (pdf == null) return NotFound();
+            return File(pdf, "application/pdf", "siparis-raporu.pdf");
+        }
+        if (string.Equals(format, "xlsx", StringComparison.OrdinalIgnoreCase))
+        {
+            var excel = await _service.GetOrderReportExcelAsync(dateFrom, dateTo, status, customerId, search, firmId, ct);
+            if (excel == null) return NotFound();
+            return File(excel, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "siparis-raporu.xlsx");
+        }
+        var data = await _service.GetOrderReportAsync(dateFrom, dateTo, status, customerId, search, firmId, ct);
+        return Ok(data);
+    }
+
+    [HttpGet("delivery-notes")]
+    public async Task<ActionResult<DeliveryNoteReportDto>> GetDeliveryNoteReport(
+        [FromQuery] DateTime? dateFrom,
+        [FromQuery] DateTime? dateTo,
+        [FromQuery] int? status,
+        [FromQuery] Guid? customerId,
+        [FromQuery] string? search,
+        [FromQuery] Guid? firmId,
+        [FromQuery] string? format,
+        CancellationToken ct = default)
+    {
+        if (string.Equals(format, "pdf", StringComparison.OrdinalIgnoreCase))
+        {
+            var pdf = await _service.GetDeliveryNoteReportPdfAsync(dateFrom, dateTo, status, customerId, search, firmId, ct);
+            if (pdf == null) return NotFound();
+            return File(pdf, "application/pdf", "irsaliye-raporu.pdf");
+        }
+        if (string.Equals(format, "xlsx", StringComparison.OrdinalIgnoreCase))
+        {
+            var excel = await _service.GetDeliveryNoteReportExcelAsync(dateFrom, dateTo, status, customerId, search, firmId, ct);
+            if (excel == null) return NotFound();
+            return File(excel, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "irsaliye-raporu.xlsx");
+        }
+        var data = await _service.GetDeliveryNoteReportAsync(dateFrom, dateTo, status, customerId, search, firmId, ct);
+        return Ok(data);
+    }
+
     [HttpGet("monthly-product-sales")]
     public async Task<ActionResult<MonthlyProductSalesReportDto>> GetMonthlyProductSales(
         [FromQuery] DateTime? dateFrom,

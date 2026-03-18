@@ -127,4 +127,19 @@ export class OrderDetailComponent implements OnInit {
       }
     });
   }
+
+  downloadPdf(): void {
+    if (!this.order) return;
+    this.orderApi.downloadPdf(this.order.id).subscribe({
+      next: blob => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        const number = this.order!.orderNumber || this.order!.id;
+        a.download = `siparis-${number}.pdf`;
+        a.click();
+        window.URL.revokeObjectURL(url);
+      }
+    });
+  }
 }

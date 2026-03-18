@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { InvoiceService } from '../../services/invoice.service';
+import { ReportService } from '../../services/report.service';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../../core/services/auth.service';
 import { LookupService } from '../../core/services/lookup.service';
@@ -29,6 +30,7 @@ export class InvoiceListComponent implements OnInit {
 
   constructor(
     private api: InvoiceService,
+    private reports: ReportService,
     private router: Router,
     private toastr: ToastrService,
     public lookups: LookupService,
@@ -95,6 +97,44 @@ export class InvoiceListComponent implements OnInit {
         this.toastr.success('Fatura PDF indirildi.');
       },
       error: () => this.toastr.error('PDF indirilemedi.')
+    });
+  }
+
+  downloadReportPdf(): void {
+    const dateFrom = this.searchDateFrom || undefined;
+    const dateTo = this.searchDateTo || undefined;
+    this.reports.downloadInvoiceReportPdf(dateFrom, dateTo).subscribe({
+      next: blob => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        const today = new Date();
+        const dateStr = today.toISOString().slice(0, 10);
+        a.href = url;
+        a.download = `fatura-raporu-${dateStr}.pdf`;
+        a.click();
+        window.URL.revokeObjectURL(url);
+        this.toastr.success('Fatura raporu PDF indirildi.');
+      },
+      error: () => this.toastr.error('Fatura raporu PDF indirilemedi.')
+    });
+  }
+
+  downloadReportExcel(): void {
+    const dateFrom = this.searchDateFrom || undefined;
+    const dateTo = this.searchDateTo || undefined;
+    this.reports.downloadInvoiceReportExcel(dateFrom, dateTo).subscribe({
+      next: blob => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        const today = new Date();
+        const dateStr = today.toISOString().slice(0, 10);
+        a.href = url;
+        a.download = `fatura-raporu-${dateStr}.xlsx`;
+        a.click();
+        window.URL.revokeObjectURL(url);
+        this.toastr.success('Fatura raporu Excel indirildi.');
+      },
+      error: () => this.toastr.error('Fatura raporu Excel indirilemedi.')
     });
   }
 

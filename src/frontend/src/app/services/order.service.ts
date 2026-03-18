@@ -36,4 +36,8 @@ export class OrderService {
   setStatus(id: string, status: OrderStatus): Observable<void> {
     return this.api.patch<void>(`${this.base}/${id}/status`, { status });
   }
+
+  downloadPdf(id: string): Observable<Blob> {
+    return this.api.getBlob(`${this.base}/${id}/pdf`);
+  }
 }

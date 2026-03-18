@@ -69,6 +69,32 @@ public class ReportService : IReportService
         return _db.Invoices.Where(i => i.UserId == _currentUser.UserId);
     }
 
+    private IQueryable<Order> OrderScope(Guid? firmIdFilter = null)
+    {
+        if (_currentUser.IsSuperAdmin)
+        {
+            if (firmIdFilter.HasValue)
+                return _db.Orders.Where(o => o.User != null && o.User.FirmId == firmIdFilter.Value);
+            return _db.Orders.AsQueryable();
+        }
+        if (_currentUser.FirmId.HasValue)
+            return _db.Orders.Where(o => o.User != null && o.User.FirmId == _currentUser.FirmId.Value);
+        return _db.Orders.Where(o => o.UserId == _currentUser.UserId);
+    }
+    
+    private IQueryable<DeliveryNote> DeliveryNoteScope(Guid? firmIdFilter = null)
+    {
+        if (_currentUser.IsSuperAdmin)
+        {
+            if (firmIdFilter.HasValue)
+                return _db.DeliveryNotes.Where(d => d.User != null && d.User.FirmId == firmIdFilter.Value);
+            return _db.DeliveryNotes.AsQueryable();
+        }
+        if (_currentUser.FirmId.HasValue)
+            return _db.DeliveryNotes.Where(d => d.User != null && d.User.FirmId == _currentUser.FirmId.Value);
+        return _db.DeliveryNotes.Where(d => d.UserId == _currentUser.UserId);
+    }
+
     public async Task<CariExtractReportDto?> GetCariExtractAsync(Guid customerId, DateTime? dateFrom, DateTime? dateTo, CancellationToken ct = default)
     {
         var customer = await CustomerScope().Where(c => c.Id == customerId)
@@ -452,12 +478,12 @@ public class ReportService : IReportService
                     {
                         t.ColumnsDefinition(c =>
                         {
-                            c.ConstantColumn(90);
-                            c.ConstantColumn(80);
-                            c.RelativeColumn();
-                            c.ConstantColumn(60);
-                            c.ConstantColumn(90);
-                            c.ConstantColumn(40);
+                            c.ConstantColumn(150);   // Fatura No (tek satırda kalsın)
+                            c.ConstantColumn(120);   // Tarih (dd.MM.yyyy HH:mm)
+                            c.RelativeColumn();      // Cari
+                            c.ConstantColumn(90);   // Durum
+                            c.ConstantColumn(110);  // Toplam
+                            c.ConstantColumn(50);   // Para
                         });
                         t.Header(h =>
                         {
@@ -468,13 +494,14 @@ public class ReportService : IReportService
                             h.Cell().Background(Colors.Grey.Lighten2).Padding(4).AlignRight().Text("Toplam").Bold();
                             h.Cell().Background(Colors.Grey.Lighten2).Padding(4).Text("Para").Bold();
                         });
+                        var culture = CultureInfo.GetCultureInfo("tr-TR");
                         foreach (var row in data.Items)
                         {
                             t.Cell().Padding(4).Text(row.InvoiceNumber);
-                            t.Cell().Padding(4).Text(row.InvoiceDate.ToString("d", CultureInfo.GetCultureInfo("tr-TR")));
+                            t.Cell().Padding(4).Text(row.InvoiceDate.ToString("dd.MM.yyyy HH:mm", culture));
                             t.Cell().Padding(4).Text(row.CustomerTitle);
                             t.Cell().Padding(4).Text(row.Status >= 0 && row.Status < statusNames.Length ? statusNames[row.Status] : "");
-                            t.Cell().Padding(4).AlignRight().Text(row.GrandTotal.ToString("N2", CultureInfo.GetCultureInfo("tr-TR")));
+                            t.Cell().Padding(4).AlignRight().Text(row.GrandTotal.ToString("N2", culture));
                             t.Cell().Padding(4).Text(row.Currency);
                         }
                     });
@@ -488,22 +515,24 @@ public class ReportService : IReportService
     {
         var data = await GetInvoiceReportAsync(dateFrom, dateTo, customerId, ct);
         var statusNames = new[] { "Taslak", "Kesildi", "Ödendi", "İptal" };
+        var culture = CultureInfo.GetCultureInfo("tr-TR");
 
         using var wb = new XLWorkbook();
         var ws = wb.Worksheets.Add("Fatura raporu");
         ws.Cell("A1").Value = data.CustomerTitle != null ? $"Fatura raporu - {data.CustomerTitle}" : "Fatura raporu";
-        ws.Cell("A2").Value = $"Dönem: {(data.DateFrom?.ToString("d") ?? "—")} - {(data.DateTo?.ToString("d") ?? "—")}";
-        ws.Cell("A4").Value = "Fatura No";
-        ws.Cell("B4").Value = "Tarih";
-        ws.Cell("C4").Value = "Cari";
-        ws.Cell("D4").Value = "Durum";
-        ws.Cell("E4").Value = "Toplam";
-        ws.Cell("F4").Value = "Para";
-        int row = 5;
+        ws.Cell("A2").Value = $"Dönem: {(data.DateFrom?.ToString("d", culture) ?? "—")} - {(data.DateTo?.ToString("d", culture) ?? "—")}";
+        ws.Cell("A3").Value = $"Rapor tarihi: {DateTime.Now.ToString("dd.MM.yyyy HH:mm", culture)}";
+        ws.Cell("A5").Value = "Fatura No";
+        ws.Cell("B5").Value = "Tarih";
+        ws.Cell("C5").Value = "Cari";
+        ws.Cell("D5").Value = "Durum";
+        ws.Cell("E5").Value = "Toplam";
+        ws.Cell("F5").Value = "Para";
+        int row = 6;
         foreach (var r in data.Items)
         {
             ws.Cell(row, 1).Value = r.InvoiceNumber;
-            ws.Cell(row, 2).Value = r.InvoiceDate.ToString("d");
+            ws.Cell(row, 2).Value = r.InvoiceDate.ToString("dd.MM.yyyy HH:mm", culture);
             ws.Cell(row, 3).Value = r.CustomerTitle;
             ws.Cell(row, 4).Value = r.Status >= 0 && r.Status < statusNames.Length ? statusNames[r.Status] : "";
             ws.Cell(row, 5).Value = r.GrandTotal;
@@ -550,5 +579,500 @@ public class ReportService : IReportService
         }).ToList();
 
         return new MonthlyProductSalesReportDto { DateFrom = dateFrom, DateTo = dateTo, Items = items };
+    }
+
+    public async Task<OrderReportDto> GetOrderReportAsync(DateTime? dateFrom, DateTime? dateTo, int? status, Guid? customerId, string? search, Guid? firmId, CancellationToken ct = default)
+    {
+        var query = OrderScope(firmId);
+        if (dateFrom.HasValue) query = query.Where(x => x.OrderDate >= dateFrom.Value.Date);
+        if (dateTo.HasValue) query = query.Where(x => x.OrderDate < dateTo.Value.Date.AddDays(1));
+        if (status.HasValue)
+        {
+            var st = (OrderStatus)status.Value;
+            query = query.Where(x => x.Status == st);
+        }
+        if (customerId.HasValue) query = query.Where(x => x.CustomerId == customerId.Value);
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            var s = search.Trim().ToLower();
+            query = query.Where(x => x.OrderNumber.ToLower().Contains(s) || (x.Customer != null && x.Customer.Title.ToLower().Contains(s)));
+        }
+
+        var items = await query
+            .Include(x => x.Customer)
+            .OrderByDescending(x => x.OrderDate)
+            .ThenByDescending(x => x.OrderNumber)
+            .Select(o => new OrderReportRowDto
+            {
+                Id = o.Id,
+                OrderNumber = o.OrderNumber,
+                OrderDate = o.OrderDate,
+                Status = (int)o.Status,
+                OrderType = (int)o.OrderType,
+                CustomerId = o.CustomerId,
+                CustomerTitle = o.Customer != null ? o.Customer.Title : null,
+                TotalAmount = o.Items.Sum(i => i.Quantity * i.UnitPrice * (1 + i.VatRate / 100m)),
+                Currency = "TRY"
+            })
+            .ToListAsync(ct);
+
+        string? customerTitle = null;
+        if (customerId.HasValue)
+            customerTitle = await CustomerScope().Where(c => c.Id == customerId.Value).Select(c => c.Title).FirstOrDefaultAsync(ct);
+
+        return new OrderReportDto
+        {
+            DateFrom = dateFrom,
+            DateTo = dateTo,
+            CustomerId = customerId,
+            CustomerTitle = customerTitle,
+            Status = status,
+            Search = search,
+            FirmId = firmId,
+            Items = items
+        };
+    }
+
+    public async Task<byte[]?> GetOrderReportPdfAsync(DateTime? dateFrom, DateTime? dateTo, int? status, Guid? customerId, string? search, Guid? firmId, CancellationToken ct = default)
+    {
+        var data = await GetOrderReportAsync(dateFrom, dateTo, status, customerId, search, firmId, ct);
+        QuestPDF.Settings.License = LicenseType.Community;
+
+        var title = data.CustomerTitle != null ? $"Sipariş raporu - {data.CustomerTitle}" : "Sipariş raporu";
+        var period = $"Dönem: {(data.DateFrom?.ToString("d", CultureInfo.GetCultureInfo("tr-TR")) ?? "—")} - {(data.DateTo?.ToString("d", CultureInfo.GetCultureInfo("tr-TR")) ?? "—")}  |  Rapor tarihi: {DateTime.Now.ToString("dd.MM.yyyy HH:mm", CultureInfo.GetCultureInfo("tr-TR"))}";
+        var statusNames = new[] { "Bekliyor", "Onaylandı", "Tamamı Teslim", "Kısmi Teslim", "İptal" };
+
+        var document = Document.Create(container =>
+        {
+            container.Page(page =>
+            {
+                page.Size(PageSizes.A4.Landscape());
+                page.Margin(20);
+                page.Header().Text(title).Bold().FontSize(14);
+                page.Content().PaddingVertical(10).Column(col =>
+                {
+                    col.Item().Text(period);
+                    if (!string.IsNullOrWhiteSpace(data.Search))
+                    {
+                        col.Item().Text($"Arama: {data.Search}");
+                    }
+                    if (data.Status.HasValue && data.Status.Value >= 0 && data.Status.Value < statusNames.Length)
+                    {
+                        col.Item().Text($"Durum: {statusNames[data.Status.Value]}");
+                    }
+                    col.Item().PaddingTop(10).Table(t =>
+                    {
+                        t.ColumnsDefinition(c =>
+                        {
+                            // Sipariş No ve Tarih kolonlarını geniş tut, satır kırılmasını azalt
+                            c.ConstantColumn(150);   // Sipariş No
+                            c.ConstantColumn(120);   // Tarih (dd.MM.yyyy HH:mm)
+                            c.RelativeColumn();      // Cari
+                            c.ConstantColumn(90);    // Durum
+                            c.ConstantColumn(110);   // Toplam
+                        });
+                        t.Header(h =>
+                        {
+                            h.Cell().Background(Colors.Grey.Lighten2).Padding(4).Text("Sipariş No").Bold();
+                            h.Cell().Background(Colors.Grey.Lighten2).Padding(4).Text("Tarih").Bold();
+                            h.Cell().Background(Colors.Grey.Lighten2).Padding(4).Text("Cari").Bold();
+                            h.Cell().Background(Colors.Grey.Lighten2).Padding(4).Text("Durum").Bold();
+                            h.Cell().Background(Colors.Grey.Lighten2).Padding(4).AlignRight().Text("Toplam").Bold();
+                        });
+                        var culture = CultureInfo.GetCultureInfo("tr-TR");
+                        foreach (var row in data.Items)
+                        {
+                            t.Cell().Padding(4).Text(row.OrderNumber);
+                            t.Cell().Padding(4).Text(row.OrderDate.ToString("dd.MM.yyyy HH:mm", culture));
+                            t.Cell().Padding(4).Text(row.CustomerTitle ?? string.Empty);
+                            t.Cell().Padding(4).Text(row.Status >= 0 && row.Status < statusNames.Length ? statusNames[row.Status] : "");
+                            t.Cell().Padding(4).AlignRight().Text($"{row.TotalAmount.ToString("N2", culture)} {row.Currency}");
+                        }
+                    });
+                });
+            });
+        });
+        return document.GeneratePdf();
+    }
+
+    public async Task<byte[]?> GetOrderReportExcelAsync(DateTime? dateFrom, DateTime? dateTo, int? status, Guid? customerId, string? search, Guid? firmId, CancellationToken ct = default)
+    {
+        var data = await GetOrderReportAsync(dateFrom, dateTo, status, customerId, search, firmId, ct);
+        var statusNames = new[] { "Bekliyor", "Onaylandı", "Tamamı Teslim", "Kısmi Teslim", "İptal" };
+
+        var culture = CultureInfo.GetCultureInfo("tr-TR");
+        using var wb = new XLWorkbook();
+        var ws = wb.Worksheets.Add("Sipariş raporu");
+        ws.Cell("A1").Value = data.CustomerTitle != null ? $"Sipariş raporu - {data.CustomerTitle}" : "Sipariş raporu";
+        ws.Cell("A2").Value = $"Dönem: {(data.DateFrom?.ToString("d", culture) ?? "—")} - {(data.DateTo?.ToString("d", culture) ?? "—")}";
+        ws.Cell("A3").Value = $"Rapor tarihi: {DateTime.Now.ToString("dd.MM.yyyy HH:mm", culture)}";
+        var infoRow = 4;
+        if (!string.IsNullOrWhiteSpace(data.Search))
+        {
+            ws.Cell(infoRow, 1).Value = $"Arama: {data.Search}";
+            infoRow++;
+        }
+        if (data.Status.HasValue && data.Status.Value >= 0 && data.Status.Value < statusNames.Length)
+        {
+            ws.Cell(infoRow, 1).Value = $"Durum: {statusNames[data.Status.Value]}";
+            infoRow++;
+        }
+        var headerRow = infoRow + 1;
+        ws.Cell(headerRow, 1).Value = "Sipariş No";
+        ws.Cell(headerRow, 2).Value = "Tarih";
+        ws.Cell(headerRow, 3).Value = "Cari";
+        ws.Cell(headerRow, 4).Value = "Durum";
+        ws.Cell(headerRow, 5).Value = "Toplam";
+        ws.Cell(headerRow, 6).Value = "Para";
+
+        var row = headerRow + 1;
+        foreach (var r in data.Items)
+        {
+            ws.Cell(row, 1).Value = r.OrderNumber;
+            ws.Cell(row, 2).Value = r.OrderDate.ToString("dd.MM.yyyy HH:mm", culture);
+            ws.Cell(row, 3).Value = r.CustomerTitle;
+            ws.Cell(row, 4).Value = r.Status >= 0 && r.Status < statusNames.Length ? statusNames[r.Status] : "";
+            ws.Cell(row, 5).Value = r.TotalAmount;
+            ws.Cell(row, 6).Value = r.Currency;
+            row++;
+        }
+
+        using var ms = new MemoryStream();
+        wb.SaveAs(ms, false);
+        return ms.ToArray();
+    }
+    
+    public async Task<DeliveryNoteReportDto> GetDeliveryNoteReportAsync(DateTime? dateFrom, DateTime? dateTo, int? status, Guid? customerId, string? search, Guid? firmId, CancellationToken ct = default)
+    {
+        var query = DeliveryNoteScope(firmId);
+        if (dateFrom.HasValue) query = query.Where(x => x.DeliveryDate >= dateFrom.Value.Date);
+        if (dateTo.HasValue) query = query.Where(x => x.DeliveryDate <= dateTo.Value.Date);
+        if (status.HasValue)
+        {
+            var st = (DeliveryNoteStatus)status.Value;
+            query = query.Where(x => x.Status == st);
+        }
+        if (customerId.HasValue) query = query.Where(x => x.CustomerId == customerId.Value);
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            var s = search.Trim().ToLower();
+            query = query.Where(x => x.DeliveryNumber.ToLower().Contains(s) || (x.Customer != null && x.Customer.Title.ToLower().Contains(s)));
+        }
+
+        var items = await query
+            .Include(x => x.Customer)
+            .Include(x => x.Order)
+            .Include(x => x.Items)
+            .OrderByDescending(x => x.DeliveryDate)
+            .ThenByDescending(x => x.DeliveryNumber)
+            .Select(d => new DeliveryNoteReportRowDto
+            {
+                Id = d.Id,
+                DeliveryNumber = d.DeliveryNumber,
+                DeliveryDate = d.DeliveryDate,
+                Status = (int)d.Status,
+                DeliveryType = (int)d.DeliveryType,
+                CustomerId = d.CustomerId,
+                CustomerTitle = d.Customer != null ? d.Customer.Title : null,
+                OrderNumber = d.Order != null ? d.Order.OrderNumber : null,
+                InvoiceId = d.InvoiceId,
+                TotalAmount = d.Items.Sum(i => i.Quantity * i.UnitPrice * (1 + i.VatRate / 100m)),
+                Currency = "TRY"
+            })
+            .ToListAsync(ct);
+
+        string? customerTitle = null;
+        if (customerId.HasValue)
+            customerTitle = await CustomerScope().Where(c => c.Id == customerId.Value).Select(c => c.Title).FirstOrDefaultAsync(ct);
+
+        return new DeliveryNoteReportDto
+        {
+            DateFrom = dateFrom,
+            DateTo = dateTo,
+            CustomerId = customerId,
+            CustomerTitle = customerTitle,
+            Status = status,
+            Search = search,
+            FirmId = firmId,
+            Items = items
+        };
+    }
+
+    public async Task<byte[]?> GetDeliveryNoteReportPdfAsync(DateTime? dateFrom, DateTime? dateTo, int? status, Guid? customerId, string? search, Guid? firmId, CancellationToken ct = default)
+    {
+        var data = await GetDeliveryNoteReportAsync(dateFrom, dateTo, status, customerId, search, firmId, ct);
+        QuestPDF.Settings.License = LicenseType.Community;
+
+        var title = data.CustomerTitle != null ? $"İrsaliye raporu - {data.CustomerTitle}" : "İrsaliye raporu";
+        var period = $"Dönem: {(data.DateFrom?.ToString("d", CultureInfo.GetCultureInfo("tr-TR")) ?? "—")} - {(data.DateTo?.ToString("d", CultureInfo.GetCultureInfo("tr-TR")) ?? "—")}  |  Rapor tarihi: {DateTime.Now.ToString("dd.MM.yyyy HH:mm", CultureInfo.GetCultureInfo("tr-TR"))}";
+        var statusNames = new[] { "Taslak", "Onaylandı", "İptal", "Faturalandı" };
+
+        var document = Document.Create(container =>
+        {
+            container.Page(page =>
+            {
+                page.Size(PageSizes.A4.Landscape());
+                page.Margin(20);
+                page.Header().Text(title).Bold().FontSize(14);
+                page.Content().PaddingVertical(10).Column(col =>
+                {
+                    col.Item().Text(period);
+                    if (!string.IsNullOrWhiteSpace(data.Search))
+                    {
+                        col.Item().Text($"Arama: {data.Search}");
+                    }
+                    if (data.Status.HasValue && data.Status.Value >= 0 && data.Status.Value < statusNames.Length)
+                    {
+                        col.Item().Text($"Durum: {statusNames[data.Status.Value]}");
+                    }
+                    col.Item().PaddingTop(10).Table(t =>
+                    {
+                        t.ColumnsDefinition(c =>
+                        {
+                            // İrsaliye No, Tarih ve Sipariş No için daha geniş kolonlar
+                            c.ConstantColumn(150);   // İrsaliye No
+                            c.ConstantColumn(120);   // Tarih (dd.MM.yyyy HH:mm)
+                            c.RelativeColumn();      // Cari
+                            c.ConstantColumn(90);    // Durum
+                            c.ConstantColumn(140);   // Sipariş No
+                            c.ConstantColumn(110);   // Toplam
+                        });
+                        t.Header(h =>
+                        {
+                            h.Cell().Background(Colors.Grey.Lighten2).Padding(4).Text("İrsaliye No").Bold();
+                            h.Cell().Background(Colors.Grey.Lighten2).Padding(4).Text("Tarih").Bold();
+                            h.Cell().Background(Colors.Grey.Lighten2).Padding(4).Text("Cari").Bold();
+                            h.Cell().Background(Colors.Grey.Lighten2).Padding(4).Text("Durum").Bold();
+                            h.Cell().Background(Colors.Grey.Lighten2).Padding(4).Text("Sipariş No").Bold();
+                            h.Cell().Background(Colors.Grey.Lighten2).Padding(4).AlignRight().Text("Toplam").Bold();
+                        });
+                        var culture = CultureInfo.GetCultureInfo("tr-TR");
+                        foreach (var row in data.Items)
+                        {
+                            t.Cell().Padding(4).Text(row.DeliveryNumber);
+                            t.Cell().Padding(4).Text(row.DeliveryDate.ToString("dd.MM.yyyy HH:mm", culture));
+                            t.Cell().Padding(4).Text(row.CustomerTitle ?? string.Empty);
+                            t.Cell().Padding(4).Text(row.Status >= 0 && row.Status < statusNames.Length ? statusNames[row.Status] : "");
+                            t.Cell().Padding(4).Text(row.OrderNumber ?? string.Empty);
+                            t.Cell().Padding(4).AlignRight().Text($"{row.TotalAmount.ToString("N2", culture)} {row.Currency}");
+                        }
+                    });
+                });
+            });
+        });
+        return document.GeneratePdf();
+    }
+
+    public async Task<byte[]?> GetDeliveryNoteReportExcelAsync(DateTime? dateFrom, DateTime? dateTo, int? status, Guid? customerId, string? search, Guid? firmId, CancellationToken ct = default)
+    {
+        var data = await GetDeliveryNoteReportAsync(dateFrom, dateTo, status, customerId, search, firmId, ct);
+        var statusNames = new[] { "Taslak", "Onaylandı", "İptal", "Faturalandı" };
+
+        var culture = CultureInfo.GetCultureInfo("tr-TR");
+        using var wb = new XLWorkbook();
+        var ws = wb.Worksheets.Add("İrsaliye raporu");
+        ws.Cell("A1").Value = data.CustomerTitle != null ? $"İrsaliye raporu - {data.CustomerTitle}" : "İrsaliye raporu";
+        ws.Cell("A2").Value = $"Dönem: {(data.DateFrom?.ToString("d", culture) ?? "—")} - {(data.DateTo?.ToString("d", culture) ?? "—")}";
+        ws.Cell("A3").Value = $"Rapor tarihi: {DateTime.Now.ToString("dd.MM.yyyy HH:mm", culture)}";
+        var infoRow = 4;
+        if (!string.IsNullOrWhiteSpace(data.Search))
+        {
+            ws.Cell(infoRow, 1).Value = $"Arama: {data.Search}";
+            infoRow++;
+        }
+        if (data.Status.HasValue && data.Status.Value >= 0 && data.Status.Value < statusNames.Length)
+        {
+            ws.Cell(infoRow, 1).Value = $"Durum: {statusNames[data.Status.Value]}";
+            infoRow++;
+        }
+        var headerRow = infoRow + 1;
+        ws.Cell(headerRow, 1).Value = "İrsaliye No";
+        ws.Cell(headerRow, 2).Value = "Tarih";
+        ws.Cell(headerRow, 3).Value = "Cari";
+        ws.Cell(headerRow, 4).Value = "Durum";
+        ws.Cell(headerRow, 5).Value = "Sipariş No";
+        ws.Cell(headerRow, 6).Value = "Toplam";
+        ws.Cell(headerRow, 7).Value = "Para";
+
+        var row = headerRow + 1;
+        foreach (var r in data.Items)
+        {
+            ws.Cell(row, 1).Value = r.DeliveryNumber;
+            ws.Cell(row, 2).Value = r.DeliveryDate.ToString("dd.MM.yyyy HH:mm", culture);
+            ws.Cell(row, 3).Value = r.CustomerTitle;
+            ws.Cell(row, 4).Value = r.Status >= 0 && r.Status < statusNames.Length ? statusNames[r.Status] : "";
+            ws.Cell(row, 5).Value = r.OrderNumber;
+            ws.Cell(row, 6).Value = r.TotalAmount;
+            ws.Cell(row, 7).Value = r.Currency;
+            row++;
+        }
+
+        using var ms = new MemoryStream();
+        wb.SaveAs(ms, false);
+        return ms.ToArray();
+    }
+
+    public async Task<byte[]?> GetOrderDetailPdfAsync(Guid orderId, CancellationToken ct = default)
+    {
+        var order = await OrderScope(null)
+            .Include(o => o.Customer)
+            .Include(o => o.Items.OrderBy(i => i.SortOrder))
+                .ThenInclude(i => i.Product)
+            .FirstOrDefaultAsync(o => o.Id == orderId, ct);
+        if (order == null) return null;
+
+        QuestPDF.Settings.License = LicenseType.Community;
+        var culture = CultureInfo.GetCultureInfo("tr-TR");
+
+        var document = Document.Create(container =>
+        {
+            container.Page(page =>
+            {
+                page.Size(PageSizes.A4);
+                page.Margin(20);
+                page.Header().Text($"Sipariş detay - {order.OrderNumber}").Bold().FontSize(14);
+                page.Content().PaddingVertical(10).Column(col =>
+                {
+                    col.Item().Text($"Tarih: {order.OrderDate.ToString("dd.MM.yyyy", culture)}");
+                    col.Item().Text($"Cari: {order.Customer?.Title ?? string.Empty}");
+                    col.Item().PaddingTop(10).Table(t =>
+                    {
+                        t.ColumnsDefinition(c =>
+                        {
+                            c.ConstantColumn(30);
+                            c.RelativeColumn();
+                            c.ConstantColumn(60);
+                            c.ConstantColumn(60);
+                            c.ConstantColumn(60);
+                        });
+                        t.Header(h =>
+                        {
+                            h.Cell().Background(Colors.Grey.Lighten2).Padding(4).Text("#").Bold();
+                            h.Cell().Background(Colors.Grey.Lighten2).Padding(4).Text("Açıklama").Bold();
+                            h.Cell().Background(Colors.Grey.Lighten2).Padding(4).AlignRight().Text("Miktar").Bold();
+                            h.Cell().Background(Colors.Grey.Lighten2).Padding(4).AlignRight().Text("Birim Fiyat").Bold();
+                            h.Cell().Background(Colors.Grey.Lighten2).Padding(4).AlignRight().Text("Tutar").Bold();
+                        });
+                        var index = 1;
+                        decimal totalNet = 0;
+                        foreach (var it in order.Items.OrderBy(i => i.SortOrder))
+                        {
+                            var qty = it.Quantity;
+                            var unitPrice = it.UnitPrice;
+                            var lineNet = qty * unitPrice;
+                            totalNet += lineNet;
+                            t.Cell().Padding(4).Text(index.ToString());
+                            t.Cell().Padding(4).Text(it.Description);
+                            t.Cell().Padding(4).AlignRight().Text(qty.ToString("N2", culture));
+                            t.Cell().Padding(4).AlignRight().Text(unitPrice.ToString("N2", culture));
+                            t.Cell().Padding(4).AlignRight().Text(lineNet.ToString("N2", culture));
+                            index++;
+                        }
+                        var totalVat = order.Items.Sum(i =>
+                        {
+                            var net = i.Quantity * i.UnitPrice;
+                            return net * i.VatRate / 100m;
+                        });
+                        var totalGross = totalNet + totalVat;
+
+                        t.Cell().ColumnSpan(3).PaddingTop(8).Text(string.Empty);
+                        t.Cell().PaddingTop(8).AlignRight().Text("Ara toplam:").Bold();
+                        t.Cell().PaddingTop(8).AlignRight().Text(totalNet.ToString("N2", culture)).Bold();
+
+                        t.Cell().ColumnSpan(3).Text(string.Empty);
+                        t.Cell().AlignRight().Text("KDV:").Bold();
+                        t.Cell().AlignRight().Text(totalVat.ToString("N2", culture)).Bold();
+
+                        t.Cell().ColumnSpan(3).Text(string.Empty);
+                        t.Cell().AlignRight().Text("Genel toplam:").Bold();
+                        t.Cell().AlignRight().Text(totalGross.ToString("N2", culture)).Bold();
+                    });
+                });
+            });
+        });
+
+        return document.GeneratePdf();
+    }
+
+    public async Task<byte[]?> GetDeliveryNoteDetailPdfAsync(Guid deliveryNoteId, CancellationToken ct = default)
+    {
+        var dn = await DeliveryNoteScope(null)
+            .Include(d => d.Customer)
+            .Include(d => d.Items.OrderBy(i => i.SortOrder))
+                .ThenInclude(i => i.Product)
+            .FirstOrDefaultAsync(d => d.Id == deliveryNoteId, ct);
+        if (dn == null) return null;
+
+        QuestPDF.Settings.License = LicenseType.Community;
+        var culture = CultureInfo.GetCultureInfo("tr-TR");
+
+        var document = Document.Create(container =>
+        {
+            container.Page(page =>
+            {
+                page.Size(PageSizes.A4);
+                page.Margin(20);
+                page.Header().Text($"İrsaliye detay - {dn.DeliveryNumber}").Bold().FontSize(14);
+                page.Content().PaddingVertical(10).Column(col =>
+                {
+                    col.Item().Text($"Tarih: {dn.DeliveryDate.ToString("dd.MM.yyyy", culture)}");
+                    col.Item().Text($"Cari: {dn.Customer?.Title ?? string.Empty}");
+                    col.Item().PaddingTop(10).Table(t =>
+                    {
+                        t.ColumnsDefinition(c =>
+                        {
+                            c.ConstantColumn(30);
+                            c.RelativeColumn();
+                            c.ConstantColumn(60);
+                            c.ConstantColumn(60);
+                            c.ConstantColumn(60);
+                        });
+                        t.Header(h =>
+                        {
+                            h.Cell().Background(Colors.Grey.Lighten2).Padding(4).Text("#").Bold();
+                            h.Cell().Background(Colors.Grey.Lighten2).Padding(4).Text("Açıklama").Bold();
+                            h.Cell().Background(Colors.Grey.Lighten2).Padding(4).AlignRight().Text("Miktar").Bold();
+                            h.Cell().Background(Colors.Grey.Lighten2).Padding(4).AlignRight().Text("Birim Fiyat").Bold();
+                            h.Cell().Background(Colors.Grey.Lighten2).Padding(4).AlignRight().Text("Tutar").Bold();
+                        });
+                        var index = 1;
+                        decimal totalNet = 0;
+                        foreach (var it in dn.Items.OrderBy(i => i.SortOrder))
+                        {
+                            var qty = it.Quantity;
+                            var unitPrice = it.UnitPrice;
+                            var lineNet = qty * unitPrice;
+                            totalNet += lineNet;
+                            t.Cell().Padding(4).Text(index.ToString());
+                            t.Cell().Padding(4).Text(it.Description);
+                            t.Cell().Padding(4).AlignRight().Text(qty.ToString("N2", culture));
+                            t.Cell().Padding(4).AlignRight().Text(unitPrice.ToString("N2", culture));
+                            t.Cell().Padding(4).AlignRight().Text(lineNet.ToString("N2", culture));
+                            index++;
+                        }
+                        var totalVat = dn.Items.Sum(i =>
+                        {
+                            var net = i.Quantity * i.UnitPrice;
+                            return net * i.VatRate / 100m;
+                        });
+                        var totalGross = totalNet + totalVat;
+
+                        t.Cell().ColumnSpan(3).PaddingTop(8).Text(string.Empty);
+                        t.Cell().PaddingTop(8).AlignRight().Text("Ara toplam:").Bold();
+                        t.Cell().PaddingTop(8).AlignRight().Text(totalNet.ToString("N2", culture)).Bold();
+
+                        t.Cell().ColumnSpan(3).Text(string.Empty);
+                        t.Cell().AlignRight().Text("KDV:").Bold();
+                        t.Cell().AlignRight().Text(totalVat.ToString("N2", culture)).Bold();
+
+                        t.Cell().ColumnSpan(3).Text(string.Empty);
+                        t.Cell().AlignRight().Text("Genel toplam:").Bold();
+                        t.Cell().AlignRight().Text(totalGross.ToString("N2", culture)).Bold();
+                    });
+                });
+            });
+        });
+
+        return document.GeneratePdf();
     }
 }

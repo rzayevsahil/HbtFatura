@@ -85,6 +85,54 @@ export interface InvoiceReportDto {
     items: InvoiceReportRowDto[];
 }
 
+export interface OrderReportRowDto {
+    id: string;
+    orderNumber: string;
+    orderDate: string;
+    status: number;
+    orderType: number;
+    customerId?: string;
+    customerTitle?: string;
+    totalAmount: number;
+    currency: string;
+}
+
+export interface OrderReportDto {
+    dateFrom?: string;
+    dateTo?: string;
+    customerId?: string;
+    customerTitle?: string;
+    status?: number;
+    search?: string;
+    firmId?: string;
+    items: OrderReportRowDto[];
+}
+
+export interface DeliveryNoteReportRowDto {
+    id: string;
+    deliveryNumber: string;
+    deliveryDate: string;
+    status: number;
+    deliveryType: number;
+    customerId?: string;
+    customerTitle?: string;
+    orderNumber?: string;
+    invoiceId?: string;
+    totalAmount: number;
+    currency: string;
+}
+
+export interface DeliveryNoteReportDto {
+    dateFrom?: string;
+    dateTo?: string;
+    customerId?: string;
+    customerTitle?: string;
+    status?: number;
+    search?: string;
+    firmId?: string;
+    items: DeliveryNoteReportRowDto[];
+}
+
 export interface MonthlyProductSalesRowDto {
     productId: string;
     productCode: string;

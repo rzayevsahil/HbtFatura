@@ -11,7 +11,8 @@ function buildCariExtractQuery(customerId: string, format: string, dateFrom?: st
 
 import {
   CariExtractReportDto, CashSummaryReportDto, BankSummaryReportDto,
-  StockLevelsReportDto, InvoiceReportDto, MonthlyProductSalesReportDto
+  StockLevelsReportDto, InvoiceReportDto, MonthlyProductSalesReportDto,
+  OrderReportDto, DeliveryNoteReportDto
 } from '../core/models';
 
 @Injectable({ providedIn: 'root' })
@@ -94,5 +95,71 @@ export class ReportService {
     if (dateTo) params['dateTo'] = dateTo;
     if (productId) params['productId'] = productId;
     return this.api.get<MonthlyProductSalesReportDto>(`${this.base}/monthly-product-sales`, Object.keys(params).length ? params : undefined);
+  }
+
+  getOrderReport(dateFrom?: string, dateTo?: string, status?: number, customerId?: string, search?: string, firmId?: string): Observable<OrderReportDto> {
+    const params: Record<string, string> = {};
+    if (dateFrom) params['dateFrom'] = dateFrom;
+    if (dateTo) params['dateTo'] = dateTo;
+    if (status !== undefined) params['status'] = String(status);
+    if (customerId) params['customerId'] = customerId;
+    if (search) params['search'] = search;
+    if (firmId) params['firmId'] = firmId;
+    return this.api.get<OrderReportDto>(`${this.base}/orders`, params);
+  }
+
+  downloadOrderReportPdf(dateFrom?: string, dateTo?: string, status?: number, customerId?: string, search?: string, firmId?: string): Observable<Blob> {
+    const p = new URLSearchParams({ format: 'pdf' });
+    if (dateFrom) p.set('dateFrom', dateFrom);
+    if (dateTo) p.set('dateTo', dateTo);
+    if (status !== undefined) p.set('status', String(status));
+    if (customerId) p.set('customerId', customerId);
+    if (search) p.set('search', search);
+    if (firmId) p.set('firmId', firmId);
+    return this.api.getBlob(`${this.base}/orders?${p.toString()}`);
+  }
+
+  downloadOrderReportExcel(dateFrom?: string, dateTo?: string, status?: number, customerId?: string, search?: string, firmId?: string): Observable<Blob> {
+    const p = new URLSearchParams({ format: 'xlsx' });
+    if (dateFrom) p.set('dateFrom', dateFrom);
+    if (dateTo) p.set('dateTo', dateTo);
+    if (status !== undefined) p.set('status', String(status));
+    if (customerId) p.set('customerId', customerId);
+    if (search) p.set('search', search);
+    if (firmId) p.set('firmId', firmId);
+    return this.api.getBlob(`${this.base}/orders?${p.toString()}`);
+  }
+
+  getDeliveryNoteReport(dateFrom?: string, dateTo?: string, status?: number, customerId?: string, search?: string, firmId?: string): Observable<DeliveryNoteReportDto> {
+    const params: Record<string, string> = {};
+    if (dateFrom) params['dateFrom'] = dateFrom;
+    if (dateTo) params['dateTo'] = dateTo;
+    if (status !== undefined) params['status'] = String(status);
+    if (customerId) params['customerId'] = customerId;
+    if (search) params['search'] = search;
+    if (firmId) params['firmId'] = firmId;
+    return this.api.get<DeliveryNoteReportDto>(`${this.base}/delivery-notes`, params);
+  }
+
+  downloadDeliveryNoteReportPdf(dateFrom?: string, dateTo?: string, status?: number, customerId?: string, search?: string, firmId?: string): Observable<Blob> {
+    const p = new URLSearchParams({ format: 'pdf' });
+    if (dateFrom) p.set('dateFrom', dateFrom);
+    if (dateTo) p.set('dateTo', dateTo);
+    if (status !== undefined) p.set('status', String(status));
+    if (customerId) p.set('customerId', customerId);
+    if (search) p.set('search', search);
+    if (firmId) p.set('firmId', firmId);
+    return this.api.getBlob(`${this.base}/delivery-notes?${p.toString()}`);
+  }
+
+  downloadDeliveryNoteReportExcel(dateFrom?: string, dateTo?: string, status?: number, customerId?: string, search?: string, firmId?: string): Observable<Blob> {
+    const p = new URLSearchParams({ format: 'xlsx' });
+    if (dateFrom) p.set('dateFrom', dateFrom);
+    if (dateTo) p.set('dateTo', dateTo);
+    if (status !== undefined) p.set('status', String(status));
+    if (customerId) p.set('customerId', customerId);
+    if (search) p.set('search', search);
+    if (firmId) p.set('firmId', firmId);
+    return this.api.getBlob(`${this.base}/delivery-notes?${p.toString()}`);
   }
 }

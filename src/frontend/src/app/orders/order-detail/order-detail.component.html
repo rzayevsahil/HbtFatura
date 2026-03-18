@@ -11,6 +11,9 @@
     <button type="button" class="btn btn-approve" (click)="setStatusOnayla()">Onayla</button>
     <button type="button" class="btn btn-cancel" (click)="setStatusIptal()">İptal</button>
     }
+    @if (order) {
+    <button type="button" class="btn btn-default" (click)="downloadPdf()">PDF indir</button>
+    }
     @if (order && canSendToDeliveryNote()) {
     <button type="button" class="btn btn-primary" (click)="createDeliveryNote()" [disabled]="creatingDeliveryNote">
       {{ creatingDeliveryNote ? 'Aktarılıyor...' : 'İrsaliyeye Aktar' }}

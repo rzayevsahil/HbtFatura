@@ -99,4 +99,19 @@ export class DeliveryNoteDetailComponent implements OnInit {
       }
     });
   }
+
+  downloadPdf(): void {
+    if (!this.deliveryNote) return;
+    this.deliveryNoteApi.downloadPdf(this.deliveryNote.id).subscribe({
+      next: blob => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        const number = this.deliveryNote?.deliveryNumber || this.deliveryNote?.id;
+        a.href = url;
+        a.download = `irsaliye-${number}.pdf`;
+        a.click();
+        window.URL.revokeObjectURL(url);
+      }
+    });
+  }
 }
