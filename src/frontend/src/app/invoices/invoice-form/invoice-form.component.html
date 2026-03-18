@@ -150,6 +150,11 @@
         }
       </div>
       <button type="button" class="add-item-btn" (click)="addItem()">+ Kalem Ekle</button>
+      <div class="totals">
+        <p><span>Mal Hizmet Toplam Tutarı</span> <span>{{ totalNet | number:'1.2-2' }} {{ currency }}</span></p>
+        <p><span>Hesaplanan KDV</span> <span>{{ totalVat | number:'1.2-2' }} {{ currency }}</span></p>
+        <p class="grand-total"><span>Genel Toplam</span> <span>{{ totalGross | number:'1.2-2' }} {{ currency }}</span></p>
+      </div>
     </div>
     @if (error) { <p class="error-msg">{{ error }}</p> }
     <div class="actions">

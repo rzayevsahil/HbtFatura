@@ -77,6 +77,30 @@ export class OrderFormComponent implements OnInit {
     });
   }
 
+  get totalNet(): number {
+    const items = this.items.controls;
+    return items.reduce((sum, c) => {
+      const qty = Number(c.get('quantity')?.value || 0);
+      const price = Number(c.get('unitPrice')?.value || 0);
+      return sum + qty * price;
+    }, 0);
+  }
+
+  get totalVat(): number {
+    const items = this.items.controls;
+    return items.reduce((sum, c) => {
+      const qty = Number(c.get('quantity')?.value || 0);
+      const price = Number(c.get('unitPrice')?.value || 0);
+      const vatRate = Number(c.get('vatRate')?.value || 0);
+      const net = qty * price;
+      return sum + net * vatRate / 100;
+    }, 0);
+  }
+
+  get totalGross(): number {
+    return this.totalNet + this.totalVat;
+  }
+
   ngOnInit(): void {
     this.customerApi.getDropdown().subscribe(list => this.customers = list);
     this.productApi.getDropdown().subscribe(list => this.products = list);

@@ -51,6 +51,24 @@ export class DeliveryNoteDetailComponent implements OnInit {
     return t === 1 ? 'Alış' : 'Satış';
   }
 
+  get totalNet(): number {
+    if (!this.deliveryNote) return 0;
+    return this.deliveryNote.items.reduce((sum, it) => sum + (it.quantity || 0) * (it.unitPrice || 0), 0);
+  }
+
+  get totalVat(): number {
+    if (!this.deliveryNote) return 0;
+    return this.deliveryNote.items.reduce((sum, it) => {
+      const net = (it.quantity || 0) * (it.unitPrice || 0);
+      const vatRate = it.vatRate || 0;
+      return sum + net * vatRate / 100;
+    }, 0);
+  }
+
+  get totalGross(): number {
+    return this.totalNet + this.totalVat;
+  }
+
   isTaslak(s: DeliveryNoteStatus | string | undefined): boolean {
     return s === 0 || s === 'Taslak';
   }

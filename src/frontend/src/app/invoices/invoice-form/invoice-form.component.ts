@@ -110,6 +110,37 @@ export class InvoiceFormComponent implements OnInit {
     });
   }
 
+  get currency(): string {
+    return this.form.get('currency')?.value || 'TRY';
+  }
+
+  get totalNet(): number {
+    const items = this.items.controls;
+    return items.reduce((sum, c) => {
+      const qty = Number(c.get('quantity')?.value || 0);
+      const price = Number(c.get('unitPrice')?.value || 0);
+      const discount = Number(c.get('discountPercent')?.value || 0);
+      const lineNet = qty * price * (1 - discount / 100);
+      return sum + lineNet;
+    }, 0);
+  }
+
+  get totalVat(): number {
+    const items = this.items.controls;
+    return items.reduce((sum, c) => {
+      const qty = Number(c.get('quantity')?.value || 0);
+      const price = Number(c.get('unitPrice')?.value || 0);
+      const discount = Number(c.get('discountPercent')?.value || 0);
+      const vatRate = Number(c.get('vatRate')?.value || 0);
+      const lineNet = qty * price * (1 - discount / 100);
+      return sum + lineNet * vatRate / 100;
+    }, 0);
+  }
+
+  get totalGross(): number {
+    return this.totalNet + this.totalVat;
+  }
+
   ngOnInit(): void {
     this.customerApi.getDropdown().subscribe(list => this.customers = list);
     this.productApi.getDropdown().subscribe(list => this.products = list);

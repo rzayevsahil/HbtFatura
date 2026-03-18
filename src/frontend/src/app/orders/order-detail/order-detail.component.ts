@@ -69,6 +69,24 @@ export class OrderDetailComponent implements OnInit {
     return this.lookups.getName('OrderType', t);
   }
 
+  get totalNet(): number {
+    if (!this.order) return 0;
+    return this.order.items.reduce((sum, it) => sum + (it.quantity || 0) * (it.unitPrice || 0), 0);
+  }
+
+  get totalVat(): number {
+    if (!this.order) return 0;
+    return this.order.items.reduce((sum, it) => {
+      const net = (it.quantity || 0) * (it.unitPrice || 0);
+      const vatRate = it.vatRate || 0;
+      return sum + net * vatRate / 100;
+    }, 0);
+  }
+
+  get totalGross(): number {
+    return this.totalNet + this.totalVat;
+  }
+
   setStatusOnayla(): void {
     if (!this.order || !this.isEditableOrder()) return;
     this.orderApi.setStatus(this.order.id, 3).subscribe({
