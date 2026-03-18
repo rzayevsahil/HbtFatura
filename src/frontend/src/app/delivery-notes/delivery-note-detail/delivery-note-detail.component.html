@@ -13,12 +13,12 @@
       {{ creatingInvoice ? 'Oluşturuluyor...' : 'Faturaya Aktar' }}
     </button>
     }
-    @if (deliveryNote?.invoiceId) {
-    <a [routerLink]="['/invoices', deliveryNote?.invoiceId]" class="btn btn-secondary">Faturaya Git</a>
-    }
     @if (deliveryNote) {
-    <button type="button" class="btn btn-default" (click)="downloadPdf()">PDF indir</button>
+      <button type="button" class="btn btn-default" (click)="downloadPdf()">PDF indir</button>
     }
+    @if (deliveryNote?.invoiceId) {
+    <a [routerLink]="['/invoices', deliveryNote?.invoiceId]" class="btn btn-secondary" style="color: var(--color-primary);">Faturaya Git</a>
+    }    
     <a routerLink="/delivery-notes" class="btn btn-default">← Geri</a>
   </div>
 </div>

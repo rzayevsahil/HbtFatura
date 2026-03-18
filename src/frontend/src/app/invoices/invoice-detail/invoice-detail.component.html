@@ -13,12 +13,11 @@
       }
     </div>
   </div>
-  <div style="display: flex; gap: 8px;">
+  <div class="header-actions">
     @if (invoice.sourceType === 'Irsaliye' && invoice.sourceId) {
-    <a [routerLink]="['/delivery-notes', invoice.sourceId]" class="back-link" style="color: inherit;">İrsaliyeye
-      Git</a>
+    <a [routerLink]="['/delivery-notes', invoice.sourceId]" class="btn btn-secondary" style="color: var(--color-primary);">İrsaliyeye Git</a>
     }
-    <a routerLink="/invoices" class="back-link">← Geri</a>
+    <a routerLink="/invoices" class="btn btn-default">← Geri</a>
   </div>
 </div>
 <div class="card table-wrap">
