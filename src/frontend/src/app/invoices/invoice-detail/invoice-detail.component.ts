@@ -90,4 +90,16 @@ export class InvoiceDetailComponent implements OnInit {
       error: () => this.toastr.error('PDF indirilemedi.')
     });
   }
+
+  goToCustomer(customerId: number | string | undefined): void {
+    if (customerId) {
+      this.router.navigate(['/customers', customerId]);
+    }
+  }
+
+  goToDeliveryNote(deliveryNoteId: number | string | undefined): void {
+    if (deliveryNoteId) {
+      this.router.navigate(['/delivery-notes', deliveryNoteId]);
+    }
+  }
 }

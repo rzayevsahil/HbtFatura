@@ -28,11 +28,11 @@
 <div class="card info-grid">
   <div class="info-item info-item-cari">
     <span class="info-label">Cari:</span>
-    <span class="info-value">{{ deliveryNote.customerTitle || '—' }}</span>
+    <span class="info-value clickable-link" (click)="goToCustomer(deliveryNote.customerId)">{{ deliveryNote.customerTitle || '—' }}</span>
   </div>
   <div class="info-item info-item-siparis">
     <span class="info-label">Sipariş No:</span>
-    <span class="info-value">{{ deliveryNote.orderNumber || '—' }}</span>
+    <span class="info-value clickable-link" (click)="goToOrder(deliveryNote.orderId)">{{ deliveryNote.orderNumber || '—' }}</span>
   </div>
   <div class="info-item">
     <span class="info-label">Tarih:</span>

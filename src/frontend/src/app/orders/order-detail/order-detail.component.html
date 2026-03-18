@@ -35,12 +35,12 @@
 <div class="card info-grid">
   <div class="info-item info-item-cari">
     <span class="info-label">Cari:</span>
-    <span class="info-value">{{ order.customerTitle || '—' }}</span>
+    <span class="info-value clickable-link" (click)="goToCustomer(order.customerId)">{{ order.customerTitle || '—' }}</span>
   </div>
   @if (order.deliveryNoteId && order.deliveryNoteNumber) {
     <div class="info-item">
       <span class="info-label">İrsaliye No:</span>
-      <span class="info-value">{{ order.deliveryNoteNumber }}</span>
+      <span class="info-value clickable-link" (click)="goToDeliveryNote(order.deliveryNoteId)">{{ order.deliveryNoteNumber }}</span>
     </div>
   }
   <div class="info-item">

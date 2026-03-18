@@ -114,4 +114,16 @@ export class DeliveryNoteDetailComponent implements OnInit {
       }
     });
   }
+
+  goToCustomer(customerId: number | string | undefined): void {
+    if (customerId) {
+      this.router.navigate(['/customers', customerId]);
+    }
+  }
+
+  goToOrder(orderId: number | string | undefined): void {
+    if (orderId) {
+      this.router.navigate(['/orders', orderId]);
+    }
+  }
 }

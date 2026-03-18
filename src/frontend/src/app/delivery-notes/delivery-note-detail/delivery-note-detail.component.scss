@@ -31,7 +31,11 @@
   background: var(--color-background, #f1f5f9);
   color: var(--color-text, #1e293b);
 }
-.card { margin-bottom: 1rem; }
+.card {
+  overflow: hidden;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
 
 .info-grid {
   display: grid;
@@ -68,6 +72,17 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.clickable-link {
+  color: var(--color-primary) !important;
+  cursor: pointer;
+  text-decoration: none;
+  
+  &:hover {
+    text-decoration: underline;
+    opacity: 0.8;
+  }
 }
 
 .section-title { font-size: 1rem; margin: 1.5rem 0 0.5rem; }

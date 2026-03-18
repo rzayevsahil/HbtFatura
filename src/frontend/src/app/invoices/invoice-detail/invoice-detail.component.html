@@ -2,16 +2,6 @@
 <div class="page-header">
   <div class="page-header-left">
     <h1 class="page-title">{{ invoice.invoiceNumber }}</h1>
-    <div class="meta">
-      <span>Tarih: {{ invoice.invoiceDate | date:'dd.MM.yyyy HH:mm' }}</span>
-      <span>Gönderim Şekli: {{ invoice.scenario === 1 ? 'Ticari Fatura' : 'Temel Fatura' }}</span>
-      <span class="status-badge {{ statusClass(invoice.status) }}">{{ statusLabel(invoice.status, invoice.sourceType)
-        }}</span>
-      <span>Cari: {{ invoice.customerTitle }}</span>
-      @if (invoice.sourceType === 'Irsaliye' && invoice.sourceId && invoice.sourceNumber) {
-      <span class="source">İrsaliye No: {{ invoice.sourceNumber }}</span>
-      }
-    </div>
   </div>
   <div class="header-actions">
     @if (invoice.sourceType === 'Irsaliye' && invoice.sourceId) {
@@ -20,17 +10,44 @@
     <a routerLink="/invoices" class="btn btn-default">← Geri</a>
   </div>
 </div>
+<div class="card info-grid">
+  <div class="info-item info-item-cari">
+    <span class="info-label">Cari:</span>
+    <span class="info-value clickable-link" (click)="goToCustomer(invoice.customerId)">{{ invoice.customerTitle || '—' }}</span>
+  </div>
+  @if (invoice.sourceType === 'Irsaliye' && invoice.sourceId && invoice.sourceNumber) {
+    <div class="info-item info-item-siparis">
+      <span class="info-label">İrsaliye No:</span>
+      <span class="info-value clickable-link" (click)="goToDeliveryNote(invoice.sourceId)">{{ invoice.sourceNumber }}</span>
+    </div>
+  }
+  <div class="info-item">
+    <span class="info-label">Tarih:</span>
+    <span class="info-value">{{ invoice.invoiceDate | date:'dd.MM.yyyy HH:mm' }}</span>
+  </div>
+  <div class="info-item">
+    <span class="info-label">Gönderim Şekli:</span>
+    <span class="info-value">{{ invoice.scenario === 1 ? 'Ticari Fatura' : 'Temel Fatura' }}</span>
+  </div>
+  <div class="info-item">
+    <span class="info-label">Durum:</span>
+    <span class="info-value">
+      <span class="status-badge {{ statusClass(invoice.status) }}">{{ statusLabel(invoice.status, invoice.sourceType) }}</span>
+    </span>
+  </div>
+</div>
+<h2 class="section-title">Kalemler</h2>
 <div class="card table-wrap">
   <table>
     <thead>
       <tr>
         <th>Stok Kodu</th>
         <th>Mal Hizmet</th>
-        <th>Miktar</th>
-        <th>Birim Fiyat</th>
-        <th>KDV Oranı</th>
-        <th>KDV Tutarı</th>
-        <th>Mal Hizmet Tutarı</th>
+        <th class="amount">Miktar</th>
+        <th class="amount">Birim Fiyat</th>
+        <th class="amount">KDV Oranı</th>
+        <th class="amount">KDV Tutarı</th>
+        <th class="amount">Mal Hizmet Tutarı</th>
       </tr>
     </thead>
     <tbody>
@@ -38,11 +55,11 @@
       <tr>
         <td>{{ item.productCode || '—' }}</td>
         <td>{{ item.description }}</td>
-        <td>{{ item.quantity | number:'1.2-2' }}</td>
-        <td>{{ item.unitPrice | number:'1.2-2' }} ₺</td>
-        <td>%{{ item.vatRate }}</td>
-        <td>{{ item.lineVatAmount | number:'1.2-2' }} ₺</td>
-        <td>{{ item.lineTotalInclVat | number:'1.2-2' }} ₺</td>
+        <td class="amount">{{ item.quantity | number:'1.2-2' }}</td>
+        <td class="amount">{{ item.unitPrice | number:'1.2-2' }} {{ invoice.currency }}</td>
+        <td class="amount">{{ item.vatRate | number:'1.0-0' }}%</td>
+        <td class="amount">{{ item.lineVatAmount | number:'1.2-2' }} {{ invoice.currency }}</td>
+        <td class="amount">{{ item.lineTotalInclVat | number:'1.2-2' }} {{ invoice.currency }}</td>
       </tr>
       }
     </tbody>
