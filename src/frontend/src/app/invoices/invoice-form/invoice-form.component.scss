@@ -177,76 +177,62 @@
   border-radius: var(--radius-sm);
 }
 
-.item-header {
+.items-grid {
   display: grid;
-  grid-template-columns: 140px 1fr 88px minmax(120px, 1fr) 110px 72px 88px auto;
-  gap: 0.75rem;
+  grid-template-columns: 140px minmax(0, 1fr) 88px minmax(72px, 96px) 96px 72px 88px 2rem;
+  column-gap: 0.75rem;
   align-items: center;
-  margin-bottom: 0.5rem;
-  padding-bottom: 0.25rem;
-  font-size: 0.8125rem;
-  font-weight: 600;
-  color: var(--color-text-muted);
 
-  .item-col-product {
-    grid-column: 1;
+  > .item-row-form {
+    display: contents;
   }
 
-  .item-col-desc {
-    grid-column: 2;
+  > .item-header-cell {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    padding-bottom: 0.25rem;
   }
 
-  .item-col-qty {
-    grid-column: 3;
-  }
-
-  .item-col-unit {
-    grid-column: 4;
-  }
-
-  .item-col-price {
-    grid-column: 5;
-  }
-
-  .item-col-vat {
-    grid-column: 6;
-  }
-
-  .item-col-discount {
-    grid-column: 7;
-  }
-
-  .item-col-action {
-    grid-column: 8;
-  }
-}
-
-.item-row {
-  display: grid;
-  grid-template-columns: 140px 1fr 88px minmax(120px, 1fr) 110px 72px 88px auto;
-  gap: 0.75rem;
-  align-items: center;
-  margin-bottom: 0.75rem;
-
-  input {
-    min-width: 0;
-  }
-
+  .product-cell,
+  .desc-cell,
+  input,
   .item-cell-unit {
     min-width: 0;
   }
 
-  button {
-    padding: 0.5rem 0.75rem;
-    font-size: 0.875rem;
-    background: var(--color-error-bg);
-    color: var(--color-error);
+  .item-remove-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    width: 2rem;
+    height: 2rem;
+    padding: 0 !important;
+    margin: 0;
+    font-weight: 500;
+    line-height: 1;
+    background: #dc2626 !important;
+    color: #fff !important;
     border: none;
     border-radius: var(--radius-sm);
     cursor: pointer;
+    flex-shrink: 0;
+    align-self: center;
+
+    .material-icons {
+      font-size: 1.125rem;
+      line-height: 1;
+      color: inherit;
+    }
 
     &:hover {
-      background: #fecaca;
+      background: #b91c1c !important;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 2px;
     }
   }
 }

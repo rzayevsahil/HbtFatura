@@ -92,18 +92,16 @@
     </div>
     <div class="form-section items-section">
       <h3>Kalemler</h3>
-      <div class="item-header">
-        <span class="item-col-product">Ürün Kodu</span>
-        <span class="item-col-desc">Açıklama</span>
-        <span class="item-col-qty">Miktar</span>
-        <span class="item-col-unit">Birim</span>
-        <span class="item-col-price">Birim Fiyat</span>
-        <span class="item-col-vat">KDV %</span>
-        <span class="item-col-action"></span>
-      </div>
-      <div formArrayName="items">
+      <div class="items-grid" formArrayName="items">
+        <span class="item-header-cell item-col-product">Ürün Kodu</span>
+        <span class="item-header-cell item-col-desc">Açıklama</span>
+        <span class="item-header-cell item-col-qty">Miktar</span>
+        <span class="item-header-cell item-col-unit">Birim</span>
+        <span class="item-header-cell item-col-price">Birim Fiyat</span>
+        <span class="item-header-cell item-col-vat">KDV %</span>
+        <span class="item-header-cell item-col-action"></span>
         @for (item of items.controls; track item; let i = $index) {
-        <div [formGroupName]="i" class="item-row">
+        <div [formGroupName]="i" class="item-row-form">
           <div class="product-cell autocomplete-container">
             <input type="text" formControlName="productCode" placeholder="Ürün Kodu" (focus)="onItemInput(i, 'code')"
               (input)="onItemInput(i, 'code')" autocomplete="off" />
@@ -137,7 +135,9 @@
           <input type="number" formControlName="unitPrice" placeholder="0" min="0" step="0.01" />
           <input type="number" formControlName="vatRate" [attr.placeholder]="'' + lookups.defaultVatRatePercent()" min="0"
             max="100" step="0.01" />
-          <button type="button" (click)="removeItem(i)">Sil</button>
+          <button type="button" class="item-remove-btn" (click)="removeItem(i)" aria-label="Kalemi sil" title="Sil">
+            <span class="material-icons" aria-hidden="true">delete</span>
+          </button>
         </div>
         }
       </div>
