@@ -1,3 +1,4 @@
+using System.IO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using HbtFatura.Api.DTOs.Customers;
@@ -112,9 +113,22 @@ public class InvoicesController : ControllerBase
     [HttpGet("{id:guid}/pdf")]
     public async Task<IActionResult> GetPdf(Guid id, CancellationToken ct)
     {
+        var invoice = await _service.GetByIdAsync(id, ct);
+        if (invoice == null) return NotFound();
         var pdf = await _pdfService.GeneratePdfAsync(id, ct);
         if (pdf == null) return NotFound();
-        return File(pdf, "application/pdf", $"fatura-{id}.pdf");
+        var suffix = SafeInvoicePdfFileSuffix(invoice.InvoiceNumber, id);
+        return File(pdf, "application/pdf", $"fatura-{suffix}.pdf");
+    }
+
+    /// <summary>Detay ekranı / liste ile aynı: fatura-{InvoiceNumber}.pdf; geçersiz dosya adı karakterleri '_' yapılır.</summary>
+    private static string SafeInvoicePdfFileSuffix(string? invoiceNumber, Guid id)
+    {
+        if (string.IsNullOrWhiteSpace(invoiceNumber))
+            return id.ToString("N");
+        var invalid = Path.GetInvalidFileNameChars();
+        var cleaned = new string(invoiceNumber.Trim().Select(c => invalid.Contains(c) ? '_' : c).ToArray());
+        return string.IsNullOrWhiteSpace(cleaned) ? id.ToString("N") : cleaned;
     }
 
     [HttpPost("{id:guid}/send-to-gib")]

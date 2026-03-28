@@ -6,6 +6,7 @@ export interface OrderItemDto {
     productId?: string;
     productCode?: string;
     description: string;
+    unit: string;
     quantity: number;
     unitPrice: number;
     vatRate: number;
@@ -42,6 +43,7 @@ export interface OrderListDto {
 export interface OrderItemInputDto {
     productId?: string;
     description: string;
+    unit: string;
     quantity: number;
     unitPrice: number;
     vatRate: number;

@@ -8,6 +8,7 @@ export interface InvoiceItemDto {
     productId?: string;
     productCode?: string;
     description: string;
+    unit: string;
     quantity: number;
     unitPrice: number;
     vatRate: number;
@@ -21,6 +22,7 @@ export interface InvoiceItemDto {
 export interface InvoiceItemInputDto {
     productId?: string;
     description: string;
+    unit: string;
     quantity: number;
     unitPrice: number;
     vatRate: number;

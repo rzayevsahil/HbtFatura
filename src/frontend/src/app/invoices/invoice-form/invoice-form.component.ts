@@ -11,11 +11,12 @@ import { DeliveryNoteService } from '../../services/delivery-note.service';
 import { CreateInvoiceRequest, InvoiceItemInputDto, CustomerDto, ProductDto, DeliveryNoteListDto } from '../../core/models';
 import { ToastrService } from 'ngx-toastr';
 import { LookupService } from '../../core/services/lookup.service';
+import { UnitFieldSelectComponent } from '../../shared/unit-field-select/unit-field-select.component';
 
 @Component({
   selector: 'app-invoice-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterLink, UnitFieldSelectComponent],
   templateUrl: './invoice-form.component.html',
   styleUrls: ['./invoice-form.component.scss']
 })
@@ -177,6 +178,7 @@ export class InvoiceFormComponent implements OnInit {
             productId: [it.productId ?? null],
             productCode: [p?.code || ''],
             description: [it.description],
+            unit: [it.unit || 'Adet'],
             quantity: [it.quantity],
             unitPrice: [it.unitPrice],
             vatRate: [it.vatRate],
@@ -193,6 +195,7 @@ export class InvoiceFormComponent implements OnInit {
       productId: [null as string | null],
       productCode: [''],
       description: [''],
+      unit: ['Adet'],
       quantity: [1],
       unitPrice: [0],
       vatRate: [this.lookups.defaultVatRatePercent()],
@@ -207,6 +210,7 @@ export class InvoiceFormComponent implements OnInit {
       productId: p.id,
       productCode: p.code,
       description: p.name,
+      unit: (p.unit || 'Adet').trim() || 'Adet',
       unitPrice: p.unitPrice
     });
     this.activeItemIndex = null;
@@ -287,6 +291,7 @@ export class InvoiceFormComponent implements OnInit {
             productId: [it.productId ?? null],
             productCode: [it.productCode || ''],
             description: [it.description],
+            unit: [it.unit || 'Adet'],
             quantity: [it.quantity],
             unitPrice: [it.unitPrice],
             vatRate: [it.vatRate],
@@ -363,6 +368,7 @@ export class InvoiceFormComponent implements OnInit {
       items: v.items.map((it: any, i: number) => ({
         productId: it.productId ?? undefined,
         description: it.description,
+        unit: String(it.unit ?? '').trim() || 'Adet',
         quantity: Number(it.quantity),
         unitPrice: Number(it.unitPrice),
         vatRate: Number(it.vatRate),

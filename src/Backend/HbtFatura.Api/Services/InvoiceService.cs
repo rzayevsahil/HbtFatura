@@ -181,12 +181,16 @@ public class InvoiceService : IInvoiceService
         var sortOrder = 0;
         foreach (var item in request.Items)
         {
+            Product? prod = null;
+            if (item.ProductId.HasValue)
+                prod = await _db.Products.FindAsync(new object[] { item.ProductId.Value }, ct);
             var entity = new InvoiceItem
             {
                 Id = Guid.NewGuid(),
                 InvoiceId = invoice.Id,
                 ProductId = item.ProductId,
                 Description = item.Description.Trim(),
+                Unit = LineItemUnitHelper.Resolve(item.Unit, prod),
                 Quantity = item.Quantity,
                 UnitPrice = item.UnitPrice,
                 VatRate = item.VatRate,
@@ -286,6 +290,7 @@ public class InvoiceService : IInvoiceService
                 InvoiceId = invoice.Id,
                 ProductId = item.ProductId,
                 Description = item.Description,
+                Unit = item.Unit,
                 Quantity = item.Quantity,
                 UnitPrice = item.UnitPrice,
                 VatRate = item.VatRate,
@@ -365,12 +370,16 @@ public class InvoiceService : IInvoiceService
         var sortOrder = 0;
         foreach (var item in request.Items)
         {
+            Product? prod = null;
+            if (item.ProductId.HasValue)
+                prod = await _db.Products.FindAsync(new object[] { item.ProductId.Value }, ct);
             var entity = new InvoiceItem
             {
                 Id = Guid.NewGuid(),
                 InvoiceId = invoice.Id,
                 ProductId = item.ProductId,
                 Description = item.Description.Trim(),
+                Unit = LineItemUnitHelper.Resolve(item.Unit, prod),
                 Quantity = item.Quantity,
                 UnitPrice = item.UnitPrice,
                 VatRate = item.VatRate,
@@ -578,6 +587,7 @@ public class InvoiceService : IInvoiceService
             ProductId = x.ProductId,
             ProductCode = x.Product?.Code,
             Description = x.Description,
+            Unit = x.Unit,
             Quantity = x.Quantity,
             UnitPrice = x.UnitPrice,
             VatRate = x.VatRate,

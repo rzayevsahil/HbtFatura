@@ -107,6 +107,7 @@
         <span class="item-col-product">Ürün Kodu</span>
         <span class="item-col-desc">Açıklama</span>
         <span class="item-col-qty">Miktar</span>
+        <span class="item-col-unit">Birim</span>
         <span class="item-col-price">Birim Fiyat</span>
         <span class="item-col-vat">KDV %</span>
         <span class="item-col-discount">İskonto %</span>
@@ -141,7 +142,10 @@
             </div>
             }
           </div>
-          <input type="number" formControlName="quantity" placeholder="Adet" min="0" step="1" />
+          <input type="number" formControlName="quantity" placeholder="0" min="0" step="1" />
+          <div class="item-cell-unit">
+            <app-unit-field-select [itemGroup]="$any(item)" emptyLabel="Birim" />
+          </div>
           <input type="number" formControlName="unitPrice" placeholder="0" min="0" step="0.01" />
           <input type="number" formControlName="vatRate" [attr.placeholder]="'' + lookups.defaultVatRatePercent()" min="0"
             max="100" step="0.01" />

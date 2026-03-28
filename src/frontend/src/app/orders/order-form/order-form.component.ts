@@ -9,11 +9,12 @@ import { ReportService } from '../../services/report.service';
 import { CustomerDto, ProductDto, StockLevelsReportDto, CreateOrderRequest, UpdateOrderRequest, OrderStatus, OrderItemInputDto } from '../../core/models';
 import { ToastrService } from 'ngx-toastr';
 import { LookupService } from '../../core/services/lookup.service';
+import { UnitFieldSelectComponent } from '../../shared/unit-field-select/unit-field-select.component';
 
 @Component({
   selector: 'app-order-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterLink, UnitFieldSelectComponent],
   templateUrl: './order-form.component.html',
   styleUrls: ['./order-form.component.scss']
 })
@@ -132,6 +133,7 @@ export class OrderFormComponent implements OnInit {
             productId: [it.productId ?? null],
             productCode: [it.productCode || p?.code || ''],
             description: [it.description],
+            unit: [it.unit || 'Adet'],
             quantity: [it.quantity],
             unitPrice: [it.unitPrice],
             vatRate: [it.vatRate],
@@ -169,6 +171,7 @@ export class OrderFormComponent implements OnInit {
       productId: [null as string | null],
       productCode: [''],
       description: [''],
+      unit: ['Adet'],
       quantity: [1],
       unitPrice: [0],
       vatRate: [this.lookups.defaultVatRatePercent()],
@@ -182,6 +185,7 @@ export class OrderFormComponent implements OnInit {
       productId: p.id,
       productCode: p.code,
       description: p.name,
+      unit: (p.unit || 'Adet').trim() || 'Adet',
       unitPrice: p.unitPrice
     });
     this.activeItemIndex = null;
@@ -281,6 +285,7 @@ export class OrderFormComponent implements OnInit {
       items: raw.items.map((it: any, idx: number) => ({
         productId: it.productId ?? undefined,
         description: it.description || '',
+        unit: String(it.unit ?? '').trim() || 'Adet',
         quantity: Number(it.quantity) || 0,
         unitPrice: Number(it.unitPrice) || 0,
         vatRate: Number(it.vatRate) || 0,
@@ -295,6 +300,7 @@ export class OrderFormComponent implements OnInit {
         items: raw.items.map((it: any, idx: number) => ({
           productId: it.productId ?? undefined,
           description: it.description || '',
+          unit: String(it.unit ?? '').trim() || 'Adet',
           quantity: Number(it.quantity) || 0,
           unitPrice: Number(it.unitPrice) || 0,
           vatRate: Number(it.vatRate) || 0,

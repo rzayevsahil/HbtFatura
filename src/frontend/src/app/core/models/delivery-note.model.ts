@@ -7,6 +7,7 @@ export interface DeliveryNoteItemDto {
     productCode?: string;
     orderItemId?: string;
     description: string;
+    unit: string;
     quantity: number;
     unitPrice: number;
     vatRate: number;
@@ -51,6 +52,7 @@ export interface DeliveryNoteItemInputDto {
     productId?: string | null;
     orderItemId?: string | null;
     description: string;
+    unit: string;
     quantity: number;
     unitPrice: number;
     vatRate: number;

@@ -8,6 +8,7 @@ public class InvoiceItemDto
     public Guid? ProductId { get; set; }
     public string? ProductCode { get; set; }
     public string Description { get; set; } = string.Empty;
+    public string Unit { get; set; } = "Adet";
     public decimal Quantity { get; set; }
     public decimal UnitPrice { get; set; }
     public decimal VatRate { get; set; }
@@ -22,6 +23,7 @@ public class InvoiceItemInputDto
 {
     public Guid? ProductId { get; set; }
     public string Description { get; set; } = string.Empty;
+    public string Unit { get; set; } = "Adet";
     public decimal Quantity { get; set; }
     public decimal UnitPrice { get; set; }
     public decimal VatRate { get; set; }

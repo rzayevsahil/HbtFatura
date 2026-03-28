@@ -1,0 +1,26 @@
+<div class="customer-select">
+  <button type="button" class="customer-select-trigger" (click)="toggle($event)">
+    {{ selectedTitle }}
+  </button>
+  @if (panelOpen) {
+  <div class="customer-select-panel" (click)="$event.stopPropagation()">
+    <input type="text" class="customer-search" placeholder="Birim ara..." [value]="searchText"
+      (input)="searchText = $any($event.target).value" />
+    <div class="customer-options-list">
+      @for (l of filteredUnits; track l.id) {
+      <button type="button" class="customer-option" (click)="pick(l)">{{ l.name }}</button>
+      }
+      @if (filteredUnits.length === 0 && searchText) {
+      <div class="customer-option empty">Sonuç bulunamadı</div>
+      }
+      @if (filteredUnits.length === 0 && !searchText) {
+      <div class="customer-option empty">Tanımlı birim yok; alttan yazın.</div>
+      }
+    </div>
+    <!--<div class="unit-panel-footer">
+      <input type="text" [formControl]="unitControl" maxlength="64" placeholder="Serbest birim (ör. özel kısaltma)" />
+    </div>
+    -->
+  </div>
+  }
+</div>

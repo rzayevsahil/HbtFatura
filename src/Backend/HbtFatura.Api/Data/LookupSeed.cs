@@ -8,7 +8,7 @@ public static class LookupSeed
     public static async Task SeedIfEmptyAsync(AppDbContext db)
     {
         // 1. Ensure Groups exist
-        var groupNames = new[] { "OrderType", "OrderStatus", "InvoiceStatus", "DeliveryNoteStatus", "InvoiceType", "DeliveryNoteType", "ChequeStatus", "Currency" };
+        var groupNames = new[] { "OrderType", "OrderStatus", "InvoiceStatus", "DeliveryNoteStatus", "InvoiceType", "DeliveryNoteType", "ChequeStatus", "Currency", "ProductUnit" };
         var existingGroups = await db.LookupGroups.ToListAsync();
         
         var groupsToCreate = new List<LookupGroup>();
@@ -39,6 +39,9 @@ public static class LookupSeed
         if (!existingGroups.Any(x => x.Name == "VatRate"))
             groupsToCreate.Add(new LookupGroup { Id = Guid.NewGuid(), Name = "VatRate", DisplayName = "KDV Oranı (%)", IsSystemGroup = true });
 
+        if (!existingGroups.Any(x => x.Name == "ProductUnit"))
+            groupsToCreate.Add(new LookupGroup { Id = Guid.NewGuid(), Name = "ProductUnit", DisplayName = "Ürün birimi", IsSystemGroup = true });
+
         if (groupsToCreate.Any())
         {
             await db.LookupGroups.AddRangeAsync(groupsToCreate);
@@ -56,6 +59,7 @@ public static class LookupSeed
         var chequeStatusId = existingGroups.First(x => x.Name == "ChequeStatus").Id;
         var currencyGroupId = existingGroups.First(x => x.Name == "Currency").Id;
         var vatRateGroupId = existingGroups.First(x => x.Name == "VatRate").Id;
+        var productUnitGroupId = existingGroups.First(x => x.Name == "ProductUnit").Id;
 
         var lookups = new List<Lookup>();
 
@@ -129,6 +133,28 @@ public static class LookupSeed
         if (!await db.Lookups.AnyAsync(x => x.LookupGroupId == vatRateGroupId))
         {
             lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = vatRateGroupId, Code = "20", Name = "%20", Color = "#0d9488", SortOrder = 1 });
+        }
+
+        // Ürün / kalem birimi (Code ve Name, ürün kartı ile aynı metin; sipariş-irsaliye-fatura satırlarında kullanılır)
+        if (!await db.Lookups.AnyAsync(x => x.LookupGroupId == productUnitGroupId))
+        {
+            var productUnits = new (string Code, string Name, string Color)[]
+            {
+                ("Adet", "Adet", "#64748b"),
+                ("Kg", "Kg", "#0d9488"),
+                ("gr", "gr", "#14b8a6"),
+                ("lt", "lt", "#3b82f6"),
+                ("m", "m", "#8b5cf6"),
+                ("m²", "m²", "#a855f7"),
+                ("m³", "m³", "#c084fc"),
+                ("Paket", "Paket", "#ea580c"),
+                ("Kutu", "Kutu", "#f97316"),
+                ("Ton", "Ton", "#0f766e"),
+                ("Saat", "Saat", "#6366f1")
+            };
+            var sort = 1;
+            foreach (var u in productUnits)
+                lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = productUnitGroupId, Code = u.Code, Name = u.Name, Color = u.Color, SortOrder = sort++ });
         }
 
         if (lookups.Any())

@@ -132,6 +132,9 @@ public class DeliveryNoteService : IDeliveryNoteService
         var sortOrder = 0;
         foreach (var item in request.Items ?? new List<DeliveryNoteItemInputDto>())
         {
+            Product? prod = null;
+            if (item.ProductId.HasValue)
+                prod = await _db.Products.FindAsync(new object[] { item.ProductId.Value }, ct);
             dn.Items.Add(new DeliveryNoteItem
             {
                 Id = Guid.NewGuid(),
@@ -139,6 +142,7 @@ public class DeliveryNoteService : IDeliveryNoteService
                 ProductId = item.ProductId,
                 OrderItemId = item.OrderItemId,
                 Description = (item.Description ?? string.Empty).Trim(),
+                Unit = LineItemUnitHelper.Resolve(item.Unit, prod),
                 Quantity = item.Quantity,
                 UnitPrice = item.UnitPrice,
                 VatRate = item.VatRate,
@@ -196,6 +200,7 @@ public class DeliveryNoteService : IDeliveryNoteService
                 ProductId = orderItem.ProductId,
                 OrderItemId = orderItem.Id,
                 Description = orderItem.Description,
+                Unit = orderItem.Unit,
                 Quantity = orderItem.Quantity,
                 UnitPrice = orderItem.UnitPrice,
                 VatRate = orderItem.VatRate,
@@ -237,6 +242,9 @@ public class DeliveryNoteService : IDeliveryNoteService
         var sortOrder = 0;
         foreach (var item in request.Items ?? new List<DeliveryNoteItemInputDto>())
         {
+            Product? prod = null;
+            if (item.ProductId.HasValue)
+                prod = await _db.Products.FindAsync(new object[] { item.ProductId.Value }, ct);
             _db.DeliveryNoteItems.Add(new DeliveryNoteItem
             {
                 Id = Guid.NewGuid(),
@@ -244,6 +252,7 @@ public class DeliveryNoteService : IDeliveryNoteService
                 ProductId = item.ProductId,
                 OrderItemId = item.OrderItemId,
                 Description = (item.Description ?? string.Empty).Trim(),
+                Unit = LineItemUnitHelper.Resolve(item.Unit, prod),
                 Quantity = item.Quantity,
                 UnitPrice = item.UnitPrice,
                 VatRate = item.VatRate,
@@ -378,6 +387,7 @@ public class DeliveryNoteService : IDeliveryNoteService
             ProductCode = x.Product?.Code,
             OrderItemId = x.OrderItemId,
             Description = x.Description,
+            Unit = x.Unit,
             Quantity = x.Quantity,
             UnitPrice = x.UnitPrice,
             VatRate = x.VatRate,

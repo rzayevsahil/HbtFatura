@@ -85,13 +85,13 @@ export class InvoiceListComponent implements OnInit {
     return this.lookups.getName('InvoiceType', t);
   }
 
-  downloadPdf(id: string): void {
+  downloadPdf(id: string, invoiceNumber: string): void {
     this.api.getPdf(id).subscribe({
       next: blob => {
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `fatura-${id}.pdf`;
+        a.download = `fatura-${invoiceNumber}.pdf`;
         a.click();
         URL.revokeObjectURL(url);
         this.toastr.success('Fatura PDF indirildi.');

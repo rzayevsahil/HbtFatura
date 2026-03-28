@@ -13,11 +13,12 @@ import {
 } from '../../core/models';
 import { ToastrService } from 'ngx-toastr';
 import { LookupService } from '../../core/services/lookup.service';
+import { UnitFieldSelectComponent } from '../../shared/unit-field-select/unit-field-select.component';
 
 @Component({
   selector: 'app-delivery-note-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterLink, UnitFieldSelectComponent],
   templateUrl: './delivery-note-form.component.html',
   styleUrls: ['./delivery-note-form.component.scss']
 })
@@ -170,6 +171,7 @@ export class DeliveryNoteFormComponent implements OnInit {
               productCode: [it.productCode || p?.code || ''],
               orderItemId: [it.orderItemId ?? null],
               description: [it.description],
+              unit: [it.unit || 'Adet'],
               quantity: [it.quantity],
               unitPrice: [it.unitPrice],
               vatRate: [it.vatRate],
@@ -188,6 +190,7 @@ export class DeliveryNoteFormComponent implements OnInit {
       productCode: [''],
       orderItemId: [null as string | null],
       description: [''],
+      unit: ['Adet'],
       quantity: [1],
       unitPrice: [0],
       vatRate: [this.lookups.defaultVatRatePercent()],
@@ -201,6 +204,7 @@ export class DeliveryNoteFormComponent implements OnInit {
       productId: p.id,
       productCode: p.code,
       description: p.name,
+      unit: (p.unit || 'Adet').trim() || 'Adet',
       unitPrice: p.unitPrice
     });
     this.activeItemIndex = null;
@@ -264,6 +268,7 @@ export class DeliveryNoteFormComponent implements OnInit {
             productCode: [it.productCode || ''],
             orderItemId: [it.id],
             description: [it.description],
+            unit: [it.unit || 'Adet'],
             quantity: [it.quantity],
             unitPrice: [it.unitPrice],
             vatRate: [it.vatRate],
@@ -321,6 +326,7 @@ export class DeliveryNoteFormComponent implements OnInit {
       productId: it.productId ?? undefined,
       orderItemId: it.orderItemId ?? undefined,
       description: it.description ?? '',
+      unit: String(it.unit ?? '').trim() || 'Adet',
       quantity: Number(it.quantity),
       unitPrice: Number(it.unitPrice),
       vatRate: Number(it.vatRate),

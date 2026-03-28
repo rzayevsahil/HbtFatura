@@ -6,6 +6,7 @@ public class OrderItem
     public Guid OrderId { get; set; }
     public Guid? ProductId { get; set; }
     public string Description { get; set; } = string.Empty;
+    public string Unit { get; set; } = "Adet";
     public decimal Quantity { get; set; }
     public decimal UnitPrice { get; set; }
     public decimal VatRate { get; set; }

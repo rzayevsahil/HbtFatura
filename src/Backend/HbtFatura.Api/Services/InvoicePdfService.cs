@@ -1,4 +1,6 @@
+using System.Globalization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
@@ -10,20 +12,50 @@ namespace HbtFatura.Api.Services;
 
 public class InvoicePdfService : IInvoicePdfService
 {
+    private const string VatRateLookupGroupName = "VatRate";
+
     private readonly AppDbContext _db;
     private readonly ICurrentUserContext _currentUser;
     private readonly Microsoft.AspNetCore.Hosting.IWebHostEnvironment _env;
+    private readonly IConfiguration _configuration;
 
     static InvoicePdfService()
     {
         QuestPDF.Settings.License = LicenseType.Community;
     }
 
-    public InvoicePdfService(AppDbContext db, ICurrentUserContext currentUser, Microsoft.AspNetCore.Hosting.IWebHostEnvironment env)
+    public InvoicePdfService(AppDbContext db, ICurrentUserContext currentUser, Microsoft.AspNetCore.Hosting.IWebHostEnvironment env, IConfiguration configuration)
     {
         _db = db;
         _currentUser = currentUser;
         _env = env;
+        _configuration = configuration;
+    }
+
+    /// <summary>Sistem tanımları (VatRate lookup) veya App:DefaultVatRate ile aynı kural — PDF etiketindeki oran metni.</summary>
+    private async Task<string> GetSystemVatRateDisplayAsync(CancellationToken ct)
+    {
+        var code = await _db.Lookups
+            .AsNoTracking()
+            .Include(x => x.Group)
+            .Where(x => x.Group != null && x.Group.Name == VatRateLookupGroupName && x.IsActive)
+            .OrderBy(x => x.SortOrder)
+            .Select(x => x.Code)
+            .FirstOrDefaultAsync(ct);
+
+        if (!string.IsNullOrWhiteSpace(code)
+            && decimal.TryParse(code.Trim(), NumberStyles.Any, CultureInfo.InvariantCulture, out var parsed)
+            && parsed is >= 0 and <= 100)
+        {
+            return parsed == decimal.Truncate(parsed)
+                ? ((int)parsed).ToString(CultureInfo.InvariantCulture)
+                : parsed.ToString("0.##", CultureInfo.InvariantCulture);
+        }
+
+        var fallback = _configuration.GetValue("App:DefaultVatRate", 20);
+        if (fallback is < 0 or > 100)
+            fallback = 20;
+        return fallback.ToString(CultureInfo.InvariantCulture);
     }
 
     private IQueryable<Invoice> ScopeQuery()
@@ -53,6 +85,8 @@ public class InvoicePdfService : IInvoicePdfService
                 .Include(x => x.TaxOffice)
                     .ThenInclude(t => t!.District)
                 .FirstOrDefaultAsync(x => x.FirmId == firmId.Value, ct);
+
+        var systemVatRateDisplay = await GetSystemVatRateDisplayAsync(ct);
 
         var document = Document.Create(container =>
         {
@@ -261,10 +295,10 @@ public class InvoicePdfService : IInvoicePdfService
                     {
                         t.ColumnsDefinition(c =>
                         {
-                            c.ConstantColumn(35);  // Sıra No
+                            c.ConstantColumn(30);  // Sıra No
                             c.ConstantColumn(65);  // Stok Kodu
                             c.RelativeColumn();    // Mal Hizmet
-                            c.ConstantColumn(45);  // Miktar
+                            c.ConstantColumn(55);  // Miktar (+ birim tek satırda)
                             c.ConstantColumn(75);  // Birim Fiyat
                             c.ConstantColumn(60);  // KDV Oranı
                             c.ConstantColumn(75);  // KDV Tutarı
@@ -289,7 +323,7 @@ public class InvoicePdfService : IInvoicePdfService
                             t.Cell().Element(CellStyle).Text(i++.ToString());
                             t.Cell().Element(CellStyle).Text(item.Product?.Code ?? "");
                             t.Cell().Element(CellStyle).Text(item.Description);
-                            t.Cell().Element(CellStyle).AlignRight().Text(item.Quantity.ToString("N2"));
+                            t.Cell().Element(CellStyle).AlignRight().Text(FormatQuantityWithUnitForPdf(item.Quantity, item.Unit));
                             t.Cell().Element(CellStyle).AlignRight().Text($"{item.UnitPrice.ToString("G29")} TL");
                             t.Cell().Element(CellStyle).AlignRight().Text($"%{item.VatRate}");
                             t.Cell().Element(CellStyle).AlignRight().Text($"{item.LineVatAmount.ToString("N2")} TL");
@@ -309,7 +343,7 @@ public class InvoicePdfService : IInvoicePdfService
                             t.Cell().Element(TotalStyle).Text("Mal Hizmet Toplam Tutarı:").Bold();
                             t.Cell().Element(TotalStyle).AlignRight().Text($"{invoice.SubTotal.ToString("N2")} TL");
 
-                            t.Cell().Element(TotalStyle).Text("Hesaplanan KDV (%18):").Bold();
+                            t.Cell().Element(TotalStyle).Text($"Hesaplanan KDV (%{systemVatRateDisplay}):").Bold();
                             t.Cell().Element(TotalStyle).AlignRight().Text($"{invoice.TotalVat.ToString("N2")} TL");
 
                             t.Cell().Element(TotalStyle).Text("Vergiler Dahil Toplam Tutar:").Bold();
@@ -358,6 +392,13 @@ public class InvoicePdfService : IInvoicePdfService
         });
 
         return document.GeneratePdf();
+    }
+
+    /// <summary>Miktar ve birimi tek satırda tutmak için normal boşluk yerine satır kırılmayan boşluk (NBSP).</summary>
+    private static string FormatQuantityWithUnitForPdf(decimal quantity, string? unit)
+    {
+        var u = string.IsNullOrWhiteSpace(unit) ? "Adet" : unit.Trim();
+        return $"{quantity.ToString("N2")}\u00A0{u}";
     }
 
     private static IContainer HeaderStyle(IContainer c) => c.Border(0.5f).Padding(4).AlignCenter().AlignMiddle().DefaultTextStyle(x => x.Bold().FontSize(8));

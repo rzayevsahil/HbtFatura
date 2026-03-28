@@ -17,6 +17,10 @@
     font-size: 0.875rem;
     font-weight: 500;
   }
+
+  app-unit-field-select {
+    min-width: 0;
+  }
 }
 
 .error-msg {

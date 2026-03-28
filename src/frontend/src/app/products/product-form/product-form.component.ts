@@ -11,11 +11,12 @@ import { FirmService } from '../../services/firm.service';
 import { ToastrService } from 'ngx-toastr';
 import { LookupService } from '../../core/services/lookup.service';
 import { LookupDto } from '../../core/models';
+import { UnitFieldSelectComponent } from '../../shared/unit-field-select/unit-field-select.component';
 
 @Component({
   selector: 'app-product-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, UnitFieldSelectComponent],
   templateUrl: './product-form.component.html',
   styleUrls: ['./product-form.component.scss']
 })
@@ -48,7 +49,7 @@ export class ProductFormComponent implements OnInit {
     public auth: AuthService,
     private firmApi: FirmService,
     private toastr: ToastrService,
-    private lookups: LookupService
+    public lookups: LookupService
   ) { }
 
   ngOnInit(): void {

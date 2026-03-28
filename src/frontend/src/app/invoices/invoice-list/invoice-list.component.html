@@ -95,7 +95,7 @@
             <a [routerLink]="['/invoices', inv.id, 'edit']">Düzenle</a>
             }
             @if (inv.isGibSent) {
-            <a href="#" (click)="downloadPdf(inv.id); $event.preventDefault()">PDF</a>
+            <a href="#" (click)="downloadPdf(inv.id, inv.invoiceNumber); $event.preventDefault()">PDF</a>
             }
           </div>
         </td>

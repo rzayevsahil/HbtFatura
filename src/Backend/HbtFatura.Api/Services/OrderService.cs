@@ -127,11 +127,12 @@ public class OrderService : IOrderService
         var sortOrder = 0;
         foreach (var item in request.Items)
         {
-            if (request.OrderType == InvoiceType.Satis && item.ProductId.HasValue)
+            Product? prod = null;
+            if (item.ProductId.HasValue)
             {
-                var product = await _db.Products.FindAsync(item.ProductId.Value);
-                if (product != null && item.Quantity > product.StockQuantity)
-                    throw new InvalidOperationException($"'{product.Name}' ürünü için yetersiz stok! Mevcut: {product.StockQuantity}");
+                prod = await _db.Products.FindAsync(new object[] { item.ProductId.Value }, ct);
+                if (request.OrderType == InvoiceType.Satis && prod != null && item.Quantity > prod.StockQuantity)
+                    throw new InvalidOperationException($"'{prod.Name}' ürünü için yetersiz stok! Mevcut: {prod.StockQuantity}");
             }
 
             order.Items.Add(new OrderItem
@@ -140,6 +141,7 @@ public class OrderService : IOrderService
                 OrderId = order.Id,
                 ProductId = item.ProductId,
                 Description = item.Description.Trim(),
+                Unit = LineItemUnitHelper.Resolve(item.Unit, prod),
                 Quantity = item.Quantity,
                 UnitPrice = item.UnitPrice,
                 VatRate = item.VatRate,
@@ -176,11 +178,12 @@ public class OrderService : IOrderService
         var sortOrder = 0;
         foreach (var item in request.Items ?? new List<OrderItemInputDto>())
         {
-            if (order.OrderType == InvoiceType.Satis && item.ProductId.HasValue)
+            Product? prod = null;
+            if (item.ProductId.HasValue)
             {
-                var product = await _db.Products.FindAsync(item.ProductId.Value);
-                if (product != null && item.Quantity > product.StockQuantity)
-                    throw new InvalidOperationException($"'{product.Name}' ürünü için yetersiz stok! Mevcut: {product.StockQuantity}");
+                prod = await _db.Products.FindAsync(new object[] { item.ProductId.Value }, ct);
+                if (order.OrderType == InvoiceType.Satis && prod != null && item.Quantity > prod.StockQuantity)
+                    throw new InvalidOperationException($"'{prod.Name}' ürünü için yetersiz stok! Mevcut: {prod.StockQuantity}");
             }
 
             _db.OrderItems.Add(new OrderItem
@@ -189,6 +192,7 @@ public class OrderService : IOrderService
                 OrderId = order.Id,
                 ProductId = item.ProductId,
                 Description = (item.Description ?? string.Empty).Trim(),
+                Unit = LineItemUnitHelper.Resolve(item.Unit, prod),
                 Quantity = item.Quantity,
                 UnitPrice = item.UnitPrice,
                 VatRate = item.VatRate,
@@ -251,6 +255,7 @@ public class OrderService : IOrderService
             ProductId = x.ProductId,
             ProductCode = x.Product?.Code,
             Description = x.Description,
+            Unit = x.Unit,
             Quantity = x.Quantity,
             UnitPrice = x.UnitPrice,
             VatRate = x.VatRate,
