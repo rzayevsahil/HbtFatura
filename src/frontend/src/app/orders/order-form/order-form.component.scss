@@ -213,8 +213,8 @@
     margin: 0;
     font-weight: 500;
     line-height: 1;
-    background: #dc2626 !important;
-    color: #fff !important;
+    background: #fef2f2 !important;
+    color: #dc2626 !important;
     border: none;
     border-radius: var(--radius-sm);
     cursor: pointer;
@@ -228,7 +228,7 @@
     }
 
     &:hover {
-      background: #b91c1c !important;
+      background: #fecaca !important;
     }
 
     &:focus-visible {
