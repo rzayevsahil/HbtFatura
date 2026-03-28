@@ -13,8 +13,17 @@ namespace HbtFatura.Api.Controllers;
 [Authorize]
 public class LookupsController : ControllerBase
 {
+    private const string VatRateGroupName = "VatRate";
+
     private readonly AppDbContext _db;
     public LookupsController(AppDbContext db) => _db = db;
+
+    private static bool IsValidVatRateCode(string? code) =>
+        !string.IsNullOrWhiteSpace(code)
+        && decimal.TryParse(code, NumberStyles.Any, CultureInfo.InvariantCulture, out var p)
+        && p is >= 0 and <= 100;
+
+    private static string VatRateDisplayNameFromCode(string code) => $"%{code.Trim()}";
 
     // --- Lookup Groups ---
 
@@ -56,7 +65,7 @@ public class LookupsController : ControllerBase
         var code = await _db.Lookups
             .AsNoTracking()
             .Include(x => x.Group)
-            .Where(x => x.Group != null && x.Group.Name == "VatRate" && x.IsActive)
+            .Where(x => x.Group != null && x.Group.Name == VatRateGroupName && x.IsActive)
             .OrderBy(x => x.SortOrder)
             .Select(x => x.Code)
             .FirstOrDefaultAsync();
@@ -87,6 +96,23 @@ public class LookupsController : ControllerBase
     [Authorize(Roles = "SuperAdmin")]
     public async Task<IActionResult> Create(Lookup lookup)
     {
+        var group = await _db.LookupGroups.AsNoTracking().FirstOrDefaultAsync(g => g.Id == lookup.LookupGroupId);
+        if (group == null)
+            return BadRequest(new { message = "Geçersiz grup." });
+
+        if (group.Name == VatRateGroupName)
+        {
+            var count = await _db.Lookups.CountAsync(x => x.LookupGroupId == lookup.LookupGroupId);
+            if (count >= 1)
+                return BadRequest(new { message = "KDV oranı için yalnızca tek tanım olabilir. Mevcut kaydı düzenleyin." });
+
+            if (!IsValidVatRateCode(lookup.Code))
+                return BadRequest(new { message = "KDV kodu 0 ile 100 arasında geçerli bir sayı olmalıdır (örn. 20)." });
+
+            lookup.Code = lookup.Code.Trim();
+            lookup.Name = VatRateDisplayNameFromCode(lookup.Code);
+        }
+
         if (lookup.Id == Guid.Empty) lookup.Id = Guid.NewGuid();
         _db.Lookups.Add(lookup);
         await _db.SaveChangesAsync();
@@ -97,8 +123,22 @@ public class LookupsController : ControllerBase
     [Authorize(Roles = "SuperAdmin")]
     public async Task<IActionResult> Update(Guid id, Lookup lookup)
     {
-        var existing = await _db.Lookups.FindAsync(id);
+        var existing = await _db.Lookups.Include(x => x.Group).FirstOrDefaultAsync(x => x.Id == id);
         if (existing == null) return NotFound();
+
+        if (existing.Group?.Name == VatRateGroupName)
+        {
+            if (!IsValidVatRateCode(lookup.Code))
+                return BadRequest(new { message = "KDV kodu 0 ile 100 arasında geçerli bir sayı olmalıdır (örn. 20)." });
+
+            existing.Code = lookup.Code.Trim();
+            existing.Name = VatRateDisplayNameFromCode(existing.Code);
+            existing.Color = lookup.Color;
+            existing.IsActive = true;
+            // Grup, sıra ve pasifleştirme değiştirilemez — tek sistem KDV satırı
+            await _db.SaveChangesAsync();
+            return Ok(existing);
+        }
 
         existing.LookupGroupId = lookup.LookupGroupId;
         existing.Code = lookup.Code;
@@ -115,8 +155,11 @@ public class LookupsController : ControllerBase
     [Authorize(Roles = "SuperAdmin")]
     public async Task<IActionResult> Delete(Guid id)
     {
-        var existing = await _db.Lookups.FindAsync(id);
+        var existing = await _db.Lookups.Include(x => x.Group).FirstOrDefaultAsync(x => x.Id == id);
         if (existing == null) return NotFound();
+
+        if (existing.Group?.Name == VatRateGroupName)
+            return BadRequest(new { message = "KDV oranı tanımı silinemez; yalnızca oran değerini güncelleyebilirsiniz." });
 
         _db.Lookups.Remove(existing);
         await _db.SaveChangesAsync();

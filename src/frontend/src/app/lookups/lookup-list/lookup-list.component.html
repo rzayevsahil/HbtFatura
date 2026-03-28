@@ -1,0 +1,147 @@
+<div class="page-header">
+  <div class="header-content">
+    <h1 class="page-title">Sistem Tanımları <span class="subtitle">(KeyValues)</span></h1>
+    <p class="page-description">Sistem genelindeki açılır menü, durum ve tip tanımlarını buradan yönetebilirsiniz.</p>
+  </div>
+  <button type="button" class="btn btn-primary" (click)="openAdd()"
+    [disabled]="groupsForAdd().length === 0"
+    [title]="groupsForAdd().length === 0 ? 'Eklenebilecek grup kalmadı' : 'Yeni tanım'">
+    <span class="icon">+</span> Yeni Tanım Ekle
+  </button>
+</div>
+
+<div class="card table-card">
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Grup / Kategori</th>
+          <th class="th-code">Kod</th>
+          <th>Ad (Değer)</th>
+          <th class="th-visual">Görsel / Renk</th>
+          <th class="th-sort">Sıra</th>
+          <th class="th-status">Durum</th>
+          <th class="th-actions">İşlemler</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of rawLookups(); track item.id; let index = $index) {
+          <tr [class.group-start]="isNewGroup(item, index)">
+            <td class="group-cell">
+              @if (isNewGroup(item, index)) {
+                <div class="group-info">
+                  <span class="group-badge">{{ item.group?.displayName }}</span>
+                  <small class="group-name">{{ item.group?.name }}</small>
+                </div>
+              }
+            </td>
+            <td><code class="code-badge">{{ item.code }}</code></td>
+            <td class="name-cell">{{ item.name }}</td>
+            <td>
+              <div class="color-item">
+                @if (item.color) {
+                  <span class="color-preview" [style.backgroundColor]="item.color"></span>
+                  <span class="color-code">{{ item.color }}</span>
+                } @else {
+                  <span class="no-color">—</span>
+                }
+              </div>
+            </td>
+            <td class="td-sort">{{ item.sortOrder }}</td>
+            <td>
+              <span class="badge" [class.badge-success]="item.isActive" [class.badge-danger]="!item.isActive">
+                {{ item.isActive ? 'Aktif' : 'Pasif' }}
+              </span>
+            </td>
+            <td class="td-actions">
+              <div class="actions">
+                <button type="button" class="btn-action edit" (click)="openEdit(item)" title="Düzenle">Düzenle</button>
+                @if (!isVatRateRow(item)) {
+                  <button type="button" class="btn-action delete" (click)="delete(item)" title="Sil">Sil</button>
+                }
+              </div>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
+
+@if (showForm) {
+  <div class="modal-overlay">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>{{ editId ? 'Tanım Düzenle' : 'Yeni Tanım Ekle' }}</h3>
+        <button type="button" class="modal-close" (click)="showForm = false">×</button>
+      </div>
+      <form (ngSubmit)="save()">
+        <div class="modal-body">
+          @if (isVatRateForm()) {
+            <p class="vat-hint">
+              Görünen ad, koda göre otomatik oluşturulur: yazdığınız oranın başına <strong>%</strong> eklenir (örn. 20 → %20).
+              @if (editingVatRate) {
+                <span> KDV sistemde tek kayıttır; silinemez veya başka gruba taşınamaz; yalnızca oran ve renk değiştirilebilir.</span>
+              }
+            </p>
+          }
+          <div class="form-grid">
+            <div class="form-group full">
+              <label>Grup / Kategori</label>
+              <select [(ngModel)]="model.lookupGroupId" name="lookupGroupId" required [disabled]="editingVatRate"
+                (ngModelChange)="onLookupGroupChange()">
+                <option [value]="undefined" disabled>Grup seçiniz...</option>
+                @for (g of formGroupOptions(); track g.id) {
+                  <option [value]="g.id">{{ g.displayName }} ({{ g.name }})</option>
+                }
+              </select>
+              <small>Hangi kategoriye ait olduğunu belirler.</small>
+            </div>
+            <div class="form-group">
+              <label>Kod (Value)</label>
+              <input type="text" [(ngModel)]="model.code" name="code" required
+                (ngModelChange)="onCodeChange()"
+                [placeholder]="isVatRateForm() ? 'KDV yüzdesi, örn: 20' : '0, 1 veya StatusKey'" />
+            </div>
+            @if (isVatRateForm()) {
+              <div class="form-group full">
+                <label>Görünen ad</label>
+                <p class="vat-name-preview">{{ vatDisplayPreview() }}</p>
+                <small>Kod alanına yazdığınız değerin başına % eklenir (örn. 20 → %20).</small>
+              </div>
+            } @else {
+              <div class="form-group">
+                <label>Görünen Ad</label>
+                <input type="text" [(ngModel)]="model.name" name="name" required placeholder="Ekranda görünecek metin" />
+              </div>
+            }
+            <div class="form-group">
+              <label>Renk</label>
+              <div class="color-input-wrap">
+                <input type="color" [value]="model.color || '#000000'" (input)="model.color = $any($event.target).value" />
+                <input type="text" [(ngModel)]="model.color" name="color" placeholder="#hex" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Sıralama</label>
+              <input type="number" [(ngModel)]="model.sortOrder" name="sortOrder" [disabled]="editingVatRate" />
+            </div>
+            <div class="form-group full checkbox-group">
+              <label class="switch">
+                <input type="checkbox" [(ngModel)]="model.isActive" name="isActive" [disabled]="editingVatRate" />
+                <span class="slider"></span>
+              </label>
+              <span>Tanım sistemde aktif olarak kullanılsın</span>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="showForm = false">Vazgeç</button>
+          <button type="submit" class="btn btn-primary" [disabled]="saving">
+            {{ saving ? 'Kaydediliyor...' : 'Kaydet' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}
