@@ -89,6 +89,8 @@ export class CompanySettingsComponent implements OnInit {
     private el: ElementRef
   ) { }
 
+  @ViewChild('fileInput') logoFileInput?: ElementRef<HTMLInputElement>;
+
   @HostListener('document:click', ['$event'])
   onDocumentClick(e: MouseEvent): void {
     if (!this.el.nativeElement.contains(e.target)) {
@@ -250,19 +252,26 @@ export class CompanySettingsComponent implements OnInit {
     });
   }
 
-  onLogoChange(event: any): void {
-    const file = event.target.files[0];
-    if (file) {
-      if (file.size > 5 * 1024 * 1024) {
-        this.toastr.warning('Logo boyutu 5MB\'dan küçük olmalıdır.');
-        return;
-      }
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        this.form.patchValue({ logoUrl: e.target.result });
-      };
-      reader.readAsDataURL(file);
+  onLogoChange(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) {
+      this.toastr.warning('Logo boyutu 5MB\'dan küçük olmalıdır.');
+      input.value = '';
+      return;
     }
+    const reader = new FileReader();
+    reader.onload = (): void => {
+      this.form.patchValue({ logoUrl: reader.result as string });
+      input.value = '';
+    };
+    reader.readAsDataURL(file);
+  }
+
+  private resetLogoFileInput(): void {
+    const el = this.logoFileInput?.nativeElement;
+    if (el) el.value = '';
   }
 
   onIbanInput(event: Event): void {
@@ -298,6 +307,7 @@ export class CompanySettingsComponent implements OnInit {
 
   clearLogo(): void {
     this.form.patchValue({ logoUrl: null });
+    this.resetLogoFileInput();
   }
 
   goBack(): void {

@@ -77,39 +77,53 @@ public class CompanySettingsService : ICompanySettingsService
         entity.BankName = request.BankName?.Trim();
         
         // Logo handling: save as file if it's base64
-        if (!string.IsNullOrEmpty(request.LogoUrl) && request.LogoUrl.StartsWith("data:image"))
+        if (!string.IsNullOrEmpty(request.LogoUrl) && request.LogoUrl.StartsWith("data:image", StringComparison.OrdinalIgnoreCase))
         {
-            var folderPath = Path.Combine(_env.WebRootPath, "uploads", "logos");
+            var webRoot = !string.IsNullOrEmpty(_env.WebRootPath)
+                ? _env.WebRootPath
+                : Path.Combine(_env.ContentRootPath, "wwwroot");
+            var folderPath = Path.Combine(webRoot, "uploads", "logos");
             if (!Directory.Exists(folderPath)) Directory.CreateDirectory(folderPath);
 
-            // Clean up old logo if exists
+            // Eski dosya kilitliyse (önizleme/IIS) silme patlayıp tüm kaydı düşürmesin — yeni dosya yine yazılır.
             if (!string.IsNullOrEmpty(entity.LogoUrl) && entity.LogoUrl.StartsWith("/uploads/"))
             {
-                var oldPath = Path.Combine(_env.WebRootPath, entity.LogoUrl.TrimStart('/'));
-                if (File.Exists(oldPath)) File.Delete(oldPath);
+                try
+                {
+                    var oldPath = Path.Combine(webRoot, entity.LogoUrl.TrimStart('/').Replace('/', Path.DirectorySeparatorChar));
+                    if (File.Exists(oldPath)) File.Delete(oldPath);
+                }
+                catch
+                {
+                    /* Devam et */
+                }
             }
 
-            var extension = ".png"; // Default to png or extract from data type
-            if (request.LogoUrl.Contains("image/jpeg")) extension = ".jpg";
-            else if (request.LogoUrl.Contains("image/webp")) extension = ".webp";
+            var extension = ".png";
+            if (request.LogoUrl.Contains("image/jpeg", StringComparison.OrdinalIgnoreCase)) extension = ".jpg";
+            else if (request.LogoUrl.Contains("image/webp", StringComparison.OrdinalIgnoreCase)) extension = ".webp";
 
             var fileName = $"{effectiveFirmId.Value}_{DateTime.Now.Ticks}{extension}";
             var filePath = Path.Combine(folderPath, fileName);
-            
-            var base64Data = request.LogoUrl.Split(',')[1];
+
+            var comma = request.LogoUrl.IndexOf(',');
+            if (comma < 0) throw new InvalidOperationException("Geçersiz logo verisi.");
+            var base64Data = request.LogoUrl[(comma + 1)..].Trim();
             var bytes = Convert.FromBase64String(base64Data);
             await File.WriteAllBytesAsync(filePath, bytes, ct);
-            
+
             entity.LogoUrl = $"/uploads/logos/{fileName}";
         }
         else if (string.IsNullOrEmpty(request.LogoUrl))
         {
-            // Clean up if logo is removed (skip file delete if WebRootPath missing or delete fails)
-            if (!string.IsNullOrEmpty(entity.LogoUrl) && entity.LogoUrl.StartsWith("/uploads/") && !string.IsNullOrEmpty(_env.WebRootPath))
+            if (!string.IsNullOrEmpty(entity.LogoUrl) && entity.LogoUrl.StartsWith("/uploads/"))
             {
+                var webRoot = !string.IsNullOrEmpty(_env.WebRootPath)
+                    ? _env.WebRootPath
+                    : Path.Combine(_env.ContentRootPath, "wwwroot");
                 try
                 {
-                    var oldPath = Path.Combine(_env.WebRootPath, entity.LogoUrl.TrimStart('/'));
+                    var oldPath = Path.Combine(webRoot, entity.LogoUrl.TrimStart('/').Replace('/', Path.DirectorySeparatorChar));
                     if (File.Exists(oldPath)) File.Delete(oldPath);
                 }
                 catch { /* Logoyu veritabanından kaldırmaya devam et */ }
