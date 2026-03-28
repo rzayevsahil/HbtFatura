@@ -123,7 +123,8 @@ public class InvoicePdfService : IInvoicePdfService
 
                             if (!string.IsNullOrEmpty(gibLogoPath))
                             {
-                                c.Item().AlignCenter().Height(60).Image(gibLogoPath, ImageScaling.FitHeight);
+                                // Sadece yükseklik: kare veya dikdörtgen GİB görseli oranı korur; ek Width ile çakışma yok
+                                c.Item().AlignCenter().Height(60).Image(gibLogoPath).FitHeight();
                             }
                             else
                             {
@@ -139,12 +140,25 @@ public class InvoicePdfService : IInvoicePdfService
                             {
                                 try
                                 {
+                                    // Satırda sabit sütun genişliği; içeride yalnızca yükseklik + FitArea (üstten genişlik ConstantItem’dan gelir).
+                                    // ConstantItem + ayrı Width(aynı) + AlignMiddle() QuestPDF’te çakışıp kare logolarda da bozabiliyordu.
+                                    const int firmLogoColW = 130;
+                                    const int firmLogoMaxH = 72;
+
                                     if (company.LogoUrl.StartsWith("/"))
                                     {
-                                        var logoPath = Path.Combine(_env.WebRootPath, company.LogoUrl.TrimStart('/'));
+                                        var relative = company.LogoUrl.TrimStart('/').Replace('/', Path.DirectorySeparatorChar);
+                                        var webRoot = _env.WebRootPath;
+                                        var logoPath = string.IsNullOrEmpty(webRoot)
+                                            ? Path.Combine(_env.ContentRootPath, "wwwroot", relative)
+                                            : Path.Combine(webRoot, relative);
                                         if (File.Exists(logoPath))
                                         {
-                                            row.AutoItem().PaddingRight(10).AlignTop().Height(70).Image(logoPath, ImageScaling.FitHeight);
+                                            row.ConstantItem(firmLogoColW).PaddingRight(8).AlignTop().Column(logoCol =>
+                                            {
+                                                logoCol.Item().Height(firmLogoMaxH).AlignCenter()
+                                                    .Image(logoPath).FitArea();
+                                            });
                                         }
                                     }
                                     else
@@ -152,7 +166,11 @@ public class InvoicePdfService : IInvoicePdfService
                                         var base64Data = company.LogoUrl;
                                         if (base64Data.Contains(",")) base64Data = base64Data.Split(',')[1];
                                         var imageBytes = Convert.FromBase64String(base64Data);
-                                        row.AutoItem().PaddingRight(10).AlignTop().Height(70).Image(imageBytes, ImageScaling.FitHeight);
+                                        row.ConstantItem(firmLogoColW).PaddingRight(8).AlignTop().Column(logoCol =>
+                                        {
+                                            logoCol.Item().Height(firmLogoMaxH).AlignCenter()
+                                                .Image(imageBytes).FitArea();
+                                        });
                                     }
                                 }
                                 catch { }
