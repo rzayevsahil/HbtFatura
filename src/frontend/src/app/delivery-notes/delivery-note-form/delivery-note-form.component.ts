@@ -133,9 +133,15 @@ export class DeliveryNoteFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.id = this.route.snapshot.paramMap.get('id');
+    this.lookups.loadLookupsAndDefaultVat().subscribe(({ defaultVat }) => {
+      if (!this.id) {
+        this.items.controls.forEach(c => c.get('vatRate')?.patchValue(defaultVat, { emitEvent: false }));
+      }
+    });
+
     this.customerApi.getDropdown().subscribe(list => this.customers = list);
     this.productApi.getDropdown().subscribe(list => this.products = list);
-    this.id = this.route.snapshot.paramMap.get('id');
 
     // Onaylanan veya kısmi teslim edilen siparişleri getir
     this.orderApi.getPaged({ page: 1, pageSize: 100, status: 3 }).subscribe(res => {
@@ -184,7 +190,7 @@ export class DeliveryNoteFormComponent implements OnInit {
       description: [''],
       quantity: [1],
       unitPrice: [0],
-      vatRate: [18],
+      vatRate: [this.lookups.defaultVatRatePercent()],
       sortOrder: [0]
     });
   }

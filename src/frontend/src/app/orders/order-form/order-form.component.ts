@@ -102,10 +102,16 @@ export class OrderFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.id = this.route.snapshot.paramMap.get('id');
+    this.lookups.loadLookupsAndDefaultVat().subscribe(({ defaultVat }) => {
+      if (!this.id) {
+        this.items.controls.forEach(c => c.get('vatRate')?.patchValue(defaultVat, { emitEvent: false }));
+      }
+    });
+
     this.customerApi.getDropdown().subscribe(list => this.customers = list);
     this.productApi.getDropdown().subscribe(list => this.products = list);
     this.reportApi.getStockLevels().subscribe(data => this.stockLevels = data);
-    this.id = this.route.snapshot.paramMap.get('id');
     if (this.id) {
       this.form.get('customerId')?.setValidators(Validators.required);
       this.form.get('customerId')?.updateValueAndValidity();
@@ -165,7 +171,7 @@ export class OrderFormComponent implements OnInit {
       description: [''],
       quantity: [1],
       unitPrice: [0],
-      vatRate: [18],
+      vatRate: [this.lookups.defaultVatRatePercent()],
       sortOrder: [0]
     });
   }

@@ -1,8 +1,10 @@
+using System.Globalization;
 using HbtFatura.Api.Data;
 using HbtFatura.Api.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace HbtFatura.Api.Controllers;
 
@@ -46,6 +48,28 @@ public class LookupsController : ControllerBase
             .ThenBy(x => x.SortOrder)
             .ToListAsync();
         return Ok(lookups);
+    }
+
+    [HttpGet("default-vat-rate")]
+    public async Task<IActionResult> GetDefaultVatRate([FromServices] IConfiguration config)
+    {
+        var code = await _db.Lookups
+            .AsNoTracking()
+            .Include(x => x.Group)
+            .Where(x => x.Group != null && x.Group.Name == "VatRate" && x.IsActive)
+            .OrderBy(x => x.SortOrder)
+            .Select(x => x.Code)
+            .FirstOrDefaultAsync();
+
+        if (!string.IsNullOrWhiteSpace(code)
+            && decimal.TryParse(code, NumberStyles.Any, CultureInfo.InvariantCulture, out var parsed)
+            && parsed is >= 0 and <= 100)
+            return Ok(new { defaultVatRate = parsed });
+
+        var fallback = config.GetValue("App:DefaultVatRate", 20);
+        if (fallback is < 0 or > 100)
+            fallback = 20;
+        return Ok(new { defaultVatRate = fallback });
     }
 
     [HttpGet("{groupName}")]

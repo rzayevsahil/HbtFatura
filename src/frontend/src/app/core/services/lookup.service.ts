@@ -1,13 +1,17 @@
 import { Injectable, signal, computed } from '@angular/core';
 import { ApiService } from './api.service';
-import { Observable, tap } from 'rxjs';
+import { Observable, forkJoin, map, tap } from 'rxjs';
 
 import { LookupGroupDto, LookupDto } from '../models';
+import { FALLBACK_DEFAULT_VAT_RATE_PERCENT } from '../constants/vat-defaults';
 
 @Injectable({ providedIn: 'root' })
 export class LookupService {
     private lookups = signal<LookupDto[]>([]);
     private groups = signal<LookupGroupDto[]>([]);
+
+    /** Sunucudaki sistem varsayılanı (VatRate lookup / App:DefaultVatRate). */
+    readonly defaultVatRatePercent = signal(FALLBACK_DEFAULT_VAT_RATE_PERCENT);
 
     constructor(private api: ApiService) { }
 
@@ -20,6 +24,24 @@ export class LookupService {
     loadGroups(): Observable<LookupGroupDto[]> {
         return this.api.get<LookupGroupDto[]>('/api/lookups/groups').pipe(
             tap(list => this.groups.set(list))
+        );
+    }
+
+    getDefaultVatRate(): Observable<number> {
+        return this.api.get<{ defaultVatRate: number }>('/api/lookups/default-vat-rate').pipe(
+            map(r => {
+                const v = Number(r?.defaultVatRate);
+                return Number.isFinite(v) && v >= 0 && v <= 100 ? v : FALLBACK_DEFAULT_VAT_RATE_PERCENT;
+            })
+        );
+    }
+
+    loadLookupsAndDefaultVat(): Observable<{ defaultVat: number }> {
+        return forkJoin({
+            _lookups: this.load(),
+            defaultVat: this.getDefaultVatRate()
+        }).pipe(
+            tap(({ defaultVat }) => this.defaultVatRatePercent.set(defaultVat))
         );
     }
 

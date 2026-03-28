@@ -142,9 +142,11 @@ export class InvoiceFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.id = this.route.snapshot.paramMap.get('id');
+    this.lookups.load().subscribe();
+
     this.customerApi.getDropdown().subscribe(list => this.customers = list);
     this.productApi.getDropdown().subscribe(list => this.products = list);
-    this.id = this.route.snapshot.paramMap.get('id');
 
     // Onaylanan (faturaya hazır) irsaliyeleri getir
     this.deliveryNoteApi.getPaged({ page: 1, pageSize: 100, status: 1 }).subscribe(res => {
@@ -193,7 +195,7 @@ export class InvoiceFormComponent implements OnInit {
       description: [''],
       quantity: [1],
       unitPrice: [0],
-      vatRate: [18],
+      vatRate: [this.lookups.defaultVatRatePercent()],
       discountPercent: [0],
       sortOrder: [0]
     });

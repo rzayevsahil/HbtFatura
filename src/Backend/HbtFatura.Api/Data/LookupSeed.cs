@@ -36,6 +36,9 @@ public static class LookupSeed
         if (!existingGroups.Any(x => x.Name == "Currency"))
             groupsToCreate.Add(new LookupGroup { Id = Guid.NewGuid(), Name = "Currency", DisplayName = "Para Birimi", IsSystemGroup = true });
 
+        if (!existingGroups.Any(x => x.Name == "VatRate"))
+            groupsToCreate.Add(new LookupGroup { Id = Guid.NewGuid(), Name = "VatRate", DisplayName = "KDV Oranı (%)", IsSystemGroup = true });
+
         if (groupsToCreate.Any())
         {
             await db.LookupGroups.AddRangeAsync(groupsToCreate);
@@ -52,6 +55,7 @@ public static class LookupSeed
         var deliveryNoteTypeId = existingGroups.First(x => x.Name == "DeliveryNoteType").Id;
         var chequeStatusId = existingGroups.First(x => x.Name == "ChequeStatus").Id;
         var currencyGroupId = existingGroups.First(x => x.Name == "Currency").Id;
+        var vatRateGroupId = existingGroups.First(x => x.Name == "VatRate").Id;
 
         var lookups = new List<Lookup>();
 
@@ -119,6 +123,12 @@ public static class LookupSeed
             lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = currencyGroupId, Code = "TRY", Name = "Türk Lirası", Color = "#0ca678", SortOrder = 1 });
             lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = currencyGroupId, Code = "USD", Name = "Amerikan Doları", Color = "#2563eb", SortOrder = 2 });
             lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = currencyGroupId, Code = "EUR", Name = "Euro", Color = "#f59e0b", SortOrder = 3 });
+        }
+
+        // KDV oranları (Code = yüzde değeri; varsayılan satır App:DefaultVatRate ile uyumlu olmalı)
+        if (!await db.Lookups.AnyAsync(x => x.LookupGroupId == vatRateGroupId))
+        {
+            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = vatRateGroupId, Code = "20", Name = "%20", Color = "#0d9488", SortOrder = 1 });
         }
 
         if (lookups.Any())
