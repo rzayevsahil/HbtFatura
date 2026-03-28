@@ -171,6 +171,7 @@ public class InvoiceService : IInvoiceService
             {
                 invoice.SourceType = ReferenceType.Irsaliye;
                 invoice.SourceId = dn.Id;
+                invoice.InvoiceType = dn.DeliveryType;
                 dn.InvoiceId = invoice.Id;
                 dn.Status = DeliveryNoteStatus.Faturalandi;
                 dn.UpdatedAt = DateTime.UtcNow;
@@ -471,7 +472,7 @@ public class InvoiceService : IInvoiceService
             var stockAlreadyCreated = await _db.StockMovements.AnyAsync(m => m.ReferenceType == ReferenceType.Fatura && m.ReferenceId == id, ct);
             if (!stockAlreadyCreated && invoice.SourceType != ReferenceType.Irsaliye)
             {
-                var stockDirection = invoice.InvoiceType == InvoiceType.Alis ? StockMovementType.Giris : StockMovementType.Cikis;
+                var stockDirection = InventoryStockMovementHelper.MovementTypeForDocument(invoice.InvoiceType);
                 foreach (var item in invoice.Items.Where(i => i.ProductId.HasValue))
                 {
                     var product = await _db.Products.FirstOrDefaultAsync(p => p.Id == item.ProductId!.Value, ct);

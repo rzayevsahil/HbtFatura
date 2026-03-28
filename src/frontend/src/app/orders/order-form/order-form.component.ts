@@ -264,7 +264,7 @@ export class OrderFormComponent implements OnInit {
     this.saving = true;
     const raw = this.form.getRawValue();
 
-    // Satış siparişi (0) ise stok kontrolü yap
+    // Alınan sipariş (0 = Satis): yetersiz stok uyarısı. Verilen sipariş (1 = Alis): stok düşmez/artmaz; kontrol yok.
     if (raw.orderType === 0) {
       for (const it of raw.items) {
         if (!it.productId) continue;

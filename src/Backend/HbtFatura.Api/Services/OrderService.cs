@@ -97,6 +97,7 @@ public class OrderService : IOrderService
         return dto;
     }
 
+    /// <summary>Sipariş (alınan/verilen) kaydı stok miktarını değiştirmez; stok yalnızca onaylanan irsaliye/fatura ile güncellenir.</summary>
     public async Task<OrderDto> CreateAsync(CreateOrderRequest request, CancellationToken ct = default)
     {
         var userId = _currentUser.UserId;

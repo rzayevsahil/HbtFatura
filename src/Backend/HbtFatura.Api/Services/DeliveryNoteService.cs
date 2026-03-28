@@ -278,7 +278,7 @@ public class DeliveryNoteService : IDeliveryNoteService
             var alreadyCreated = await _db.StockMovements.AnyAsync(m => m.ReferenceType == ReferenceType.Irsaliye && m.ReferenceId == id, ct);
             if (!alreadyCreated)
             {
-                var direction = dn.DeliveryType == InvoiceType.Alis ? StockMovementType.Giris : StockMovementType.Cikis;
+                var direction = InventoryStockMovementHelper.MovementTypeForDocument(dn.DeliveryType);
                 foreach (var item in dn.Items.Where(i => i.ProductId.HasValue))
                 {
                     _db.StockMovements.Add(new StockMovement
