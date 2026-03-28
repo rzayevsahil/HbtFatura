@@ -34,6 +34,21 @@ public class ProductsController : ControllerBase
         return Ok(list);
     }
 
+    [HttpGet("code-taken")]
+    [Authorize(Policy = "Products.Edit")]
+    public async Task<ActionResult<object>> GetCodeTaken([FromQuery] string code, [FromQuery] Guid firmId, [FromQuery] Guid? excludeId, CancellationToken ct = default)
+    {
+        try
+        {
+            var taken = await _service.IsProductCodeTakenAsync(code, firmId, excludeId, ct);
+            return Ok(new { taken });
+        }
+        catch (UnauthorizedAccessException)
+        {
+            return Forbid();
+        }
+    }
+
     [HttpGet("{id:guid}")]
     [Authorize(Policy = "Products.View")]
     public async Task<ActionResult<ProductDto>> Get(Guid id, CancellationToken ct = default)
@@ -47,17 +62,31 @@ public class ProductsController : ControllerBase
     [Authorize(Policy = "Products.Edit")]
     public async Task<ActionResult<ProductDto>> Create([FromBody] CreateProductRequest request, CancellationToken ct = default)
     {
-        var dto = await _service.CreateAsync(request, ct);
-        return CreatedAtAction(nameof(Get), new { id = dto.Id }, dto);
+        try
+        {
+            var dto = await _service.CreateAsync(request, ct);
+            return CreatedAtAction(nameof(Get), new { id = dto.Id }, dto);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
     }
 
     [HttpPut("{id:guid}")]
     [Authorize(Policy = "Products.Edit")]
     public async Task<ActionResult<ProductDto>> Update(Guid id, [FromBody] UpdateProductRequest request, CancellationToken ct = default)
     {
-        var dto = await _service.UpdateAsync(id, request, ct);
-        if (dto == null) return NotFound();
-        return Ok(dto);
+        try
+        {
+            var dto = await _service.UpdateAsync(id, request, ct);
+            if (dto == null) return NotFound();
+            return Ok(dto);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
     }
 
     [HttpDelete("{id:guid}")]

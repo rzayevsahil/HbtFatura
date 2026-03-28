@@ -118,6 +118,7 @@ public class BankAccountService : IBankAccountService
         entity.Name = request.Name.Trim();
         entity.Iban = request.Iban?.Trim();
         entity.BankName = request.BankName?.Trim();
+        entity.Currency = string.IsNullOrWhiteSpace(request.Currency) ? entity.Currency : request.Currency.Trim();
         entity.IsActive = request.IsActive;
         await _db.SaveChangesAsync(ct);
         await _log.LogAsync($"Banka hesabı güncellendi: {entity.Name}", "Update", "BankAccount", "Info", $"Id: {entity.Id}");

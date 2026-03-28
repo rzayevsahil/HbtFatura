@@ -26,6 +26,7 @@ export interface CreateCashRegisterRequest {
 
 export interface UpdateCashRegisterRequest {
     name: string;
+    currency: string;
     isActive: boolean;
 }
 

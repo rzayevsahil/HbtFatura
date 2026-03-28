@@ -1,7 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { merge, of } from 'rxjs';
+import { catchError, debounceTime, map, startWith, switchMap } from 'rxjs/operators';
 import { ProductService } from '../../services/product.service';
 import { AuthService } from '../../core/services/auth.service';
 import { FirmService } from '../../services/firm.service';
@@ -17,6 +20,8 @@ import { LookupDto } from '../../core/models';
   styleUrls: ['./product-form.component.scss']
 })
 export class ProductFormComponent implements OnInit {
+  private readonly destroyRef = inject(DestroyRef);
+
   form = this.fb.nonNullable.group({
     code: ['', Validators.required],
     name: ['', Validators.required],
@@ -28,6 +33,8 @@ export class ProductFormComponent implements OnInit {
     firmId: [null as string | null]
   });
   id: string | null = null;
+  /** Düzenlemede kod kontrolü için ürünün firması */
+  private firmIdForScope: string | null = null;
   firms: { id: string; name: string }[] = [];
   currencies: LookupDto[] = [];
   error = '';
@@ -48,22 +55,60 @@ export class ProductFormComponent implements OnInit {
     if (this.auth.user()?.role === 'SuperAdmin') {
       this.firmApi.getAll().subscribe(f => (this.firms = f));
     }
-    // Para birimi lookup'larını yükle
     this.lookups.load().subscribe(list => {
       this.currencies = list.filter(x => x.group?.name === 'Currency' && x.isActive);
     });
     this.id = this.route.snapshot.paramMap.get('id');
+
+    merge(
+      this.form.controls.code.valueChanges.pipe(startWith(this.form.controls.code.getRawValue())),
+      this.form.controls.firmId.valueChanges.pipe(startWith(this.form.controls.firmId.getRawValue()))
+    ).pipe(
+      debounceTime(400),
+      switchMap(() => {
+        const code = (this.form.controls.code.getRawValue() ?? '').toString().trim();
+        const firmId = this.getFirmIdForCodeCheck();
+        if (!code || !firmId) return of(false);
+        return this.api.isCodeTaken(code, firmId, this.id ?? undefined).pipe(
+          map(r => r.taken),
+          catchError(() => of(false))
+        );
+      }),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(taken => this.setDuplicateCodeError(taken));
+
     if (this.id) {
-      this.api.getById(this.id).subscribe(p => this.form.patchValue({
-        code: p.code,
-        name: p.name,
-        barcode: p.barcode ?? '',
-        unit: p.unit ?? 'Adet',
-        stockQuantity: p.stockQuantity ?? 0,
-        unitPrice: p.unitPrice ?? 0,
-        currency: p.currency ?? 'TRY'
-      }));
+      this.api.getById(this.id).subscribe(p => {
+        this.firmIdForScope = p.firmId;
+        this.form.patchValue({
+          code: p.code,
+          name: p.name,
+          barcode: p.barcode ?? '',
+          unit: p.unit ?? 'Adet',
+          stockQuantity: p.stockQuantity ?? 0,
+          unitPrice: p.unitPrice ?? 0,
+          currency: p.currency ?? 'TRY'
+        });
+      });
     }
+  }
+
+  private getFirmIdForCodeCheck(): string | null {
+    if (this.id && this.firmIdForScope) return this.firmIdForScope;
+    if (this.auth.user()?.role === 'SuperAdmin') {
+      const v = this.form.controls.firmId.getRawValue();
+      return v ? String(v) : null;
+    }
+    const fid = this.auth.user()?.firmId;
+    return fid ? String(fid) : null;
+  }
+
+  private setDuplicateCodeError(taken: boolean): void {
+    const c = this.form.controls.code;
+    const errs = { ...(c.errors ?? {}) } as Record<string, unknown>;
+    if (taken) errs['duplicateCode'] = true;
+    else delete errs['duplicateCode'];
+    c.setErrors(Object.keys(errs).length ? errs : null);
   }
 
   onSubmit(): void {

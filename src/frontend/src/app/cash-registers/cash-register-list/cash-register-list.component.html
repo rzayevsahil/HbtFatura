@@ -29,7 +29,7 @@
       <tr>
         <td><a [routerLink]="['/cash-registers', c.id]">{{ c.name }}</a></td>
         <td>{{ c.currency }}</td>
-        <td class="amount">{{ c.balance | number:'1.2-2' }} ₺</td>
+        <td class="amount">{{ c.balance | number:'1.2-2' }} {{ formatCurrencyLabel(c.currency) }}</td>
         <td>{{ c.isActive ? 'Aktif' : 'Pasif' }}</td>
         <td>
           <div class="actions-cell">

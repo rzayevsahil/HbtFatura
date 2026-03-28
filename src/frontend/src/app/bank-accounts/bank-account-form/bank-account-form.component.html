@@ -30,7 +30,11 @@
       </div>
       <div class="row">
         <label>Para birimi</label>
-        <input formControlName="currency" placeholder="TRY" required />
+        <select formControlName="currency" required>
+          @for (c of currencies; track c.id) {
+          <option [value]="c.code">{{ c.name }} ({{ c.code }})</option>
+          }
+        </select>
       </div>
       @if (id) {
       <div class="row">

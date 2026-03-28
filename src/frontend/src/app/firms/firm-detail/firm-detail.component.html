@@ -82,7 +82,7 @@
         <td>{{ u.createdAt | date:'dd.MM.yyyy' }}</td>
         @if (auth.hasPermission('Employees.Edit')) {
         <td>
-          <a [routerLink]="['/employees', u.id, 'edit']" class="btn-sm">Düzenle</a>
+          <a [routerLink]="['/employees', u.id, 'edit']" [queryParams]="{ returnUrl: '/firms/' + firm.id }" class="btn-sm">Düzenle</a>
         </td>
         }
       </tr>

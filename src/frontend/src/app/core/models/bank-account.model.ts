@@ -32,6 +32,7 @@ export interface UpdateBankAccountRequest {
     name: string;
     iban?: string;
     bankName?: string;
+    currency: string;
     isActive: boolean;
 }
 

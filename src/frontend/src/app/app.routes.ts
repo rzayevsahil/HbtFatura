@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
 import { companyGuard } from './core/guards/company.guard';
-import { superAdminGuard } from './core/guards/super-admin.guard';
+import { superAdminGuard, notSuperAdminGuard } from './core/guards/super-admin.guard';
 import { firmBusinessGuard } from './core/guards/firm-business.guard';
 import { PermissionGuard } from './core/guards/permission.guard';
 
@@ -245,8 +245,8 @@ export const routes: Routes = [
   { path: 'firms/new', loadComponent: () => import('./firms/firm-form/firm-form.component').then(m => m.FirmFormComponent), canActivate: [authGuard, superAdminGuard] },
   { path: 'firms/:id', loadComponent: () => import('./firms/firm-detail/firm-detail.component').then(m => m.FirmDetailComponent), canActivate: [authGuard] },
 
-  { path: 'employees', loadComponent: () => import('./employees/employee-list/employee-list.component').then(m => m.EmployeeListComponent), canActivate: [authGuard, PermissionGuard], data: { permission: 'Employees.View' } },
-  { path: 'employees/new', loadComponent: () => import('./employees/employee-form/employee-form.component').then(m => m.EmployeeFormComponent), canActivate: [authGuard, PermissionGuard], data: { permission: 'Employees.Edit' } },
+  { path: 'employees', loadComponent: () => import('./employees/employee-list/employee-list.component').then(m => m.EmployeeListComponent), canActivate: [authGuard, notSuperAdminGuard, PermissionGuard], data: { permission: 'Employees.View' } },
+  { path: 'employees/new', loadComponent: () => import('./employees/employee-form/employee-form.component').then(m => m.EmployeeFormComponent), canActivate: [authGuard, notSuperAdminGuard, PermissionGuard], data: { permission: 'Employees.Edit' } },
   { path: 'employees/:id/edit', loadComponent: () => import('./employees/employee-form/employee-form.component').then(m => m.EmployeeFormComponent), canActivate: [authGuard, PermissionGuard], data: { permission: 'Employees.Edit' } },
 
   { path: 'dashboard', loadComponent: () => import('./dashboard/dashboard.component').then(m => m.DashboardComponent), canActivate: [authGuard] },

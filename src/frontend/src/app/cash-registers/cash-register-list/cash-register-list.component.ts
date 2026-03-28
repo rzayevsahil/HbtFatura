@@ -8,6 +8,7 @@ import { AuthService } from '../../core/services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 
 import { ConfirmModalComponent } from '../../shared/confirm-modal/confirm-modal.component';
+import { currencyDisplaySuffix } from '../../core/utils/currency-display';
 
 @Component({
   selector: 'app-cash-register-list',
@@ -61,6 +62,11 @@ export class CashRegisterListComponent implements OnInit {
   onDeleteClick(id: string, name: string): void {
     this.deletingRegister = { id, name };
     this.showDeleteModal = true;
+  }
+
+  /** Bakiye yanında gösterilecek para kodu (core/utils/currency-display). */
+  formatCurrencyLabel(code: string | undefined | null): string {
+    return currencyDisplaySuffix(code);
   }
 
   confirmDelete(): void {

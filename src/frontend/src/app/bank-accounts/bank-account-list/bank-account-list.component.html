@@ -20,6 +20,7 @@
         <th>Hesap adı</th>
         <th>Banka</th>
         <th>IBAN</th>
+        <th>Para birimi</th>
         <th>Bakiye</th>
         <th>Durum</th>
         <th></th>
@@ -31,7 +32,8 @@
         <td><a [routerLink]="['/bank-accounts', b.id]">{{ b.name }}</a></td>
         <td>{{ b.bankName }}</td>
         <td>{{ b.iban }}</td>
-        <td class="amount">{{ b.balance | number:'1.2-2' }} ₺</td>
+        <td>{{ b.currency }}</td>
+        <td class="amount">{{ b.balance | number:'1.2-2' }} {{ formatCurrencyLabel(b.currency) }}</td>
         <td>{{ b.isActive ? 'Aktif' : 'Pasif' }}</td>
         <td>
           <div class="actions-cell">

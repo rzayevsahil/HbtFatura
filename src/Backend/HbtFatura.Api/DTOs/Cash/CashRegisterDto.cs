@@ -21,6 +21,7 @@ public class CreateCashRegisterRequest
 public class UpdateCashRegisterRequest
 {
     public string Name { get; set; } = string.Empty;
+    public string Currency { get; set; } = "TRY";
     public bool IsActive { get; set; }
 }
 

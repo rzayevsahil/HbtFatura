@@ -161,7 +161,7 @@ export class DeliveryNoteFormComponent implements OnInit {
             const p = this.products.find(x => x.id === it.productId);
             this.items.push(this.fb.nonNullable.group({
               productId: [it.productId ?? null],
-              productCode: [p?.code || ''],
+              productCode: [it.productCode || p?.code || ''],
               orderItemId: [it.orderItemId ?? null],
               description: [it.description],
               quantity: [it.quantity],

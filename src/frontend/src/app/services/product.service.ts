@@ -23,6 +23,13 @@ export class ProductService {
     return this.api.get<ProductDto>(`${this.base}/${id}`);
   }
 
+  /** Aynı firmada ürün kodu kullanımda mı (form doğrulama). */
+  isCodeTaken(code: string, firmId: string, excludeProductId?: string): Observable<{ taken: boolean }> {
+    const params: Record<string, string> = { code, firmId };
+    if (excludeProductId) params['excludeId'] = excludeProductId;
+    return this.api.get<{ taken: boolean }>(`${this.base}/code-taken`, params);
+  }
+
   create(req: CreateProductRequest): Observable<ProductDto> {
     return this.api.post<ProductDto>(this.base, req);
   }

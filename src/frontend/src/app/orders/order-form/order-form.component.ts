@@ -121,9 +121,10 @@ export class OrderFormComponent implements OnInit {
         this.items.clear();
         o.items.forEach((it, idx) => {
           const p = this.products.find(x => x.id === it.productId);
+          // API satırında productCode var; ürün listesi henüz yüklenmediyse yine dolu olsun (yarış koşulu).
           this.items.push(this.fb.nonNullable.group({
             productId: [it.productId ?? null],
-            productCode: [p?.code || ''],
+            productCode: [it.productCode || p?.code || ''],
             description: [it.description],
             quantity: [it.quantity],
             unitPrice: [it.unitPrice],

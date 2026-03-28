@@ -8,6 +8,7 @@ import { AuthService } from '../../core/services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 
 import { ConfirmModalComponent } from '../../shared/confirm-modal/confirm-modal.component';
+import { currencyDisplaySuffix } from '../../core/utils/currency-display';
 
 @Component({
   selector: 'app-product-list',
@@ -50,6 +51,10 @@ export class ProductListComponent implements OnInit {
         this.loading = false;
       }
     });
+  }
+
+  formatCurrencyLabel(code: string | undefined | null): string {
+    return currencyDisplaySuffix(code);
   }
 
   applySearch(): void {

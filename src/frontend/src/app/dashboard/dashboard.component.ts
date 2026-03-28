@@ -15,6 +15,7 @@ import { DashboardData } from '../core/models';
 export class DashboardComponent implements OnInit {
     data = signal<DashboardData | null>(null);
     loading = signal(true);
+    readonly today = new Date();
 
     constructor(
         public auth: AuthService,

@@ -26,7 +26,7 @@
       <button class="btn btn-primary" type="submit" [disabled]="form.invalid || saving">
         {{ id ? 'Güncelle' : 'Oluştur' }}
       </button>
-      <a routerLink="/employees">İptal</a>
+      <a [routerLink]="cancelUrl">İptal</a>
     </div>
   </form>
 </div>

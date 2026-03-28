@@ -110,7 +110,8 @@ public static class RoleSeed
         var superAdminRole = await roleManager.FindByNameAsync(Roles.SuperAdmin);
         if (superAdminRole != null)
         {
-            var adminPermCodes = new[] { "Dashboard.View", "Lookups.", "Roles.", "Menus.", "Logs.", "Firms.", "CompanyProfile.Edit" };
+            // SuperAdmin: sistem + firma yönetimi; Employees.* firma detayından çalışan düzenleme ve API (genel /employees listesi menü ve servis tarafında kısıtlı).
+            var adminPermCodes = new[] { "Dashboard.View", "Lookups.", "Roles.", "Menus.", "Logs.", "Firms.", "CompanyProfile.Edit", "Employees." };
             var adminPerms = allPerms.Where(x => adminPermCodes.Any(code => x.Code.StartsWith(code))).ToList();
 
             // Add missing permissions

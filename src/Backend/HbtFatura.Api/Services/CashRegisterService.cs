@@ -110,6 +110,7 @@ public class CashRegisterService : ICashRegisterService
         var entity = await ScopeQuery().FirstOrDefaultAsync(x => x.Id == id, ct);
         if (entity == null) return null;
         entity.Name = request.Name.Trim();
+        entity.Currency = string.IsNullOrWhiteSpace(request.Currency) ? entity.Currency : request.Currency.Trim();
         entity.IsActive = request.IsActive;
         await _db.SaveChangesAsync(ct);
         await _log.LogAsync($"Kasa güncellendi: {entity.Name}", "Update", "CashRegister", "Info", $"Id: {entity.Id}");

@@ -35,6 +35,28 @@ public class ProductService : IProductService
         return _db.Products.Where(x => false);
     }
 
+    private static string NormalizeProductCode(string code) => code.Trim().ToLowerInvariant();
+
+    private async Task<bool> IsDuplicateProductCodeAsync(Guid firmId, string code, Guid? excludeProductId, CancellationToken ct)
+    {
+        var norm = NormalizeProductCode(code);
+        return await _db.Products.AnyAsync(p =>
+            p.FirmId == firmId &&
+            (!excludeProductId.HasValue || p.Id != excludeProductId.Value) &&
+            p.Code.ToLower() == norm, ct);
+    }
+
+    public async Task<bool> IsProductCodeTakenAsync(string code, Guid firmId, Guid? excludeProductId, CancellationToken ct = default)
+    {
+        if (string.IsNullOrWhiteSpace(code)) return false;
+        if (!_currentUser.IsSuperAdmin)
+        {
+            if (!_currentUser.FirmId.HasValue || _currentUser.FirmId.Value != firmId)
+                throw new UnauthorizedAccessException();
+        }
+        return await IsDuplicateProductCodeAsync(firmId, code, excludeProductId, ct);
+    }
+
     public async Task<PagedResult<ProductListDto>> GetPagedAsync(int page, int pageSize, string? search, Guid? firmId, CancellationToken ct = default)
     {
         var query = ScopeQuery(firmId);
@@ -99,6 +121,9 @@ public class ProductService : IProductService
 
         if (request.StockQuantity < 0) throw new ArgumentException("Başlangıç stok miktarı sıfırdan küçük olamaz.");
 
+        if (await IsDuplicateProductCodeAsync(firmId, request.Code, null, ct))
+            throw new ArgumentException("Bu ürün kodu bu firmada zaten kullanılıyor. Farklı bir kod girin.");
+
         var entity = new Product
         {
             Id = Guid.NewGuid(),
@@ -139,6 +164,10 @@ public class ProductService : IProductService
     {
         var entity = await ScopeQuery().FirstOrDefaultAsync(x => x.Id == id, ct);
         if (entity == null) return null;
+
+        if (await IsDuplicateProductCodeAsync(entity.FirmId, request.Code, entity.Id, ct))
+            throw new ArgumentException("Bu ürün kodu bu firmada zaten kullanılıyor. Farklı bir kod girin.");
+
         entity.Code = request.Code.Trim();
         entity.Name = request.Name.Trim();
         entity.Barcode = request.Barcode?.Trim();

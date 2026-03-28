@@ -8,6 +8,8 @@ import { FirmDto, BankAccountDto } from '../../core/models';
 import { AuthService } from '../../core/services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { IbanFormatter } from '../../core/utils/iban-formatter';
+import { LookupService } from '../../core/services/lookup.service';
+import { LookupDto } from '../../core/models';
 
 @Component({
   selector: 'app-bank-account-form',
@@ -27,6 +29,7 @@ export class BankAccountFormComponent implements OnInit {
   });
   id: string | null = null;
   firms: FirmDto[] = [];
+  currencies: LookupDto[] = [];
   error = '';
   saving = false;
 
@@ -37,10 +40,14 @@ export class BankAccountFormComponent implements OnInit {
     private api: BankAccountService,
     private firmApi: FirmService,
     public auth: AuthService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private lookups: LookupService
   ) { }
 
   ngOnInit(): void {
+    this.lookups.load().subscribe(list => {
+      this.currencies = list.filter(x => x.group?.name === 'Currency' && x.isActive);
+    });
     this.id = this.route.snapshot.paramMap.get('id');
     if (this.auth.user()?.role === 'SuperAdmin') {
       this.firmApi.getAll().subscribe(list => this.firms = list);
@@ -73,7 +80,13 @@ export class BankAccountFormComponent implements OnInit {
     if ('firmId' in v && v.firmId) req.firmId = v.firmId;
 
     if (this.id) {
-      this.api.update(this.id, { name: v.name, iban: v.iban || undefined, bankName: v.bankName || undefined, isActive: v.isActive }).subscribe({
+      this.api.update(this.id, {
+        name: v.name,
+        iban: v.iban || undefined,
+        bankName: v.bankName || undefined,
+        currency: v.currency,
+        isActive: v.isActive
+      }).subscribe({
         next: () => {
           this.toastr.success('Banka hesabı güncellendi.');
           this.router.navigate(['/bank-accounts']);

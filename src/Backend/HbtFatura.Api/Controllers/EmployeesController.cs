@@ -26,7 +26,7 @@ public class EmployeesController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize(Roles = Roles.FirmAdmin + "," + Roles.SuperAdmin)]
+    [Authorize(Roles = Roles.FirmAdmin)]
     public async Task<ActionResult<EmployeeListDto>> Create([FromBody] CreateEmployeeRequest request, CancellationToken ct)
     {
         // ... handled in service but double check with attribute
@@ -62,7 +62,7 @@ public class EmployeesController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    [Authorize(Roles = Roles.FirmAdmin + "," + Roles.SuperAdmin)]
+    [Authorize(Roles = Roles.FirmAdmin)]
     public async Task<IActionResult> Delete(Guid id, CancellationToken ct)
     {
         try

@@ -45,8 +45,6 @@ public class CurrentUserContext : ICurrentUserContext
 
     public async Task<bool> HasPermissionAsync(string permissionCode, AppDbContext db, CancellationToken ct = default)
     {
-        if (IsSuperAdmin) return true;
-        
         var userId = UserId;
         if (userId == Guid.Empty) return false;
 

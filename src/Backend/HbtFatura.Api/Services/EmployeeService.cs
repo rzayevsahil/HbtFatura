@@ -20,23 +20,24 @@ public class EmployeeService : IEmployeeService
         _currentUser = currentUser;
     }
 
-    private IQueryable<ApplicationUser> ScopeQuery(Guid? firmIdFilter = null)
+    /// <summary>Firma kullanıcıları (çalışan düzenleme). SuperAdmin tüm firmalar; diğer roller kendi firması.</summary>
+    private IQueryable<ApplicationUser> ScopeQuery()
     {
         var baseQuery = _db.Users.AsQueryable();
-
         if (_currentUser.IsSuperAdmin)
-        {
-            if (firmIdFilter.HasValue)
-                return baseQuery.Where(u => u.FirmId == firmIdFilter.Value);
-            return baseQuery.Where(u => u.FirmId != null); // SuperAdmin see all firm users
-        }
-
+            return baseQuery.Where(u => u.FirmId != null);
+        if (!_currentUser.FirmId.HasValue)
+            return baseQuery.Where(u => false);
         return baseQuery.Where(u => u.FirmId == _currentUser.FirmId);
     }
 
     public async Task<IReadOnlyList<EmployeeListDto>> GetByFirmAsync(CancellationToken ct = default)
     {
         if (!await _currentUser.HasPermissionAsync("Employees.View", _db, ct))
+            return Array.Empty<EmployeeListDto>();
+
+        // SuperAdmin: genel personel listesi yok; liste firma detayında Firmalar/{id}/users ile.
+        if (_currentUser.IsSuperAdmin)
             return Array.Empty<EmployeeListDto>();
 
         return await ScopeQuery()
@@ -57,9 +58,9 @@ public class EmployeeService : IEmployeeService
         if (!await _currentUser.HasPermissionAsync("Employees.Edit", _db, ct))
             throw new UnauthorizedAccessException("Personel oluşturma yetkiniz bulunmamaktadır.");
 
-        var effectiveFirmId = _currentUser.IsSuperAdmin ? (request.FirmId ?? _currentUser.FirmId) : _currentUser.FirmId;
-        if (!effectiveFirmId.HasValue)
+        if (!_currentUser.FirmId.HasValue)
             throw new ArgumentException("FirmId is required.");
+        var effectiveFirmId = _currentUser.FirmId.Value;
 
         var email = request.Email.Trim().ToLowerInvariant();
         if (await _userManager.FindByEmailAsync(email) != null)
@@ -72,7 +73,7 @@ public class EmployeeService : IEmployeeService
             Email = email,
             FullName = request.FullName.Trim(),
             CreatedAt = DateTime.UtcNow,
-            FirmId = effectiveFirmId.Value
+            FirmId = effectiveFirmId
         };
         var result = await _userManager.CreateAsync(user, request.Password);
         if (!result.Succeeded)

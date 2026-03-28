@@ -8,6 +8,7 @@ import { AuthService } from '../../core/services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 
 import { ConfirmModalComponent } from '../../shared/confirm-modal/confirm-modal.component';
+import { currencyDisplaySuffix } from '../../core/utils/currency-display';
 
 @Component({
   selector: 'app-bank-account-list',
@@ -55,8 +56,13 @@ export class BankAccountListComponent implements OnInit {
       b =>
         b.name?.toLowerCase().includes(q) ||
         b.bankName?.toLowerCase().includes(q) ||
-        b.iban?.toLowerCase().includes(q)
+        b.iban?.toLowerCase().includes(q) ||
+        b.currency?.toLowerCase().includes(q)
     );
+  }
+
+  formatCurrencyLabel(code: string | undefined | null): string {
+    return currencyDisplaySuffix(code);
   }
 
   onDeleteClick(id: string, name: string): void {

@@ -18,6 +18,9 @@
       <div class="row">
         <label>Kod</label>
         <input formControlName="code" placeholder="Ürün kodu" />
+        @if (form.controls.code.errors?.['duplicateCode']) {
+        <small class="error-msg">Bu kod zaten kullanılıyor.</small>
+        }
       </div>
       <div class="row">
         <label>Ad</label>

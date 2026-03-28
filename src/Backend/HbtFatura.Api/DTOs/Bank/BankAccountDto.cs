@@ -27,6 +27,7 @@ public class UpdateBankAccountRequest
     public string Name { get; set; } = string.Empty;
     public string? Iban { get; set; }
     public string? BankName { get; set; }
+    public string Currency { get; set; } = "TRY";
     public bool IsActive { get; set; }
 }
 

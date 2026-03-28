@@ -9,8 +9,7 @@
     <header class="dashboard-header animate-fade-in">
         <div class="welcome">
             <h1>Hoş Geldiniz, {{ auth.user()?.fullName }} 👋</h1>
-            <p>{{ auth.user()?.role === 'SuperAdmin' ? 'Sistem Yönetim Paneli' : (auth.user()?.firmName || 'HBT Fatura
-                Panel') }} — {{ '2026-03-08' | date:'dd MMMM yyyy' }}</p>
+            <p>{{ auth.user()?.role === 'SuperAdmin' ? 'Sistem Yönetim Paneli' : (auth.user()?.firmName || 'HBT Fatura Panel') }} — {{ today | date:'dd MMMM yyyy' }}</p>
         </div>
         <div class="header-actions">
             @if (auth.user()?.role === 'SuperAdmin') {

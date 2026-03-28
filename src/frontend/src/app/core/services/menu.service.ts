@@ -23,8 +23,19 @@ export class MenuService {
 
     fetchMenu(): Observable<MenuItem[]> {
         return this.http.get<MenuItem[]>('/api/menu').pipe(
-            tap(items => this.menuItems.set(items))
+            tap(items => this.menuItems.set(this.filterSidebarForRole(items)))
         );
+    }
+
+    /** SuperAdmin: Personel menüsü gizli; çalışan yönetimi yalnızca firma detayından. */
+    private filterSidebarForRole(items: MenuItem[]): MenuItem[] {
+        const role = this.auth.user()?.role;
+        return items
+            .map(item => ({
+                ...item,
+                children: item.children?.length ? this.filterSidebarForRole(item.children) : item.children
+            }))
+            .filter(item => !(role === 'SuperAdmin' && item.routerLink === '/employees'));
     }
 
     // Management APIs

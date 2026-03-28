@@ -156,19 +156,11 @@ public class AuthService : IAuthService
         var userWithFirm = await _db.Users.Include(x => x.Firm).FirstOrDefaultAsync(x => x.Id == user.Id, ct);
         var firmName = userWithFirm?.Firm?.Name;
 
-        var userPermissions = new List<string>();
-        if (roleName == Roles.SuperAdmin)
-        {
-            userPermissions = await _db.Permissions.Select(p => p.Code).ToListAsync(ct);
-        }
-        else
-        {
-            userPermissions = await (from ur in _db.UserRoles
+        var userPermissions = await (from ur in _db.UserRoles
                                      join rp in _db.RolePermissions on ur.RoleId equals rp.RoleId
                                      join p in _db.Permissions on rp.PermissionId equals p.Id
                                      where ur.UserId == user.Id
                                      select p.Code).ToListAsync(ct);
-        }
 
         var accessToken = GenerateAccessToken(user, roleName, firmName);
         var refreshTokenEntity = await CreateRefreshTokenAsync(user.Id, ipAddress, ct);

@@ -4,6 +4,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { EmployeeService } from '../../services/employee.service';
 import { ToastrService } from 'ngx-toastr';
+import { sanitizeInternalReturnUrl } from '../../core/utils/sanitize-return-url';
 
 @Component({
   selector: 'app-employee-form',
@@ -21,6 +22,8 @@ export class EmployeeFormComponent implements OnInit {
   id: string | null = null;
   error = '';
   saving = false;
+  /** Firma detayından gelindiyse iptal ve bazı yönlendirmeler için */
+  cancelUrl = '/employees';
 
   constructor(
     private fb: FormBuilder,
@@ -31,6 +34,10 @@ export class EmployeeFormComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    const q = this.route.snapshot.queryParamMap.get('returnUrl');
+    const safe = sanitizeInternalReturnUrl(q);
+    if (safe) this.cancelUrl = safe;
+
     this.id = this.route.snapshot.paramMap.get('id');
     if (this.id) {
       // Düzenleme modunda şifre zorunlu olmasın
@@ -65,7 +72,7 @@ export class EmployeeFormComponent implements OnInit {
         if (res.firmId) {
           this.router.navigate(['/firms', res.firmId]);
         } else {
-          this.router.navigate(['/employees']);
+          this.router.navigateByUrl(this.cancelUrl);
         }
       },
       error: (e: any) => {
