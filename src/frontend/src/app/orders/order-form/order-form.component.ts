@@ -23,6 +23,8 @@ export class OrderFormComponent implements OnInit {
 
   form: FormGroup;
   id: string | null = null;
+  /** Düzenleme sayfasında sipariş API’den gelene kadar */
+  editLoading = false;
   orderNumber: string | null = null;
   customers: CustomerDto[] = [];
   products: ProductDto[] = [];
@@ -114,32 +116,38 @@ export class OrderFormComponent implements OnInit {
     this.productApi.getDropdown().subscribe(list => this.products = list);
     this.reportApi.getStockLevels().subscribe(data => this.stockLevels = data);
     if (this.id) {
+      this.editLoading = true;
       this.form.get('customerId')?.setValidators(Validators.required);
       this.form.get('customerId')?.updateValueAndValidity();
-      this.orderApi.getById(this.id).subscribe(o => {
-        this.orderNumber = o.orderNumber ?? null;
-        const orderTypeNum = this.normalizeOrderType(o.orderType);
-        this.form.patchValue({
-          customerId: o.customerId ?? null,
-          orderDate: this.toDatetimeLocalValue(o.orderDate),
-          orderType: orderTypeNum,
-          status: 0
-        });
-        this.items.clear();
-        o.items.forEach((it, idx) => {
-          const p = this.products.find(x => x.id === it.productId);
-          // API satırında productCode var; ürün listesi henüz yüklenmediyse yine dolu olsun (yarış koşulu).
-          this.items.push(this.fb.nonNullable.group({
-            productId: [it.productId ?? null],
-            productCode: [it.productCode || p?.code || ''],
-            description: [it.description],
-            unit: [it.unit || 'Adet'],
-            quantity: [it.quantity],
-            unitPrice: [it.unitPrice],
-            vatRate: [it.vatRate],
-            sortOrder: [idx]
-          }));
-        });
+      this.orderApi.getById(this.id).subscribe({
+        next: (o) => {
+          this.orderNumber = o.orderNumber ?? null;
+          const orderTypeNum = this.normalizeOrderType(o.orderType);
+          this.form.patchValue({
+            customerId: o.customerId ?? null,
+            orderDate: this.toDatetimeLocalValue(o.orderDate),
+            orderType: orderTypeNum,
+            status: 0
+          });
+          this.items.clear();
+          o.items.forEach((it, idx) => {
+            const p = this.products.find(x => x.id === it.productId);
+            this.items.push(this.fb.nonNullable.group({
+              productId: [it.productId ?? null],
+              productCode: [it.productCode || p?.code || ''],
+              description: [it.description],
+              unit: [it.unit || 'Adet'],
+              quantity: [it.quantity],
+              unitPrice: [it.unitPrice],
+              vatRate: [it.vatRate],
+              sortOrder: [idx]
+            }));
+          });
+          this.editLoading = false;
+        },
+        error: () => {
+          this.editLoading = false;
+        }
       });
     }
   }
@@ -234,7 +242,7 @@ export class OrderFormComponent implements OnInit {
 
   @HostListener('document:keydown', ['$event'])
   onKeyDown(e: KeyboardEvent): void {
-    if (e.key === 'F9' && !this.saving && this.form.valid && !['INPUT', 'TEXTAREA', 'SELECT'].includes((e.target as HTMLElement)?.tagName)) {
+    if (e.key === 'F9' && !this.saving && !this.editLoading && this.form.valid && !['INPUT', 'TEXTAREA', 'SELECT'].includes((e.target as HTMLElement)?.tagName)) {
       e.preventDefault();
       this.onSubmit();
     }

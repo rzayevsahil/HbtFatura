@@ -1,6 +1,12 @@
 <div class="page-header">
   <h1 class="page-title">{{ id ? 'Cari Düzenle' : 'Yeni Cari' }}</h1>
 </div>
+@if (formInitialLoading) {
+<div class="loading-container">
+  <div class="spinner"></div>
+  <p>Veriler yükleniyor...</p>
+</div>
+} @else {
 <div class="card">
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <div class="form-grid">
@@ -168,3 +174,4 @@
     </div>
   </form>
 </div>
+}

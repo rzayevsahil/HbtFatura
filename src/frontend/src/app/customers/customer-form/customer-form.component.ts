@@ -88,6 +88,8 @@ export class CustomerFormComponent implements OnInit {
     website: ['']
   });
   id: string | null = null;
+  /** Düzenlemede cari API’den gelene kadar */
+  formInitialLoading = false;
   error = '';
   saving = false;
 
@@ -152,6 +154,9 @@ export class CustomerFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.id = this.route.snapshot.paramMap.get('id');
+    if (this.id) {
+      this.formInitialLoading = true;
+    }
     const taxCtrl = this.form.get('taxNumber');
     taxCtrl?.addAsyncValidators(
       taxNumberUniqueAsyncValidator(this.taxNumberValidation, 'customer', {
@@ -166,42 +171,48 @@ export class CustomerFormComponent implements OnInit {
     });
     this.taxOfficeApi.getCities().subscribe(res => this.cities = res);
     if (this.id) {
-      this.api.getById(this.id).subscribe(c => {
-        this.form.patchValue({
-          mainAccountCode: c.mainAccountCode ?? '',
-          code: c.code ?? '',
-          title: c.title,
-          taxPayerType: c.taxPayerType ?? 2,
-          cardType: c.cardType ?? 1,
-          taxNumber: c.taxNumber ?? '',
-          address: c.address ?? '',
-          cityId: c.cityId,
-          districtId: c.districtId,
-          taxOfficeId: c.taxOfficeId,
-          postalCode: c.postalCode ?? '',
-          country: c.country ?? '',
-          phone: c.phone ? PhoneFormatter.format(c.phone) : '',
-          email: c.email ?? '',
-          website: c.website ?? ''
-        });
-
-        if (c.cityId) {
-          this.selectedCityName = c.cityName ?? '';
-          this.selectedDistrictName = c.districtName ?? '';
-          this.taxOfficeApi.getDistricts(c.cityId).subscribe(res => {
-            this.districts = res;
-            this.form.patchValue({ districtId: c.districtId });
-
-            if (c.cityId && c.districtId) {
-              this.selectedTaxOfficeName = c.taxOfficeName ?? '';
-              this.taxOfficeApi.getOffices(c.cityId, c.districtId).subscribe(offices => {
-                this.taxOffices = offices;
-                this.form.patchValue({ taxOfficeId: c.taxOfficeId });
-              });
-            }
+      this.api.getById(this.id).subscribe({
+        next: (c) => {
+          this.form.patchValue({
+            mainAccountCode: c.mainAccountCode ?? '',
+            code: c.code ?? '',
+            title: c.title,
+            taxPayerType: c.taxPayerType ?? 2,
+            cardType: c.cardType ?? 1,
+            taxNumber: c.taxNumber ?? '',
+            address: c.address ?? '',
+            cityId: c.cityId,
+            districtId: c.districtId,
+            taxOfficeId: c.taxOfficeId,
+            postalCode: c.postalCode ?? '',
+            country: c.country ?? '',
+            phone: c.phone ? PhoneFormatter.format(c.phone) : '',
+            email: c.email ?? '',
+            website: c.website ?? ''
           });
+
+          if (c.cityId) {
+            this.selectedCityName = c.cityName ?? '';
+            this.selectedDistrictName = c.districtName ?? '';
+            this.taxOfficeApi.getDistricts(c.cityId).subscribe(res => {
+              this.districts = res;
+              this.form.patchValue({ districtId: c.districtId });
+
+              if (c.cityId && c.districtId) {
+                this.selectedTaxOfficeName = c.taxOfficeName ?? '';
+                this.taxOfficeApi.getOffices(c.cityId, c.districtId).subscribe(offices => {
+                  this.taxOffices = offices;
+                  this.form.patchValue({ taxOfficeId: c.taxOfficeId });
+                });
+              }
+            });
+          }
+          this.onMainAccountCodesLoaded();
+          this.formInitialLoading = false;
+        },
+        error: () => {
+          this.formInitialLoading = false;
         }
-        this.onMainAccountCodesLoaded();
       });
     }
   }

@@ -19,7 +19,12 @@
     <button type="button" (click)="downloadInvoiceReportExcel()">Excel indir</button>
     }
   </div>
-  @if (invoiceLoading) { <p>Yükleniyor...</p> }
+  @if (invoiceLoading) {
+  <div class="report-loading">
+    <div class="spinner"></div>
+    <span>Yükleniyor...</span>
+  </div>
+  }
   @if (invoiceData && !invoiceLoading) {
   <p>{{ invoiceData.customerTitle ? invoiceData.customerTitle + ' — ' : '' }}Toplam {{ invoiceData.items.length }}
     fatura</p>
@@ -69,7 +74,12 @@
     <button type="button" (click)="downloadCariExcel()">Excel indir</button>
     }
   </div>
-  @if (cariLoading) { <p>Yükleniyor...</p> }
+  @if (cariLoading) {
+  <div class="report-loading">
+    <div class="spinner"></div>
+    <span>Yükleniyor...</span>
+  </div>
+  }
   @if (cariData && !cariLoading) {
   <p><strong>{{ cariData.customerTitle }}</strong> — Açılış: {{ cariData.openingBalance | number:'1.2-2' }} ₺ — Kapanış:
     {{ cariData.closingBalance | number:'1.2-2' }} ₺</p>
@@ -113,7 +123,12 @@
     <input type="date" [(ngModel)]="cashDateTo" />
     <button type="button" (click)="loadCash()" [disabled]="cashLoading">Yükle</button>
   </div>
-  @if (cashLoading) { <p>Yükleniyor...</p> }
+  @if (cashLoading) {
+  <div class="report-loading">
+    <div class="spinner"></div>
+    <span>Yükleniyor...</span>
+  </div>
+  }
   @if (cashData && !cashLoading) {
   <p>Açılış: {{ cashData.openingBalance | number:'1.2-2' }} — Giriş: {{ cashData.totalGiris | number:'1.2-2' }} — Çıkış:
     {{ cashData.totalCikis | number:'1.2-2' }} — Kapanış: {{ cashData.closingBalance | number:'1.2-2' }} ₺</p>
@@ -186,7 +201,12 @@
     <button type="button" (click)="loadStock()" [disabled]="stockLoading">Yükle</button>
     <button type="button" (click)="downloadStockPdf()">PDF indir</button>
   </div>
-  @if (stockLoading) { <p>Yükleniyor...</p> }
+  @if (stockLoading) {
+  <div class="report-loading">
+    <div class="spinner"></div>
+    <span>Yükleniyor...</span>
+  </div>
+  }
   @if (stockData && !stockLoading) {
   <div class="table-wrap">
     <table>
@@ -227,7 +247,12 @@
     </select>
     <button type="button" (click)="loadMonthlyProductSales()" [disabled]="monthlyLoading">Yükle</button>
   </div>
-  @if (monthlyLoading) { <p>Yükleniyor...</p> }
+  @if (monthlyLoading) {
+  <div class="report-loading">
+    <div class="spinner"></div>
+    <span>Yükleniyor...</span>
+  </div>
+  }
   @if (monthlyData && !monthlyLoading) {
   <p>Toplam {{ monthlyData.items.length }} satır</p>
   <div class="table-wrap">

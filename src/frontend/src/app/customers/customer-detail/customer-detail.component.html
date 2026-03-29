@@ -8,13 +8,21 @@
       <a [routerLink]="['/customers', customer.id, 'edit']" class="btn btn-primary">Düzenle</a>
     </div>
     } @else {
-    <p>Yükleniyor...</p>
+    <h1 class="page-title">Cari detay</h1>
+    @if (!loading) {
+    <p class="text-muted">Kayıt bulunamadı veya yüklenemedi.</p>
+    }
     }
   </div>
   <a routerLink="/customers" class="back-link">← Geri</a>
 </div>
 
-@if (customer) {
+@if (loading) {
+<div class="loading-container">
+  <div class="spinner"></div>
+  <p>Veriler yükleniyor...</p>
+</div>
+} @else if (customer) {
 <section class="card info-section">
   <h2 class="card-title">Cari bilgileri</h2>
   <dl class="info-list">

@@ -20,7 +20,12 @@
   <input type="date" [(ngModel)]="filterDueTo" (change)="applyFilter()" placeholder="Vade to" />
   <button type="button" (click)="applyFilter()">Filtrele</button>
 </div>
-<div class="card table-wrap">
+<div class="card table-wrap" style="position: relative; min-height: 200px;">
+  @if (loading) {
+  <div class="loading-overlay">
+    <div class="spinner"></div>
+  </div>
+  }
   <table>
     <thead>
       <tr>

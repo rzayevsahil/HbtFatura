@@ -15,6 +15,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class ProductDetailComponent implements OnInit {
   product: ProductDto | null = null;
+  loading = true;
   movements: StockMovementDto[] = [];
   totalCount = 0;
   page = 1;
@@ -38,8 +39,18 @@ export class ProductDetailComponent implements OnInit {
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
-      this.api.getById(id).subscribe(p => this.product = p);
+      this.api.getById(id).subscribe({
+        next: (p) => {
+          this.product = p;
+          this.loading = false;
+        },
+        error: () => {
+          this.loading = false;
+        }
+      });
       this.loadMovements();
+    } else {
+      this.loading = false;
     }
   }
 

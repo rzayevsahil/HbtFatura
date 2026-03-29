@@ -18,6 +18,7 @@ export class FirmDetailComponent implements OnInit {
   firm: FirmDto | null = null;
   company: CompanySettingsDto | null = null;
   firmUsers: FirmUserDto[] = [];
+  loading = true;
 
   constructor(
     private route: ActivatedRoute,
@@ -36,6 +37,7 @@ export class FirmDetailComponent implements OnInit {
       this.firmApi.getById(id).subscribe({
         next: f => {
           this.firm = f;
+          this.loading = false;
           this.companyApi.get(f.id).subscribe({
             next: c => (this.company = c),
             error: () => (this.company = null)
@@ -46,11 +48,12 @@ export class FirmDetailComponent implements OnInit {
           });
         },
         error: () => {
-          // If firm not found or unauthorized, go back
+          this.loading = false;
           window.history.back();
         }
       });
     } else {
+      this.loading = false;
       window.history.back();
     }
   }

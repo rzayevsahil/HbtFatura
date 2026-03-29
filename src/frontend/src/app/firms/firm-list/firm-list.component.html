@@ -5,7 +5,12 @@
 <div class="toolbar">
   <a routerLink="/firms/new" class="btn btn-primary">Yeni Firma</a>
 </div>
-<div class="card table-wrap">
+<div class="card table-wrap" style="position: relative; min-height: 200px;">
+  @if (loading) {
+  <div class="loading-overlay">
+    <div class="spinner"></div>
+  </div>
+  }
   <table>
     <thead>
       <tr>

@@ -1,6 +1,14 @@
+@if (!isModal) {
 <div class="page-header">
   <h1 class="page-title">{{ id ? 'Hesap Kodu Düzenle' : 'Yeni Hesap Kodu' }}</h1>
 </div>
+}
+@if (id && editLoading) {
+<div class="loading-container" [style.min-height.px]="isModal ? 120 : undefined">
+  <div class="spinner"></div>
+  <p>Veriler yükleniyor...</p>
+</div>
+} @else {
 <div class="card">
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <div class="form-grid">
@@ -37,3 +45,4 @@
     </div>
   </form>
 </div>
+}

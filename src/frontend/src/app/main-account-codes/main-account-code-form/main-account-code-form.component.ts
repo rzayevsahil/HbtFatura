@@ -30,6 +30,7 @@ export class MainAccountCodeFormComponent implements OnInit {
     firmId: [null as string | null]
   });
   id: string | null = null;
+  editLoading = false;
   firms: FirmDto[] = [];
   error = '';
   saving = false;
@@ -52,9 +53,11 @@ export class MainAccountCodeFormComponent implements OnInit {
       (this.form as FormGroup).removeControl('firmId');
     }
     if (this.id) {
+      this.editLoading = true;
       this.api.getById(this.id).subscribe({
         next: item => {
           if (item.isSystem) {
+            this.editLoading = false;
             this.toastr.warning('Sistem kodları düzenlenemez.');
             if (this.isModal) this.cancel.emit(); else this.router.navigate(['/main-account-codes']);
             return;
@@ -64,8 +67,13 @@ export class MainAccountCodeFormComponent implements OnInit {
             name: item.name,
             sortOrder: item.sortOrder ?? 0
           });
+          this.editLoading = false;
         },
-        error: () => this.isModal ? this.cancel.emit() : this.router.navigate(['/main-account-codes'])
+        error: () => {
+          this.editLoading = false;
+          if (this.isModal) this.cancel.emit();
+          else this.router.navigate(['/main-account-codes']);
+        }
       });
     } else {
       this.api.getByFirm(undefined).subscribe(list => {

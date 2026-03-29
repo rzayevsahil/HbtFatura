@@ -16,6 +16,7 @@ import { ChequeOrPromissoryDto, PagedResult } from '../../core/models';
 })
 export class ChequeListComponent implements OnInit {
   items: ChequeOrPromissoryDto[] = [];
+  loading = false;
   totalCount = 0;
   page = 1;
   pageSize = 20;
@@ -37,6 +38,7 @@ export class ChequeListComponent implements OnInit {
   }
 
   load(): void {
+    this.loading = true;
     this.api.getPaged(this.page, this.pageSize, {
       type: this.filterType === '' ? undefined : this.filterType,
       status: this.filterStatus === '' ? undefined : Number(this.filterStatus),
@@ -48,8 +50,12 @@ export class ChequeListComponent implements OnInit {
       next: (res: PagedResult<ChequeOrPromissoryDto>) => {
         this.items = res.items;
         this.totalCount = res.totalCount;
+        this.loading = false;
       },
-      error: e => this.toastr.error(e.error?.message ?? 'Liste yüklenemedi.')
+      error: (e) => {
+        this.loading = false;
+        this.toastr.error(e.error?.message ?? 'Liste yüklenemedi.');
+      }
     });
   }
 

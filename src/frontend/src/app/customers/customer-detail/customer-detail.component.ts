@@ -14,6 +14,7 @@ import { CustomerDto, AccountTransactionDto, PagedResult } from '../../core/mode
 })
 export class CustomerDetailComponent implements OnInit {
   customer: CustomerDto | null = null;
+  loading = true;
   transactions: AccountTransactionDto[] = [];
   totalCount = 0;
   page = 1;
@@ -26,8 +27,18 @@ export class CustomerDetailComponent implements OnInit {
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
-      this.api.getById(id).subscribe(c => this.customer = c);
+      this.api.getById(id).subscribe({
+        next: (c) => {
+          this.customer = c;
+          this.loading = false;
+        },
+        error: () => {
+          this.loading = false;
+        }
+      });
       this.loadTransactions();
+    } else {
+      this.loading = false;
     }
   }
 

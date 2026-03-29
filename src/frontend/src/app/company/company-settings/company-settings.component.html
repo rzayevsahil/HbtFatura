@@ -6,7 +6,10 @@
 <div class="card" style="position: relative; min-height: 300px;">
   @if (loading) {
   <div class="loading-overlay">
-    <div class="spinner"></div>
+    <div class="company-settings-loading-inner">
+      <div class="spinner" aria-hidden="true"></div>
+      <p class="company-settings-loading-text">Yükleniyor…</p>
+    </div>
   </div>
   }
   <form [formGroup]="form" (ngSubmit)="onSubmit()">

@@ -1,4 +1,9 @@
-@if (invoice) {
+@if (loading) {
+<div class="loading-container">
+  <div class="spinner"></div>
+  <p>Veriler yükleniyor...</p>
+</div>
+} @else if (invoice) {
 <div class="page-header">
   <div class="page-header-left">
     <h1 class="page-title">{{ invoice.invoiceNumber }}</h1>
@@ -116,5 +121,9 @@
   }
 </div>
 } @else {
-<p class="loading">Yükleniyor...</p>
+<div class="page-header">
+  <h1 class="page-title">Fatura</h1>
+  <a routerLink="/invoices" class="btn btn-default">← Geri</a>
+</div>
+<p class="text-muted">Fatura yüklenemedi veya bulunamadı.</p>
 }

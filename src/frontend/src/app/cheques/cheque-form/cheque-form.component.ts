@@ -29,6 +29,7 @@ export class ChequeFormComponent implements OnInit {
     firmId: [null as string | null]
   });
   id: string | null = null;
+  editLoading = false;
   customers: CustomerDto[] = [];
   bankAccounts: BankAccountDto[] = [];
   firms: { id: string; name: string }[] = [];
@@ -53,15 +54,24 @@ export class ChequeFormComponent implements OnInit {
     if (this.auth.user()?.role === 'SuperAdmin') this.firmApi.getAll().subscribe(f => this.firms = f);
     this.id = this.route.snapshot.paramMap.get('id');
     if (this.id) {
-      this.api.getById(this.id).subscribe(c => this.form.patchValue({
-        type: c.type,
-        serialNumber: c.serialNumber ?? '',
-        customerId: c.customerId,
-        amount: c.amount,
-        issueDate: c.issueDate.slice(0, 10),
-        dueDate: c.dueDate.slice(0, 10),
-        bankAccountId: c.bankAccountId ?? null
-      }));
+      this.editLoading = true;
+      this.api.getById(this.id).subscribe({
+        next: (c) => {
+          this.form.patchValue({
+            type: c.type,
+            serialNumber: c.serialNumber ?? '',
+            customerId: c.customerId,
+            amount: c.amount,
+            issueDate: c.issueDate.slice(0, 10),
+            dueDate: c.dueDate.slice(0, 10),
+            bankAccountId: c.bankAccountId ?? null
+          });
+          this.editLoading = false;
+        },
+        error: () => {
+          this.editLoading = false;
+        }
+      });
     }
   }
 

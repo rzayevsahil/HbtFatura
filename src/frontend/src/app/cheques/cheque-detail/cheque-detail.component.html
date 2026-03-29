@@ -1,10 +1,17 @@
 <div class="page-header">
-  <h1 class="page-title">{{ item ? typeLabel(item.type) + ' - ' + item.customerTitle : 'Yükleniyor...' }}</h1>
+  <h1 class="page-title">{{ item ? typeLabel(item.type) + ' - ' + item.customerTitle : 'Çek / Senet' }}</h1>
   <div class="actions">
-    <a [routerLink]="['/cheques', item?.id, 'edit']" class="btn">Düzenle</a>
+    @if (item) {
+    <a [routerLink]="['/cheques', item.id, 'edit']" class="btn">Düzenle</a>
+    }
   </div>
 </div>
-@if (item) {
+@if (loading) {
+<div class="loading-container">
+  <div class="spinner"></div>
+  <p>Veriler yükleniyor...</p>
+</div>
+} @else if (item) {
   <div class="card info-grid">
     <p><strong>Portföy no:</strong> {{ item.portfolioNumber }}</p>
     <p><strong>Seri no:</strong> {{ item.serialNumber || '—' }}</p>
@@ -27,4 +34,6 @@
       <button type="button" (click)="updateStatus()">Kaydet</button>
     </div>
   </div>
+} @else {
+<p class="text-muted">Kayıt bulunamadı veya yüklenemedi.</p>
 }

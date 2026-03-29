@@ -2,6 +2,12 @@
   <h1 class="page-title">{{ id ? 'İrsaliye Düzenle' : 'Yeni İrsaliye' }}</h1>
   <a routerLink="/delivery-notes" class="btn btn-default">← Geri</a>
 </div>
+@if (id && editLoading) {
+<div class="loading-container">
+  <div class="spinner"></div>
+  <p>Veriler yükleniyor...</p>
+</div>
+} @else {
 <div class="card">
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <div class="form-section">
@@ -155,3 +161,4 @@
     </div>
   </form>
 </div>
+}

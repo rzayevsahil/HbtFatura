@@ -15,6 +15,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class InvoiceDetailComponent implements OnInit {
   invoice: InvoiceDto | null = null;
+  loading = true;
   selectedScenario: InvoiceScenario = 0;
 
   constructor(private route: ActivatedRoute, private router: Router, private api: InvoiceService, private toastr: ToastrService) { }
@@ -29,7 +30,19 @@ export class InvoiceDetailComponent implements OnInit {
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
-    if (id) this.api.getById(id).subscribe(inv => this.invoice = inv);
+    if (id) {
+      this.api.getById(id).subscribe({
+        next: (inv) => {
+          this.invoice = inv;
+          this.loading = false;
+        },
+        error: () => {
+          this.loading = false;
+        }
+      });
+    } else {
+      this.loading = false;
+    }
   }
 
   statusLabel(s: any, sourceType?: string | null): string {

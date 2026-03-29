@@ -28,6 +28,7 @@ export class DeliveryNoteFormComponent implements OnInit {
 
   form: FormGroup;
   id: string | null = null;
+  editLoading = false;
   deliveryNumber: string | null = null;
   deliveryStatus: string | number | undefined; // düzenlemede salt okunur göstermek için
   customers: CustomerDto[] = [];
@@ -153,6 +154,7 @@ export class DeliveryNoteFormComponent implements OnInit {
     });
 
     if (this.id) {
+      this.editLoading = true;
       this.deliveryNoteApi.getById(this.id).subscribe({
         next: dn => {
           this.deliveryNumber = dn.deliveryNumber ?? null;
@@ -178,8 +180,12 @@ export class DeliveryNoteFormComponent implements OnInit {
               sortOrder: [it.sortOrder]
             }));
           });
+          this.editLoading = false;
         },
-        error: () => this.router.navigate(['/delivery-notes'])
+        error: () => {
+          this.editLoading = false;
+          this.router.navigate(['/delivery-notes']);
+        }
       });
     }
   }

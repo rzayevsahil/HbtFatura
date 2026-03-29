@@ -20,6 +20,7 @@ export class EmployeeFormComponent implements OnInit {
     fullName: ['', Validators.required]
   });
   id: string | null = null;
+  editLoading = false;
   error = '';
   saving = false;
   /** Firma detayından gelindiyse iptal ve bazı yönlendirmeler için */
@@ -40,6 +41,7 @@ export class EmployeeFormComponent implements OnInit {
 
     this.id = this.route.snapshot.paramMap.get('id');
     if (this.id) {
+      this.editLoading = true;
       // Düzenleme modunda şifre zorunlu olmasın
       this.form.get('password')?.clearValidators();
       this.form.get('password')?.setValidators([Validators.minLength(6)]);
@@ -51,8 +53,12 @@ export class EmployeeFormComponent implements OnInit {
             email: emp.email,
             fullName: emp.fullName
           });
+          this.editLoading = false;
         },
-        error: () => this.toastr.error('Çalışan bilgileri yüklenemedi.')
+        error: () => {
+          this.editLoading = false;
+          this.toastr.error('Çalışan bilgileri yüklenemedi.');
+        }
       });
     }
   }

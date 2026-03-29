@@ -25,6 +25,7 @@ export class CashRegisterFormComponent implements OnInit {
     firmId: [null as string | null]
   });
   id: string | null = null;
+  editLoading = false;
   firms: FirmDto[] = [];
   currencies: LookupDto[] = [];
   error = '';
@@ -52,11 +53,20 @@ export class CashRegisterFormComponent implements OnInit {
       (this.form as FormGroup).removeControl('firmId');
     }
     if (this.id) {
-      this.api.getById(this.id).subscribe(c => this.form.patchValue({
-        name: c.name,
-        currency: c.currency,
-        isActive: c.isActive
-      }));
+      this.editLoading = true;
+      this.api.getById(this.id).subscribe({
+        next: (c) => {
+          this.form.patchValue({
+            name: c.name,
+            currency: c.currency,
+            isActive: c.isActive
+          });
+          this.editLoading = false;
+        },
+        error: () => {
+          this.editLoading = false;
+        }
+      });
     }
   }
 

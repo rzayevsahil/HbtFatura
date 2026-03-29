@@ -28,6 +28,7 @@ export class BankAccountFormComponent implements OnInit {
     firmId: [null as string | null]
   });
   id: string | null = null;
+  editLoading = false;
   firms: FirmDto[] = [];
   currencies: LookupDto[] = [];
   error = '';
@@ -55,13 +56,22 @@ export class BankAccountFormComponent implements OnInit {
       (this.form as FormGroup).removeControl('firmId');
     }
     if (this.id) {
-      this.api.getById(this.id).subscribe(b => this.form.patchValue({
-        name: b.name,
-        iban: b.iban ? IbanFormatter.format(b.iban) : '',
-        bankName: b.bankName ?? '',
-        currency: b.currency,
-        isActive: b.isActive
-      }));
+      this.editLoading = true;
+      this.api.getById(this.id).subscribe({
+        next: (b) => {
+          this.form.patchValue({
+            name: b.name,
+            iban: b.iban ? IbanFormatter.format(b.iban) : '',
+            bankName: b.bankName ?? '',
+            currency: b.currency,
+            isActive: b.isActive
+          });
+          this.editLoading = false;
+        },
+        error: () => {
+          this.editLoading = false;
+        }
+      });
     }
   }
 

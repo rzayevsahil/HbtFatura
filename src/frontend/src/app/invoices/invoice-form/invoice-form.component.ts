@@ -28,6 +28,7 @@ export class InvoiceFormComponent implements OnInit {
 
   form: FormGroup;
   id: string | null = null;
+  editLoading = false;
   /** İrsaliyeden oluşturulmuş faturada tip değiştirilemez. */
   invoiceSourceId: string | null = null;
   customers: CustomerDto[] = [];
@@ -158,37 +159,44 @@ export class InvoiceFormComponent implements OnInit {
     });
 
     if (this.id) {
-      this.invoiceApi.getById(this.id).subscribe(inv => {
-        this.invoiceSourceId = inv.sourceId ?? null;
-        this.form.patchValue({
-          invoiceType: inv.invoiceType ?? 0,
-          customerId: inv.customerId ?? null,
-          customerTitle: inv.customerTitle,
-          customerTaxNumber: inv.customerTaxNumber ?? '',
-          customerAddress: inv.customerAddress ?? '',
-          customerPhone: inv.customerPhone ?? '',
-          customerEmail: inv.customerEmail ?? '',
-          customerWebsite: inv.customerWebsite ?? '',
-          customerTaxOffice: inv.customerTaxOffice ?? '',
-          invoiceDate: inv.invoiceDate ? this.formatDateForInput(new Date(inv.invoiceDate)) : '',
-          currency: inv.currency,
-          exchangeRate: inv.exchangeRate
-        });
-        this.items.clear();
-        inv.items.forEach(it => {
-          const p = this.products.find(x => x.id === it.productId);
-          this.items.push(this.fb.nonNullable.group({
-            productId: [it.productId ?? null],
-            productCode: [p?.code || ''],
-            description: [it.description],
-            unit: [it.unit || 'Adet'],
-            quantity: [it.quantity],
-            unitPrice: [it.unitPrice],
-            vatRate: [it.vatRate],
-            discountPercent: [it.discountPercent ?? 0],
-            sortOrder: [it.sortOrder]
-          }));
-        });
+      this.editLoading = true;
+      this.invoiceApi.getById(this.id).subscribe({
+        next: (inv) => {
+          this.invoiceSourceId = inv.sourceId ?? null;
+          this.form.patchValue({
+            invoiceType: inv.invoiceType ?? 0,
+            customerId: inv.customerId ?? null,
+            customerTitle: inv.customerTitle,
+            customerTaxNumber: inv.customerTaxNumber ?? '',
+            customerAddress: inv.customerAddress ?? '',
+            customerPhone: inv.customerPhone ?? '',
+            customerEmail: inv.customerEmail ?? '',
+            customerWebsite: inv.customerWebsite ?? '',
+            customerTaxOffice: inv.customerTaxOffice ?? '',
+            invoiceDate: inv.invoiceDate ? this.formatDateForInput(new Date(inv.invoiceDate)) : '',
+            currency: inv.currency,
+            exchangeRate: inv.exchangeRate
+          });
+          this.items.clear();
+          inv.items.forEach(it => {
+            const p = this.products.find(x => x.id === it.productId);
+            this.items.push(this.fb.nonNullable.group({
+              productId: [it.productId ?? null],
+              productCode: [p?.code || ''],
+              description: [it.description],
+              unit: [it.unit || 'Adet'],
+              quantity: [it.quantity],
+              unitPrice: [it.unitPrice],
+              vatRate: [it.vatRate],
+              discountPercent: [it.discountPercent ?? 0],
+              sortOrder: [it.sortOrder]
+            }));
+          });
+          this.editLoading = false;
+        },
+        error: () => {
+          this.editLoading = false;
+        }
       });
     }
   }
@@ -313,7 +321,7 @@ export class InvoiceFormComponent implements OnInit {
 
   @HostListener('document:keydown', ['$event'])
   onKeyDown(e: KeyboardEvent): void {
-    if (e.key === 'F9' && !this.saving && !this.form.pending && this.form.valid && !['INPUT', 'TEXTAREA', 'SELECT'].includes((e.target as HTMLElement)?.tagName)) {
+    if (e.key === 'F9' && !this.saving && !this.editLoading && !this.form.pending && this.form.valid && !['INPUT', 'TEXTAREA', 'SELECT'].includes((e.target as HTMLElement)?.tagName)) {
       e.preventDefault();
       this.onSubmit();
     }

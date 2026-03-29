@@ -12,11 +12,20 @@
       düzenle</a>
   </div>
   }
+  } @else if (loading) {
+  <h1 class="page-title">Firma profili</h1>
   } @else {
-  <p>Yükleniyor...</p>
+  <h1 class="page-title">Firma profili</h1>
+  <p class="text-muted">Firma yüklenemedi.</p>
   }
 </div>
 
+@if (loading) {
+<div class="firm-profile-loading">
+  <div class="firm-profile-loading__spinner" role="status" aria-label="Yükleniyor"></div>
+  <p class="firm-profile-loading__text">Yükleniyor…</p>
+</div>
+} @else {
 @if (firm && company) {
 <section class="company-info card">
   <h2 class="card-title">Firma bilgileri</h2>
@@ -95,5 +104,6 @@
   <h2 class="card-title">Çalışan hesapları</h2>
   <p class="text-muted">Bu firmaya ait kullanıcı hesabı bulunmuyor.</p>
 </section>
+}
 }
 }

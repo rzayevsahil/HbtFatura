@@ -2,11 +2,18 @@
   <a routerLink="/products" class="back-link">← Geri</a>
   <h1 class="page-title">{{ product?.name ?? 'Ürün' }}</h1>
   <div class="actions">
-    <a [routerLink]="['/products', product?.id, 'edit']" class="btn">Düzenle</a>
+    @if (product) {
+    <a [routerLink]="['/products', product.id, 'edit']" class="btn">Düzenle</a>
     <button type="button" (click)="openAddModal()">Stok fişi ekle</button>
+    }
   </div>
 </div>
-@if (product) {
+@if (loading) {
+<div class="loading-container">
+  <div class="spinner"></div>
+  <p>Veriler yükleniyor...</p>
+</div>
+} @else if (product) {
 <div class="card info-grid">
   <p><strong>Kod:</strong> {{ product.code }}</p>
   <p><strong>Birim:</strong> {{ product.unit }}</p>
@@ -65,6 +72,10 @@
     <button type="button" [disabled]="page <= 1" (click)="prevPage()">Önceki</button>
     <button type="button" [disabled]="movements.length < pageSize" (click)="nextPage()">Sonraki</button>
   </div>
+</div>
+} @else {
+<div class="card">
+  <p class="text-muted">Ürün bulunamadı veya yüklenemedi.</p>
 </div>
 }
 @if (showAddModal) {

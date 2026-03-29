@@ -16,6 +16,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class ChequeDetailComponent implements OnInit {
   item: ChequeOrPromissoryDto | null = null;
+  loading = true;
   newStatus: number = 0;
 
   constructor(
@@ -28,10 +29,18 @@ export class ChequeDetailComponent implements OnInit {
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
-      this.api.getById(id).subscribe(c => {
-        this.item = c;
-        this.newStatus = c.status;
+      this.api.getById(id).subscribe({
+        next: (c) => {
+          this.item = c;
+          this.newStatus = c.status;
+          this.loading = false;
+        },
+        error: () => {
+          this.loading = false;
+        }
       });
+    } else {
+      this.loading = false;
     }
   }
 

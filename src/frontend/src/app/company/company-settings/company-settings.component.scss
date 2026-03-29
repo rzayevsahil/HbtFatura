@@ -245,3 +245,26 @@
     }
   }
 }
+
+/* İl/ilçe/VD panelleri z-index: 100; overlay ve spinner üstte kalsın */
+.loading-overlay {
+  z-index: 200;
+}
+
+.loading-overlay .spinner {
+  flex-shrink: 0;
+}
+
+.company-settings-loading-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.company-settings-loading-text {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+}

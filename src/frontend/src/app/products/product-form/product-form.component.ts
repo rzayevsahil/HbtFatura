@@ -34,6 +34,7 @@ export class ProductFormComponent implements OnInit {
     firmId: [null as string | null]
   });
   id: string | null = null;
+  editLoading = false;
   /** Düzenlemede kod kontrolü için ürünün firması */
   private firmIdForScope: string | null = null;
   firms: { id: string; name: string }[] = [];
@@ -79,17 +80,24 @@ export class ProductFormComponent implements OnInit {
     ).subscribe(taken => this.setDuplicateCodeError(taken));
 
     if (this.id) {
-      this.api.getById(this.id).subscribe(p => {
-        this.firmIdForScope = p.firmId;
-        this.form.patchValue({
-          code: p.code,
-          name: p.name,
-          barcode: p.barcode ?? '',
-          unit: p.unit ?? 'Adet',
-          stockQuantity: p.stockQuantity ?? 0,
-          unitPrice: p.unitPrice ?? 0,
-          currency: p.currency ?? 'TRY'
-        });
+      this.editLoading = true;
+      this.api.getById(this.id).subscribe({
+        next: (p) => {
+          this.firmIdForScope = p.firmId;
+          this.form.patchValue({
+            code: p.code,
+            name: p.name,
+            barcode: p.barcode ?? '',
+            unit: p.unit ?? 'Adet',
+            stockQuantity: p.stockQuantity ?? 0,
+            unitPrice: p.unitPrice ?? 0,
+            currency: p.currency ?? 'TRY'
+          });
+          this.editLoading = false;
+        },
+        error: () => {
+          this.editLoading = false;
+        }
       });
     }
   }

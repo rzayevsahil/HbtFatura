@@ -13,6 +13,7 @@ import { FirmDto } from '../../core/models';
 })
 export class FirmListComponent implements OnInit {
   items: FirmDto[] = [];
+  loading = true;
 
   constructor(private api: FirmService) { }
 
@@ -21,6 +22,15 @@ export class FirmListComponent implements OnInit {
   }
 
   load(): void {
-    this.api.getAll().subscribe(list => (this.items = list));
+    this.loading = true;
+    this.api.getAll().subscribe({
+      next: (list) => {
+        this.items = list;
+        this.loading = false;
+      },
+      error: () => {
+        this.loading = false;
+      }
+    });
   }
 }
