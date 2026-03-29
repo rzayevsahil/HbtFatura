@@ -6,11 +6,12 @@ import { CompanyService } from '../../services/company.service';
 import { FirmDto, FirmUserDto, CompanySettingsDto } from '../../core/models';
 import { environment } from '../../../environments/environment';
 import { AuthService } from '../../core/services/auth.service';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-firm-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, TranslateModule],
   templateUrl: './firm-detail.component.html',
   styleUrls: ['./firm-detail.component.scss']
 })
@@ -24,7 +25,8 @@ export class FirmDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private firmApi: FirmService,
     private companyApi: CompanyService,
-    public auth: AuthService
+    public auth: AuthService,
+    private translate: TranslateService
   ) { }
 
   ngOnInit(): void {
@@ -68,7 +70,8 @@ export class FirmDetailComponent implements OnInit {
   }
 
   roleLabel(role: string): string {
-    const map: Record<string, string> = { FirmAdmin: 'Firma Admin', Employee: 'Çalışan' };
-    return map[role] ?? role;
+    if (role === 'FirmAdmin') return this.translate.instant('firmProfile.roleFirmAdmin');
+    if (role === 'Employee') return this.translate.instant('firmProfile.roleEmployee');
+    return role;
   }
 }

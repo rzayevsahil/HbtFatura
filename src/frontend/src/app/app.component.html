@@ -1,100 +1,203 @@
 @if (auth.loggingOut()) {
+
 <div class="logout-overlay">
+
   <div class="logout-card">
+
     <div class="spinner"></div>
-    <p>Oturum kapatılıyor...</p>
+
+    <p>{{ 'app.loggingOut' | translate }}</p>
+
   </div>
+
 </div>
+
 }
 
+
+
 <div [class.layout]="auth.isAuthenticated()">
+
   @if (auth.isAuthenticated()) {
+
   <header class="header">
-    <span class="header-brand">HBT Fatura</span>
+
+    <span class="header-brand">{{ 'app.brand' | translate }}</span>
+
     <div class="header-right">
+
+      <div class="lang-switcher" role="group" [attr.aria-label]="'app.langPickAria' | translate">
+        <button type="button" class="lang-switcher-btn" [class.active]="isLang('tr')" (click)="setLang('tr')"
+          [attr.aria-pressed]="isLang('tr')">{{ 'app.langTurkish' | translate }}</button>
+        <button type="button" class="lang-switcher-btn" [class.active]="isLang('en')" (click)="setLang('en')"
+          [attr.aria-pressed]="isLang('en')">{{ 'app.langEnglish' | translate }}</button>
+      </div>
+
       <button type="button" class="header-theme-btn" (click)="theme.toggle(); closeHeaderMenu()"
-        [attr.aria-label]="theme.darkMode() ? 'Açık temaya geç' : 'Koyu temaya geç'" title="Tema">
+
+        [attr.aria-label]="(theme.darkMode() ? 'app.themeLightAria' : 'app.themeDarkAria') | translate"
+
+        [title]="'app.themeTitle' | translate">
+
         <span class="material-icons" aria-hidden="true">{{ theme.darkMode() ? 'light_mode' : 'dark_mode' }}</span>
+
       </button>
+
       <div class="header-notif-wrap">
+
         <button type="button" class="header-notif-btn" (click)="toggleNotifPanel(); closeHeaderMenu()"
-          [attr.aria-expanded]="notifOpen" aria-label="Bildirimler">
+
+          [attr.aria-expanded]="notifOpen" [attr.aria-label]="'app.notifications' | translate">
+
           <span class="material-icons">notifications</span>
+
           @if (notifUnread > 0) {
+
           <span class="header-notif-badge">{{ notifUnread > 99 ? '99+' : notifUnread }}</span>
+
           }
+
         </button>
+
         @if (notifOpen) {
+
         <div class="header-notif-backdrop" (click)="closeNotifPanel()"></div>
+
         <div class="header-notif-panel">
+
           <div class="header-notif-head">
-            <span>Bildirimler</span>
-            <button type="button" class="link-btn" (click)="markAllNotifsRead()">Tümünü okundu işaretle</button>
+
+            <span>{{ 'app.notifications' | translate }}</span>
+
+            <button type="button" class="link-btn" (click)="markAllNotifsRead()">{{ 'app.markAllRead' | translate }}</button>
+
           </div>
+
           @if (canViewGibInbox()) {
-          <a routerLink="/gib-simulation/inbox" class="header-notif-gib-link" (click)="closeNotifPanel()">GİB kutusuna
-            git</a>
+
+          <a routerLink="/gib-simulation/inbox" class="header-notif-gib-link" (click)="closeNotifPanel()">{{ 'app.gibInboxLink' | translate }}</a>
+
           }
+
           <ul class="header-notif-list">
+
             @for (n of notifItems; track n.id) {
+
             <li [class.unread]="!n.readAt" [class.notif-clickable]="notificationTargetUrl(n)"
+
               (click)="onNotificationClick(n)" [attr.role]="notificationTargetUrl(n) ? 'link' : null"
+
               [attr.tabindex]="notificationTargetUrl(n) ? 0 : null"
+
               (keydown.enter)="onNotificationClick(n)"
+
               (keydown.space)="$event.preventDefault(); onNotificationClick(n)">
+
               <div class="header-notif-title">{{ n.title }}</div>
+
               <div class="header-notif-body">{{ n.body }}</div>
-              <div class="header-notif-meta">{{ notificationInstant(n.createdAt) | date:'dd.MM.yyyy HH:mm' }}</div>
+
+              <div class="header-notif-meta">{{ notificationInstant(n.createdAt) | date:'dd.MM.yyyy HH:mm':undefined:dateLocaleId }}</div>
+
             </li>
+
             }
+
             @if (notifItems.length === 0) {
-            <li class="header-notif-empty">Bildirim yok</li>
+
+            <li class="header-notif-empty">{{ 'app.noNotifications' | translate }}</li>
+
             }
+
           </ul>
-          <p class="header-notif-footnote">GİB ile ilgili uyarılar uygulama içi simülasyondur.</p>
+
+          <p class="header-notif-footnote">{{ 'app.gibFootnote' | translate }}</p>
+
         </div>
+
         }
+
       </div>
+
       <button type="button" class="header-user-trigger" (click)="headerMenuOpen = !headerMenuOpen"
+
         aria-expanded="headerMenuOpen">
+
         <span class="header-user-name">{{ auth.user()?.fullName }}</span>
+
         <span class="header-user-chevron">{{ headerMenuOpen ? '▲' : '▼' }}</span>
+
       </button>
+
       @if (headerMenuOpen) {
+
       <div class="header-menu-backdrop" (click)="closeHeaderMenu()"></div>
+
       <div class="header-menu">
+
         <div class="header-menu-item header-menu-user">
-          <span class="header-menu-label">Profil</span>
+
+          <span class="header-menu-label">{{ 'app.profileLabel' | translate }}</span>
+
           <span class="header-menu-value">{{ auth.user()?.fullName }}</span>
+
         </div>
-        <button type="button" class="header-menu-item" (click)="closeHeaderMenu()" routerLink="/profile">Profil
-          Ayarları</button>
+
+        <button type="button" class="header-menu-item" (click)="closeHeaderMenu()" routerLink="/profile">{{ 'app.profileSettings' | translate }}</button>
+
         <button type="button" class="header-menu-item header-menu-logout"
-          (click)="auth.logout(); closeHeaderMenu()">Çıkış</button>
+
+          (click)="auth.logout(); closeHeaderMenu()">{{ 'app.logout' | translate }}</button>
+
       </div>
+
       }
+
     </div>
+
   </header>
 
+
+
   <aside class="sidebar">
+
     <nav class="sidebar-nav">
+
       @for (item of menu.menu(); track item.id) {
+
       @if (item.routerLink) {
+
       <a [routerLink]="item.routerLink" routerLinkActive="active">
+
         @if (item.icon) { <span class="nav-icon material-icons">{{ item.icon }}</span> }
-        {{ item.label }}
+
+        {{ menuDisplayLabel(item) }}
+
       </a>
+
       } @else {
-      <!-- Parent menu or expandable if needed later -->
-      <div class="nav-group-label">{{ item.label }}</div>
+
+      <div class="nav-group-label">{{ menuDisplayLabel(item) }}</div>
+
       }
+
       }
+
+
 
     </nav>
+
   </aside>
+
   }
 
+
+
   <main class="main-content">
+
     <router-outlet />
+
   </main>
+
 </div>
+

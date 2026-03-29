@@ -9,11 +9,12 @@ import { ToastrService } from 'ngx-toastr';
 
 import { ConfirmModalComponent } from '../../shared/confirm-modal/confirm-modal.component';
 import { currencyDisplaySuffix } from '../../core/utils/currency-display';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-bank-account-list',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule, ConfirmModalComponent],
+  imports: [CommonModule, RouterLink, FormsModule, ConfirmModalComponent, TranslateModule],
   templateUrl: './bank-account-list.component.html',
   styleUrls: ['./bank-account-list.component.scss']
 })
@@ -28,7 +29,8 @@ export class BankAccountListComponent implements OnInit {
   constructor(
     private api: BankAccountService,
     public auth: AuthService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private translate: TranslateService
   ) { }
 
   ngOnInit(): void {
@@ -43,7 +45,7 @@ export class BankAccountListComponent implements OnInit {
         this.loading = false;
       },
       error: e => {
-        this.toastr.error(e.error?.message ?? 'Liste yüklenemedi.');
+        this.toastr.error(e.error?.message ?? this.translate.instant('bankAccountsPage.toastLoadFailed'));
         this.loading = false;
       }
     });
@@ -74,13 +76,13 @@ export class BankAccountListComponent implements OnInit {
     if (!this.deletingAccount) return;
     this.api.delete(this.deletingAccount.id).subscribe({
       next: () => {
-        this.toastr.success('Banka hesabı silindi.');
+        this.toastr.success(this.translate.instant('bankAccountsPage.toastAccountDeleted'));
         this.showDeleteModal = false;
         this.deletingAccount = null;
         this.load();
       },
       error: e => {
-        this.toastr.error(e.error?.message ?? 'Silme sırasında hata oluştu.');
+        this.toastr.error(e.error?.message ?? this.translate.instant('mainAccountCodes.deleteError'));
         this.showDeleteModal = false;
         this.deletingAccount = null;
       }

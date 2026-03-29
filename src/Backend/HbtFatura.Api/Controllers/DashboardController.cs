@@ -67,10 +67,30 @@ public class DashboardController : ControllerBase
 
             response.Stats = new List<DashboardStatDto>
             {
-                new() { Label = "Toplam Firma", Value = $"{totalFirms}", Icon = "business", Color = "teal", Trend = "Kayıtlı" },
-                new() { Label = "Toplam Kullanıcı", Value = $"{totalUsers}", Icon = "people", Color = "blue", Trend = "Aktif" },
-                new() { Label = "Yeni Firmalar", Value = $"{newFirmsThisMonth}", Icon = "add_business", Color = "orange", Trend = "Bu Ay" },
-                new() { Label = "Sistem Hataları", Value = $"{systemErrors}", Icon = "report_problem", Color = "purple", Trend = "Kritik" }
+                new()
+                {
+                    Key = "total_firms",
+                    Label = "Toplam Firma", Value = $"{totalFirms}", Icon = "business", Color = "teal",
+                    Trend = "Kayıtlı", Count = totalFirms, TrendKind = "registered"
+                },
+                new()
+                {
+                    Key = "total_users",
+                    Label = "Toplam Kullanıcı", Value = $"{totalUsers}", Icon = "people", Color = "blue",
+                    Trend = "Aktif", Count = totalUsers, TrendKind = "active"
+                },
+                new()
+                {
+                    Key = "new_firms",
+                    Label = "Yeni Firmalar", Value = $"{newFirmsThisMonth}", Icon = "add_business", Color = "orange",
+                    Trend = "Bu Ay", Count = newFirmsThisMonth, TrendKind = "this_month"
+                },
+                new()
+                {
+                    Key = "system_errors",
+                    Label = "Sistem Hataları", Value = $"{systemErrors}", Icon = "report_problem", Color = "purple",
+                    Trend = "Kritik", Count = systemErrors, TrendKind = "critical"
+                }
             };
 
             // For SuperAdmin, RecentInvoices can show Recent Firms instead (reuse the list or change labels in UI)
@@ -128,10 +148,31 @@ public class DashboardController : ControllerBase
 
             response.Stats = new List<DashboardStatDto>
             {
-                new() { Label = "Aylık Satış", Value = $"₺{monthlySales:N2}", Icon = "trending_up", Color = "teal", Trend = "Bu Ay" },
-                new() { Label = "Bekleyen Tahsilat", Value = $"₺{pendingPayments:N2}", Icon = "payments", Color = "orange", Trend = $"{pendingCount} Fatura" },
-                new() { Label = "Yeni Siparişler", Value = $"{newOrdersCount} Adet", Icon = "shopping_cart", Color = "blue", Trend = "Bekleyen" },
-                new() { Label = "Toplam Müşteri", Value = $"{totalCustomers} Kayıt", Icon = "people", Color = "purple" }
+                new()
+                {
+                    Key = "monthly_sales",
+                    Label = "Aylık Satış", Value = $"₺{monthlySales:N2}", Icon = "trending_up", Color = "teal",
+                    Trend = "Bu Ay", Amount = monthlySales, TrendKind = "this_month"
+                },
+                new()
+                {
+                    Key = "pending_collection",
+                    Label = "Bekleyen Tahsilat", Value = $"₺{pendingPayments:N2}", Icon = "payments", Color = "orange",
+                    Trend = $"{pendingCount} Fatura", Amount = pendingPayments, TrendCount = pendingCount,
+                    TrendKind = "invoice_count"
+                },
+                new()
+                {
+                    Key = "new_orders",
+                    Label = "Yeni Siparişler", Value = $"{newOrdersCount} Adet", Icon = "shopping_cart", Color = "blue",
+                    Trend = "Bekleyen", Count = newOrdersCount, TrendKind = "pending"
+                },
+                new()
+                {
+                    Key = "total_customers",
+                    Label = "Toplam Müşteri", Value = $"{totalCustomers} Kayıt", Icon = "people", Color = "purple",
+                    Count = totalCustomers
+                }
             };
 
             var recentInvoices = await invoicesQuery

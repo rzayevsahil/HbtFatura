@@ -14,11 +14,12 @@ import {
 } from '../core/models';
 import { ToastrService } from 'ngx-toastr';
 import { LookupService } from '../core/services/lookup.service';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-reports',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, TranslateModule],
   templateUrl: './reports.component.html',
   styleUrls: ['./reports.component.scss']
 })
@@ -68,7 +69,8 @@ export class ReportsComponent implements OnInit {
     private bankApi: BankAccountService,
     private productApi: ProductService,
     private toastr: ToastrService,
-    public lookups: LookupService
+    public lookups: LookupService,
+    private translate: TranslateService
   ) { }
 
   ngOnInit(): void {
@@ -87,7 +89,7 @@ export class ReportsComponent implements OnInit {
       this.monthlyProductId || undefined
     ).subscribe({
       next: data => { this.monthlyData = data; this.monthlyLoading = false; },
-      error: e => { this.toastr.error(e.error?.message ?? 'Yüklenemedi.'); this.monthlyLoading = false; }
+      error: e => { this.toastr.error(e.error?.message ?? this.translate.instant('reportsPage.genericLoadFailed')); this.monthlyLoading = false; }
     });
   }
 
@@ -98,7 +100,7 @@ export class ReportsComponent implements OnInit {
 
   loadCari(): void {
     if (!this.cariCustomerId) {
-      this.toastr.warning('Cari seçin.');
+      this.toastr.warning(this.translate.instant('reportsPage.selectCustomerWarn'));
       return;
     }
     this.cariLoading = true;
@@ -109,7 +111,7 @@ export class ReportsComponent implements OnInit {
       this.cariDateTo || undefined
     ).subscribe({
       next: data => { this.cariData = data; this.cariLoading = false; },
-      error: e => { this.toastr.error(e.error?.message ?? 'Yüklenemedi.'); this.cariLoading = false; }
+      error: e => { this.toastr.error(e.error?.message ?? this.translate.instant('reportsPage.genericLoadFailed')); this.cariLoading = false; }
     });
   }
 
@@ -127,9 +129,9 @@ export class ReportsComponent implements OnInit {
         a.download = `cari-ekstre-${this.cariCustomerId}.pdf`;
         a.click();
         URL.revokeObjectURL(url);
-        this.toastr.success('PDF indirildi.');
+        this.toastr.success(this.translate.instant('reportsPage.downloadPdfOk'));
       },
-      error: e => this.toastr.error(e.error?.message ?? 'İndirilemedi.')
+      error: e => this.toastr.error(e.error?.message ?? this.translate.instant('reportsPage.downloadPdfFail'))
     });
   }
 
@@ -147,9 +149,9 @@ export class ReportsComponent implements OnInit {
         a.download = `cari-ekstre-${this.cariCustomerId}.xlsx`;
         a.click();
         URL.revokeObjectURL(url);
-        this.toastr.success('Excel indirildi.');
+        this.toastr.success(this.translate.instant('reportsPage.downloadExcelOk'));
       },
-      error: e => this.toastr.error(e.error?.message ?? 'İndirilemedi.')
+      error: e => this.toastr.error(e.error?.message ?? this.translate.instant('reportsPage.downloadExcelFail'))
     });
   }
 
@@ -162,7 +164,7 @@ export class ReportsComponent implements OnInit {
       this.cashDateTo || undefined
     ).subscribe({
       next: data => { this.cashData = data; this.cashLoading = false; },
-      error: e => { this.toastr.error(e.error?.message ?? 'Yüklenemedi.'); this.cashLoading = false; }
+      error: e => { this.toastr.error(e.error?.message ?? this.translate.instant('reportsPage.genericLoadFailed')); this.cashLoading = false; }
     });
   }
 
@@ -175,7 +177,7 @@ export class ReportsComponent implements OnInit {
       this.bankDateTo || undefined
     ).subscribe({
       next: data => { this.bankData = data; this.bankLoading = false; },
-      error: e => { this.toastr.error(e.error?.message ?? 'Yüklenemedi.'); this.bankLoading = false; }
+      error: e => { this.toastr.error(e.error?.message ?? this.translate.instant('reportsPage.genericLoadFailed')); this.bankLoading = false; }
     });
   }
 
@@ -183,7 +185,7 @@ export class ReportsComponent implements OnInit {
     this.stockLoading = true;
     this.reportApi.getStockLevels().subscribe({
       next: data => { this.stockData = data; this.stockLoading = false; },
-      error: e => { this.toastr.error(e.error?.message ?? 'Yüklenemedi.'); this.stockLoading = false; }
+      error: e => { this.toastr.error(e.error?.message ?? this.translate.instant('reportsPage.genericLoadFailed')); this.stockLoading = false; }
     });
   }
 
@@ -196,9 +198,9 @@ export class ReportsComponent implements OnInit {
         a.download = 'stok-raporu.pdf';
         a.click();
         URL.revokeObjectURL(url);
-        this.toastr.success('PDF indirildi.');
+        this.toastr.success(this.translate.instant('reportsPage.downloadPdfOk'));
       },
-      error: e => this.toastr.error(e.error?.message ?? 'İndirilemedi.')
+      error: e => this.toastr.error(e.error?.message ?? this.translate.instant('reportsPage.downloadPdfFail'))
     });
   }
 
@@ -211,7 +213,7 @@ export class ReportsComponent implements OnInit {
       this.invoiceCustomerId || undefined
     ).subscribe({
       next: data => { this.invoiceData = data; this.invoiceLoading = false; },
-      error: e => { this.toastr.error(e.error?.message ?? 'Yüklenemedi.'); this.invoiceLoading = false; }
+      error: e => { this.toastr.error(e.error?.message ?? this.translate.instant('reportsPage.genericLoadFailed')); this.invoiceLoading = false; }
     });
   }
 
@@ -228,9 +230,9 @@ export class ReportsComponent implements OnInit {
         a.download = 'fatura-raporu.pdf';
         a.click();
         URL.revokeObjectURL(url);
-        this.toastr.success('PDF indirildi.');
+        this.toastr.success(this.translate.instant('reportsPage.downloadPdfOk'));
       },
-      error: e => this.toastr.error(e.error?.message ?? 'İndirilemedi.')
+      error: e => this.toastr.error(e.error?.message ?? this.translate.instant('reportsPage.downloadPdfFail'))
     });
   }
 
@@ -247,9 +249,9 @@ export class ReportsComponent implements OnInit {
         a.download = 'fatura-raporu.xlsx';
         a.click();
         URL.revokeObjectURL(url);
-        this.toastr.success('Excel indirildi.');
+        this.toastr.success(this.translate.instant('reportsPage.downloadExcelOk'));
       },
-      error: e => this.toastr.error(e.error?.message ?? 'İndirilemedi.')
+      error: e => this.toastr.error(e.error?.message ?? this.translate.instant('reportsPage.downloadExcelFail'))
     });
   }
 

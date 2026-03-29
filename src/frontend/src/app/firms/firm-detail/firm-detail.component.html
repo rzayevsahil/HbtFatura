@@ -1,84 +1,82 @@
 <div class="page-header">
   @if (auth.user()?.role === 'SuperAdmin') {
-  <a routerLink="/firms" class="back-link">← Firmalar</a>
+  <a routerLink="/firms" class="back-link">{{ 'firmProfile.backFirms' | translate }}</a>
   }
   @if (firm) {
   <h1 class="page-title">{{ firm.name }}</h1>
-  <p class="page-subtitle">Oluşturulma: {{ firm.createdAt | date:'dd.MM.yyyy' }}</p>
+  <p class="page-subtitle">{{ 'firmProfile.createdLabel' | translate }} {{ firm.createdAt | date:'dd.MM.yyyy' }}</p>
   @if (auth.hasPermission('CompanyProfile.Edit')) {
   <div class="actions">
-    <a [routerLink]="['/company/profile/edit']" [queryParams]="{ firmId: firm.id }" class="btn btn-primary">Firma
-      bilgilerini
-      düzenle</a>
+    <a [routerLink]="['/company/profile/edit']" [queryParams]="{ firmId: firm.id }" class="btn btn-primary">{{ 'firmProfile.editCompanyInfo' | translate }}</a>
   </div>
   }
   } @else if (loading) {
-  <h1 class="page-title">Firma profili</h1>
+  <h1 class="page-title">{{ 'firmProfile.profileTitle' | translate }}</h1>
   } @else {
-  <h1 class="page-title">Firma profili</h1>
-  <p class="text-muted">Firma yüklenemedi.</p>
+  <h1 class="page-title">{{ 'firmProfile.profileTitle' | translate }}</h1>
+  <p class="text-muted">{{ 'firmProfile.loadError' | translate }}</p>
   }
 </div>
 
 @if (loading) {
 <div class="firm-profile-loading">
-  <div class="firm-profile-loading__spinner" role="status" aria-label="Yükleniyor"></div>
-  <p class="firm-profile-loading__text">Yükleniyor…</p>
+  <div class="firm-profile-loading__spinner" role="status" [attr.aria-label]="'firmProfile.loadingAria' | translate"></div>
+  <p class="firm-profile-loading__text">{{ 'firmProfile.loading' | translate }}</p>
 </div>
 } @else {
 @if (firm && company) {
 <section class="company-info card">
-  <h2 class="card-title">Firma bilgileri</h2>
+  <h2 class="card-title">{{ 'firmProfile.companyInfo' | translate }}</h2>
   <div class="company-content">
     <dl class="info-list">
-      <dt>Firma adı</dt>
+      <dt>{{ 'firmProfile.companyName' | translate }}</dt>
       <dd>{{ company.companyName }}</dd>
-      <dt>İl / İlçe</dt>
+      <dt>{{ 'firmProfile.cityDistrict' | translate }}</dt>
       <dd>{{ company.cityName }}@if (company.cityName && company.districtName) { / }{{ company.districtName }}</dd>
-      <dt>Vergi dairesi</dt>
+      <dt>{{ 'firmProfile.taxOffice' | translate }}</dt>
       <dd>{{ company.taxOfficeName }}</dd>
-      <dt>Vergi No / TC</dt>
+      <dt>{{ 'firmProfile.taxId' | translate }}</dt>
       <dd>{{ company.taxNumber }}</dd>
-      <dt>Adres</dt>
+      <dt>{{ 'firmProfile.address' | translate }}</dt>
       <dd>{{ company.address }}</dd>
-      <dt>Telefon</dt>
+      <dt>{{ 'firmProfile.phone' | translate }}</dt>
       <dd>{{ company.phone }}</dd>
-      <dt>E-posta</dt>
+      <dt>{{ 'firmProfile.email' | translate }}</dt>
       <dd><a [href]="'mailto:' + company.email">{{ company.email }}</a></dd>
-      <dt>Web adresi</dt>
+      <dt>{{ 'firmProfile.website' | translate }}</dt>
       <dd>@if (company.website) { <a [href]="company.website" target="_blank">{{ company.website }}</a> }</dd>
-      <dt>Banka adı</dt>
+      <dt>{{ 'firmProfile.bankName' | translate }}</dt>
       <dd>{{ company.bankName }}</dd>
-      <dt>IBAN</dt>
+      <dt>{{ 'firmProfile.iban' | translate }}</dt>
       <dd>{{ company.iban }}</dd>
     </dl>
     @if (company.logoUrl) {
     <div class="company-logo">
-      <img [src]="getLogoUrl()" alt="Firma Logosu" />
+      <img [src]="getLogoUrl()" [alt]="'firmProfile.logoAlt' | translate" />
     </div>
     }
   </div>
 </section>
 } @else if (firm) {
 <section class="company-info card">
-  <p class="text-muted">Firma bilgileri henüz girilmedi. Düzenlemek için yukarıdaki butonu kullanın.</p>
+  <p class="text-muted">{{ 'firmProfile.noCompanyYet' | translate }}</p>
 </section>
 }
 
 @if (auth.hasPermission('Employees.View')) {
 @if (firm && firmUsers.length > 0) {
 <section class="firm-users card">
-  <h2 class="card-title">Çalışan hesapları</h2>
-  <p class="section-desc">Firma admin ve çalışan hesapları.</p>
+  <h2 class="card-title">{{ 'firmProfile.employeeAccounts' | translate }}</h2>
+  <p class="section-desc">{{ 'firmProfile.sectionUsersDesc' | translate }}</p>
   <table class="users-table">
     <thead>
       <tr>
-        <th>Rol</th>
-        <th>E-posta</th>
-        <th>Ad Soyad</th>
-        <th>Oluşturulma</th>
+        <th>{{ 'firmProfile.colRole' | translate }}</th>
+        <th>{{ 'employeesPage.colEmail' | translate }}</th>
+        <th>{{ 'firmProfile.colFullName' | translate }}</th>
+        <th>{{ 'firmProfile.created' | translate }}</th>
         @if (auth.hasPermission('Employees.Edit')) {
-        <th>İşlemler</th>
+        <th>{{ 'firmProfile.colOperations' | translate }}</th>
         }
       </tr>
     </thead>
@@ -91,7 +89,7 @@
         <td>{{ u.createdAt | date:'dd.MM.yyyy' }}</td>
         @if (auth.hasPermission('Employees.Edit')) {
         <td>
-          <a [routerLink]="['/employees', u.id, 'edit']" [queryParams]="{ returnUrl: '/firms/' + firm.id }" class="btn-sm">Düzenle</a>
+          <a [routerLink]="['/employees', u.id, 'edit']" [queryParams]="{ returnUrl: '/firms/' + firm.id }" class="btn-sm">{{ 'firmProfile.editShort' | translate }}</a>
         </td>
         }
       </tr>
@@ -101,8 +99,8 @@
 </section>
 } @else if (firm) {
 <section class="firm-users card">
-  <h2 class="card-title">Çalışan hesapları</h2>
-  <p class="text-muted">Bu firmaya ait kullanıcı hesabı bulunmuyor.</p>
+  <h2 class="card-title">{{ 'firmProfile.employeeAccounts' | translate }}</h2>
+  <p class="text-muted">{{ 'firmProfile.noUsers' | translate }}</p>
 </section>
 }
 }

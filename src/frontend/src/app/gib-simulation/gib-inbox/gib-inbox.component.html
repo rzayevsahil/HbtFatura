@@ -1,8 +1,8 @@
 <div class="page-header">
-  <h1 class="page-title">GİB Kutusu</h1>
+  <h1 class="page-title">{{ 'gibInbox.pageTitle' | translate }}</h1>
 </div>
 <p class="card disclaimer-banner">
-  <strong>Simülasyon:</strong> Bu ekran gerçek Gelir İdaresi Bağlantısı (GİB) değildir; yalnızca uygulama içi onay ve bildirim akışını gösterir.
+  <strong>{{ 'gibInbox.disclaimerBold' | translate }}</strong> {{ 'gibInbox.disclaimer' | translate }}
 </p>
 <div class="card table-wrap gib-table-card">
   @if (loading) {
@@ -11,19 +11,19 @@
   </div>
   }
   @if (!loading && items.length === 0) {
-  <p class="empty-state text-muted">Bekleyen fatura yok.</p>
+  <p class="empty-state text-muted">{{ 'gibInbox.empty' | translate }}</p>
   }
   @if (!loading && items.length > 0) {
   <table>
     <thead>
       <tr>
-        <th>Fatura no</th>
-        <th>Tarih</th>
-        <th>Gönderen firma</th>
-        <th>Cari ünvan</th>
-        <th>VKN</th>
-        <th class="col-amount">Tutar</th>
-        <th class="col-pdf"><span class="th-pdf-label" title="PDF">PDF</span></th>
+        <th>{{ 'gibInbox.colInvoiceNo' | translate }}</th>
+        <th>{{ 'gibInbox.colDate' | translate }}</th>
+        <th>{{ 'gibInbox.colSender' | translate }}</th>
+        <th>{{ 'gibInbox.colCustomerTitle' | translate }}</th>
+        <th>{{ 'gibInbox.colTaxId' | translate }}</th>
+        <th class="col-amount">{{ 'gibInbox.colAmount' | translate }}</th>
+        <th class="col-pdf"><span class="th-pdf-label" [attr.title]="'gibInbox.pdfShort' | translate">{{ 'gibInbox.pdfShort' | translate }}</span></th>
         <th class="col-actions"></th>
       </tr>
     </thead>
@@ -40,19 +40,19 @@
         <td class="col-amount">{{ row.grandTotal | number:'1.2-2' }} {{ row.currency }}</td>
         <td class="col-pdf">
           <button type="button" class="icon-btn icon-btn--pdf" (click)="downloadPdf(row)"
-            [disabled]="busyId === row.submissionId || pdfBusyId === row.invoiceId" title="PDF indir"
-            aria-label="PDF indir">
+            [disabled]="busyId === row.submissionId || pdfBusyId === row.invoiceId" [attr.title]="'gibInbox.ariaDownloadPdf' | translate"
+            [attr.aria-label]="'gibInbox.ariaDownloadPdf' | translate">
             <span class="material-icons" aria-hidden="true">picture_as_pdf</span>
           </button>
         </td>
         <td class="col-actions">
           <div class="actions-cell">
             <button type="button" class="icon-btn icon-btn--approve" (click)="accept(row)"
-              [disabled]="busyId === row.submissionId" title="Onayla" aria-label="Onayla">
+              [disabled]="busyId === row.submissionId" [attr.title]="'gibInbox.ariaApprove' | translate" [attr.aria-label]="'gibInbox.ariaApprove' | translate">
               <span class="material-icons" aria-hidden="true">check_circle</span>
             </button>
             <button type="button" class="icon-btn icon-btn--reject" (click)="reject(row)"
-              [disabled]="busyId === row.submissionId" title="Reddet" aria-label="Reddet">
+              [disabled]="busyId === row.submissionId" [attr.title]="'gibInbox.ariaReject' | translate" [attr.aria-label]="'gibInbox.ariaReject' | translate">
               <span class="material-icons" aria-hidden="true">cancel</span>
             </button>
           </div>

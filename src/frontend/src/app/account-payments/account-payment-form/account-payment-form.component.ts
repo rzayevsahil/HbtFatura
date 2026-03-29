@@ -9,11 +9,12 @@ import { AccountPaymentService } from '../../services/account-payment.service';
 import { InvoiceService } from '../../services/invoice.service';
 import { CustomerDto, CashRegisterDto, BankAccountDto, InvoiceListDto, AccountPaymentMethod, AccountPaymentType } from '../../core/models';
 import { ToastrService } from 'ngx-toastr';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-account-payment-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterLink, TranslateModule],
   templateUrl: './account-payment-form.component.html',
   styleUrls: ['./account-payment-form.component.scss']
 })
@@ -44,7 +45,8 @@ export class AccountPaymentFormComponent implements OnInit {
     private bankApi: BankAccountService,
     private paymentApi: AccountPaymentService,
     private invoiceApi: InvoiceService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private translate: TranslateService
   ) { }
 
   ngOnInit(): void {
@@ -86,11 +88,11 @@ export class AccountPaymentFormComponent implements OnInit {
     this.error = '';
     const v = this.form.getRawValue();
     if (v.paymentMethod === 'Kasa' && !v.cashRegisterId) {
-      this.error = 'Kasa seçiniz.';
+      this.error = this.translate.instant('payments.selectCashRequired');
       return;
     }
     if (v.paymentMethod === 'Banka' && !v.bankAccountId) {
-      this.error = 'Banka hesabı seçiniz.';
+      this.error = this.translate.instant('payments.selectBankRequired');
       return;
     }
     this.saving = true;
@@ -102,17 +104,23 @@ export class AccountPaymentFormComponent implements OnInit {
       paymentMethod: v.paymentMethod as AccountPaymentMethod,
       cashRegisterId: v.paymentMethod === 'Kasa' ? v.cashRegisterId || undefined : undefined,
       bankAccountId: v.paymentMethod === 'Banka' ? v.bankAccountId || undefined : undefined,
-      description: v.description || (v.type === 'Tahsilat' ? 'Tahsilat' : 'Ödeme'),
+      description: v.description || (v.type === 'Tahsilat'
+        ? this.translate.instant('payments.defaultDescCollection')
+        : this.translate.instant('payments.defaultDescPayment')),
       type: v.type as AccountPaymentType,
       invoiceId: v.invoiceId || undefined
     }).subscribe({
       next: () => {
-        this.toastr.success(v.type === 'Tahsilat' ? 'Tahsilat kaydedildi.' : 'Ödeme kaydedildi.');
+        this.toastr.success(
+          v.type === 'Tahsilat'
+            ? this.translate.instant('payments.toastCollectionSaved')
+            : this.translate.instant('payments.toastPaymentSaved')
+        );
         this.router.navigate(['/payments']);
       },
       error: e => {
         this.error = e.error?.message ?? 'Hata';
-        this.toastr.error(e.error?.message ?? 'Kayıt sırasında hata oluştu.');
+        this.toastr.error(e.error?.message ?? this.translate.instant('payments.saveError'));
         this.saving = false;
       },
       complete: () => { this.saving = false; }

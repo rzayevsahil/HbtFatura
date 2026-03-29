@@ -5,11 +5,13 @@ import { DeliveryNoteService } from '../../services/delivery-note.service';
 import { DeliveryNoteDto, DeliveryNoteStatus } from '../../core/models';
 import { InvoiceService } from '../../services/invoice.service';
 import { ToastrService } from 'ngx-toastr';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { LookupService } from '../../core/services/lookup.service';
 
 @Component({
   selector: 'app-delivery-note-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, TranslateModule],
   templateUrl: './delivery-note-detail.component.html',
   styleUrls: ['./delivery-note-detail.component.scss']
 })
@@ -23,7 +25,9 @@ export class DeliveryNoteDetailComponent implements OnInit {
     private router: Router,
     private deliveryNoteApi: DeliveryNoteService,
     private invoiceApi: InvoiceService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private translate: TranslateService,
+    public lookups: LookupService
   ) { }
 
   ngOnInit(): void {
@@ -38,17 +42,12 @@ export class DeliveryNoteDetailComponent implements OnInit {
     }
   }
 
-  /** Backend bazen enum'ı sayı bazen string (örn. "Taslak") gönderebilir. */
   statusLabel(s: DeliveryNoteStatus | string | undefined): string {
-    if (s === undefined || s === null) return '';
-    const byNumber: Record<number, string> = { 0: 'Taslak', 1: 'Onaylandı', 2: 'İptal', 3: 'Faturalandı' };
-    const byString: Record<string, string> = { Taslak: 'Taslak', Onaylandi: 'Onaylandı', Iptal: 'İptal', Faturalandi: 'Faturalandı' };
-    if (typeof s === 'number') return byNumber[s] ?? '';
-    return byString[String(s)] ?? '';
+    return this.lookups.getName('DeliveryNoteStatus', s);
   }
 
   typeLabel(t: number): string {
-    return t === 1 ? 'Alış' : 'Satış';
+    return this.lookups.getName('DeliveryNoteType', t);
   }
 
   get totalNet(): number {
@@ -80,8 +79,8 @@ export class DeliveryNoteDetailComponent implements OnInit {
   confirmDeliveryNote(): void {
     if (!this.deliveryNote || !this.isTaslak(this.deliveryNote.status)) return;
     this.deliveryNoteApi.setStatus(this.deliveryNote.id, 1).subscribe({
-      next: () => { this.toastr.success('İrsaliye onaylandı.'); this.ngOnInit(); },
-      error: e => this.toastr.error(e.error?.message ?? 'Onaylanamadı.')
+      next: () => { this.toastr.success(this.translate.instant('deliveryNotes.toastrApproved')); this.ngOnInit(); },
+      error: e => this.toastr.error(e.error?.message ?? this.translate.instant('deliveryNotes.approveFailed'))
     });
   }
 
@@ -90,11 +89,11 @@ export class DeliveryNoteDetailComponent implements OnInit {
     this.creatingInvoice = true;
     this.invoiceApi.createFromDeliveryNote(this.deliveryNote.id).subscribe({
       next: inv => {
-        this.toastr.success('Fatura oluşturuldu.');
+        this.toastr.success(this.translate.instant('deliveryNotes.toastrInvoiceCreated'));
         this.router.navigate(['/invoices', inv.id]);
       },
       error: e => {
-        this.toastr.error(e.error?.message ?? 'Fatura oluşturulamadı.');
+        this.toastr.error(e.error?.message ?? this.translate.instant('deliveryNotes.toastrInvoiceFailed'));
         this.creatingInvoice = false;
       }
     });

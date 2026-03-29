@@ -1,19 +1,29 @@
 <div class="auth-page">
+  <div class="auth-top-bar">
+    <div class="lang-switcher" role="group" [attr.aria-label]="'app.langPickAria' | translate">
+      <button type="button" class="lang-switcher-btn" [class.active]="isLang('tr')" (click)="setLang('tr')"
+        [attr.aria-pressed]="isLang('tr')">{{ 'app.langTurkish' | translate }}</button>
+      <button type="button" class="lang-switcher-btn" [class.active]="isLang('en')" (click)="setLang('en')"
+        [attr.aria-pressed]="isLang('en')">{{ 'app.langEnglish' | translate }}</button>
+    </div>
+  </div>
   <button type="button" class="auth-theme-toggle" (click)="theme.toggle()"
-    [attr.aria-label]="theme.darkMode() ? 'Açık temaya geç' : 'Koyu temaya geç'" title="Tema">
+    [attr.aria-label]="(theme.darkMode() ? 'app.themeLightAria' : 'app.themeDarkAria') | translate"
+    [title]="'app.themeTitle' | translate">
     <span class="material-icons" aria-hidden="true">{{ theme.darkMode() ? 'light_mode' : 'dark_mode' }}</span>
   </button>
   <div class="auth-box">
-    <h1>Giriş</h1>
+    <h1>{{ 'auth.loginTitle' | translate }}</h1>
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
       <div class="field">
-        <label>E-posta</label>
-        <input type="email" formControlName="email" placeholder="ornek@firma.com" />
+        <label>{{ 'auth.email' | translate }}</label>
+        <input type="email" formControlName="email" [placeholder]="'auth.emailPlaceholder' | translate" />
       </div>
       <div class="field">
-        <label>Şifre</label>
+        <label>{{ 'auth.password' | translate }}</label>
         <div class="password-input">
-          <input [type]="showPassword ? 'text' : 'password'" formControlName="password" placeholder="••••••••" />
+          <input [type]="showPassword ? 'text' : 'password'" formControlName="password"
+            [placeholder]="'auth.passwordPlaceholder' | translate" />
           <button type="button" class="toggle-password" (click)="showPassword = !showPassword" tabindex="-1">
             @if (showPassword) {
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
@@ -43,10 +53,10 @@
           <svg class="spinner-sm" viewBox="0 0 24 24">
             <circle class="path" cx="12" cy="12" r="10" fill="none" stroke-width="3"></circle>
           </svg>
-          Giriş yapılıyor...
+          {{ 'auth.loggingIn' | translate }}
         </span>
         } @else {
-        Giriş
+        {{ 'auth.loginSubmit' | translate }}
         }
       </button>
     </form>

@@ -1,24 +1,24 @@
 <div class="page-header">
-  <h1 class="page-title">Siparişler</h1>
+  <h1 class="page-title">{{ 'orders.pageTitle' | translate }}</h1>
 </div>
 <div class="toolbar">
   <label class="toolbar-field">
-    <span class="toolbar-label">Ara (Sipariş No/Cari)</span>
-    <input [(ngModel)]="searchText" type="text" placeholder="Sipariş no veya cari..." (keyup.enter)="load()"
+    <span class="toolbar-label">{{ 'orders.searchLabel' | translate }}</span>
+    <input [(ngModel)]="searchText" type="text" [placeholder]="'orders.searchPlaceholder' | translate" (keyup.enter)="load()"
       class="toolbar-input" />
   </label>
   <label class="toolbar-field">
-    <span class="toolbar-label">Başlangıç tarihi</span>
+    <span class="toolbar-label">{{ 'common.dateFromShort' | translate }}</span>
     <input [(ngModel)]="searchDateFrom" type="date" class="toolbar-input" />
   </label>
   <label class="toolbar-field">
-    <span class="toolbar-label">Bitiş tarihi</span>
+    <span class="toolbar-label">{{ 'common.dateToShort' | translate }}</span>
     <input [(ngModel)]="searchDateTo" type="date" class="toolbar-input" />
   </label>
   <label class="toolbar-field">
-    <span class="toolbar-label">Durum</span>
+    <span class="toolbar-label">{{ 'common.status' | translate }}</span>
     <select [(ngModel)]="searchStatus" class="toolbar-select">
-      <option [ngValue]="null">Tümü</option>
+      <option [ngValue]="null">{{ 'common.all' | translate }}</option>
       @for (l of lookups.getGroup('OrderStatus')(); track l.code) {
       <option [ngValue]="+l.code">{{ l.name }}</option>
       }
@@ -26,20 +26,20 @@
   </label>
   <div class="toolbar-field toolbar-field-btn">
     <span class="toolbar-label">&nbsp;</span>
-    <button type="button" (click)="load()">Filtrele</button>
+    <button type="button" (click)="load()">{{ 'common.filter' | translate }}</button>
   </div>
   <div class="toolbar-field toolbar-field-btn">
     <span class="toolbar-label">&nbsp;</span>
-    <button type="button" class="btn btn-default" (click)="downloadPdf()">PDF indir</button>
+    <button type="button" class="btn btn-default" (click)="downloadPdf()">{{ 'common.pdfDownload' | translate }}</button>
   </div>
   <div class="toolbar-field toolbar-field-btn">
     <span class="toolbar-label">&nbsp;</span>
-    <button type="button" class="btn btn-default" (click)="downloadExcel()">Excel indir</button>
+    <button type="button" class="btn btn-default" (click)="downloadExcel()">{{ 'common.excelDownload' | translate }}</button>
   </div>
   @if (auth.hasPermission('Orders.Create')) {
   <div class="toolbar-field toolbar-field-btn">
     <span class="toolbar-label">&nbsp;</span>
-    <a routerLink="/orders/new" class="btn btn-primary">Yeni Sipariş</a>
+    <a routerLink="/orders/new" class="btn btn-primary">{{ 'orders.newOrder' | translate }}</a>
   </div>
   }
 </div>
@@ -52,13 +52,13 @@
   <table>
     <thead>
       <tr>
-        <th>Sipariş No</th>
-        <th>Tarih</th>
-        <th>Tip</th>
-        <th>Cari</th>
-        <th>Toplam</th>
-        <th>Durum</th>
-        <th>Oluşturan</th>
+        <th>{{ 'orders.colOrderNo' | translate }}</th>
+        <th>{{ 'dashboard.colDate' | translate }}</th>
+        <th>{{ 'common.type' | translate }}</th>
+        <th>{{ 'common.customer' | translate }}</th>
+        <th>{{ 'common.total' | translate }}</th>
+        <th>{{ 'common.status' | translate }}</th>
+        <th>{{ 'common.createdBy' | translate }}</th>
         <th></th>
       </tr>
     </thead>
@@ -82,9 +82,9 @@
         <td>{{ o.createdByUserName ?? '—' }}</td>
         <td>
           <div class="actions-cell">
-            <a [routerLink]="['/orders', o.id]">Detay</a>
+            <a [routerLink]="['/orders', o.id]">{{ 'common.detail' | translate }}</a>
             @if (isEditableStatus(o) && auth.hasPermission('Orders.Edit')) {
-            <a [routerLink]="['/orders', o.id, 'edit']">Düzenle</a>
+            <a [routerLink]="['/orders', o.id, 'edit']">{{ 'common.edit' | translate }}</a>
             }
           </div>
         </td>
@@ -94,7 +94,7 @@
   </table>
 </div>
 <div class="pagination">
-  <span>Toplam: {{ totalCount }} kayıt — Sayfa {{ page }}</span>
-  <button type="button" [disabled]="page <= 1" (click)="prevPage()">Önceki</button>
-  <button type="button" [disabled]="items.length < pageSize" (click)="nextPage()">Sonraki</button>
+  <span>{{ 'common.paginationTotalPage' | translate: { total: totalCount, page: page } }}</span>
+  <button type="button" [disabled]="page <= 1" (click)="prevPage()">{{ 'common.previous' | translate }}</button>
+  <button type="button" [disabled]="items.length < pageSize" (click)="nextPage()">{{ 'common.next' | translate }}</button>
 </div>

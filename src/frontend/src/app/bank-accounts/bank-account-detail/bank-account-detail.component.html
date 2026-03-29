@@ -1,12 +1,11 @@
 <div class="page-header">
-  <a routerLink="/bank-accounts" class="back-link">← Banka</a>
+  <a routerLink="/bank-accounts" class="back-link">{{ 'bankAccountsPage.backLink' | translate }}</a>
   @if (bankAccount) {
   <h1 class="page-title">{{ bankAccount.name }}</h1>
-  <p class="page-subtitle">{{ bankAccount.bankName }} · Bakiye: {{ bankAccount.balance | number:'1.2-2' }} {{
-    bankAccount.currency }}</p>
+  <p class="page-subtitle">{{ 'bankAccountsPage.subtitleBank' | translate:{ bank: bankAccount.bankName ?? '', amount: (bankAccount.balance | number:'1.2-2'), currency: bankAccount.currency } }}</p>
   <div class="actions">
-    <button type="button" class="btn btn-primary" (click)="openAddModal()">Dekont ekle</button>
-    <a [routerLink]="['/bank-accounts', bankAccount.id, 'edit']" class="btn btn-secondary">Düzenle</a>
+    <button type="button" class="btn btn-primary" (click)="openAddModal()">{{ 'bankAccountsPage.addReceipt' | translate }}</button>
+    <a [routerLink]="['/bank-accounts', bankAccount.id, 'edit']" class="btn btn-secondary">{{ 'common.edit' | translate }}</a>
   </div>
   } @else if (loading) {
   <div class="loading-container">
@@ -21,20 +20,20 @@
     <div class="spinner"></div>
   </div>
   }
-  <h2 class="card-title">Banka hareketleri</h2>
+  <h2 class="card-title">{{ 'bankAccountsPage.movements' | translate }}</h2>
   <div class="filter-bar">
     <input type="date" [(ngModel)]="dateFrom" />
     <input type="date" [(ngModel)]="dateTo" />
-    <button type="button" (click)="applyFilter()">Filtrele</button>
+    <button type="button" (click)="applyFilter()">{{ 'common.filter' | translate }}</button>
   </div>
   <table class="transactions-table">
     <thead>
       <tr>
-        <th>Tarih</th>
-        <th>Açıklama</th>
-        <th>Tip</th>
-        <th>Giriş</th>
-        <th>Çıkış</th>
+        <th>{{ 'payments.colDate' | translate }}</th>
+        <th>{{ 'common.description' | translate }}</th>
+        <th>{{ 'common.type' | translate }}</th>
+        <th>{{ 'common.txnIn' | translate }}</th>
+        <th>{{ 'common.txnOut' | translate }}</th>
       </tr>
     </thead>
     <tbody>
@@ -49,32 +48,32 @@
       }
     </tbody>
   </table>
-  @if (transactions.length === 0) { <p class="text-muted">Bu dönemde hareket bulunmuyor.</p> }
+  @if (transactions.length === 0) { <p class="text-muted">{{ 'cashRegisters.noMovementsInPeriod' | translate }}</p> }
   <div class="pagination">
-    <span>Toplam: {{ totalCount }} kayıt</span>
-    <button type="button" [disabled]="page <= 1" (click)="prevPage()">Önceki</button>
-    <button type="button" [disabled]="transactions.length < pageSize" (click)="nextPage()">Sonraki</button>
+    <span>{{ 'common.paginationTotal' | translate:{ total: totalCount } }}</span>
+    <button type="button" [disabled]="page <= 1" (click)="prevPage()">{{ 'common.previous' | translate }}</button>
+    <button type="button" [disabled]="transactions.length < pageSize" (click)="nextPage()">{{ 'common.next' | translate }}</button>
   </div>
 </section>
 }
 @if (showAddModal) {
 <div class="modal-overlay" (click)="closeAddModal()">
   <div class="modal" (click)="$event.stopPropagation()">
-    <h3>Banka dekontu</h3>
+    <h3>{{ 'bankAccountsPage.receiptModalTitle' | translate }}</h3>
     <div class="form-grid">
-      <div class="row"><label>Tarih</label><input type="date" [(ngModel)]="newTransaction.date" /></div>
-      <div class="row"><label>Tip</label><select [(ngModel)]="newTransaction.type">
-          <option [ngValue]="1">Giriş</option>
-          <option [ngValue]="2">Çıkış</option>
+      <div class="row"><label>{{ 'payments.colDate' | translate }}</label><input type="date" [(ngModel)]="newTransaction.date" /></div>
+      <div class="row"><label>{{ 'common.type' | translate }}</label><select [(ngModel)]="newTransaction.type">
+          <option [ngValue]="1">{{ 'common.txnIn' | translate }}</option>
+          <option [ngValue]="2">{{ 'common.txnOut' | translate }}</option>
         </select></div>
-      <div class="row"><label>Tutar</label><input type="number" [(ngModel)]="newTransaction.amount" min="0"
+      <div class="row"><label>{{ 'cashRegisters.amount' | translate }}</label><input type="number" [(ngModel)]="newTransaction.amount" min="0"
           step="0.01" /></div>
-      <div class="row"><label>Açıklama</label><input [(ngModel)]="newTransaction.description" placeholder="Açıklama" />
+      <div class="row"><label>{{ 'common.description' | translate }}</label><input [(ngModel)]="newTransaction.description" [placeholder]="'common.description' | translate" />
       </div>
     </div>
     <div class="modal-actions">
-      <button type="button" (click)="submitTransaction()" [disabled]="newTransaction.amount <= 0">Kaydet</button>
-      <button type="button" (click)="closeAddModal()">İptal</button>
+      <button type="button" (click)="submitTransaction()" [disabled]="newTransaction.amount <= 0">{{ 'common.save' | translate }}</button>
+      <button type="button" (click)="closeAddModal()">{{ 'common.cancel' | translate }}</button>
     </div>
   </div>
 </div>

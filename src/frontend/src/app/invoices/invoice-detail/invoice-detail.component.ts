@@ -2,6 +2,7 @@ import { Component, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { InvoiceService } from '../../services/invoice.service';
 import { InvoiceDto, InvoiceScenario, InvoiceStatus } from '../../core/models';
 import { ToastrService } from 'ngx-toastr';
@@ -9,7 +10,7 @@ import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-invoice-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [CommonModule, RouterLink, FormsModule, TranslateModule],
   templateUrl: './invoice-detail.component.html',
   styleUrls: ['./invoice-detail.component.scss']
 })
@@ -18,7 +19,13 @@ export class InvoiceDetailComponent implements OnInit {
   loading = true;
   selectedScenario: InvoiceScenario = 0;
 
-  constructor(private route: ActivatedRoute, private router: Router, private api: InvoiceService, private toastr: ToastrService) { }
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private api: InvoiceService,
+    private toastr: ToastrService,
+    private translate: TranslateService
+  ) { }
 
   @HostListener('document:keydown', ['$event'])
   onKeyDown(e: KeyboardEvent): void {
@@ -46,14 +53,18 @@ export class InvoiceDetailComponent implements OnInit {
   }
 
   statusLabel(s: any, sourceType?: string | null): string {
-    const map: any = {
-      0: 'Fatura Oluşturuldu', 'Draft': 'Fatura Oluşturuldu',
-      1: 'Onaylandı', 'Issued': 'Onaylandı',
-      2: 'Ödendi', 'Paid': 'Ödendi',
-      3: 'İptal', 'Cancelled': 'İptal',
-      4: 'GİB onayı bekliyor', 'PendingGibAcceptance': 'GİB onayı bekliyor'
+    const map: Record<string, string> = {
+      '0': 'invoices.statusDraft', Draft: 'invoices.statusDraft',
+      '1': 'invoices.statusIssued', Issued: 'invoices.statusIssued',
+      '2': 'invoices.statusPaid', Paid: 'invoices.statusPaid',
+      '3': 'invoices.statusCancelled', Cancelled: 'invoices.statusCancelled',
+      '4': 'invoices.statusPendingGib', PendingGibAcceptance: 'invoices.statusPendingGib'
     };
-    return map[s] ?? (s !== null && s !== undefined ? s.toString() : '');
+    const key = map[String(s)];
+    if (key) {
+      return this.translate.instant(key);
+    }
+    return s !== null && s !== undefined ? String(s) : '';
   }
 
   statusClass(s: any): string {
@@ -79,12 +90,12 @@ export class InvoiceDetailComponent implements OnInit {
         this.api.getById(this.invoice!.id).subscribe(inv => {
           this.invoice = inv;
           this.approvingPurchase = false;
-          this.toastr.success('Alış faturası onaylandı; PDF indirebilirsiniz.');
+          this.toastr.success(this.translate.instant('invoices.toastrPurchaseOk'));
         });
       },
       error: () => {
         this.approvingPurchase = false;
-        this.toastr.error('Onay sırasında bir hata oluştu.');
+        this.toastr.error(this.translate.instant('invoices.toastrApproveError'));
       }
     });
   }
@@ -98,12 +109,12 @@ export class InvoiceDetailComponent implements OnInit {
         this.sendingGib = false;
         this.api.getById(this.invoice!.id).subscribe(inv => {
           this.invoice = inv;
-          this.toastr.success('Fatura GİB simülasyon kuyruğuna alındı; karşı firma onayından sonra kesinleşir.');
+          this.toastr.success(this.translate.instant('invoices.toastrGibQueued'));
         });
       },
       error: e => {
         this.sendingGib = false;
-        this.toastr.error(e.error?.message ?? "GİB simülasyon gönderiminde hata oluştu.");
+        this.toastr.error(e.error?.message ?? this.translate.instant('invoices.toastrGibError'));
       }
     });
   }
@@ -118,9 +129,9 @@ export class InvoiceDetailComponent implements OnInit {
         a.download = `fatura-${this.invoice!.invoiceNumber}.pdf`;
         a.click();
         URL.revokeObjectURL(url);
-        this.toastr.success('Fatura PDF indirildi.');
+        this.toastr.success(this.translate.instant('invoices.toastrPdfOk'));
       },
-      error: () => this.toastr.error('PDF indirilemedi.')
+      error: () => this.toastr.error(this.translate.instant('invoices.toastrPdfFail'))
     });
   }
 

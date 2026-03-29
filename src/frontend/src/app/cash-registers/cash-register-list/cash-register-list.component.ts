@@ -9,11 +9,12 @@ import { ToastrService } from 'ngx-toastr';
 
 import { ConfirmModalComponent } from '../../shared/confirm-modal/confirm-modal.component';
 import { currencyDisplaySuffix } from '../../core/utils/currency-display';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-cash-register-list',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule, ConfirmModalComponent],
+  imports: [CommonModule, RouterLink, FormsModule, ConfirmModalComponent, TranslateModule],
   templateUrl: './cash-register-list.component.html',
   styleUrls: ['./cash-register-list.component.scss']
 })
@@ -28,7 +29,8 @@ export class CashRegisterListComponent implements OnInit {
   constructor(
     private api: CashRegisterService,
     public auth: AuthService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private translate: TranslateService
   ) { }
 
   ngOnInit(): void {
@@ -43,7 +45,7 @@ export class CashRegisterListComponent implements OnInit {
         this.loading = false;
       },
       error: e => {
-        this.toastr.error(e.error?.message ?? 'Liste yüklenemedi.');
+        this.toastr.error(e.error?.message ?? this.translate.instant('cashRegisters.toastLoadFailed'));
         this.loading = false;
       }
     });
@@ -73,13 +75,13 @@ export class CashRegisterListComponent implements OnInit {
     if (!this.deletingRegister) return;
     this.api.delete(this.deletingRegister.id).subscribe({
       next: () => {
-        this.toastr.success('Kasa silindi.');
+        this.toastr.success(this.translate.instant('cashRegisters.toastRegisterDeleted'));
         this.showDeleteModal = false;
         this.deletingRegister = null;
         this.load();
       },
       error: e => {
-        this.toastr.error(e.error?.message ?? 'Silme sırasında hata oluştu.');
+        this.toastr.error(e.error?.message ?? this.translate.instant('mainAccountCodes.deleteError'));
         this.showDeleteModal = false;
         this.deletingRegister = null;
       }

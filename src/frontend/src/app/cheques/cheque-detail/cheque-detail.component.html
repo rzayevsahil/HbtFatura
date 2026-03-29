@@ -1,39 +1,39 @@
 <div class="page-header">
-  <h1 class="page-title">{{ item ? typeLabel(item.type) + ' - ' + item.customerTitle : 'Çek / Senet' }}</h1>
+  <h1 class="page-title">{{ item ? (typeLabel(item.type) + ' - ' + item.customerTitle) : ('chequesPage.detailTitleFallback' | translate) }}</h1>
   <div class="actions">
     @if (item) {
-    <a [routerLink]="['/cheques', item.id, 'edit']" class="btn">Düzenle</a>
+    <a [routerLink]="['/cheques', item.id, 'edit']" class="btn">{{ 'common.edit' | translate }}</a>
     }
   </div>
 </div>
 @if (loading) {
 <div class="loading-container">
   <div class="spinner"></div>
-  <p>Veriler yükleniyor...</p>
+  <p>{{ 'common.loadingData' | translate }}</p>
 </div>
 } @else if (item) {
   <div class="card info-grid">
-    <p><strong>Portföy no:</strong> {{ item.portfolioNumber }}</p>
-    <p><strong>Seri no:</strong> {{ item.serialNumber || '—' }}</p>
-    @if (item.bordroNumber) { <p><strong>Bordro no:</strong> {{ item.bordroNumber }}</p> }
-    <p><strong>Cari:</strong> {{ item.customerTitle }}</p>
-    <p><strong>Tutar:</strong> {{ item.amount | number:'1.2-2' }} ₺</p>
-    <p><strong>Keşide:</strong> {{ item.issueDate | date:'shortDate' }}</p>
-    <p><strong>Vade:</strong> {{ item.dueDate | date:'shortDate' }}</p>
-    <p><strong>Durum:</strong> {{ statusLabel(item.status) }}</p>
-    @if (item.bankAccountName) { <p><strong>Banka:</strong> {{ item.bankAccountName }}</p> }
+    <p><strong>{{ 'chequesPage.detailPortfolio' | translate }}</strong> {{ item.portfolioNumber }}</p>
+    <p><strong>{{ 'chequesPage.detailSerial' | translate }}</strong> {{ item.serialNumber || ('chequesPage.noneDash' | translate) }}</p>
+    @if (item.bordroNumber) { <p><strong>{{ 'chequesPage.detailBordro' | translate }}</strong> {{ item.bordroNumber }}</p> }
+    <p><strong>{{ 'chequesPage.detailCustomer' | translate }}</strong> {{ item.customerTitle }}</p>
+    <p><strong>{{ 'chequesPage.detailAmount' | translate }}</strong> {{ item.amount | number:'1.2-2' }} ₺</p>
+    <p><strong>{{ 'chequesPage.detailIssue' | translate }}</strong> {{ item.issueDate | date:'shortDate' }}</p>
+    <p><strong>{{ 'chequesPage.detailDue' | translate }}</strong> {{ item.dueDate | date:'shortDate' }}</p>
+    <p><strong>{{ 'chequesPage.detailStatus' | translate }}</strong> {{ statusLabel(item.status) }}</p>
+    @if (item.bankAccountName) { <p><strong>{{ 'chequesPage.detailBank' | translate }}</strong> {{ item.bankAccountName }}</p> }
   </div>
   <div class="card">
-    <h3>Durum güncelle</h3>
+    <h3>{{ 'chequesPage.statusUpdate' | translate }}</h3>
     <div class="status-update">
       <select [(ngModel)]="newStatus">
         @for (l of lookups.getGroup('ChequeStatus')(); track l.code) {
         <option [ngValue]="+l.code">{{ l.name }}</option>
         }
       </select>
-      <button type="button" (click)="updateStatus()">Kaydet</button>
+      <button type="button" (click)="updateStatus()">{{ 'common.save' | translate }}</button>
     </div>
   </div>
 } @else {
-<p class="text-muted">Kayıt bulunamadı veya yüklenemedi.</p>
+<p class="text-muted">{{ 'chequesPage.notFoundOrError' | translate }}</p>
 }

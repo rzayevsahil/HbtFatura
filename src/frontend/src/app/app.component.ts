@@ -2,20 +2,70 @@ import { Component, effect } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Subscription, interval } from 'rxjs';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AuthService } from './core/services/auth.service';
 import { LookupService } from './core/services/lookup.service';
 import { MenuService } from './core/services/menu.service';
 import { NotificationService, UserNotificationDto } from './services/notification.service';
 import { ThemeService } from './core/services/theme.service';
+import { LANG_STORAGE_KEY } from './core/i18n/app-shell.init';
+import { MenuItem } from './core/models';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive],
+  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive, TranslateModule],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
+  /** API menü `routerLink` → i18n anahtarı */
+  private static readonly MENU_LINK_KEYS: Record<string, string> = {
+    '/dashboard': 'menu.dashboard',
+    '/invoices': 'menu.invoices',
+    '/gib-simulation/inbox': 'menu.gibInbox',
+    '/orders': 'menu.orders',
+    '/delivery-notes': 'menu.deliveryNotes',
+    '/products': 'menu.products',
+    '/customers': 'menu.customers',
+    '/main-account-codes': 'menu.mainAccountCodes',
+    '/payments': 'menu.payments',
+    '/cash-registers': 'menu.cashRegisters',
+    '/bank-accounts': 'menu.bankAccounts',
+    '/cheques': 'menu.cheques',
+    '/reports': 'menu.reports',
+    '/lookups': 'menu.lookups',
+    '/permissions': 'menu.permissions',
+    '/menus': 'menu.menus',
+    '/firms': 'menu.firms',
+    '/employees': 'menu.employees',
+    '/logs': 'menu.logs',
+    '/company/profile': 'menu.companyProfile'
+  };
+
+  private static readonly MENU_LABEL_FALLBACK: Record<string, string> = {
+    'Dashboard': 'menu.dashboard',
+    'Faturalar': 'menu.invoices',
+    'GİB Kutusu (simülasyon)': 'menu.gibInbox',
+    'Siparişler': 'menu.orders',
+    'İrsaliyeler': 'menu.deliveryNotes',
+    'Ürünler': 'menu.products',
+    'Cari Kartlar': 'menu.customers',
+    'Hesap Kodları': 'menu.mainAccountCodes',
+    'Tahsilat / Ödeme': 'menu.payments',
+    'Kasa Yönetimi': 'menu.cashRegisters',
+    'Banka Yönetimi': 'menu.bankAccounts',
+    'Çek / Senet': 'menu.cheques',
+    'Raporlar': 'menu.reports',
+    'Sistem Tanımları': 'menu.lookups',
+    'Rol ve Yetki Yönetimi': 'menu.permissions',
+    'Menü Yönetimi': 'menu.menus',
+    'Firma Yönetimi': 'menu.firms',
+    'Personel Yönetimi': 'menu.employees',
+    'Sistem Logları': 'menu.logs',
+    'Şirket Profili': 'menu.companyProfile'
+  };
+
   headerMenuOpen = false;
   notifOpen = false;
   notifItems: UserNotificationDto[] = [];
@@ -25,6 +75,7 @@ export class AppComponent {
   constructor(
     public auth: AuthService,
     public theme: ThemeService,
+    public translate: TranslateService,
     private lookup: LookupService,
     public menu: MenuService,
     private notifApi: NotificationService,
@@ -135,5 +186,45 @@ export class AppComponent {
 
   canViewGibInbox(): boolean {
     return !!this.auth.user()?.permissions?.includes('GibSimulation.ViewInbox');
+  }
+
+  /** Angular `DatePipe` yerel ayarı (dil değişince güncellenir) */
+  get dateLocaleId(): string {
+    return this.translate.currentLang === 'en' ? 'en-US' : 'tr';
+  }
+
+  setLang(lang: 'tr' | 'en'): void {
+    this.translate.use(lang).subscribe(() => {
+      try {
+        localStorage.setItem(LANG_STORAGE_KEY, lang);
+      } catch {
+        /* */
+      }
+      document.documentElement.lang = lang === 'en' ? 'en' : 'tr';
+      this.closeHeaderMenu();
+    });
+  }
+
+  isLang(lang: 'tr' | 'en'): boolean {
+    return this.translate.currentLang === lang;
+  }
+
+  menuDisplayLabel(item: MenuItem): string {
+    const link = (item.routerLink || '').trim();
+    const linkKey = link ? AppComponent.MENU_LINK_KEYS[link] : undefined;
+    if (linkKey) {
+      const t = this.translate.instant(linkKey);
+      if (t !== linkKey) {
+        return t;
+      }
+    }
+    const fb = item.label ? AppComponent.MENU_LABEL_FALLBACK[item.label] : undefined;
+    if (fb) {
+      const t = this.translate.instant(fb);
+      if (t !== fb) {
+        return t;
+      }
+    }
+    return item.label;
   }
 }

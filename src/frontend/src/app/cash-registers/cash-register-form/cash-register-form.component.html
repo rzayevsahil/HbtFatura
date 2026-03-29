@@ -1,10 +1,10 @@
 <div class="page-header">
-  <h1 class="page-title">{{ id ? 'Kasa Düzenle' : 'Yeni Kasa' }}</h1>
+  <h1 class="page-title">{{ id ? ('cashRegisters.formEditTitle' | translate) : ('cashRegisters.formNewTitle' | translate) }}</h1>
 </div>
 @if (id && editLoading) {
 <div class="loading-container">
   <div class="spinner"></div>
-  <p>Veriler yükleniyor...</p>
+  <p>{{ 'common.loadingData' | translate }}</p>
 </div>
 } @else {
 <div class="card">
@@ -12,9 +12,9 @@
     <div class="form-grid">
       @if (auth.user()?.role === 'SuperAdmin' && !id) {
         <div class="row">
-          <label>Firma</label>
+          <label>{{ 'common.firm' | translate }}</label>
           <select formControlName="firmId" required>
-            <option [ngValue]="null">Firma seçin</option>
+            <option [ngValue]="null">{{ 'common.selectFirm' | translate }}</option>
             @for (f of firms; track f.id) {
               <option [ngValue]="f.id">{{ f.name }}</option>
             }
@@ -22,11 +22,11 @@
         </div>
       }
       <div class="row">
-        <label>Kasa adı</label>
-        <input formControlName="name" placeholder="Örn. Ana Kasa" />
+        <label>{{ 'cashRegisters.cashName' | translate }}</label>
+        <input formControlName="name" [placeholder]="'cashRegisters.nameExampleCash' | translate" />
       </div>
       <div class="row">
-        <label>Para birimi</label>
+        <label>{{ 'cashRegisters.currency' | translate }}</label>
         <select formControlName="currency">
           @for (c of currencies; track c.id) {
           <option [value]="c.code">{{ c.name }} ({{ c.code }})</option>
@@ -35,15 +35,15 @@
       </div>
       @if (id) {
         <div class="row">
-          <label>Aktif</label>
+          <label>{{ 'cashRegisters.active' | translate }}</label>
           <input type="checkbox" formControlName="isActive" />
         </div>
       }
       @if (error) { <p class="error-msg">{{ error }}</p> }
     </div>
     <div class="actions">
-      <button type="submit" [disabled]="form.invalid || saving">Kaydet</button>
-      <a routerLink="/cash-registers">İptal</a>
+      <button type="submit" [disabled]="form.invalid || saving">{{ 'common.save' | translate }}</button>
+      <a routerLink="/cash-registers">{{ 'common.cancel' | translate }}</a>
     </div>
   </form>
 </div>

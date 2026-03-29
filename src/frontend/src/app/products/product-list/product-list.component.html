@@ -1,11 +1,11 @@
 <div class="page-header">
-  <h1 class="page-title">Ürünler (Stok)</h1>
+  <h1 class="page-title">{{ 'products.pageTitle' | translate }}</h1>
 </div>
 <div class="toolbar">
-  <input type="text" [(ngModel)]="search" placeholder="Kod, ad, barkod..." (keyup.enter)="applySearch()" />
-  <button type="button" (click)="applySearch()">Ara</button>
+  <input type="text" [(ngModel)]="search" [placeholder]="'products.searchPlaceholder' | translate" (keyup.enter)="applySearch()" />
+  <button type="button" (click)="applySearch()">{{ 'products.search' | translate }}</button>
   @if (auth.hasPermission('Products.Edit')) {
-  <a routerLink="/products/new" class="btn btn-primary">Yeni Ürün</a>
+  <a routerLink="/products/new" class="btn btn-primary">{{ 'products.newProduct' | translate }}</a>
   }
 </div>
 <div class="card table-wrap" style="position: relative; min-height: 200px;">
@@ -17,11 +17,11 @@
   <table>
     <thead>
       <tr>
-        <th>Kod</th>
-        <th>Ad</th>
-        <th>Birim</th>
-        <th>Fiyat</th>
-        <th>Stok</th>
+        <th>{{ 'products.colCode' | translate }}</th>
+        <th>{{ 'products.colName' | translate }}</th>
+        <th>{{ 'products.colUnit' | translate }}</th>
+        <th>{{ 'products.colPrice' | translate }}</th>
+        <th>{{ 'products.colStock' | translate }}</th>
         <th></th>
       </tr>
     </thead>
@@ -35,10 +35,10 @@
         <td class="amount">{{ p.stockQuantity | number:'1.2-2' }}</td>
         <td>
           <div class="actions-cell">
-            <a [routerLink]="['/products', p.id]">Detay</a>
+            <a [routerLink]="['/products', p.id]">{{ 'products.detail' | translate }}</a>
             @if (auth.hasPermission('Products.Edit')) {
-            <a [routerLink]="['/products', p.id, 'edit']">Düzenle</a>
-            <button type="button" (click)="onDeleteClick(p.id, p.name)">Sil</button>
+            <a [routerLink]="['/products', p.id, 'edit']">{{ 'products.edit' | translate }}</a>
+            <button type="button" (click)="onDeleteClick(p.id, p.name)">{{ 'products.delete' | translate }}</button>
             }
           </div>
         </td>
@@ -48,14 +48,16 @@
   </table>
 </div>
 @if (totalCount > pageSize) {
-<p class="text-muted">Toplam {{ totalCount }} kayıt. Sayfa {{ page }}.</p>
+<p class="text-muted">{{ 'products.pageInfo' | translate: { total: totalCount, page: page } }}</p>
 }
 @if (items.length === 0) {
-<p class="text-muted">Ürün bulunamadı veya henüz ürün tanımlanmamış.</p>
+<p class="text-muted">{{ 'products.noResults' | translate }}</p>
 }
 
-@if (showDeleteModal) {
-<app-confirm-modal title="Ürün Sil"
-  [message]="'\'' + deletingProduct?.name + '\' isimli ürünü silmek istediğinize emin misiniz?'" confirmText="Sil"
-  cancelText="Vazgeç" (confirm)="confirmDelete()" (cancel)="showDeleteModal = false"></app-confirm-modal>
+@if (showDeleteModal && deletingProduct) {
+<app-confirm-modal [title]="'products.deleteTitle' | translate"
+  [message]="'products.deleteMessage' | translate: { name: deletingProduct.name }"
+  [confirmText]="'products.delete' | translate"
+  [cancelText]="'common.cancel' | translate"
+  (confirm)="confirmDelete()" (cancel)="showDeleteModal = false"></app-confirm-modal>
 }

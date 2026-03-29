@@ -10,11 +10,12 @@ import { CustomerDto, ProductDto, StockLevelsReportDto, CreateOrderRequest, Upda
 import { ToastrService } from 'ngx-toastr';
 import { LookupService } from '../../core/services/lookup.service';
 import { UnitFieldSelectComponent } from '../../shared/unit-field-select/unit-field-select.component';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-order-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterLink, UnitFieldSelectComponent],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterLink, UnitFieldSelectComponent, TranslateModule],
   templateUrl: './order-form.component.html',
   styleUrls: ['./order-form.component.scss']
 })
@@ -44,9 +45,9 @@ export class OrderFormComponent implements OnInit {
 
   get selectedCustomerTitle(): string {
     const cid = this.form.get('customerId')?.value;
-    if (!cid) return 'Seçin';
+    if (!cid) return this.translate.instant('common.selectShort');
     const c = this.customers.find(x => x.id === cid);
-    return c?.title ?? 'Seçin';
+    return c?.title ?? this.translate.instant('common.selectShort');
   }
 
   /** Dropdown içindeki arama kutusuna göre filtrelenir */
@@ -69,7 +70,8 @@ export class OrderFormComponent implements OnInit {
     private productApi: ProductService,
     private reportApi: ReportService,
     private toastr: ToastrService,
-    public lookups: LookupService
+    public lookups: LookupService,
+    private translate: TranslateService
   ) {
     this.form = this.fb.nonNullable.group({
       customerId: this.fb.control<string | null>(null, Validators.required),
@@ -316,12 +318,12 @@ export class OrderFormComponent implements OnInit {
         }))
       };
       this.orderApi.update(this.id, updateReq).subscribe({
-        next: () => { this.toastr.success('Sipariş güncellendi.'); this.router.navigate(['/orders']); },
+        next: () => { this.toastr.success(this.translate.instant('orders.toastrUpdated')); this.router.navigate(['/orders']); },
         error: e => { this.error = e.error?.message ?? 'Kaydedilemedi.'; this.saving = false; }
       });
     } else {
       this.orderApi.create(req).subscribe({
-        next: () => { this.toastr.success('Sipariş oluşturuldu.'); this.router.navigate(['/orders']); },
+        next: () => { this.toastr.success(this.translate.instant('orders.toastrCreated')); this.router.navigate(['/orders']); },
         error: e => { this.error = e.error?.message ?? 'Kaydedilemedi.'; this.saving = false; }
       });
     }

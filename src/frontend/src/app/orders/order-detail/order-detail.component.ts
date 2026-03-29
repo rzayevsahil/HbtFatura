@@ -6,11 +6,12 @@ import { OrderDto, OrderStatus } from '../../core/models';
 import { DeliveryNoteService } from '../../services/delivery-note.service';
 import { ToastrService } from 'ngx-toastr';
 import { LookupService } from '../../core/services/lookup.service';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-order-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, TranslateModule],
   templateUrl: './order-detail.component.html',
   styleUrls: ['./order-detail.component.scss']
 })
@@ -25,7 +26,8 @@ export class OrderDetailComponent implements OnInit {
     private orderApi: OrderService,
     private deliveryNoteApi: DeliveryNoteService,
     private toastr: ToastrService,
-    public lookups: LookupService
+    public lookups: LookupService,
+    private translate: TranslateService
   ) { }
 
   @HostListener('document:keydown', ['$event'])
@@ -91,22 +93,22 @@ export class OrderDetailComponent implements OnInit {
     if (!this.order || !this.isEditableOrder()) return;
     this.orderApi.setStatus(this.order.id, 3).subscribe({
       next: () => {
-        this.toastr.success('Sipariş onaylandı.');
+        this.toastr.success(this.translate.instant('orders.toastrApproved'));
         this.ngOnInit();
       },
-      error: e => this.toastr.error(e.error?.message ?? 'Durum güncellenemedi.')
+      error: e => this.toastr.error(e.error?.message ?? this.translate.instant('orders.statusError'))
     });
   }
 
   setStatusIptal(): void {
     if (!this.order || !this.isEditableOrder()) return;
-    if (!confirm('Siparişi iptal etmek istediğinize emin misiniz?')) return;
+    if (!confirm(this.translate.instant('common.confirmCancelOrder'))) return;
     this.orderApi.setStatus(this.order.id, 2).subscribe({
       next: () => {
-        this.toastr.success('Sipariş iptal edildi.');
+        this.toastr.success(this.translate.instant('orders.toastrCancelled'));
         this.ngOnInit();
       },
-      error: e => this.toastr.error(e.error?.message ?? 'Durum güncellenemedi.')
+      error: e => this.toastr.error(e.error?.message ?? this.translate.instant('orders.statusError'))
     });
   }
 
@@ -118,11 +120,11 @@ export class OrderDetailComponent implements OnInit {
     const deliveryDate = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
     this.deliveryNoteApi.createFromOrder({ orderId: this.order.id, deliveryDate }).subscribe({
       next: dn => {
-        this.toastr.success('İrsaliye oluşturuldu.');
+        this.toastr.success(this.translate.instant('orders.toastrDnCreated'));
         this.router.navigate(['/delivery-notes', dn.id]);
       },
       error: e => {
-        this.toastr.error(e.error?.message ?? 'İrsaliye oluşturulamadı.');
+        this.toastr.error(e.error?.message ?? this.translate.instant('orders.toastrDnFailed'));
         this.creatingDeliveryNote = false;
       }
     });

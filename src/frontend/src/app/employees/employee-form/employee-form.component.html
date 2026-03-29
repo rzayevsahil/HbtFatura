@@ -1,38 +1,38 @@
 <div class="page-header">
-  <h1 class="page-title">{{ id ? 'Çalışanı Düzenle' : 'Yeni Çalışan' }}</h1>
-  <p class="page-subtitle">{{ id ? 'Çalışan bilgilerini güncelleyin.' : 'Firmanıza yeni çalışan hesabı ekleyin.' }}</p>
+  <h1 class="page-title">{{ id ? ('employeesPage.editTitle' | translate) : ('employeesPage.newTitle' | translate) }}</h1>
+  <p class="page-subtitle">{{ id ? ('employeesPage.subtitleEdit' | translate) : ('employeesPage.subtitleNew' | translate) }}</p>
 </div>
 @if (id && editLoading) {
 <div class="loading-container">
   <div class="spinner"></div>
-  <p>Veriler yükleniyor...</p>
+  <p>{{ 'common.loadingData' | translate }}</p>
 </div>
 } @else {
 <div class="card">
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <div class="form-grid">
       <div class="row">
-        <label>E-posta</label>
-        <input type="email" formControlName="email" placeholder="calisan&#64;firma.com" />
+        <label>{{ 'employeesPage.email' | translate }}</label>
+        <input type="email" formControlName="email" [placeholder]="'employeesPage.emailPh' | translate" />
       </div>
       <div class="row">
-        <label>Şifre</label>
-        <input type="password" formControlName="password" placeholder="En az 6 karakter" />
+        <label>{{ 'employeesPage.password' | translate }}</label>
+        <input type="password" formControlName="password" [placeholder]="'auth.passwordMinPlaceholder' | translate" />
         @if (id) {
-        <small class="help-text">Şifreyi değiştirmek istemiyorsanız boş bırakın.</small>
+        <small class="help-text">{{ 'employeesPage.passwordHintEdit' | translate }}</small>
         }
       </div>
       <div class="row">
-        <label>Ad Soyad</label>
-        <input formControlName="fullName" placeholder="Ad Soyad" />
+        <label>{{ 'employeesPage.fullName' | translate }}</label>
+        <input formControlName="fullName" [placeholder]="'employeesPage.fullNamePh' | translate" />
       </div>
       @if (error) { <p class="error-msg">{{ error }}</p> }
     </div>
     <div class="actions">
       <button class="btn btn-primary" type="submit" [disabled]="form.invalid || saving">
-        {{ id ? 'Güncelle' : 'Oluştur' }}
+        {{ id ? ('employeesPage.update' | translate) : ('employeesPage.create' | translate) }}
       </button>
-      <a [routerLink]="cancelUrl">İptal</a>
+      <a [routerLink]="cancelUrl">{{ 'common.cancel' | translate }}</a>
     </div>
   </form>
 </div>

@@ -1,7 +1,7 @@
 @if (loading) {
 <div class="loading-container">
   <div class="spinner"></div>
-  <p>Veriler yükleniyor...</p>
+  <p>{{ 'common.loadingData' | translate }}</p>
 </div>
 } @else if (invoice) {
 <div class="page-header">
@@ -10,54 +10,54 @@
   </div>
   <div class="header-actions">
     @if (invoice.sourceType === 'Irsaliye' && invoice.sourceId) {
-    <a [routerLink]="['/delivery-notes', invoice.sourceId]" class="btn btn-secondary" style="color: var(--color-primary);">İrsaliyeye Git</a>
+    <a [routerLink]="['/delivery-notes', invoice.sourceId]" class="btn btn-secondary" style="color: var(--color-primary);">{{ 'invoices.linkGoDn' | translate }}</a>
     }
-    <a routerLink="/invoices" class="btn btn-default">← Geri</a>
+    <a routerLink="/invoices" class="btn btn-default">{{ 'common.back' | translate }}</a>
   </div>
 </div>
 <div class="card info-grid">
   <div class="info-item info-item-cari">
-    <span class="info-label">Cari:</span>
+    <span class="info-label">{{ 'common.customer' | translate }}:</span>
     <span class="info-value clickable-link" (click)="goToCustomer(invoice.customerId)">{{ invoice.customerTitle || '—' }}</span>
   </div>
   @if (invoice.sourceType === 'Irsaliye' && invoice.sourceId && invoice.sourceNumber) {
-    <div class="info-item info-item-siparis">
-      <span class="info-label">İrsaliye No:</span>
-      <span class="info-value clickable-link" (click)="goToDeliveryNote(invoice.sourceId)">{{ invoice.sourceNumber }}</span>
-    </div>
+  <div class="info-item info-item-siparis">
+    <span class="info-label">{{ 'invoices.dnNo' | translate }}</span>
+    <span class="info-value clickable-link" (click)="goToDeliveryNote(invoice.sourceId)">{{ invoice.sourceNumber }}</span>
+  </div>
   }
   <div class="info-item">
-    <span class="info-label">Tarih:</span>
+    <span class="info-label">{{ 'dashboard.colDate' | translate }}:</span>
     <span class="info-value">{{ invoice.invoiceDate | date:'dd.MM.yyyy HH:mm' }}</span>
   </div>
   <div class="info-item">
-    <span class="info-label">Gönderim Şekli:</span>
-    <span class="info-value">{{ invoice.scenario === 1 ? 'Ticari Fatura' : 'Temel Fatura' }}</span>
+    <span class="info-label">{{ 'invoices.scenario' | translate }}</span>
+    <span class="info-value">{{ invoice.scenario === 1 ? ('invoices.commercialInvoice' | translate) : ('invoices.basicInvoice' | translate) }}</span>
   </div>
   <div class="info-item">
-    <span class="info-label">Durum:</span>
+    <span class="info-label">{{ 'common.status' | translate }}:</span>
     <span class="info-value">
       <span class="status-badge {{ statusClass(invoice.status) }}">{{ statusLabel(invoice.status, invoice.sourceType) }}</span>
     </span>
   </div>
   <div class="info-item">
-    <span class="info-label">Oluşturan:</span>
+    <span class="info-label">{{ 'common.createdBy' | translate }}:</span>
     <span class="info-value">{{ invoice.createdByUserName || '—' }}</span>
   </div>
 </div>
-<h2 class="section-title">Kalemler</h2>
+<h2 class="section-title">{{ 'invoices.lines' | translate }}</h2>
 <div class="card table-wrap">
   <table>
     <thead>
       <tr>
-        <th>Stok Kodu</th>
-        <th>Mal Hizmet</th>
-        <th class="amount">Miktar</th>
-        <th>Birim</th>
-        <th class="amount">Birim Fiyat</th>
-        <th class="amount">KDV Oranı</th>
-        <th class="amount">KDV Tutarı</th>
-        <th class="amount">Mal Hizmet Tutarı</th>
+        <th>{{ 'common.colStockCode' | translate }}</th>
+        <th>{{ 'common.colGoodsService' | translate }}</th>
+        <th class="amount">{{ 'common.colQty' | translate }}</th>
+        <th>{{ 'common.colUnit' | translate }}</th>
+        <th class="amount">{{ 'common.colUnitPrice' | translate }}</th>
+        <th class="amount">{{ 'common.colVatRate' | translate }}</th>
+        <th class="amount">{{ 'common.colVatAmount' | translate }}</th>
+        <th class="amount">{{ 'common.colLineAmount' | translate }}</th>
       </tr>
     </thead>
     <tbody>
@@ -66,7 +66,7 @@
         <td>{{ item.productCode || '—' }}</td>
         <td>{{ item.description }}</td>
         <td class="amount">{{ item.quantity | number:'1.2-2' }}</td>
-        <td>{{ item.unit || 'Adet' }}</td>
+        <td>{{ item.unit || ('common.unitPiece' | translate) }}</td>
         <td class="amount">{{ item.unitPrice | number:'1.2-2' }} {{ invoice.currency }}</td>
         <td class="amount">{{ item.vatRate | number:'1.0-0' }}%</td>
         <td class="amount">{{ item.lineVatAmount | number:'1.2-2' }} {{ invoice.currency }}</td>
@@ -76,54 +76,54 @@
     </tbody>
   </table>
   <div class="totals">
-    <p><span>Mal Hizmet Toplam Tutarı:</span> <span>{{ invoice.subTotal | number:'1.2-2' }} {{ invoice.currency }}</span></p>
-    <p><span>Hesaplanan KDV:</span> <span>{{ invoice.totalVat | number:'1.2-2' }} {{ invoice.currency }}</span></p>
-    <p class="grand-total"><span>Genel Toplam:</span> <span>{{ invoice.grandTotal | number:'1.2-2' }} {{ invoice.currency }}</span></p>
+    <p><span>{{ 'common.totalsGoodsColon' | translate }}</span> <span>{{ invoice.subTotal | number:'1.2-2' }} {{ invoice.currency }}</span></p>
+    <p><span>{{ 'common.totalsVatColon' | translate }}</span> <span>{{ invoice.totalVat | number:'1.2-2' }} {{ invoice.currency }}</span></p>
+    <p class="grand-total"><span>{{ 'common.totalsGrandColon' | translate }}</span> <span>{{ invoice.grandTotal | number:'1.2-2' }} {{ invoice.currency }}</span></p>
   </div>
 </div>
 <div class="actions">
   @if (invoice.status === 0 && invoice.sourceType !== 'Irsaliye') {
-  <a [routerLink]="['/invoices', invoice.id, 'edit']" class="btn btn-secondary">Düzenle</a>
+  <a [routerLink]="['/invoices', invoice.id, 'edit']" class="btn btn-secondary">{{ 'invoices.edit' | translate }}</a>
   }
 
   @if (invoice.invoiceType === 1) {
   @if (invoice.status === 0) {
   <button type="button" class="btn btn-primary" (click)="approvePurchaseInvoice()" [disabled]="approvingPurchase">
-    {{ approvingPurchase ? 'Onaylanıyor...' : 'Faturayı onayla' }}
+    {{ approvingPurchase ? ('invoices.approvingPurchase' | translate) : ('invoices.approvePurchase' | translate) }}
   </button>
   <span class="text-muted" style="margin-left: 10px; font-size: 0.9em;">
-    Alış faturasında GİB’e gönderim yoktur (belgeyi karşı taraf keser). Onayladıktan sonra PDF, gelen e-fatura görünümünde indirilebilir.
+    {{ 'invoices.purchaseHint' | translate }}
   </span>
   }
   @if (invoice.isGibSent || invoice.status >= 1) {
-  <button type="button" class="btn btn-primary" (click)="downloadPdf()">PDF İndir</button>
+  <button type="button" class="btn btn-primary" (click)="downloadPdf()">{{ 'invoices.pdfDownloadBtn' | translate }}</button>
   }
   } @else {
   @if (invoice.status === 4) {
   <p class="text-muted gib-sim-note">
-    <strong>GİB simülasyonu:</strong> Fatura karşı firmanın kutusunda; onay sonrası kesinleşir ve cari/stok işlenir. Bu süreç gerçek GİB entegrasyonu değildir.
+    {{ 'invoices.gibSimNote' | translate }}
   </p>
-  <button type="button" class="btn btn-primary" (click)="downloadPdf()">PDF Önizleme</button>
+  <button type="button" class="btn btn-primary" (click)="downloadPdf()">{{ 'invoices.pdfPreviewBtn' | translate }}</button>
   } @else if (!invoice.isGibSent) {
   <select [(ngModel)]="selectedScenario" class="btn btn-default" style="width: auto; margin-right: 10px; height: 38px;">
-    <option [ngValue]="0">Temel Fatura</option>
-    <option [ngValue]="1">Ticari Fatura</option>
+    <option [ngValue]="0">{{ 'invoices.basicInvoice' | translate }}</option>
+    <option [ngValue]="1">{{ 'invoices.commercialInvoice' | translate }}</option>
   </select>
   <button type="button" class="btn btn-primary" (click)="sendToGib()" [disabled]="sendingGib">
-    {{ sendingGib ? 'Gönderiliyor...' : 'GİB simülasyonuna gönder' }}
+    {{ sendingGib ? ('invoices.sendingGib' | translate) : ('invoices.sendGib' | translate) }}
   </button>
   <span class="text-muted" style="margin-right: 15px; font-size: 0.9em;">
-    * Karşı tarafın şirket profilindeki VKN eşleşmesi gerekir. Simülasyondur; gerçek GİB değildir.
+    {{ 'invoices.gibSendHint' | translate }}
   </span>
   } @else {
-  <button type="button" class="btn btn-primary" (click)="downloadPdf()">PDF İndir</button>
+  <button type="button" class="btn btn-primary" (click)="downloadPdf()">{{ 'invoices.pdfDownloadBtn' | translate }}</button>
   }
   }
 </div>
 } @else {
 <div class="page-header">
-  <h1 class="page-title">Fatura</h1>
-  <a routerLink="/invoices" class="btn btn-default">← Geri</a>
+  <h1 class="page-title">{{ 'invoices.notFoundTitle' | translate }}</h1>
+  <a routerLink="/invoices" class="btn btn-default">{{ 'common.back' | translate }}</a>
 </div>
-<p class="text-muted">Fatura yüklenemedi veya bulunamadı.</p>
+<p class="text-muted">{{ 'invoices.notFound' | translate }}</p>
 }

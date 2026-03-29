@@ -1,11 +1,11 @@
 <div class="page-header">
-  <h1 class="page-title">Hesap Planı Kodları</h1>
+  <h1 class="page-title">{{ 'mainAccountCodes.pageTitle' | translate }}</h1>
   <div class="actions">
-    <button type="button" class="btn btn-primary" (click)="openNew()">Yeni Hesap Kodu</button>
+    <button type="button" class="btn btn-primary" (click)="openNew()">{{ 'mainAccountCodes.newCode' | translate }}</button>
   </div>
 </div>
 <div class="card list-toolbar">
-  <input type="text" class="search-input" [(ngModel)]="searchText" placeholder="Kod veya ad ile ara..." />
+  <input type="text" class="search-input" [(ngModel)]="searchText" [placeholder]="'mainAccountCodes.searchPlaceholder' | translate" />
 </div>
 <div class="card table-wrap" style="position: relative; min-height: 200px;">
   @if (loading) {
@@ -21,8 +21,8 @@
     </colgroup>
     <thead>
       <tr>
-        <th>Hesap Kodu</th>
-        <th>Hesap Adı</th>
+        <th>{{ 'mainAccountCodes.colCode' | translate }}</th>
+        <th>{{ 'mainAccountCodes.colName' | translate }}</th>
         <th></th>
       </tr>
     </thead>
@@ -34,12 +34,12 @@
         <td>
           @if (!item.isSystem) {
           <div class="actions-cell">
-            <button type="button" class="btn btn-outline" (click)="openEdit(item.id)">Düzenle</button>
+            <button type="button" class="btn btn-outline" (click)="openEdit(item.id)">{{ 'common.edit' | translate }}</button>
             <button type="button" class="btn btn-outline btn-danger"
-              (click)="onDeleteClick(item.id, item.code)">Sil</button>
+              (click)="onDeleteClick(item.id, item.code)">{{ 'common.delete' | translate }}</button>
           </div>
           } @else {
-          <span class="text-muted">Sistem kodu</span>
+          <span class="text-muted">{{ 'mainAccountCodes.systemCode' | translate }}</span>
           }
         </td>
       </tr>
@@ -48,9 +48,9 @@
   </table>
 </div>
 @if (items.length === 0) {
-<p class="text-muted">Henüz ana cari kodu tanımlanmamış. Carilerde kullanmak için buradan kod ekleyebilirsiniz.</p>
+<p class="text-muted">{{ 'mainAccountCodes.emptyHint' | translate }}</p>
 } @else if (filteredItems.length === 0) {
-<p class="text-muted">Arama kriterine uygun kayıt bulunamadı.</p>
+<p class="text-muted">{{ 'mainAccountCodes.noMatch' | translate }}</p>
 }
 
 @if (modalOpen) {
@@ -63,7 +63,7 @@
 }
 
 @if (showDeleteModal) {
-<app-confirm-modal title="Hesap Kodu Sil"
-  [message]="'\'' + deletingItem?.code + '\' kodlu hesap planını silmek istediğinize emin misiniz?'" confirmText="Sil"
-  cancelText="Vazgeç" (confirm)="confirmDelete()" (cancel)="showDeleteModal = false"></app-confirm-modal>
+<app-confirm-modal [title]="'mainAccountCodes.deleteTitle' | translate"
+  [message]="'mainAccountCodes.deleteMessage' | translate: { code: deletingItem?.code ?? '' }"
+  [confirmText]="'common.delete' | translate" [cancelText]="'common.discard' | translate" (confirm)="confirmDelete()" (cancel)="showDeleteModal = false"></app-confirm-modal>
 }

@@ -1,32 +1,32 @@
 <div class="page-header">
-  <h1 class="page-title">Faturalar</h1>
+  <h1 class="page-title">{{ 'invoices.pageTitle' | translate }}</h1>
 </div>
 <div class="toolbar">
   <label class="toolbar-field">
-    <span class="toolbar-label">Ara (FaturaNo/Cari)</span>
-    <input [(ngModel)]="searchText" type="text" placeholder="Fatura no veya cari..." (keyup.enter)="load()" />
+    <span class="toolbar-label">{{ 'invoices.searchLabel' | translate }}</span>
+    <input [(ngModel)]="searchText" type="text" [placeholder]="'invoices.searchPlaceholder' | translate" (keyup.enter)="load()" />
   </label>
   <label class="toolbar-field">
-    <span class="toolbar-label">Başlangıç Tarihi</span>
+    <span class="toolbar-label">{{ 'common.dateFrom' | translate }}</span>
     <input [(ngModel)]="searchDateFrom" type="date" />
   </label>
   <label class="toolbar-field">
-    <span class="toolbar-label">Bitiş Tarihi</span>
+    <span class="toolbar-label">{{ 'common.dateTo' | translate }}</span>
     <input [(ngModel)]="searchDateTo" type="date" />
   </label>
   <label class="toolbar-field">
-    <span class="toolbar-label">Durum</span>
+    <span class="toolbar-label">{{ 'common.status' | translate }}</span>
     <select [(ngModel)]="searchStatus">
-      <option [ngValue]="null">Tümü</option>
+      <option [ngValue]="null">{{ 'common.all' | translate }}</option>
       @for (l of lookups.getGroup('InvoiceStatus')(); track l.code) {
       <option [ngValue]="+l.code">{{ l.name }}</option>
       }
     </select>
   </label>
   <label class="toolbar-field">
-    <span class="toolbar-label">Fatura Tipi</span>
+    <span class="toolbar-label">{{ 'invoices.invoiceType' | translate }}</span>
     <select [(ngModel)]="searchInvoiceType">
-      <option [ngValue]="null">Satış/Alış</option>
+      <option [ngValue]="null">{{ 'invoices.filterTypeAll' | translate }}</option>
       @for (l of lookups.getGroup('InvoiceType')(); track l.code) {
       <option [ngValue]="+l.code">{{ l.name }}</option>
       }
@@ -34,20 +34,20 @@
   </label>
   <div class="toolbar-field toolbar-field-btn">
     <span class="toolbar-label">&nbsp;</span>
-    <button type="button" (click)="load()">Filtrele</button>
+    <button type="button" (click)="load()">{{ 'common.filter' | translate }}</button>
   </div>
   <div class="toolbar-field toolbar-field-btn">
     <span class="toolbar-label">&nbsp;</span>
-    <button type="button" class="btn btn-default" (click)="downloadReportPdf()">PDF indir</button>
+    <button type="button" class="btn btn-default" (click)="downloadReportPdf()">{{ 'common.pdfDownload' | translate }}</button>
   </div>
   <div class="toolbar-field toolbar-field-btn">
     <span class="toolbar-label">&nbsp;</span>
-    <button type="button" class="btn btn-default" (click)="downloadReportExcel()">Excel indir</button>
+    <button type="button" class="btn btn-default" (click)="downloadReportExcel()">{{ 'common.excelDownload' | translate }}</button>
   </div>
   @if (auth.hasPermission('Invoices.Create')) {
   <div class="toolbar-field toolbar-field-btn">
     <span class="toolbar-label">&nbsp;</span>
-    <a routerLink="/invoices/new" class="btn-primary">Yeni Fatura</a>
+    <a routerLink="/invoices/new" class="btn-primary">{{ 'invoices.newInvoice' | translate }}</a>
   </div>
   }
 </div>
@@ -60,13 +60,13 @@
   <table>
     <thead>
       <tr>
-        <th>No</th>
-        <th>Tarih</th>
-        <th>Tip</th>
-        <th>Cari</th>
-        <th>Toplam</th>
-        <th>Durum</th>
-        <th>Oluşturan</th>
+        <th>{{ 'invoices.colNo' | translate }}</th>
+        <th>{{ 'dashboard.colDate' | translate }}</th>
+        <th>{{ 'common.type' | translate }}</th>
+        <th>{{ 'common.customer' | translate }}</th>
+        <th>{{ 'common.total' | translate }}</th>
+        <th>{{ 'common.status' | translate }}</th>
+        <th>{{ 'common.createdBy' | translate }}</th>
         <th></th>
       </tr>
     </thead>
@@ -90,12 +90,12 @@
         <td>{{ inv.createdByUserName ?? '—' }}</td>
         <td>
           <div class="actions-cell">
-            <a [routerLink]="['/invoices', inv.id]">Detay</a>
+            <a [routerLink]="['/invoices', inv.id]">{{ 'common.detail' | translate }}</a>
             @if (inv.status === 0 && auth.hasPermission('Invoices.Edit')) {
-            <a [routerLink]="['/invoices', inv.id, 'edit']">Düzenle</a>
+            <a [routerLink]="['/invoices', inv.id, 'edit']">{{ 'common.edit' | translate }}</a>
             }
             @if (inv.isGibSent || (inv.invoiceType === 1 && inv.status >= 1)) {
-            <a href="#" (click)="downloadPdf(inv.id, inv.invoiceNumber); $event.preventDefault()">PDF</a>
+            <a href="#" (click)="downloadPdf(inv.id, inv.invoiceNumber); $event.preventDefault()">{{ 'common.pdf' | translate }}</a>
             }
           </div>
         </td>
@@ -105,7 +105,7 @@
   </table>
 </div>
 <div class="pagination">
-  <span>Toplam: {{ totalCount }} kayıt — Sayfa {{ page }}</span>
-  <button type="button" [disabled]="page <= 1" (click)="prevPage()">Önceki</button>
-  <button type="button" [disabled]="items.length < pageSize" (click)="nextPage()">Sonraki</button>
+  <span>{{ 'common.paginationTotalPage' | translate: { total: totalCount, page: page } }}</span>
+  <button type="button" [disabled]="page <= 1" (click)="prevPage()">{{ 'common.previous' | translate }}</button>
+  <button type="button" [disabled]="items.length < pageSize" (click)="nextPage()">{{ 'common.next' | translate }}</button>
 </div>

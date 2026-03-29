@@ -136,6 +136,19 @@
     }
 }
 
+.dashboard-empty-cell {
+    text-align: center;
+    padding: 2rem;
+    color: var(--color-text-muted);
+}
+
+.dashboard-no-activity {
+    padding: 1rem;
+    color: var(--color-text-muted);
+    font-size: 0.8125rem;
+    margin: 0;
+}
+
 /* Main Content Grid */
 .main-grid {
     display: grid;

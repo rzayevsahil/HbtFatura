@@ -9,11 +9,12 @@ import { ChequeOrPromissoryDto, CreateChequeOrPromissoryRequest, UpdateChequeOrP
 import { AuthService } from '../../core/services/auth.service';
 import { FirmService } from '../../services/firm.service';
 import { ToastrService } from 'ngx-toastr';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-cheque-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, TranslateModule],
   templateUrl: './cheque-form.component.html',
   styleUrls: ['./cheque-form.component.scss']
 })
@@ -45,7 +46,8 @@ export class ChequeFormComponent implements OnInit {
     private customerApi: CustomerService,
     private bankApi: BankAccountService,
     private firmApi: FirmService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private translate: TranslateService
   ) { }
 
   ngOnInit(): void {
@@ -92,7 +94,7 @@ export class ChequeFormComponent implements OnInit {
     if (this.id) {
       this.api.update(this.id, payload).subscribe({
         next: () => {
-          this.toastr.success('Kayıt güncellendi.');
+          this.toastr.success(this.translate.instant('chequesPage.toastRecordUpdated'));
           this.router.navigate(['/cheques']);
         },
         error: e => {
@@ -104,7 +106,7 @@ export class ChequeFormComponent implements OnInit {
     } else {
       this.api.create(payload).subscribe({
         next: () => {
-          this.toastr.success('Kayıt eklendi.');
+          this.toastr.success(this.translate.instant('chequesPage.toastRecordCreated'));
           this.router.navigate(['/cheques']);
         },
         error: e => {

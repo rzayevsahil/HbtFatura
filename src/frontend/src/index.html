@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="tr">
 
 <head>
   <script>
@@ -8,6 +8,8 @@
         var k = 'hbt-theme', v = localStorage.getItem(k);
         var d = v === 'dark' || (v !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
         document.documentElement.classList.toggle('dark', d);
+        var lang = localStorage.getItem('hbt-lang') === 'en' ? 'en' : 'tr';
+        document.documentElement.lang = lang;
       } catch (e) { }
     })();
   </script>

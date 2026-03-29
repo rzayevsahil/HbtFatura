@@ -1,43 +1,46 @@
 <div class="page-header">
-  <h1 class="page-title">Raporlar</h1>
+  <h1 class="page-title">{{ 'reportsPage.pageTitle' | translate }}</h1>
 </div>
 
 <section class="report-section card">
-  <h2>Fatura raporu</h2>
+  <h2>{{ 'reportsPage.invoiceReport' | translate }}</h2>
   <div class="filters">
-    <input type="date" [(ngModel)]="invoiceDateFrom" placeholder="Başlangıç" />
-    <input type="date" [(ngModel)]="invoiceDateTo" placeholder="Bitiş" />
+    <input type="date" [(ngModel)]="invoiceDateFrom" [attr.placeholder]="'common.dateFromShort' | translate" />
+    <input type="date" [(ngModel)]="invoiceDateTo" [attr.placeholder]="'common.dateToShort' | translate" />
     <select [(ngModel)]="invoiceCustomerId">
-      <option value="">Tüm cariler</option>
+      <option value="">{{ 'reportsPage.allCustomers' | translate }}</option>
       @for (c of customers; track c.id) {
       <option [value]="c.id">{{ c.title }}</option>
       }
     </select>
-    <button type="button" (click)="loadInvoiceReport()" [disabled]="invoiceLoading">Yükle</button>
+    <button type="button" (click)="loadInvoiceReport()" [disabled]="invoiceLoading">{{ 'reportsPage.load' | translate }}</button>
     @if (invoiceData) {
-    <button type="button" (click)="downloadInvoiceReportPdf()">PDF indir</button>
-    <button type="button" (click)="downloadInvoiceReportExcel()">Excel indir</button>
+    <button type="button" (click)="downloadInvoiceReportPdf()">{{ 'common.pdfDownload' | translate }}</button>
+    <button type="button" (click)="downloadInvoiceReportExcel()">{{ 'common.excelDownload' | translate }}</button>
     }
   </div>
   @if (invoiceLoading) {
   <div class="report-loading">
     <div class="spinner"></div>
-    <span>Yükleniyor...</span>
+    <span>{{ 'reportsPage.loading' | translate }}</span>
   </div>
   }
   @if (invoiceData && !invoiceLoading) {
-  <p>{{ invoiceData.customerTitle ? invoiceData.customerTitle + ' — ' : '' }}Toplam {{ invoiceData.items.length }}
-    fatura</p>
+  @if (invoiceData.customerTitle) {
+  <p>{{ 'reportsPage.invoiceLineWithCustomer' | translate: { customer: invoiceData.customerTitle, count: invoiceData.items.length } }}</p>
+  } @else {
+  <p>{{ 'reportsPage.invoiceLine' | translate: { count: invoiceData.items.length } }}</p>
+  }
   <div class="table-wrap">
     <table>
       <thead>
         <tr>
-          <th>Fatura No</th>
-          <th>Tarih</th>
-          <th>Cari</th>
-          <th>Durum</th>
-          <th class="amount">Toplam</th>
-          <th>Para</th>
+          <th>{{ 'reportsPage.colInvoiceNo' | translate }}</th>
+          <th>{{ 'payments.colDate' | translate }}</th>
+          <th>{{ 'reportsPage.colCustomer' | translate }}</th>
+          <th>{{ 'reportsPage.colStatus' | translate }}</th>
+          <th class="amount">{{ 'reportsPage.colTotal' | translate }}</th>
+          <th>{{ 'reportsPage.colCurrency' | translate }}</th>
         </tr>
       </thead>
       <tbody>
@@ -58,40 +61,43 @@
 </section>
 
 <section class="report-section card">
-  <h2>Cari ekstre</h2>
+  <h2>{{ 'reportsPage.cariStatement' | translate }}</h2>
   <div class="filters">
     <select [(ngModel)]="cariCustomerId" required>
-      <option value="">Cari seçin</option>
+      <option value="">{{ 'reportsPage.selectCustomer' | translate }}</option>
       @for (c of customers; track c.id) {
       <option [value]="c.id">{{ c.title }}</option>
       }
     </select>
-    <input type="date" [(ngModel)]="cariDateFrom" placeholder="Başlangıç" />
-    <input type="date" [(ngModel)]="cariDateTo" placeholder="Bitiş" />
-    <button type="button" (click)="loadCari()" [disabled]="cariLoading">Yükle</button>
+    <input type="date" [(ngModel)]="cariDateFrom" [attr.placeholder]="'common.dateFromShort' | translate" />
+    <input type="date" [(ngModel)]="cariDateTo" [attr.placeholder]="'common.dateToShort' | translate" />
+    <button type="button" (click)="loadCari()" [disabled]="cariLoading">{{ 'reportsPage.load' | translate }}</button>
     @if (cariData) {
-    <button type="button" (click)="downloadCariPdf()">PDF indir</button>
-    <button type="button" (click)="downloadCariExcel()">Excel indir</button>
+    <button type="button" (click)="downloadCariPdf()">{{ 'common.pdfDownload' | translate }}</button>
+    <button type="button" (click)="downloadCariExcel()">{{ 'common.excelDownload' | translate }}</button>
     }
   </div>
   @if (cariLoading) {
   <div class="report-loading">
     <div class="spinner"></div>
-    <span>Yükleniyor...</span>
+    <span>{{ 'reportsPage.loading' | translate }}</span>
   </div>
   }
   @if (cariData && !cariLoading) {
-  <p><strong>{{ cariData.customerTitle }}</strong> — Açılış: {{ cariData.openingBalance | number:'1.2-2' }} ₺ — Kapanış:
-    {{ cariData.closingBalance | number:'1.2-2' }} ₺</p>
+  <p>{{ 'reportsPage.cariBalances' | translate: {
+    title: cariData.customerTitle,
+    open: (cariData.openingBalance | number:'1.2-2'),
+    close: (cariData.closingBalance | number:'1.2-2')
+  } }}</p>
   <div class="table-wrap">
     <table>
       <thead>
         <tr>
-          <th>Tarih</th>
-          <th>Açıklama</th>
-          <th class="amount">Borç</th>
-          <th class="amount">Alacak</th>
-          <th class="amount">Bakiye</th>
+          <th>{{ 'payments.colDate' | translate }}</th>
+          <th>{{ 'customers.colDescription' | translate }}</th>
+          <th class="amount">{{ 'customers.colDebitShort' | translate }}</th>
+          <th class="amount">{{ 'customers.colCreditShort' | translate }}</th>
+          <th class="amount">{{ 'customers.colRunningBalance' | translate }}</th>
         </tr>
       </thead>
       <tbody>
@@ -111,34 +117,38 @@
 </section>
 
 <section class="report-section card">
-  <h2>Kasa raporu</h2>
+  <h2>{{ 'reportsPage.cashReport' | translate }}</h2>
   <div class="filters">
     <select [(ngModel)]="cashRegisterId">
-      <option value="">Tüm kasalar</option>
+      <option value="">{{ 'reportsPage.allCash' | translate }}</option>
       @for (c of cashRegisters; track c.id) {
       <option [value]="c.id">{{ c.name }}</option>
       }
     </select>
     <input type="date" [(ngModel)]="cashDateFrom" />
     <input type="date" [(ngModel)]="cashDateTo" />
-    <button type="button" (click)="loadCash()" [disabled]="cashLoading">Yükle</button>
+    <button type="button" (click)="loadCash()" [disabled]="cashLoading">{{ 'reportsPage.load' | translate }}</button>
   </div>
   @if (cashLoading) {
   <div class="report-loading">
     <div class="spinner"></div>
-    <span>Yükleniyor...</span>
+    <span>{{ 'reportsPage.loading' | translate }}</span>
   </div>
   }
   @if (cashData && !cashLoading) {
-  <p>Açılış: {{ cashData.openingBalance | number:'1.2-2' }} — Giriş: {{ cashData.totalGiris | number:'1.2-2' }} — Çıkış:
-    {{ cashData.totalCikis | number:'1.2-2' }} — Kapanış: {{ cashData.closingBalance | number:'1.2-2' }} ₺</p>
+  <p>{{ 'reportsPage.cashSummary' | translate: {
+    open: (cashData.openingBalance | number:'1.2-2'),
+    in: (cashData.totalGiris | number:'1.2-2'),
+    out: (cashData.totalCikis | number:'1.2-2'),
+    close: (cashData.closingBalance | number:'1.2-2')
+  } }}</p>
   <div class="table-wrap">
     <table>
       <thead>
         <tr>
-          <th>Tarih</th>
-          <th>Açıklama</th>
-          <th class="amount">Tutar</th>
+          <th>{{ 'payments.colDate' | translate }}</th>
+          <th>{{ 'customers.colDescription' | translate }}</th>
+          <th class="amount">{{ 'cashRegisters.amount' | translate }}</th>
         </tr>
       </thead>
       <tbody>
@@ -156,29 +166,38 @@
 </section>
 
 <section class="report-section card">
-  <h2>Banka raporu</h2>
+  <h2>{{ 'reportsPage.bankReport' | translate }}</h2>
   <div class="filters">
     <select [(ngModel)]="bankAccountId">
-      <option value="">Tüm hesaplar</option>
+      <option value="">{{ 'reportsPage.allBankAccounts' | translate }}</option>
       @for (b of bankAccounts; track b.id) {
       <option [value]="b.id">{{ b.name }}</option>
       }
     </select>
     <input type="date" [(ngModel)]="bankDateFrom" />
     <input type="date" [(ngModel)]="bankDateTo" />
-    <button type="button" (click)="loadBank()" [disabled]="bankLoading">Yükle</button>
+    <button type="button" (click)="loadBank()" [disabled]="bankLoading">{{ 'reportsPage.load' | translate }}</button>
   </div>
-  @if (bankLoading) { <p>Yükleniyor...</p> }
+  @if (bankLoading) {
+  <div class="report-loading">
+    <div class="spinner"></div>
+    <span>{{ 'reportsPage.loading' | translate }}</span>
+  </div>
+  }
   @if (bankData && !bankLoading) {
-  <p>Açılış: {{ bankData.openingBalance | number:'1.2-2' }} — Giriş: {{ bankData.totalGiris | number:'1.2-2' }} — Çıkış:
-    {{ bankData.totalCikis | number:'1.2-2' }} — Kapanış: {{ bankData.closingBalance | number:'1.2-2' }} ₺</p>
+  <p>{{ 'reportsPage.bankSummary' | translate: {
+    open: (bankData.openingBalance | number:'1.2-2'),
+    in: (bankData.totalGiris | number:'1.2-2'),
+    out: (bankData.totalCikis | number:'1.2-2'),
+    close: (bankData.closingBalance | number:'1.2-2')
+  } }}</p>
   <div class="table-wrap">
     <table>
       <thead>
         <tr>
-          <th>Tarih</th>
-          <th>Açıklama</th>
-          <th class="amount">Tutar</th>
+          <th>{{ 'payments.colDate' | translate }}</th>
+          <th>{{ 'customers.colDescription' | translate }}</th>
+          <th class="amount">{{ 'cashRegisters.amount' | translate }}</th>
         </tr>
       </thead>
       <tbody>
@@ -196,15 +215,15 @@
 </section>
 
 <section class="report-section card">
-  <h2>Stok raporu</h2>
+  <h2>{{ 'reportsPage.stockReport' | translate }}</h2>
   <div class="filters">
-    <button type="button" (click)="loadStock()" [disabled]="stockLoading">Yükle</button>
-    <button type="button" (click)="downloadStockPdf()">PDF indir</button>
+    <button type="button" (click)="loadStock()" [disabled]="stockLoading">{{ 'reportsPage.load' | translate }}</button>
+    <button type="button" (click)="downloadStockPdf()">{{ 'common.pdfDownload' | translate }}</button>
   </div>
   @if (stockLoading) {
   <div class="report-loading">
     <div class="spinner"></div>
-    <span>Yükleniyor...</span>
+    <span>{{ 'reportsPage.loading' | translate }}</span>
   </div>
   }
   @if (stockData && !stockLoading) {
@@ -212,10 +231,10 @@
     <table>
       <thead>
         <tr>
-          <th>Kod</th>
-          <th>Ad</th>
-          <th>Birim</th>
-          <th class="amount">Miktar</th>
+          <th>{{ 'products.colCode' | translate }}</th>
+          <th>{{ 'products.colName' | translate }}</th>
+          <th>{{ 'products.colUnit' | translate }}</th>
+          <th class="amount">{{ 'products.colStock' | translate }}</th>
         </tr>
       </thead>
       <tbody>
@@ -234,36 +253,36 @@
 </section>
 
 <section class="report-section card">
-  <h2>Ürün bazlı aylık satışlar</h2>
-  <p class="text-muted">Hangi üründen hangi ayda ne kadar satıldığını görüntüleyin. Sadece satış faturaları dikkate alınır.</p>
+  <h2>{{ 'reportsPage.monthlySales' | translate }}</h2>
+  <p class="text-muted">{{ 'reportsPage.monthlyHint' | translate }}</p>
   <div class="filters">
-    <input type="date" [(ngModel)]="monthlyDateFrom" placeholder="Başlangıç" />
-    <input type="date" [(ngModel)]="monthlyDateTo" placeholder="Bitiş" />
+    <input type="date" [(ngModel)]="monthlyDateFrom" [attr.placeholder]="'common.dateFromShort' | translate" />
+    <input type="date" [(ngModel)]="monthlyDateTo" [attr.placeholder]="'common.dateToShort' | translate" />
     <select [(ngModel)]="monthlyProductId">
-      <option value="">Tüm ürünler</option>
+      <option value="">{{ 'reportsPage.allProducts' | translate }}</option>
       @for (p of products; track p.id) {
       <option [value]="p.id">{{ p.code }} — {{ p.name }}</option>
       }
     </select>
-    <button type="button" (click)="loadMonthlyProductSales()" [disabled]="monthlyLoading">Yükle</button>
+    <button type="button" (click)="loadMonthlyProductSales()" [disabled]="monthlyLoading">{{ 'reportsPage.load' | translate }}</button>
   </div>
   @if (monthlyLoading) {
   <div class="report-loading">
     <div class="spinner"></div>
-    <span>Yükleniyor...</span>
+    <span>{{ 'reportsPage.loading' | translate }}</span>
   </div>
   }
   @if (monthlyData && !monthlyLoading) {
-  <p>Toplam {{ monthlyData.items.length }} satır</p>
+  <p>{{ 'reportsPage.totalRows' | translate: { count: monthlyData.items.length } }}</p>
   <div class="table-wrap">
     <table>
       <thead>
         <tr>
-          <th>Kod</th>
-          <th>Ad</th>
-          <th>Yıl</th>
-          <th>Ay</th>
-          <th class="amount">Satılan miktar</th>
+          <th>{{ 'products.colCode' | translate }}</th>
+          <th>{{ 'products.colName' | translate }}</th>
+          <th>{{ 'reportsPage.colYear' | translate }}</th>
+          <th>{{ 'reportsPage.colMonth' | translate }}</th>
+          <th class="amount">{{ 'reportsPage.colQtySold' | translate }}</th>
         </tr>
       </thead>
       <tbody>
@@ -276,7 +295,7 @@
           <td class="amount">{{ r.quantitySold | number:'1.2-2' }}</td>
         </tr>
         } @empty {
-        <tr><td colspan="5" class="text-muted">Seçilen dönemde satış kaydı yok.</td></tr>
+        <tr><td colspan="5" class="text-muted">{{ 'reportsPage.noSalesInPeriod' | translate }}</td></tr>
         }
       </tbody>
     </table>

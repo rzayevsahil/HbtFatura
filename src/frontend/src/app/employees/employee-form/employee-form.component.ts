@@ -5,11 +5,12 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { EmployeeService } from '../../services/employee.service';
 import { ToastrService } from 'ngx-toastr';
 import { sanitizeInternalReturnUrl } from '../../core/utils/sanitize-return-url';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-employee-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, TranslateModule],
   templateUrl: './employee-form.component.html',
   styleUrls: ['./employee-form.component.scss']
 })
@@ -31,7 +32,8 @@ export class EmployeeFormComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private api: EmployeeService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private translate: TranslateService
   ) { }
 
   ngOnInit(): void {
@@ -57,7 +59,7 @@ export class EmployeeFormComponent implements OnInit {
         },
         error: () => {
           this.editLoading = false;
-          this.toastr.error('Çalışan bilgileri yüklenemedi.');
+          this.toastr.error(this.translate.instant('employeesPage.toastLoadError'));
         }
       });
     }
@@ -74,7 +76,9 @@ export class EmployeeFormComponent implements OnInit {
 
     obs.subscribe({
       next: (res: any) => {
-        this.toastr.success(this.id ? 'Çalışan güncellendi.' : 'Çalışan eklendi.');
+        this.toastr.success(
+          this.id ? this.translate.instant('employeesPage.toastUpdated') : this.translate.instant('employeesPage.toastCreated')
+        );
         if (res.firmId) {
           this.router.navigate(['/firms', res.firmId]);
         } else {
@@ -84,7 +88,7 @@ export class EmployeeFormComponent implements OnInit {
       error: (e: any) => {
         this.error = e.error?.message ?? 'Hata';
         this.saving = false;
-        this.toastr.error(e.error?.message ?? 'İşlem sırasında hata oluştu.');
+        this.toastr.error(e.error?.message ?? this.translate.instant('employeesPage.toastSaveError'));
       },
       complete: () => { this.saving = false; }
     });

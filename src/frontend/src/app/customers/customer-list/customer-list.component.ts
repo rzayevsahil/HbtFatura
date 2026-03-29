@@ -7,11 +7,12 @@ import { CustomerListDto } from '../../core/models';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../../core/services/auth.service';
 import { ConfirmModalComponent } from '../../shared/confirm-modal/confirm-modal.component';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-customer-list',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule, ConfirmModalComponent],
+  imports: [CommonModule, RouterLink, FormsModule, ConfirmModalComponent, TranslateModule],
   templateUrl: './customer-list.component.html',
   styleUrls: ['./customer-list.component.scss']
 })
@@ -28,7 +29,8 @@ export class CustomerListComponent implements OnInit {
   constructor(
     private api: CustomerService,
     private toastr: ToastrService,
-    public auth: AuthService
+    public auth: AuthService,
+    private translate: TranslateService
   ) { }
 
   ngOnInit(): void {
@@ -56,13 +58,13 @@ export class CustomerListComponent implements OnInit {
     if (!this.deletingCustomer) return;
     this.api.delete(this.deletingCustomer.id).subscribe({
       next: () => {
-        this.toastr.success('Cari silindi.');
+        this.toastr.success(this.translate.instant('customers.deleted'));
         this.showDeleteModal = false;
         this.deletingCustomer = null;
         this.load();
       },
       error: e => {
-        this.toastr.error(e.error?.message ?? 'Silme sırasında hata oluştu.');
+        this.toastr.error(e.error?.message ?? this.translate.instant('customers.deleteError'));
         this.showDeleteModal = false;
         this.deletingCustomer = null;
       }
@@ -78,6 +80,8 @@ export class CustomerListComponent implements OnInit {
   }
 
   cardTypeLabel(t: number): string {
-    return t === 2 ? 'Satıcı' : 'Alıcı';
+    return t === 2
+      ? this.translate.instant('customers.cardSeller')
+      : this.translate.instant('customers.cardBuyer');
   }
 }

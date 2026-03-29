@@ -4,11 +4,12 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CustomerService } from '../../services/customer.service';
 import { CustomerDto, AccountTransactionDto, PagedResult } from '../../core/models';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-customer-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [CommonModule, RouterLink, FormsModule, TranslateModule],
   templateUrl: './customer-detail.component.html',
   styleUrls: ['./customer-detail.component.scss']
 })
@@ -22,7 +23,7 @@ export class CustomerDetailComponent implements OnInit {
   dateFrom = '';
   dateTo = '';
 
-  constructor(private route: ActivatedRoute, private api: CustomerService) { }
+  constructor(private route: ActivatedRoute, private api: CustomerService, private translate: TranslateService) { }
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
@@ -59,11 +60,15 @@ export class CustomerDetailComponent implements OnInit {
   }
 
   taxPayerTypeLabel(t: number): string {
-    return t === 1 ? 'Gerçek kişi' : 'Tüzel kişi';
+    return t === 1
+      ? this.translate.instant('customers.taxPayerPerson')
+      : this.translate.instant('customers.taxPayerCompany');
   }
 
   cardTypeLabel(t: number): string {
-    return t === 1 ? 'Alıcı' : t === 2 ? 'Satıcı' : '—';
+    if (t === 1) return this.translate.instant('customers.cardBuyer');
+    if (t === 2) return this.translate.instant('customers.cardSeller');
+    return '—';
   }
 
   transactionTypeLabel(t: number): string {

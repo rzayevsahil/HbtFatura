@@ -2,78 +2,78 @@
   <div class="page-header-left">
     @if (customer) {
     <h1 class="page-title">{{ customer.title }}</h1>
-    <p class="page-subtitle">{{ cardTypeLabel(customer.cardType) }} · Bakiye: {{ customer.balance | number:'1.2-2' }} ₺
+    <p class="page-subtitle">{{ 'customers.subtitle' | translate: { type: cardTypeLabel(customer.cardType), amount: (customer.balance | number:'1.2-2') } }}
     </p>
     <div class="actions">
-      <a [routerLink]="['/customers', customer.id, 'edit']" class="btn btn-primary">Düzenle</a>
+      <a [routerLink]="['/customers', customer.id, 'edit']" class="btn btn-primary">{{ 'common.edit' | translate }}</a>
     </div>
     } @else {
-    <h1 class="page-title">Cari detay</h1>
+    <h1 class="page-title">{{ 'customers.detailTitle' | translate }}</h1>
     @if (!loading) {
-    <p class="text-muted">Kayıt bulunamadı veya yüklenemedi.</p>
+    <p class="text-muted">{{ 'customers.notFound' | translate }}</p>
     }
     }
   </div>
-  <a routerLink="/customers" class="back-link">← Geri</a>
+  <a routerLink="/customers" class="back-link">{{ 'common.back' | translate }}</a>
 </div>
 
 @if (loading) {
 <div class="loading-container">
   <div class="spinner"></div>
-  <p>Veriler yükleniyor...</p>
+  <p>{{ 'common.loadingData' | translate }}</p>
 </div>
 } @else if (customer) {
 <section class="card info-section">
-  <h2 class="card-title">Cari bilgileri</h2>
+  <h2 class="card-title">{{ 'customers.sectionInfo' | translate }}</h2>
   <dl class="info-list">
     @if (customer.mainAccountCode) {
-    <dt>Ana cari kodu</dt>
+    <dt>{{ 'customers.mainAccountCode' | translate }}</dt>
     <dd>{{ customer.mainAccountCode }}</dd>
     }
     @if (customer.code) {
-    <dt>Cari kodu</dt>
+    <dt>{{ 'customers.colCode' | translate }}</dt>
     <dd>{{ customer.code }}</dd>
     }
-    <dt>Cari adı</dt>
+    <dt>{{ 'customers.colTitle' | translate }}</dt>
     <dd>{{ customer.title }}</dd>
-    <dt>Mükellef türü</dt>
+    <dt>{{ 'customers.taxPayerType' | translate }}</dt>
     <dd>{{ taxPayerTypeLabel(customer.taxPayerType) }}</dd>
-    <dt>Cari tipi</dt>
+    <dt>{{ 'customers.cardType' | translate }}</dt>
     <dd>{{ cardTypeLabel(customer.cardType) }}</dd>
     @if (customer.taxNumber) {
-    <dt>Vergi No / TC</dt>
+    <dt>{{ 'customers.taxId' | translate }}</dt>
     <dd>{{ customer.taxNumber }}</dd>
     }
     @if (customer.address) {
-    <dt>Adres</dt>
+    <dt>{{ 'invoices.address' | translate }}</dt>
     <dd>{{ customer.address }}</dd>
     }
     @if (customer.cityName || customer.districtName) {
-    <dt>İl / İlçe</dt>
+    <dt>{{ 'customers.cityDistrict' | translate }}</dt>
     <dd>{{ joinCityDistrict(customer.cityName, customer.districtName) }}</dd>
     }
     @if (customer.taxOfficeName) {
-    <dt>Vergi Dairesi</dt>
+    <dt>{{ 'invoices.taxOffice' | translate }}</dt>
     <dd>{{ customer.taxOfficeName }}</dd>
     }
     @if (customer.postalCode) {
-    <dt>Posta kodu</dt>
+    <dt>{{ 'customers.postalCode' | translate }}</dt>
     <dd>{{ customer.postalCode }}</dd>
     }
     @if (customer.country) {
-    <dt>Ülke</dt>
+    <dt>{{ 'customers.country' | translate }}</dt>
     <dd>{{ customer.country }}</dd>
     }
     @if (customer.phone) {
-    <dt>Telefon</dt>
+    <dt>{{ 'customers.phone' | translate }}</dt>
     <dd>{{ customer.phone }}</dd>
     }
     @if (customer.email) {
-    <dt>E-posta</dt>
+    <dt>{{ 'auth.email' | translate }}</dt>
     <dd><a [href]="'mailto:' + customer.email">{{ customer.email }}</a></dd>
     }
     @if (customer.website) {
-    <dt>Web Adresi</dt>
+    <dt>{{ 'invoices.website' | translate }}</dt>
     <dd><a [href]="customer.website.startsWith('http') ? customer.website : 'https://' + customer.website"
         target="_blank">{{ customer.website }}</a></dd>
     }
@@ -81,20 +81,20 @@
 </section>
 
 <section class="card transactions-section">
-  <h2 class="card-title">Cari hareketler (ekstre)</h2>
+  <h2 class="card-title">{{ 'customers.sectionLedger' | translate }}</h2>
   <div class="filter-bar">
-    <input type="date" [(ngModel)]="dateFrom" placeholder="Başlangıç" />
-    <input type="date" [(ngModel)]="dateTo" placeholder="Bitiş" />
-    <button type="button" (click)="applyFilter()">Filtrele</button>
+    <input type="date" [(ngModel)]="dateFrom" />
+    <input type="date" [(ngModel)]="dateTo" />
+    <button type="button" (click)="applyFilter()">{{ 'common.filter' | translate }}</button>
   </div>
   <table class="transactions-table">
     <thead>
       <tr>
-        <th>Tarih</th>
-        <th>Açıklama</th>
-        <th>Borç</th>
-        <th>Alacak</th>
-        <th>Bakiye</th>
+        <th>{{ 'dashboard.colDate' | translate }}</th>
+        <th>{{ 'customers.colDescription' | translate }}</th>
+        <th>{{ 'customers.colDebitShort' | translate }}</th>
+        <th>{{ 'customers.colCreditShort' | translate }}</th>
+        <th>{{ 'customers.colRunningBalance' | translate }}</th>
       </tr>
     </thead>
     <tbody>
@@ -116,12 +116,12 @@
     </tbody>
   </table>
   @if (transactions.length === 0) {
-  <p class="text-muted">Bu dönemde hareket bulunmuyor.</p>
+  <p class="text-muted">{{ 'customers.noMovements' | translate }}</p>
   }
   <div class="pagination">
-    <span>Toplam: {{ totalCount }} kayıt</span>
-    <button type="button" [disabled]="page <= 1" (click)="prevPage()">Önceki</button>
-    <button type="button" [disabled]="transactions.length < pageSize" (click)="nextPage()">Sonraki</button>
+    <span>{{ 'common.paginationTotal' | translate: { total: totalCount } }}</span>
+    <button type="button" [disabled]="page <= 1" (click)="prevPage()">{{ 'common.previous' | translate }}</button>
+    <button type="button" [disabled]="transactions.length < pageSize" (click)="nextPage()">{{ 'common.next' | translate }}</button>
   </div>
 </section>
 }

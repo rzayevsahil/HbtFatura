@@ -1,40 +1,40 @@
 <div class="page-header">
-  <h1 class="page-title">Tahsilat / Ödeme</h1>
+  <h1 class="page-title">{{ 'payments.pageTitle' | translate }}</h1>
 </div>
 <div class="toolbar">
   <label class="toolbar-field">
-    <span class="toolbar-label">Başlangıç tarihi</span>
+    <span class="toolbar-label">{{ 'common.dateFrom' | translate }}</span>
     <input type="date" [(ngModel)]="listDateFrom" (change)="applyListFilter()" class="toolbar-input" />
   </label>
   <label class="toolbar-field">
-    <span class="toolbar-label">Bitiş tarihi</span>
+    <span class="toolbar-label">{{ 'common.dateTo' | translate }}</span>
     <input type="date" [(ngModel)]="listDateTo" (change)="applyListFilter()" class="toolbar-input" />
   </label>
   <label class="toolbar-field">
-    <span class="toolbar-label">Cari</span>
+    <span class="toolbar-label">{{ 'common.customer' | translate }}</span>
     <select [(ngModel)]="listCustomerId" (change)="applyListFilter()" class="toolbar-select">
-      <option value="">Tüm cariler</option>
+      <option value="">{{ 'payments.allCustomers' | translate }}</option>
       @for (c of customers; track c.id) {
         <option [value]="c.id">{{ c.title }}</option>
       }
     </select>
   </label>
   <label class="toolbar-field">
-    <span class="toolbar-label">Tip</span>
+    <span class="toolbar-label">{{ 'common.type' | translate }}</span>
     <select [(ngModel)]="listType" (change)="applyListFilter()" class="toolbar-select">
-      <option value="">Tümü</option>
-      <option value="Tahsilat">Tahsilat</option>
-      <option value="Odeme">Ödeme</option>
+      <option value="">{{ 'common.all' | translate }}</option>
+      <option value="Tahsilat">{{ 'payments.typeCollection' | translate }}</option>
+      <option value="Odeme">{{ 'payments.typePayment' | translate }}</option>
     </select>
   </label>
   <div class="toolbar-field toolbar-field-btn">
     <span class="toolbar-label">&nbsp;</span>
-    <button type="button" (click)="applyListFilter()">Filtrele</button>
+    <button type="button" (click)="applyListFilter()">{{ 'common.filter' | translate }}</button>
   </div>
   @if (auth.hasPermission('Payments.Create')) {
   <div class="toolbar-field toolbar-field-btn">
     <span class="toolbar-label">&nbsp;</span>
-    <a routerLink="/payments/new" class="btn btn-primary">Ekle</a>
+    <a routerLink="/payments/new" class="btn btn-primary">{{ 'payments.add' | translate }}</a>
   </div>
   }
 </div>
@@ -47,32 +47,32 @@
   <table>
     <thead>
       <tr>
-        <th>Tarih</th>
-        <th>Tip</th>
-        <th>Cari</th>
-        <th class="amount">Tutar</th>
-        <th>Açıklama</th>
+        <th>{{ 'payments.colDate' | translate }}</th>
+        <th>{{ 'payments.colType' | translate }}</th>
+        <th>{{ 'payments.colCustomer' | translate }}</th>
+        <th class="amount">{{ 'payments.colAmount' | translate }}</th>
+        <th>{{ 'payments.colDescription' | translate }}</th>
       </tr>
     </thead>
     <tbody>
       @for (p of listItems; track p.id) {
         <tr>
           <td>{{ p.date | date:'dd.MM.yyyy HH:mm' }}</td>
-          <td>{{ p.type }}</td>
+          <td>{{ paymentTypeLabel(p.type) }}</td>
           <td>{{ p.customerTitle }}</td>
           <td class="amount">{{ p.amount | number:'1.2-2' }} {{ p.currency }}</td>
           <td>{{ p.description }}</td>
         </tr>
       } @empty {
         @if (!listLoading) {
-          <tr><td colspan="5" class="text-muted">Kayıt bulunamadı.</td></tr>
+          <tr><td colspan="5" class="text-muted">{{ 'payments.noRecords' | translate }}</td></tr>
         }
       }
     </tbody>
   </table>
 </div>
 <div class="pagination">
-  <span>Toplam: {{ listTotalCount }} kayıt — Sayfa {{ listPage }}</span>
-  <button type="button" (click)="listPrevPage()" [disabled]="listPage <= 1">Önceki</button>
-  <button type="button" (click)="listNextPage()" [disabled]="listPage * listPageSize >= listTotalCount">Sonraki</button>
+  <span>{{ 'common.paginationTotalPage' | translate:{ total: listTotalCount, page: listPage } }}</span>
+  <button type="button" (click)="listPrevPage()" [disabled]="listPage <= 1">{{ 'common.previous' | translate }}</button>
+  <button type="button" (click)="listNextPage()" [disabled]="listPage * listPageSize >= listTotalCount">{{ 'common.next' | translate }}</button>
 </div>

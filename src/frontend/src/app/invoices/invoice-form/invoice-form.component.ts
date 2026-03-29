@@ -14,11 +14,12 @@ import { CreateInvoiceRequest, InvoiceItemInputDto, CustomerDto, ProductDto, Del
 import { ToastrService } from 'ngx-toastr';
 import { LookupService } from '../../core/services/lookup.service';
 import { UnitFieldSelectComponent } from '../../shared/unit-field-select/unit-field-select.component';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-invoice-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterLink, UnitFieldSelectComponent],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterLink, UnitFieldSelectComponent, TranslateModule],
   templateUrl: './invoice-form.component.html',
   styleUrls: ['./invoice-form.component.scss']
 })
@@ -50,9 +51,9 @@ export class InvoiceFormComponent implements OnInit {
 
   get selectedCustomerTitle(): string {
     const cid = this.form.get('customerId')?.value;
-    if (!cid) return 'Manuel gir';
+    if (!cid) return this.translate.instant('common.manualEntry');
     const c = this.customers.find(x => x.id === cid);
-    return c?.title ?? 'Manuel gir';
+    return c?.title ?? this.translate.instant('common.manualEntry');
   }
 
   get filteredCustomers(): CustomerDto[] {
@@ -80,9 +81,9 @@ export class InvoiceFormComponent implements OnInit {
 
   get selectedDeliveryNoteNumber(): string {
     const dnid = this.form.get('deliveryNoteId')?.value;
-    if (!dnid) return 'Seçiniz';
+    if (!dnid) return this.translate.instant('common.selectPlease');
     const dn = this.confirmedDeliveryNotes.find(x => x.id === dnid);
-    return dn ? `${dn.deliveryNumber} (${dn.customerTitle})` : 'Seçiniz';
+    return dn ? `${dn.deliveryNumber} (${dn.customerTitle})` : this.translate.instant('common.selectPlease');
   }
 
   constructor(
@@ -95,7 +96,8 @@ export class InvoiceFormComponent implements OnInit {
     private deliveryNoteApi: DeliveryNoteService,
     private toastr: ToastrService,
     public lookups: LookupService,
-    private taxNumberValidation: TaxNumberValidationService
+    private taxNumberValidation: TaxNumberValidationService,
+    private translate: TranslateService
   ) {
     this.form = this.fb.nonNullable.group({
       invoiceType: [0 as number, Validators.required], // 0=Satış, 1=Alış
@@ -361,7 +363,7 @@ export class InvoiceFormComponent implements OnInit {
   onSubmit(): void {
     this.error = '';
     if (this.form.pending) {
-      this.error = 'Vergi no / TC kontrolü tamamlanıyor, lütfen kısa süre bekleyin.';
+      this.error = this.translate.instant('invoices.taxPendingWait');
       return;
     }
     if (this.form.invalid) {
@@ -398,26 +400,26 @@ export class InvoiceFormComponent implements OnInit {
     if (this.id) {
       this.invoiceApi.update(this.id, req).subscribe({
         next: () => {
-          this.toastr.success('Fatura güncellendi.');
+          this.toastr.success(this.translate.instant('invoices.toastrUpdated'));
           this.router.navigate(['/invoices']);
         },
         error: e => {
           this.error = e.error?.message ?? 'Hata';
           this.saving = false;
-          this.toastr.error(e.error?.message ?? 'Güncelleme sırasında hata oluştu.');
+          this.toastr.error(e.error?.message ?? this.translate.instant('invoices.toastrUpdateError'));
         },
         complete: () => { this.saving = false; }
       });
     } else {
       this.invoiceApi.create(req).subscribe({
         next: () => {
-          this.toastr.success('Fatura oluşturuldu.');
+          this.toastr.success(this.translate.instant('invoices.toastrCreated'));
           this.router.navigate(['/invoices']);
         },
         error: e => {
           this.error = e.error?.message ?? 'Hata';
           this.saving = false;
-          this.toastr.error(e.error?.message ?? 'Kayıt sırasında hata oluştu.');
+          this.toastr.error(e.error?.message ?? this.translate.instant('invoices.toastrSaveError'));
         },
         complete: () => { this.saving = false; }
       });

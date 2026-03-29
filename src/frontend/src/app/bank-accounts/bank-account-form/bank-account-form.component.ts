@@ -10,11 +10,12 @@ import { ToastrService } from 'ngx-toastr';
 import { IbanFormatter } from '../../core/utils/iban-formatter';
 import { LookupService } from '../../core/services/lookup.service';
 import { LookupDto } from '../../core/models';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-bank-account-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, TranslateModule],
   templateUrl: './bank-account-form.component.html',
   styleUrls: ['./bank-account-form.component.scss']
 })
@@ -42,7 +43,8 @@ export class BankAccountFormComponent implements OnInit {
     private firmApi: FirmService,
     public auth: AuthService,
     private toastr: ToastrService,
-    private lookups: LookupService
+    private lookups: LookupService,
+    private translate: TranslateService
   ) { }
 
   ngOnInit(): void {
@@ -111,13 +113,13 @@ export class BankAccountFormComponent implements OnInit {
     } else {
       this.api.create(req).subscribe({
         next: () => {
-          this.toastr.success('Banka hesabı oluşturuldu.');
+          this.toastr.success(this.translate.instant('bankAccountsPage.toastCreated'));
           this.router.navigate(['/bank-accounts']);
         },
         error: e => {
           this.error = e.error?.message ?? 'Hata';
           this.saving = false;
-          this.toastr.error(e.error?.message ?? 'Kayıt sırasında hata oluştu.');
+          this.toastr.error(e.error?.message ?? this.translate.instant('bankAccountsPage.saveError'));
         },
         complete: () => { this.saving = false; }
       });

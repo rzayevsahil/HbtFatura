@@ -9,11 +9,21 @@ public class DashboardDto
 
 public class DashboardStatDto
 {
+    /// <summary>İstemci çevirisi için sabit anahtar (örn. monthly_sales).</summary>
+    public string Key { get; set; } = string.Empty;
     public string Label { get; set; } = string.Empty;
     public string Value { get; set; } = string.Empty;
     public string Icon { get; set; } = string.Empty;
     public string Color { get; set; } = string.Empty;
     public string? Trend { get; set; }
+    /// <summary>TRY tutarı (aylık satış, bekleyen tahsilat).</summary>
+    public decimal? Amount { get; set; }
+    /// <summary>Sayı göstergeleri (sipariş adedi, müşteri sayısı, firma sayısı vb.).</summary>
+    public int? Count { get; set; }
+    /// <summary>Trend metni için ek sayı (örn. bekleyen fatura adedi).</summary>
+    public int? TrendCount { get; set; }
+    /// <summary>Trend çevirisi: this_month, invoice_count, pending, registered, active, critical.</summary>
+    public string? TrendKind { get; set; }
 }
 
 public class RecentInvoiceDto

@@ -5,11 +5,12 @@ import { FormsModule } from '@angular/forms';
 import { BankAccountService } from '../../services/bank-account.service';
 import { BankAccountDto, BankTransactionDto, PagedResult } from '../../core/models';
 import { ToastrService } from 'ngx-toastr';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-bank-account-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [CommonModule, RouterLink, FormsModule, TranslateModule],
   templateUrl: './bank-account-detail.component.html',
   styleUrls: ['./bank-account-detail.component.scss']
 })
@@ -28,7 +29,8 @@ export class BankAccountDetailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private api: BankAccountService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private translate: TranslateService
   ) { }
 
   ngOnInit(): void {
@@ -71,18 +73,20 @@ export class BankAccountDetailComponent implements OnInit {
       date: this.newTransaction.date,
       type: this.newTransaction.type,
       amount: this.newTransaction.amount,
-      description: this.newTransaction.description || 'Manuel dekont'
+      description: this.newTransaction.description || this.translate.instant('bankAccountsPage.manualReceiptNote')
     }).subscribe({
       next: () => {
-        this.toastr.success('Dekont eklendi.');
+        this.toastr.success(this.translate.instant('bankAccountsPage.toastReceiptAdded'));
         this.closeAddModal();
         this.api.getById(id).subscribe(b => this.bankAccount = b);
         this.loadTransactions();
       },
-      error: e => this.toastr.error(e.error?.message ?? 'Dekont eklenemedi.')
+      error: e => this.toastr.error(e.error?.message ?? this.translate.instant('bankAccountsPage.toastReceiptFailed'))
     });
   }
-  typeLabel(t: number): string { return t === 1 ? 'Giriş' : 'Çıkış'; }
+  typeLabel(t: number): string {
+    return t === 1 ? this.translate.instant('common.txnIn') : this.translate.instant('common.txnOut');
+  }
   prevPage(): void { if (this.page > 1) { this.page--; this.loadTransactions(); } }
   nextPage(): void { this.page++; this.loadTransactions(); }
 }

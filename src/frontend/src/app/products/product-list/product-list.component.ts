@@ -7,13 +7,14 @@ import { ProductListDto, PagedResult } from '../../core/models';
 import { AuthService } from '../../core/services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ConfirmModalComponent } from '../../shared/confirm-modal/confirm-modal.component';
 import { currencyDisplaySuffix } from '../../core/utils/currency-display';
 
 @Component({
   selector: 'app-product-list',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule, ConfirmModalComponent],
+  imports: [CommonModule, RouterLink, FormsModule, ConfirmModalComponent, TranslateModule],
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.scss']
 })
@@ -31,7 +32,8 @@ export class ProductListComponent implements OnInit {
   constructor(
     private api: ProductService,
     public auth: AuthService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private translate: TranslateService
   ) { }
 
   ngOnInit(): void {
@@ -47,7 +49,7 @@ export class ProductListComponent implements OnInit {
         this.loading = false;
       },
       error: e => {
-        this.toastr.error(e.error?.message ?? 'Liste yüklenemedi.');
+        this.toastr.error(e.error?.message ?? this.translate.instant('products.loadError'));
         this.loading = false;
       }
     });
@@ -71,13 +73,13 @@ export class ProductListComponent implements OnInit {
     if (!this.deletingProduct) return;
     this.api.delete(this.deletingProduct.id).subscribe({
       next: () => {
-        this.toastr.success('Ürün silindi.');
+        this.toastr.success(this.translate.instant('products.deleted'));
         this.showDeleteModal = false;
         this.deletingProduct = null;
         this.load();
       },
       error: e => {
-        this.toastr.error(e.error?.message ?? 'Silme sırasında hata oluştu.');
+        this.toastr.error(e.error?.message ?? this.translate.instant('products.deleteError'));
         this.showDeleteModal = false;
         this.deletingProduct = null;
       }

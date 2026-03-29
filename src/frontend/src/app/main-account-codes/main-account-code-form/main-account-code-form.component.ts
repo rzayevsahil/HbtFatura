@@ -7,11 +7,12 @@ import { FirmService } from '../../services/firm.service';
 import { MainAccountCodeDto, FirmDto, CreateMainAccountCodeRequest, UpdateMainAccountCodeRequest } from '../../core/models';
 import { AuthService } from '../../core/services/auth.service';
 import { ToastrService } from 'ngx-toastr';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-main-account-code-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, TranslateModule],
   templateUrl: './main-account-code-form.component.html',
   styleUrls: ['./main-account-code-form.component.scss']
 })
@@ -42,7 +43,8 @@ export class MainAccountCodeFormComponent implements OnInit {
     private api: MainAccountCodeService,
     private firmApi: FirmService,
     public auth: AuthService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private translate: TranslateService
   ) { }
 
   ngOnInit(): void {
@@ -99,14 +101,14 @@ export class MainAccountCodeFormComponent implements OnInit {
     if (this.existingCodes.length > 0) {
       if (this.id) {
         if (isDuplicate(this.existingCodes, this.id)) {
-          this.error = 'Bu hesap kodu zaten kayıtlı. Farklı bir kod girin.';
+          this.error = this.translate.instant('mainAccountCodes.duplicateCode');
           this.saving = false;
           this.toastr.error(this.error);
           return;
         }
       } else {
         if (isDuplicate(this.existingCodes)) {
-          this.error = 'Bu hesap kodu zaten kayıtlı. Farklı bir kod girin.';
+          this.error = this.translate.instant('mainAccountCodes.duplicateCode');
           this.saving = false;
           this.toastr.error(this.error);
           return;
@@ -117,13 +119,13 @@ export class MainAccountCodeFormComponent implements OnInit {
     if (this.id) {
       this.api.update(this.id, { code: req.code, name: req.name, sortOrder: req.sortOrder }).subscribe({
         next: () => {
-          this.toastr.success('Ana cari kodu güncellendi.');
+          this.toastr.success(this.translate.instant('mainAccountCodes.updated'));
           if (this.isModal) this.saved.emit(); else this.router.navigate(['/main-account-codes']);
         },
         error: e => {
           this.error = e.error?.message ?? 'Hata';
           this.saving = false;
-          this.toastr.error(e.error?.message ?? 'Güncelleme sırasında hata oluştu.');
+          this.toastr.error(e.error?.message ?? this.translate.instant('mainAccountCodes.saveOrUpdateError'));
         },
         complete: () => {
           this.saving = false;
@@ -138,7 +140,7 @@ export class MainAccountCodeFormComponent implements OnInit {
         error: e => {
           this.error = e.error?.message ?? 'Hata';
           this.saving = false;
-          this.toastr.error(e.error?.message ?? 'Kayıt sırasında hata oluştu.');
+          this.toastr.error(e.error?.message ?? this.translate.instant('mainAccountCodes.saveOrUpdateError'));
         },
         complete: () => {
           this.saving = false;

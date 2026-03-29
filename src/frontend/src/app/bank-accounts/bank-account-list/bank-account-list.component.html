@@ -1,11 +1,11 @@
 <div class="page-header">
-  <h1 class="page-title">Banka</h1>
+  <h1 class="page-title">{{ 'bankAccountsPage.pageTitle' | translate }}</h1>
 </div>
 <div class="toolbar">
-  <input [(ngModel)]="search" placeholder="Hesap adı, banka, IBAN ile ara..." (keyup.enter)="search = search" />
-  <button type="button">Ara</button>
+  <input [(ngModel)]="search" [placeholder]="'bankAccountsPage.searchPlaceholder' | translate" (keyup.enter)="search = search" />
+  <button type="button">{{ 'common.search' | translate }}</button>
   @if (auth.hasPermission('Banking.Edit')) {
-  <a routerLink="/bank-accounts/new" class="btn btn-primary">Yeni Banka Hesabı</a>
+  <a routerLink="/bank-accounts/new" class="btn btn-primary">{{ 'bankAccountsPage.newAccount' | translate }}</a>
   }
 </div>
 <div class="card table-wrap" style="position: relative; min-height: 200px;">
@@ -17,12 +17,12 @@
   <table>
     <thead>
       <tr>
-        <th>Hesap adı</th>
-        <th>Banka</th>
-        <th>IBAN</th>
-        <th>Para birimi</th>
-        <th>Bakiye</th>
-        <th>Durum</th>
+        <th>{{ 'bankAccountsPage.colAccountName' | translate }}</th>
+        <th>{{ 'bankAccountsPage.colBank' | translate }}</th>
+        <th>{{ 'bankAccountsPage.colIban' | translate }}</th>
+        <th>{{ 'bankAccountsPage.colCurrency' | translate }}</th>
+        <th>{{ 'bankAccountsPage.colBalance' | translate }}</th>
+        <th>{{ 'common.status' | translate }}</th>
         <th></th>
       </tr>
     </thead>
@@ -34,13 +34,13 @@
         <td>{{ b.iban }}</td>
         <td>{{ b.currency }}</td>
         <td class="amount">{{ b.balance | number:'1.2-2' }} {{ formatCurrencyLabel(b.currency) }}</td>
-        <td>{{ b.isActive ? 'Aktif' : 'Pasif' }}</td>
+        <td>{{ b.isActive ? ('bankAccountsPage.statusActive' | translate) : ('bankAccountsPage.statusPassive' | translate) }}</td>
         <td>
           <div class="actions-cell">
-            <a [routerLink]="['/bank-accounts', b.id]">Detay</a>
+            <a [routerLink]="['/bank-accounts', b.id]">{{ 'common.detail' | translate }}</a>
             @if (auth.hasPermission('Banking.Edit')) {
-            <a [routerLink]="['/bank-accounts', b.id, 'edit']">Düzenle</a>
-            <button type="button" (click)="onDeleteClick(b.id, b.name)">Sil</button>
+            <a [routerLink]="['/bank-accounts', b.id, 'edit']">{{ 'common.edit' | translate }}</a>
+            <button type="button" (click)="onDeleteClick(b.id, b.name)">{{ 'common.delete' | translate }}</button>
             }
           </div>
         </td>
@@ -50,13 +50,12 @@
   </table>
 </div>
 @if (filteredItems.length === 0) {
-<p class="text-muted">{{ search.trim() ? 'Arama kriterine uygun hesap bulunamadı.' : 'Henüz banka hesabı tanımlanmamış.'
-  }}</p>
+<p class="text-muted">{{ search.trim() ? ('bankAccountsPage.noSearch' | translate) : ('bankAccountsPage.empty' | translate) }}</p>
 }
 
 @if (showDeleteModal) {
-<app-confirm-modal title="Banka Hesabı Sil"
-  [message]="'\'' + deletingAccount?.name + '\' isimli banka hesabını silmek istediğinize emin misiniz?'"
-  confirmText="Sil" cancelText="Vazgeç" (confirm)="confirmDelete()"
+<app-confirm-modal [title]="'bankAccountsPage.deleteTitle' | translate"
+  [message]="'bankAccountsPage.deleteMessage' | translate:{ name: deletingAccount?.name ?? '' }"
+  [confirmText]="'common.delete' | translate" [cancelText]="'common.discard' | translate" (confirm)="confirmDelete()"
   (cancel)="showDeleteModal = false"></app-confirm-modal>
 }

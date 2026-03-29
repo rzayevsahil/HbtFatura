@@ -9,11 +9,12 @@ import { AuthService } from '../../core/services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { LookupService } from '../../core/services/lookup.service';
 import { LookupDto } from '../../core/models';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-cash-register-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, TranslateModule],
   templateUrl: './cash-register-form.component.html',
   styleUrls: ['./cash-register-form.component.scss']
 })
@@ -39,7 +40,8 @@ export class CashRegisterFormComponent implements OnInit {
     private firmApi: FirmService,
     public auth: AuthService,
     private toastr: ToastrService,
-    private lookups: LookupService
+    private lookups: LookupService,
+    private translate: TranslateService
   ) { }
 
   ngOnInit(): void {
@@ -80,26 +82,26 @@ export class CashRegisterFormComponent implements OnInit {
     if (this.id) {
       this.api.update(this.id, { name: v.name, currency: v.currency, isActive: v.isActive }).subscribe({
         next: () => {
-          this.toastr.success('Kasa güncellendi.');
+          this.toastr.success(this.translate.instant('cashRegisters.toastUpdated'));
           this.router.navigate(['/cash-registers']);
         },
         error: e => {
           this.error = e.error?.message ?? 'Hata';
           this.saving = false;
-          this.toastr.error(e.error?.message ?? 'Güncelleme sırasında hata oluştu.');
+          this.toastr.error(e.error?.message ?? this.translate.instant('cashRegisters.updateError'));
         },
         complete: () => { this.saving = false; }
       });
     } else {
       this.api.create(req).subscribe({
         next: () => {
-          this.toastr.success('Kasa oluşturuldu.');
+          this.toastr.success(this.translate.instant('cashRegisters.toastCreated'));
           this.router.navigate(['/cash-registers']);
         },
         error: e => {
           this.error = e.error?.message ?? 'Hata';
           this.saving = false;
-          this.toastr.error(e.error?.message ?? 'Kayıt sırasında hata oluştu.');
+          this.toastr.error(e.error?.message ?? this.translate.instant('cashRegisters.saveError'));
         },
         complete: () => { this.saving = false; }
       });

@@ -1,3 +1,10 @@
+.auth-top-bar {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 11;
+}
+
 .auth-page {
   min-height: 100vh;
   display: flex;

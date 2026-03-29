@@ -2,6 +2,7 @@ import { Component, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { InvoiceService } from '../../services/invoice.service';
 import { ReportService } from '../../services/report.service';
 import { ToastrService } from 'ngx-toastr';
@@ -12,7 +13,7 @@ import { InvoiceListDto, InvoiceStatus } from '../../core/models';
 @Component({
   selector: 'app-invoice-list',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [CommonModule, RouterLink, FormsModule, TranslateModule],
   templateUrl: './invoice-list.component.html',
   styleUrls: ['./invoice-list.component.scss']
 })
@@ -34,7 +35,8 @@ export class InvoiceListComponent implements OnInit {
     private router: Router,
     private toastr: ToastrService,
     public lookups: LookupService,
-    public auth: AuthService
+    public auth: AuthService,
+    private translate: TranslateService
   ) { }
 
   @HostListener('document:keydown', ['$event'])
@@ -113,9 +115,9 @@ export class InvoiceListComponent implements OnInit {
         a.download = `fatura-raporu-${dateStr}.pdf`;
         a.click();
         window.URL.revokeObjectURL(url);
-        this.toastr.success('Fatura raporu PDF indirildi.');
+        this.toastr.success(this.translate.instant('invoices.toastrReportPdfOk'));
       },
-      error: () => this.toastr.error('Fatura raporu PDF indirilemedi.')
+      error: () => this.toastr.error(this.translate.instant('invoices.toastrReportPdfFail'))
     });
   }
 
@@ -132,9 +134,9 @@ export class InvoiceListComponent implements OnInit {
         a.download = `fatura-raporu-${dateStr}.xlsx`;
         a.click();
         window.URL.revokeObjectURL(url);
-        this.toastr.success('Fatura raporu Excel indirildi.');
+        this.toastr.success(this.translate.instant('invoices.toastrReportExcelOk'));
       },
-      error: () => this.toastr.error('Fatura raporu Excel indirilemedi.')
+      error: () => this.toastr.error(this.translate.instant('invoices.toastrReportExcelFail'))
     });
   }
 

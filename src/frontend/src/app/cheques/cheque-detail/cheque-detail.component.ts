@@ -6,11 +6,12 @@ import { ChequeService } from '../../services/cheque.service';
 import { LookupService } from '../../core/services/lookup.service';
 import { ChequeOrPromissoryDto } from '../../core/models';
 import { ToastrService } from 'ngx-toastr';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-cheque-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [CommonModule, RouterLink, FormsModule, TranslateModule],
   templateUrl: './cheque-detail.component.html',
   styleUrls: ['./cheque-detail.component.scss']
 })
@@ -23,7 +24,8 @@ export class ChequeDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private api: ChequeService,
     public lookups: LookupService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private translate: TranslateService
   ) { }
 
   ngOnInit(): void {
@@ -56,7 +58,9 @@ export class ChequeDetailComponent implements OnInit {
   }
 
   typeLabel(type: number): string {
-    return type === 1 ? 'Çek' : type === 2 ? 'Senet' : '';
+    if (type === 1) return this.translate.instant('chequesPage.typeCheque');
+    if (type === 2) return this.translate.instant('chequesPage.typeNote');
+    return '';
   }
 
   statusLabel(status: number): string {

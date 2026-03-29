@@ -6,11 +6,12 @@ import { AccountPaymentService } from '../../services/account-payment.service';
 import { CustomerService } from '../../services/customer.service';
 import { CustomerDto, AccountPaymentListDto } from '../../core/models';
 import { AuthService } from '../../core/services/auth.service';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-account-payment-list',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [CommonModule, RouterLink, FormsModule, TranslateModule],
   templateUrl: './account-payment-list.component.html',
   styleUrls: ['./account-payment-list.component.scss']
 })
@@ -29,8 +30,15 @@ export class AccountPaymentListComponent implements OnInit {
   constructor(
     private paymentApi: AccountPaymentService,
     private customerApi: CustomerService,
-    public auth: AuthService
+    public auth: AuthService,
+    private translate: TranslateService
   ) { }
+
+  paymentTypeLabel(type: string): string {
+    if (type === 'Tahsilat') return this.translate.instant('payments.typeCollection');
+    if (type === 'Odeme') return this.translate.instant('payments.typePayment');
+    return type;
+  }
 
   ngOnInit(): void {
     this.customerApi.getDropdown().subscribe(c => this.customers = c);

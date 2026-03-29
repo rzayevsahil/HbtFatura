@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { DeliveryNoteService } from '../../services/delivery-note.service';
 import { ReportService } from '../../services/report.service';
 import { DeliveryNoteListDto, DeliveryNoteStatus } from '../../core/models';
@@ -12,7 +13,7 @@ import { LookupService } from '../../core/services/lookup.service';
 @Component({
   selector: 'app-delivery-note-list',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [CommonModule, RouterLink, FormsModule, TranslateModule],
   templateUrl: './delivery-note-list.component.html',
   styleUrls: ['./delivery-note-list.component.scss']
 })
@@ -32,7 +33,8 @@ export class DeliveryNoteListComponent implements OnInit {
     private reports: ReportService,
     private toastr: ToastrService,
     public lookups: LookupService,
-    public auth: AuthService
+    public auth: AuthService,
+    private translate: TranslateService
   ) { }
 
   ngOnInit(): void {
@@ -73,8 +75,8 @@ export class DeliveryNoteListComponent implements OnInit {
 
   setStatus(id: string, status: DeliveryNoteStatus): void {
     this.api.setStatus(id, status).subscribe({
-      next: () => { this.toastr.success('Durum güncellendi.'); this.load(); },
-      error: e => this.toastr.error(e.error?.message ?? 'Güncellenemedi.')
+      next: () => { this.toastr.success(this.translate.instant('common.statusUpdated')); this.load(); },
+      error: e => this.toastr.error(e.error?.message ?? this.translate.instant('common.updateFailed'))
     });
   }
 

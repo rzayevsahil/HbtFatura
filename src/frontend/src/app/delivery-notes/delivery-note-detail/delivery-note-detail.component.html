@@ -1,72 +1,72 @@
 <div class="page-header">
-  <h1 class="page-title">{{ deliveryNote?.deliveryNumber ?? 'İrsaliye' }}</h1>
+  <h1 class="page-title">{{ deliveryNote?.deliveryNumber ?? ('deliveryNotes.defaultTitle' | translate) }}</h1>
   <div class="actions">
     @if (isTaslak(deliveryNote?.status) && !deliveryNote?.invoiceId) {
     <span class="text-muted" style="margin-right: 15px; font-size: 0.9em;">
-      * İrsaliyeyi onayladıktan sonra faturaya aktarabilirsiniz.
+      {{ 'deliveryNotes.hintInvoice' | translate }}
     </span>
-    <a [routerLink]="['/delivery-notes', deliveryNote?.id, 'edit']" class="btn btn-secondary">Düzenle</a>
-    <button type="button" class="btn btn-primary" (click)="confirmDeliveryNote()">Onayla</button>
+    <a [routerLink]="['/delivery-notes', deliveryNote?.id, 'edit']" class="btn btn-secondary">{{ 'common.edit' | translate }}</a>
+    <button type="button" class="btn btn-primary" (click)="confirmDeliveryNote()">{{ 'common.approve' | translate }}</button>
     }
     @if (isOnaylandi(deliveryNote?.status) && !deliveryNote?.invoiceId) {
     <button type="button" class="btn btn-primary" (click)="createInvoice()" [disabled]="creatingInvoice">
-      {{ creatingInvoice ? 'Oluşturuluyor...' : 'Faturaya Aktar' }}
+      {{ creatingInvoice ? ('deliveryNotes.creatingInvoice' | translate) : ('deliveryNotes.toInvoice' | translate) }}
     </button>
     }
     @if (deliveryNote) {
-      <button type="button" class="btn btn-default" (click)="downloadPdf()">PDF indir</button>
+      <button type="button" class="btn btn-default" (click)="downloadPdf()">{{ 'common.pdfDownload' | translate }}</button>
     }
     @if (deliveryNote?.invoiceId) {
-    <a [routerLink]="['/invoices', deliveryNote?.invoiceId]" class="btn btn-secondary" style="color: var(--color-primary);">Faturaya Git</a>
+    <a [routerLink]="['/invoices', deliveryNote?.invoiceId]" class="btn btn-secondary" style="color: var(--color-primary);">{{ 'deliveryNotes.goInvoice' | translate }}</a>
     }    
-    <a routerLink="/delivery-notes" class="btn btn-default">← Geri</a>
+    <a routerLink="/delivery-notes" class="btn btn-default">{{ 'common.back' | translate }}</a>
   </div>
 </div>
 @if (loading) {
 <div class="loading-container">
   <div class="spinner"></div>
-  <p>Veriler yükleniyor...</p>
+  <p>{{ 'common.loadingData' | translate }}</p>
 </div>
 } @else if (deliveryNote) {
 <div class="card info-grid">
   <div class="info-item info-item-cari">
-    <span class="info-label">Cari:</span>
+    <span class="info-label">{{ 'common.customer' | translate }}:</span>
     <span class="info-value clickable-link" (click)="goToCustomer(deliveryNote.customerId)">{{ deliveryNote.customerTitle || '—' }}</span>
   </div>
   <div class="info-item info-item-siparis">
-    <span class="info-label">Sipariş No:</span>
+    <span class="info-label">{{ 'deliveryNotes.orderNo' | translate }}</span>
     <span class="info-value clickable-link" (click)="goToOrder(deliveryNote.orderId)">{{ deliveryNote.orderNumber || '—' }}</span>
   </div>
   <div class="info-item">
-    <span class="info-label">Tarih:</span>
+    <span class="info-label">{{ 'dashboard.colDate' | translate }}:</span>
     <span class="info-value">{{ deliveryNote.deliveryDate | date:'dd.MM.yyyy HH:mm' }}</span>
   </div>
   <div class="info-item">
-    <span class="info-label">Tip:</span>
+    <span class="info-label">{{ 'common.type' | translate }}:</span>
     <span class="info-value">{{ typeLabel(deliveryNote.deliveryType) }}</span>
   </div>
   <div class="info-item">
-    <span class="info-label">Durum:</span>
+    <span class="info-label">{{ 'common.status' | translate }}:</span>
     <span class="info-value">{{ statusLabel(deliveryNote.status) }}</span>
   </div>
   <div class="info-item">
-    <span class="info-label">Oluşturan:</span>
+    <span class="info-label">{{ 'common.createdBy' | translate }}:</span>
     <span class="info-value">{{ deliveryNote.createdByUserName || '—' }}</span>
   </div>
 </div>
-<h2 class="section-title">Kalemler</h2>
+<h2 class="section-title">{{ 'common.lines' | translate }}</h2>
 <div class="card table-wrap">
   <table>
     <thead>
       <tr>
-        <th>Stok Kodu</th>
-        <th>Mal Hizmet</th>
-        <th class="amount">Miktar</th>
-        <th>Birim</th>
-        <th class="amount">Birim Fiyat</th>
-        <th class="amount">KDV Oranı</th>
-        <th class="amount">KDV Tutarı</th>
-        <th class="amount">Mal Hizmet Tutarı</th>
+        <th>{{ 'common.colStockCode' | translate }}</th>
+        <th>{{ 'common.colGoodsService' | translate }}</th>
+        <th class="amount">{{ 'common.colQty' | translate }}</th>
+        <th>{{ 'common.colUnit' | translate }}</th>
+        <th class="amount">{{ 'common.colUnitPrice' | translate }}</th>
+        <th class="amount">{{ 'common.colVatRate' | translate }}</th>
+        <th class="amount">{{ 'common.colVatAmount' | translate }}</th>
+        <th class="amount">{{ 'common.colLineAmount' | translate }}</th>
       </tr>
     </thead>
     <tbody>
@@ -75,7 +75,7 @@
         <td>{{ it.productCode || '—' }}</td>
         <td>{{ it.description || '—' }}</td>
         <td class="amount">{{ it.quantity | number:'1.2-2' }}</td>
-        <td>{{ it.unit || 'Adet' }}</td>
+        <td>{{ it.unit || ('common.unitPiece' | translate) }}</td>
         <td class="amount">{{ it.unitPrice | number:'1.2-2' }} TRY</td>
         <td class="amount">{{ it.vatRate | number:'1.0-0' }}%</td>
         <td class="amount">{{ (it.quantity * it.unitPrice * it.vatRate / 100) | number:'1.2-2' }} TRY</td>
@@ -85,11 +85,11 @@
     </tbody>
   </table>
   <div class="totals">
-    <p><span>Mal Hizmet Toplam Tutarı:</span> <span>{{ totalNet | number:'1.2-2' }} TRY</span></p>
-    <p><span>Hesaplanan KDV:</span> <span>{{ totalVat | number:'1.2-2' }} TRY</span></p>
-    <p class="grand-total"><span>Genel Toplam:</span> <span>{{ totalGross | number:'1.2-2' }} TRY</span></p>
+    <p><span>{{ 'common.totalsGoodsColon' | translate }}</span> <span>{{ totalNet | number:'1.2-2' }} TRY</span></p>
+    <p><span>{{ 'common.totalsVatColon' | translate }}</span> <span>{{ totalVat | number:'1.2-2' }} TRY</span></p>
+    <p class="grand-total"><span>{{ 'common.totalsGrandColon' | translate }}</span> <span>{{ totalGross | number:'1.2-2' }} TRY</span></p>
   </div>
 </div>
 } @else {
-<p>İrsaliye bulunamadı.</p>
+<p>{{ 'deliveryNotes.notFound' | translate }}</p>
 }

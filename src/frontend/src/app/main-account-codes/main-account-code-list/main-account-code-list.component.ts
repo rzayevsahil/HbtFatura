@@ -9,11 +9,12 @@ import { ToastrService } from 'ngx-toastr';
 import { MainAccountCodeFormComponent } from '../main-account-code-form/main-account-code-form.component';
 
 import { ConfirmModalComponent } from '../../shared/confirm-modal/confirm-modal.component';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-main-account-code-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, MainAccountCodeFormComponent, ConfirmModalComponent],
+  imports: [CommonModule, FormsModule, RouterLink, MainAccountCodeFormComponent, ConfirmModalComponent, TranslateModule],
   templateUrl: './main-account-code-list.component.html',
   styleUrls: ['./main-account-code-list.component.scss']
 })
@@ -40,7 +41,8 @@ export class MainAccountCodeListComponent implements OnInit {
   constructor(
     private api: MainAccountCodeService,
     public auth: AuthService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private translate: TranslateService
   ) { }
 
   ngOnInit(): void {
@@ -55,7 +57,7 @@ export class MainAccountCodeListComponent implements OnInit {
         this.loading = false;
       },
       error: e => {
-        this.toastr.error(e.error?.message ?? 'Liste yüklenemedi.');
+        this.toastr.error(e.error?.message ?? this.translate.instant('mainAccountCodes.loadError'));
         this.loading = false;
       }
     });
@@ -70,13 +72,13 @@ export class MainAccountCodeListComponent implements OnInit {
     if (!this.deletingItem) return;
     this.api.delete(this.deletingItem.id).subscribe({
       next: () => {
-        this.toastr.success('Ana cari kodu silindi.');
+        this.toastr.success(this.translate.instant('mainAccountCodes.deleted'));
         this.showDeleteModal = false;
         this.deletingItem = null;
         this.load();
       },
       error: e => {
-        this.toastr.error(e.error?.message ?? 'Silme sırasında hata oluştu.');
+        this.toastr.error(e.error?.message ?? this.translate.instant('mainAccountCodes.deleteError'));
         this.showDeleteModal = false;
         this.deletingItem = null;
       }

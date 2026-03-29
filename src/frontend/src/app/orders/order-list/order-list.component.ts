@@ -2,6 +2,7 @@ import { Component, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { OrderService } from '../../services/order.service';
 import { ReportService } from '../../services/report.service';
 import { OrderListDto, OrderStatus } from '../../core/models';
@@ -12,7 +13,7 @@ import { LookupService } from '../../core/services/lookup.service';
 @Component({
   selector: 'app-order-list',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [CommonModule, RouterLink, FormsModule, TranslateModule],
   templateUrl: './order-list.component.html',
   styleUrls: ['./order-list.component.scss']
 })
@@ -33,7 +34,8 @@ export class OrderListComponent implements OnInit {
     private router: Router,
     private toastr: ToastrService,
     public lookups: LookupService,
-    public auth: AuthService
+    public auth: AuthService,
+    private translate: TranslateService
   ) { }
 
   @HostListener('document:keydown', ['$event'])
@@ -79,13 +81,13 @@ export class OrderListComponent implements OnInit {
   }
 
   setStatus(id: string, status: OrderStatus): void {
-    if (status === 2 && !confirm('Siparişi iptal etmek istediğinize emin misiniz?')) return;
+    if (status === 2 && !confirm(this.translate.instant('common.confirmCancelOrder'))) return;
     this.api.setStatus(id, status).subscribe({
       next: () => {
-        this.toastr.success('Durum güncellendi.');
+        this.toastr.success(this.translate.instant('common.statusUpdated'));
         this.load();
       },
-      error: e => this.toastr.error(e.error?.message ?? 'Güncellenemedi.')
+      error: e => this.toastr.error(e.error?.message ?? this.translate.instant('common.updateFailed'))
     });
   }
 

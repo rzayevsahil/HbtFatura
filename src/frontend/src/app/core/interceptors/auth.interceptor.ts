@@ -4,6 +4,11 @@ import { catchError, switchMap, throwError } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 import { environment } from '../../../environments/environment';
 
+/** Same-origin static files (i18n JSON, etc.); must not be sent to API base URL. */
+function isLocalStaticAssetUrl(url: string): boolean {
+  return url.startsWith('assets/') || url.startsWith('/assets/');
+}
+
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const auth = inject(AuthService);
   const token = auth.getToken();
@@ -12,7 +17,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
       setHeaders: { Authorization: `Bearer ${token}` }
     });
   }
-  if (!req.url.startsWith('http')) {
+  if (!req.url.startsWith('http') && !isLocalStaticAssetUrl(req.url)) {
     const fullUrl = environment.apiUrl + req.url;
     console.log('[Auth Interceptor] İstek URL:', fullUrl, '| apiUrl:', environment.apiUrl);
     req = req.clone({ url: fullUrl });

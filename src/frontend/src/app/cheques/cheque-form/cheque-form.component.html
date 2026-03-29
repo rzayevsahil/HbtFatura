@@ -1,10 +1,10 @@
 <div class="page-header">
-  <h1 class="page-title">{{ id ? 'Çek/Senet Düzenle' : 'Yeni Çek/Senet' }}</h1>
+  <h1 class="page-title">{{ id ? ('chequesPage.editFormTitle' | translate) : ('chequesPage.newFormTitle' | translate) }}</h1>
 </div>
 @if (id && editLoading) {
 <div class="loading-container">
   <div class="spinner"></div>
-  <p>Veriler yükleniyor...</p>
+  <p>{{ 'common.loadingData' | translate }}</p>
 </div>
 } @else {
 <div class="card">
@@ -12,9 +12,9 @@
     <div class="form-grid">
       @if (auth.user()?.role === 'SuperAdmin' && !id) {
         <div class="row">
-          <label>Firma</label>
+          <label>{{ 'common.firm' | translate }}</label>
           <select formControlName="firmId" required>
-            <option [ngValue]="null">Firma seçin</option>
+            <option [ngValue]="null">{{ 'common.selectFirm' | translate }}</option>
             @for (f of firms; track f.id) {
               <option [ngValue]="f.id">{{ f.name }}</option>
             }
@@ -22,44 +22,44 @@
         </div>
       }
       <div class="row">
-        <label>Tip</label>
+        <label>{{ 'chequesPage.colType' | translate }}</label>
         <select formControlName="type">
-          <option [ngValue]="1">Çek</option>
-          <option [ngValue]="2">Senet</option>
+          <option [ngValue]="1">{{ 'chequesPage.typeCheque' | translate }}</option>
+          <option [ngValue]="2">{{ 'chequesPage.typeNote' | translate }}</option>
         </select>
       </div>
       <div class="row">
-        <label>Seri no</label>
-        <input type="text" formControlName="serialNumber" placeholder="Çek: banka no (7 hane), Senet: matbu seri no" />
+        <label>{{ 'chequesPage.serialNo' | translate }}</label>
+        <input type="text" formControlName="serialNumber" [placeholder]="'chequesPage.serialPlaceholder' | translate" />
       </div>
       @if (!id) {
-        <p class="hint">Portföy no kayıt sonrası sistem tarafından atanacaktır.</p>
+        <p class="hint">{{ 'chequesPage.portfolioHint' | translate }}</p>
       }
       <div class="row">
-        <label>Cari</label>
+        <label>{{ 'common.customer' | translate }}</label>
         <select formControlName="customerId" required>
-          <option value="">Cari seçin</option>
+          <option value="">{{ 'payments.selectCustomer' | translate }}</option>
           @for (c of customers; track c.id) {
             <option [ngValue]="c.id">{{ c.title }}</option>
           }
         </select>
       </div>
       <div class="row">
-        <label>Tutar</label>
+        <label>{{ 'payments.amount' | translate }}</label>
         <input type="number" formControlName="amount" step="0.01" min="0.01" />
       </div>
       <div class="row">
-        <label>Keşide tarihi</label>
+        <label>{{ 'chequesPage.issueDate' | translate }}</label>
         <input type="date" formControlName="issueDate" />
       </div>
       <div class="row">
-        <label>Vade tarihi</label>
+        <label>{{ 'chequesPage.dueDateLabel' | translate }}</label>
         <input type="date" formControlName="dueDate" />
       </div>
       <div class="row">
-        <label>Banka hesabı</label>
+        <label>{{ 'chequesPage.bankAccount' | translate }}</label>
         <select formControlName="bankAccountId">
-          <option [ngValue]="null">—</option>
+          <option [ngValue]="null">{{ 'chequesPage.noneDash' | translate }}</option>
           @for (b of bankAccounts; track b.id) {
             <option [ngValue]="b.id">{{ b.name }}</option>
           }
@@ -68,8 +68,8 @@
       @if (error) { <p class="error-msg">{{ error }}</p> }
     </div>
     <div class="actions">
-      <button type="submit" [disabled]="form.invalid || saving">Kaydet</button>
-      <a routerLink="/cheques">İptal</a>
+      <button type="submit" [disabled]="form.invalid || saving">{{ 'common.save' | translate }}</button>
+      <a routerLink="/cheques">{{ 'common.cancel' | translate }}</a>
     </div>
   </form>
 </div>

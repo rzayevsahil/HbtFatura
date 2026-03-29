@@ -5,11 +5,12 @@ import { FormsModule } from '@angular/forms';
 import { CashRegisterService } from '../../services/cash-register.service';
 import { CashRegisterDto, CashTransactionDto, PagedResult } from '../../core/models';
 import { ToastrService } from 'ngx-toastr';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-cash-register-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [CommonModule, RouterLink, FormsModule, TranslateModule],
   templateUrl: './cash-register-detail.component.html',
   styleUrls: ['./cash-register-detail.component.scss']
 })
@@ -28,7 +29,8 @@ export class CashRegisterDetailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private api: CashRegisterService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private translate: TranslateService
   ) { }
 
   ngOnInit(): void {
@@ -81,20 +83,20 @@ export class CashRegisterDetailComponent implements OnInit {
       date: this.newTransaction.date,
       type: this.newTransaction.type,
       amount: this.newTransaction.amount,
-      description: this.newTransaction.description || 'Manuel fiş'
+      description: this.newTransaction.description || this.translate.instant('cashRegisters.manualSlipNote')
     }).subscribe({
       next: () => {
-        this.toastr.success('Fiş eklendi.');
+        this.toastr.success(this.translate.instant('cashRegisters.toastSlipAdded'));
         this.closeAddModal();
         this.api.getById(id).subscribe(c => this.cashRegister = c);
         this.loadTransactions();
       },
-      error: e => this.toastr.error(e.error?.message ?? 'Fiş eklenemedi.')
+      error: e => this.toastr.error(e.error?.message ?? this.translate.instant('cashRegisters.toastSlipFailed'))
     });
   }
 
   typeLabel(t: number): string {
-    return t === 1 ? 'Giriş' : 'Çıkış';
+    return t === 1 ? this.translate.instant('common.txnIn') : this.translate.instant('common.txnOut');
   }
 
   prevPage(): void { if (this.page > 1) { this.page--; this.loadTransactions(); } }

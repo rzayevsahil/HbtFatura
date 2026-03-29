@@ -1,9 +1,15 @@
 export interface DashboardStat {
+    /** API çeviri anahtarı (örn. monthly_sales) */
+    key?: string;
     label: string;
     value: string;
     icon: string;
     color: string;
     trend?: string;
+    amount?: number | null;
+    count?: number | null;
+    trendCount?: number | null;
+    trendKind?: string | null;
 }
 
 export interface RecentInvoice {

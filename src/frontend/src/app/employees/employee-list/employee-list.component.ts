@@ -4,11 +4,12 @@ import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { EmployeeService } from '../../services/employee.service';
 import { EmployeeListDto } from '../../core/models';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-employee-list',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [CommonModule, RouterLink, FormsModule, TranslateModule],
   templateUrl: './employee-list.component.html',
   styleUrls: ['./employee-list.component.scss']
 })

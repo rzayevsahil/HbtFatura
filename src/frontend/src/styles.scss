@@ -247,6 +247,36 @@ html.dark #toast-container .toast-progress {
   opacity: 0.35;
 }
 
+/* Dil TR / EN (üst çubuk + giriş sayfası) */
+.lang-switcher {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.lang-switcher-btn {
+  padding: 0.35rem 0.55rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border: none;
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  line-height: 1;
+
+  &:hover {
+    background: var(--color-background);
+    color: var(--color-text);
+  }
+
+  &.active {
+    background: var(--color-primary-light);
+    color: var(--color-primary);
+  }
+}
+
 /* Giriş / kayıt — tema (oturum öncesi) */
 .auth-theme-toggle {
   position: fixed;

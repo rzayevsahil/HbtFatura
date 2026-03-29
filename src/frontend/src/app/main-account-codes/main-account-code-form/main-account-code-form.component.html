@@ -1,12 +1,12 @@
 @if (!isModal) {
 <div class="page-header">
-  <h1 class="page-title">{{ id ? 'Hesap Kodu Düzenle' : 'Yeni Hesap Kodu' }}</h1>
+  <h1 class="page-title">{{ id ? ('mainAccountCodes.editTitle' | translate) : ('mainAccountCodes.newTitle' | translate) }}</h1>
 </div>
 }
 @if (id && editLoading) {
 <div class="loading-container" [style.min-height.px]="isModal ? 120 : undefined">
   <div class="spinner"></div>
-  <p>Veriler yükleniyor...</p>
+  <p>{{ 'common.loadingData' | translate }}</p>
 </div>
 } @else {
 <div class="card">
@@ -14,9 +14,9 @@
     <div class="form-grid">
       @if (auth.user()?.role === 'SuperAdmin' && !id) {
         <div class="row">
-          <label>Firma</label>
+          <label>{{ 'mainAccountCodes.firm' | translate }}</label>
           <select formControlName="firmId" required>
-            <option [ngValue]="null">Firma seçin</option>
+            <option [ngValue]="null">{{ 'mainAccountCodes.selectFirm' | translate }}</option>
             @for (f of firms; track f.id) {
               <option [ngValue]="f.id">{{ f.name }}</option>
             }
@@ -24,23 +24,23 @@
         </div>
       }
       <div class="row">
-        <label>Hesap Kodu</label>
-        <input formControlName="code" placeholder="Örn. 120.01.001" />
+        <label>{{ 'mainAccountCodes.colCode' | translate }}</label>
+        <input formControlName="code" [placeholder]="'mainAccountCodes.codePh' | translate" />
       </div>
       <div class="row">
-        <label>Hesap Adı</label>
-        <input formControlName="name" placeholder="Örn. Alıcılar" />
+        <label>{{ 'mainAccountCodes.colName' | translate }}</label>
+        <input formControlName="name" [placeholder]="'mainAccountCodes.namePh' | translate" />
       </div>
       @if (error) {
         <p class="error-msg">{{ error }}</p>
       }
     </div>
     <div class="actions">
-      <button type="submit" [disabled]="form.invalid || saving">Kaydet</button>
+      <button type="submit" [disabled]="form.invalid || saving">{{ 'common.save' | translate }}</button>
       @if (isModal) {
-        <button type="button" (click)="cancel.emit()">İptal</button>
+        <button type="button" (click)="cancel.emit()">{{ 'common.cancel' | translate }}</button>
       } @else {
-        <a routerLink="/main-account-codes">İptal</a>
+        <a routerLink="/main-account-codes">{{ 'common.cancel' | translate }}</a>
       }
     </div>
   </form>

@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { GibSimulationService, GibInboxItemDto } from '../../services/gib-simulation.service';
 import { InvoiceService } from '../../services/invoice.service';
 import { ToastrService } from 'ngx-toastr';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-gib-inbox',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslateModule],
   templateUrl: './gib-inbox.component.html',
   styleUrls: ['./gib-inbox.component.scss']
 })
@@ -20,7 +21,8 @@ export class GibInboxComponent implements OnInit {
   constructor(
     private gib: GibSimulationService,
     private invoices: InvoiceService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private translate: TranslateService
   ) { }
 
   ngOnInit(): void {
@@ -45,13 +47,13 @@ export class GibInboxComponent implements OnInit {
     this.busyId = row.submissionId;
     this.gib.accept(row.submissionId).subscribe({
       next: () => {
-        this.toastr.success('Fatura onaylandı (simülasyon).');
+        this.toastr.success(this.translate.instant('gibInbox.toastAccepted'));
         this.load();
         this.busyId = null;
       },
       error: e => {
         this.busyId = null;
-        this.toastr.error(e.error?.message ?? 'Onay başarısız.');
+        this.toastr.error(e.error?.message ?? this.translate.instant('gibInbox.toastAcceptFailed'));
       }
     });
   }
@@ -67,11 +69,11 @@ export class GibInboxComponent implements OnInit {
         a.click();
         URL.revokeObjectURL(url);
         this.pdfBusyId = null;
-        this.toastr.success('PDF indirildi.');
+        this.toastr.success(this.translate.instant('gibInbox.toastPdfOk'));
       },
       error: () => {
         this.pdfBusyId = null;
-        this.toastr.error('PDF indirilemedi veya erişim yok.');
+        this.toastr.error(this.translate.instant('gibInbox.toastPdfFail'));
       }
     });
   }
@@ -80,13 +82,13 @@ export class GibInboxComponent implements OnInit {
     this.busyId = row.submissionId;
     this.gib.reject(row.submissionId).subscribe({
       next: () => {
-        this.toastr.info('Fatura reddedildi; gönderen taraf taslak olarak görecek.');
+        this.toastr.info(this.translate.instant('gibInbox.toastRejected'));
         this.load();
         this.busyId = null;
       },
       error: e => {
         this.busyId = null;
-        this.toastr.error(e.error?.message ?? 'Red işlemi başarısız.');
+        this.toastr.error(e.error?.message ?? this.translate.instant('gibInbox.toastRejectFailed'));
       }
     });
   }

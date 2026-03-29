@@ -14,11 +14,12 @@ import {
 import { ToastrService } from 'ngx-toastr';
 import { LookupService } from '../../core/services/lookup.service';
 import { UnitFieldSelectComponent } from '../../shared/unit-field-select/unit-field-select.component';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-delivery-note-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterLink, UnitFieldSelectComponent],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterLink, UnitFieldSelectComponent, TranslateModule],
   templateUrl: './delivery-note-form.component.html',
   styleUrls: ['./delivery-note-form.component.scss']
 })
@@ -50,9 +51,9 @@ export class DeliveryNoteFormComponent implements OnInit {
 
   get selectedCustomerTitle(): string {
     const cid = this.form.get('customerId')?.value;
-    if (!cid) return 'Seçiniz';
+    if (!cid) return this.translate.instant('common.selectPlease');
     const c = this.customers.find(x => x.id === cid);
-    return c?.title ?? 'Seçiniz';
+    return c?.title ?? this.translate.instant('common.selectPlease');
   }
 
   get filteredCustomers(): CustomerDto[] {
@@ -99,7 +100,8 @@ export class DeliveryNoteFormComponent implements OnInit {
     private productApi: ProductService,
     private orderApi: OrderService,
     private toastr: ToastrService,
-    public lookups: LookupService
+    public lookups: LookupService,
+    private translate: TranslateService
   ) {
     this.form = this.fb.nonNullable.group({
       customerId: this.fb.control<string | null>(null, Validators.required),
@@ -284,7 +286,7 @@ export class DeliveryNoteFormComponent implements OnInit {
         if (this.items.length === 0) {
           this.addItem();
         }
-        this.toastr.info(`${o.orderNumber} nolu sipariş bilgileri aktarıldı.`);
+        this.toastr.info(this.translate.instant('deliveryNotes.toastrOrderInfo', { no: o.orderNumber }));
       },
       error: () => this.toastr.error('Sipariş bilgileri yüklenemedi.')
     });
@@ -346,13 +348,13 @@ export class DeliveryNoteFormComponent implements OnInit {
       };
       this.deliveryNoteApi.update(this.id, req).subscribe({
         next: () => {
-          this.toastr.success('İrsaliye güncellendi.');
+          this.toastr.success(this.translate.instant('deliveryNotes.toastrUpdated'));
           this.router.navigate(['/delivery-notes', this.id]);
         },
         error: e => {
           this.error = e.error?.message ?? 'Hata';
           this.saving = false;
-          this.toastr.error(e.error?.message ?? 'Güncelleme sırasında hata oluştu.');
+          this.toastr.error(e.error?.message ?? this.translate.instant('deliveryNotes.updateError'));
         },
         complete: () => { this.saving = false; }
       });
@@ -366,13 +368,13 @@ export class DeliveryNoteFormComponent implements OnInit {
       };
       this.deliveryNoteApi.create(req).subscribe({
         next: (dto) => {
-          this.toastr.success('İrsaliye oluşturuldu.');
+          this.toastr.success(this.translate.instant('deliveryNotes.toastrCreated'));
           this.router.navigate(['/delivery-notes', dto.id]);
         },
         error: e => {
           this.error = e.error?.message ?? 'Hata';
           this.saving = false;
-          this.toastr.error(e.error?.message ?? 'Kayıt sırasında hata oluştu.');
+          this.toastr.error(e.error?.message ?? this.translate.instant('deliveryNotes.saveErrorKayit'));
         },
         complete: () => { this.saving = false; }
       });
