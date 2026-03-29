@@ -13,12 +13,14 @@ public class CompanySettingsService : ICompanySettingsService
     private readonly AppDbContext _db;
     private readonly ICurrentUserContext _currentUser;
     private readonly IWebHostEnvironment _env;
+    private readonly ITaxNumberUniquenessService _taxNumberUniqueness;
 
-    public CompanySettingsService(AppDbContext db, ICurrentUserContext currentUser, IWebHostEnvironment env)
+    public CompanySettingsService(AppDbContext db, ICurrentUserContext currentUser, IWebHostEnvironment env, ITaxNumberUniquenessService taxNumberUniqueness)
     {
         _db = db;
         _currentUser = currentUser;
         _env = env;
+        _taxNumberUniqueness = taxNumberUniqueness;
     }
 
     public async Task<CompanySettingsDto?> GetByFirmIdAsync(Guid? firmId, CancellationToken ct = default)
@@ -66,7 +68,8 @@ public class CompanySettingsService : ICompanySettingsService
         var companyName = (request.CompanyName ?? "").Trim();
         entity.CompanyName = companyName.Length > 0 ? companyName : (entity.CompanyName ?? "");
         entity.TaxOfficeId = request.TaxOfficeId;
-        entity.TaxNumber = request.TaxNumber?.Trim();
+        var taxNorm = TaxNumberNormalization.Normalize(request.TaxNumber);
+        entity.TaxNumber = string.IsNullOrEmpty(taxNorm) ? null : taxNorm;
         entity.InvoiceSerialPrefix = NormalizeSerialPrefix(request.InvoiceSerialPrefix);
         entity.DeliveryNoteSerialPrefix = NormalizeSerialPrefix(request.DeliveryNoteSerialPrefix);
         entity.Address = request.Address?.Trim();
@@ -131,6 +134,7 @@ public class CompanySettingsService : ICompanySettingsService
             entity.LogoUrl = null;
         }
 
+        await _taxNumberUniqueness.EnsureUniqueForCompanyAsync(entity.TaxNumber, effectiveFirmId.Value, ct);
         await _db.SaveChangesAsync(ct);
         
         // Final return with navigation names

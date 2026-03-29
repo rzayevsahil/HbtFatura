@@ -86,6 +86,7 @@ builder.Services.AddScoped<IAuthorizationHandler, PermissionHandler>();
 builder.Services.AddScoped<ICurrentUserContext, CurrentUserContext>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ICompanySettingsService, CompanySettingsService>();
+builder.Services.AddScoped<ITaxNumberUniquenessService, TaxNumberUniquenessService>();
 builder.Services.AddScoped<ICustomerService, CustomerService>();
 builder.Services.AddScoped<IInvoiceCalculationService, InvoiceCalculationService>();
 builder.Services.AddScoped<IUserNotificationService, UserNotificationService>();

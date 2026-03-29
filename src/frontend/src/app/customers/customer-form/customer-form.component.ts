@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { taxNumberValidator } from '../../core/validators/tax-number.validator';
+import { taxNumberUniqueAsyncValidator } from '../../core/validators/tax-number-unique.async-validator';
+import { TaxNumberValidationService } from '../../core/services/tax-number-validation.service';
 import { CustomerService } from '../../services/customer.service';
 import { MainAccountCodeService } from '../../services/main-account-code.service';
 import { TaxOfficeService } from '../../services/tax-office.service';
@@ -97,7 +99,8 @@ export class CustomerFormComponent implements OnInit {
     private mainAccountCodeApi: MainAccountCodeService,
     private taxOfficeApi: TaxOfficeService,
     private toastr: ToastrService,
-    private el: ElementRef
+    private el: ElementRef,
+    private taxNumberValidation: TaxNumberValidationService
   ) { }
 
   @HostListener('document:click', ['$event'])
@@ -149,6 +152,14 @@ export class CustomerFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.id = this.route.snapshot.paramMap.get('id');
+    const taxCtrl = this.form.get('taxNumber');
+    taxCtrl?.addAsyncValidators(
+      taxNumberUniqueAsyncValidator(this.taxNumberValidation, 'customer', {
+        excludeCustomerId: () => this.id
+      })
+    );
+    taxCtrl?.updateValueAndValidity({ emitEvent: false });
+
     this.mainAccountCodeApi.getByFirm().subscribe(list => {
       this.mainAccountCodes = list;
       this.onMainAccountCodesLoaded();
@@ -250,6 +261,10 @@ export class CustomerFormComponent implements OnInit {
 
   onSubmit(): void {
     this.error = '';
+    if (this.form.pending) {
+      this.error = 'Vergi no / TC kontrolü tamamlanıyor, lütfen kısa süre bekleyin.';
+      return;
+    }
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       this.error = 'Lütfen zorunlu alanları doldurun (Cari adı).';

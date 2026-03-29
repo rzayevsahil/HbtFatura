@@ -11,6 +11,8 @@ import { environment } from '../../../environments/environment';
 import { PhoneFormatter } from '../../core/utils/phone-formatter';
 import { IbanFormatter } from '../../core/utils/iban-formatter';
 import { taxNumberValidator } from '../../core/validators/tax-number.validator';
+import { taxNumberUniqueAsyncValidator } from '../../core/validators/tax-number-unique.async-validator';
+import { TaxNumberValidationService } from '../../core/services/tax-number-validation.service';
 
 @Component({
   selector: 'app-company-settings',
@@ -86,7 +88,8 @@ export class CompanySettingsComponent implements OnInit {
     private route: ActivatedRoute,
     private toastr: ToastrService,
     private location: Location,
-    private el: ElementRef
+    private el: ElementRef,
+    private taxNumberValidation: TaxNumberValidationService
   ) { }
 
   @ViewChild('fileInput') logoFileInput?: ElementRef<HTMLInputElement>;
@@ -142,6 +145,14 @@ export class CompanySettingsComponent implements OnInit {
 
   ngOnInit(): void {
     this.firmId = this.route.snapshot.queryParamMap.get('firmId') ?? undefined;
+    const taxCtrl = this.form.get('taxNumber');
+    taxCtrl?.addAsyncValidators(
+      taxNumberUniqueAsyncValidator(this.taxNumberValidation, 'company', {
+        firmId: () => this.firmId ?? this.auth.user()?.firmId ?? undefined
+      })
+    );
+    taxCtrl?.updateValueAndValidity({ emitEvent: false });
+
     this.loadCities();
     this.api.get(this.firmId).subscribe({
       next: c => {
@@ -236,6 +247,14 @@ export class CompanySettingsComponent implements OnInit {
 
   onSubmit(): void {
     this.error = '';
+    if (this.form.pending) {
+      this.error = 'Vergi no / TC kontrolü tamamlanıyor, lütfen kısa süre bekleyin.';
+      return;
+    }
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
     this.saving = true;
     this.api.save(this.form.getRawValue(), this.firmId).subscribe({
       next: () => {

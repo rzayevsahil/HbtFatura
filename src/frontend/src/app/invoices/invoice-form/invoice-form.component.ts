@@ -4,6 +4,8 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { taxNumberValidator } from '../../core/validators/tax-number.validator';
+import { taxNumberUniqueAsyncValidator } from '../../core/validators/tax-number-unique.async-validator';
+import { TaxNumberValidationService } from '../../core/services/tax-number-validation.service';
 import { InvoiceService } from '../../services/invoice.service';
 import { CustomerService } from '../../services/customer.service';
 import { ProductService } from '../../services/product.service';
@@ -91,7 +93,8 @@ export class InvoiceFormComponent implements OnInit {
     private productApi: ProductService,
     private deliveryNoteApi: DeliveryNoteService,
     private toastr: ToastrService,
-    public lookups: LookupService
+    public lookups: LookupService,
+    private taxNumberValidation: TaxNumberValidationService
   ) {
     this.form = this.fb.nonNullable.group({
       invoiceType: [0 as number, Validators.required], // 0=Satış, 1=Alış
@@ -310,7 +313,7 @@ export class InvoiceFormComponent implements OnInit {
 
   @HostListener('document:keydown', ['$event'])
   onKeyDown(e: KeyboardEvent): void {
-    if (e.key === 'F9' && !this.saving && this.form.valid && !['INPUT', 'TEXTAREA', 'SELECT'].includes((e.target as HTMLElement)?.tagName)) {
+    if (e.key === 'F9' && !this.saving && !this.form.pending && this.form.valid && !['INPUT', 'TEXTAREA', 'SELECT'].includes((e.target as HTMLElement)?.tagName)) {
       e.preventDefault();
       this.onSubmit();
     }
@@ -349,6 +352,14 @@ export class InvoiceFormComponent implements OnInit {
 
   onSubmit(): void {
     this.error = '';
+    if (this.form.pending) {
+      this.error = 'Vergi no / TC kontrolü tamamlanıyor, lütfen kısa süre bekleyin.';
+      return;
+    }
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
     this.saving = true;
     const v = this.form.getRawValue();
     const req: CreateInvoiceRequest = {

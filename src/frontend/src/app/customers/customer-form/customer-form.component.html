@@ -55,6 +55,12 @@
       <div class="row">
         <label>Vergi No / TC</label>
         <input formControlName="taxNumber" placeholder="10 veya 11 haneli" maxlength="11" />
+        @if (form.get('taxNumber')?.pending) {
+        <span class="error-msg">Numara kontrol ediliyor…</span>
+        }
+        @if (form.get('taxNumber')?.invalid && form.get('taxNumber')?.touched && form.get('taxNumber')?.errors?.['taxNumberUnique']) {
+        <span class="error-msg">{{ form.get('taxNumber')?.errors?.['taxNumberUnique'] }}</span>
+        }
         @if (form.get('taxNumber')?.invalid && form.get('taxNumber')?.touched && form.get('taxNumber')?.errors?.['taxNumber']) {
         <span class="error-msg">{{ form.get('taxNumber')?.errors?.['taxNumber'] }}</span>
         }

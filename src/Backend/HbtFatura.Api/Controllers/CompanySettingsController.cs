@@ -28,8 +28,15 @@ public class CompanySettingsController : ControllerBase
     [HttpPut]
     public async Task<ActionResult<CompanySettingsDto>> CreateOrUpdate([FromBody] UpdateCompanySettingsRequest request, [FromQuery] Guid? firmId, CancellationToken ct)
     {
-        var dto = await _service.CreateOrUpdateAsync(request, firmId, ct);
-        if (dto == null) return Forbid();
-        return Ok(dto);
+        try
+        {
+            var dto = await _service.CreateOrUpdateAsync(request, firmId, ct);
+            if (dto == null) return Forbid();
+            return Ok(dto);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
     }
 }

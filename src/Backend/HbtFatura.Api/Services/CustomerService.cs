@@ -3,6 +3,7 @@ using HbtFatura.Api.Constants;
 using HbtFatura.Api.Data;
 using HbtFatura.Api.DTOs.Customers;
 using HbtFatura.Api.Entities;
+using HbtFatura.Api.Helpers;
 
 namespace HbtFatura.Api.Services;
 
@@ -11,12 +12,14 @@ public class CustomerService : ICustomerService
     private readonly AppDbContext _db;
     private readonly ICurrentUserContext _currentUser;
     private readonly ILogService _log;
+    private readonly ITaxNumberUniquenessService _taxNumberUniqueness;
 
-    public CustomerService(AppDbContext db, ICurrentUserContext currentUser, ILogService log)
+    public CustomerService(AppDbContext db, ICurrentUserContext currentUser, ILogService log, ITaxNumberUniquenessService taxNumberUniqueness)
     {
         _db = db;
         _currentUser = currentUser;
         _log = log;
+        _taxNumberUniqueness = taxNumberUniqueness;
     }
 
     private IQueryable<Customer> ScopeQuery(Guid? firmIdFilter = null)
@@ -233,6 +236,7 @@ public class CustomerService : ICustomerService
             CreatedAt = DateTime.UtcNow,
             CreatedBy = userId
         };
+        await _taxNumberUniqueness.EnsureUniqueForCustomerAsync(entity.TaxNumber, excludeCustomerId: null, ct);
         _db.Customers.Add(entity);
         await _db.SaveChangesAsync(ct);
         await _log.LogAsync($"Cari kart oluşturuldu: {entity.Title}", "Create", "Customer", "Info", $"Id: {entity.Id}");
@@ -248,7 +252,8 @@ public class CustomerService : ICustomerService
         entity.Title = request.Title.Trim();
         entity.TaxPayerType = request.TaxPayerType;
         entity.CardType = request.CardType is Constants.CardType.Satici ? Constants.CardType.Satici : Constants.CardType.Alici;
-        entity.TaxNumber = request.TaxNumber?.Trim();
+        var taxNorm = TaxNumberNormalization.Normalize(request.TaxNumber);
+        entity.TaxNumber = string.IsNullOrEmpty(taxNorm) ? null : taxNorm;
         entity.Address = request.Address?.Trim();
         entity.CityId = request.CityId;
         entity.DistrictId = request.DistrictId;
@@ -260,6 +265,7 @@ public class CustomerService : ICustomerService
         entity.Website = request.Website?.Trim();
         entity.UpdatedAt = DateTime.UtcNow;
         entity.UpdatedBy = _currentUser.UserId;
+        await _taxNumberUniqueness.EnsureUniqueForCustomerAsync(entity.TaxNumber, id, ct);
         await _db.SaveChangesAsync(ct);
         await _log.LogAsync($"Cari kart güncellendi: {entity.Title}", "Update", "Customer", "Info", $"Id: {entity.Id}");
         return MapToDto(entity);

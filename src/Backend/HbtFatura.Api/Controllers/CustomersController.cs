@@ -66,16 +66,30 @@ public class CustomersController : ControllerBase
     [Authorize(Policy = "Customers.Edit")]
     public async Task<ActionResult<CustomerDto>> Create([FromBody] CreateCustomerRequest request, CancellationToken ct)
     {
-        var dto = await _service.CreateAsync(request, ct);
-        return CreatedAtAction(nameof(Get), new { id = dto.Id }, dto);
+        try
+        {
+            var dto = await _service.CreateAsync(request, ct);
+            return CreatedAtAction(nameof(Get), new { id = dto.Id }, dto);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
     }
 
     [HttpPut("{id:guid}")]
     public async Task<ActionResult<CustomerDto>> Update(Guid id, [FromBody] UpdateCustomerRequest request, CancellationToken ct)
     {
-        var dto = await _service.UpdateAsync(id, request, ct);
-        if (dto == null) return NotFound();
-        return Ok(dto);
+        try
+        {
+            var dto = await _service.UpdateAsync(id, request, ct);
+            if (dto == null) return NotFound();
+            return Ok(dto);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
     }
 
     [HttpDelete("{id:guid}")]
