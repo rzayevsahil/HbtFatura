@@ -70,7 +70,7 @@ table {
   }
 
   tbody tr:hover {
-    background: #f8fafc;
+    background: var(--color-row-hover);
   }
 }
 
@@ -98,7 +98,7 @@ table {
     border: 1px solid transparent;
 
     &:hover:not(:disabled) {
-      background: #fecaca;
+      background: color-mix(in srgb, var(--color-error) 28%, var(--color-surface));
     }
   }
 }

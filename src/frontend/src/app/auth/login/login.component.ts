@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../core/services/auth.service';
+import { ThemeService } from '../../core/services/theme.service';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -21,7 +22,12 @@ export class LoginComponent {
   loading = false;
   showPassword = false;
 
-  constructor(private fb: FormBuilder, private auth: AuthService, private toastr: ToastrService) { }
+  constructor(
+    private fb: FormBuilder,
+    private auth: AuthService,
+    private toastr: ToastrService,
+    public theme: ThemeService
+  ) { }
 
   onSubmit(): void {
     this.error = '';

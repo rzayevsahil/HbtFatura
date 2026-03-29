@@ -221,7 +221,7 @@
     }
 
     &:hover {
-      background: #fecaca !important;
+      background: color-mix(in srgb, var(--color-error) 28%, var(--color-surface)) !important;
     }
 
     &:focus-visible {

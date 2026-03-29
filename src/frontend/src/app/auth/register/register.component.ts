@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../core/services/auth.service';
+import { ThemeService } from '../../core/services/theme.service';
 
 @Component({
   selector: 'app-register',
@@ -20,7 +21,11 @@ export class RegisterComponent {
   error = '';
   loading = false;
 
-  constructor(private fb: FormBuilder, private auth: AuthService) {}
+  constructor(
+    private fb: FormBuilder,
+    private auth: AuthService,
+    public theme: ThemeService
+  ) {}
 
   onSubmit(): void {
     this.error = '';

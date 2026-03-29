@@ -6,6 +6,7 @@ import { AuthService } from './core/services/auth.service';
 import { LookupService } from './core/services/lookup.service';
 import { MenuService } from './core/services/menu.service';
 import { NotificationService, UserNotificationDto } from './services/notification.service';
+import { ThemeService } from './core/services/theme.service';
 
 @Component({
   selector: 'app-root',
@@ -23,6 +24,7 @@ export class AppComponent {
 
   constructor(
     public auth: AuthService,
+    public theme: ThemeService,
     private lookup: LookupService,
     public menu: MenuService,
     private notifApi: NotificationService,

@@ -64,7 +64,7 @@ table {
   }
 
   tbody tr:hover {
-    background: #f8fafc;
+    background: var(--color-row-hover);
   }
 }
 
@@ -87,12 +87,12 @@ td.col-pdf {
 }
 
 .icon-btn--pdf {
-  color: #b91c1c;
+  color: var(--color-error);
 
   &:hover:not(:disabled) {
-    background: #fef2f2;
-    border-color: #fecaca;
-    color: #991b1b;
+    background: var(--color-error-bg);
+    border-color: var(--color-border);
+    color: var(--color-error);
   }
 }
 
@@ -145,8 +145,8 @@ td.col-pdf {
 
 .icon-btn--reject {
   &:hover:not(:disabled) {
-    color: #b91c1c;
-    border-color: #fecaca;
-    background: #fef2f2;
+    color: var(--color-error);
+    border-color: var(--color-border);
+    background: var(--color-error-bg);
   }
 }

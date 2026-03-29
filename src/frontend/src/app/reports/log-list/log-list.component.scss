@@ -130,7 +130,7 @@
         button {
             padding: 0.5rem 1rem;
             border: 1px solid var(--color-border);
-            background: white;
+            background: var(--color-surface);
             border-radius: var(--radius-sm);
             cursor: pointer;
 
@@ -140,7 +140,7 @@
             }
 
             &:hover:not(:disabled) {
-                background: #f8fafc;
+                background: var(--color-row-hover);
             }
         }
     }

@@ -3,6 +3,7 @@
   --color-primary: #0d9488;
   --color-primary-hover: #0f766e;
   --color-primary-light: #ccfbf1;
+  --color-primary-rgb: 13, 148, 136;
   --color-surface: #ffffff;
   --color-background: #f8fafc;
   --color-border: #e2e8f0;
@@ -10,11 +11,30 @@
   --color-text-muted: #64748b;
   --color-error: #dc2626;
   --color-error-bg: #fef2f2;
+  --color-row-hover: #f1f5f9;
   --radius: 10px;
   --radius-sm: 6px;
   --shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
   --font: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+html.dark {
+  color-scheme: dark;
+  --color-primary: #2dd4bf;
+  --color-primary-hover: #5eead4;
+  --color-primary-light: rgba(45, 212, 191, 0.2);
+  --color-primary-rgb: 45, 212, 191;
+  --color-surface: #1c1c1e;
+  --color-background: #0f0f10;
+  --color-border: #38383a;
+  --color-text: #f2f2f7;
+  --color-text-muted: #98989d;
+  --color-error: #ff6b6b;
+  --color-error-bg: rgba(255, 107, 107, 0.14);
+  --color-row-hover: rgba(255, 255, 255, 0.07);
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
+  --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.55);
 }
 
 *,
@@ -202,6 +222,56 @@ a.btn {
   justify-content: center;
   z-index: 5;
   border-radius: var(--radius);
+}
+
+html.dark .loading-overlay {
+  background: rgba(15, 15, 16, 0.78);
+}
+
+/* ngx-toastr — koyu tema */
+html.dark #toast-container > .ngx-toastr,
+html.dark #toast-container > div {
+  background-image: none !important;
+  background-color: var(--color-surface) !important;
+  color: var(--color-text) !important;
+  border: 1px solid var(--color-border) !important;
+  box-shadow: var(--shadow-md) !important;
+}
+
+html.dark #toast-container .toast-close-button {
+  color: var(--color-text-muted);
+  opacity: 0.9;
+}
+
+html.dark #toast-container .toast-progress {
+  opacity: 0.35;
+}
+
+/* Giriş / kayıt — tema (oturum öncesi) */
+.auth-theme-toggle {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-text);
+  cursor: pointer;
+  box-shadow: var(--shadow);
+
+  &:hover {
+    background: var(--color-background);
+  }
+
+  .material-icons {
+    font-size: 24px;
+  }
 }
 
 /* Badges */

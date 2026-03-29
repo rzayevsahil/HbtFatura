@@ -105,7 +105,7 @@ table {
   }
 
   tbody tr:hover {
-    background: #f8fafc;
+    background: var(--color-row-hover);
   }
 }
 
