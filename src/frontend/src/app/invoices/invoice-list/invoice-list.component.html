@@ -94,7 +94,7 @@
             @if (inv.status === 0 && auth.hasPermission('Invoices.Edit')) {
             <a [routerLink]="['/invoices', inv.id, 'edit']">Düzenle</a>
             }
-            @if (inv.isGibSent) {
+            @if (inv.isGibSent || (inv.invoiceType === 1 && inv.status >= 1)) {
             <a href="#" (click)="downloadPdf(inv.id, inv.invoiceNumber); $event.preventDefault()">PDF</a>
             }
           </div>

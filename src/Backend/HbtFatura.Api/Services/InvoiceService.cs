@@ -418,6 +418,9 @@ public class InvoiceService : IInvoiceService
     {
         var invoice = await ScopeQuery().FirstOrDefaultAsync(x => x.Id == id, ct);
         if (invoice == null) return false;
+
+        if (invoice.InvoiceType == InvoiceType.Alis)
+            throw new InvalidOperationException("Alış faturaları GİB'e gönderilmez; karşı tarafın kestiği belgedir. Onayladığınızda kayıt tamamlanır ve PDF indirilebilir.");
         
         if (invoice.IsGibSent) return true;
 
@@ -497,6 +500,14 @@ public class InvoiceService : IInvoiceService
                     });
                 }
             }
+        }
+
+        // Alış: GİB'e gönderim yok; onaylandığında e-belge görünümü (PDF/ETTN) için işaretlenir.
+        if (invoice.InvoiceType == InvoiceType.Alis && (status == InvoiceStatus.Issued || status == InvoiceStatus.Paid) && !invoice.IsGibSent)
+        {
+            invoice.IsGibSent = true;
+            if (string.IsNullOrEmpty(invoice.Ettn))
+                invoice.Ettn = Guid.NewGuid().ToString().ToUpper();
         }
 
         invoice.Status = status;

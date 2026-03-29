@@ -77,6 +77,19 @@
   <a [routerLink]="['/invoices', invoice.id, 'edit']" class="btn btn-secondary">Düzenle</a>
   }
 
+  @if (invoice.invoiceType === 1) {
+  @if (invoice.status === 0) {
+  <button type="button" class="btn btn-primary" (click)="approvePurchaseInvoice()" [disabled]="approvingPurchase">
+    {{ approvingPurchase ? 'Onaylanıyor...' : 'Faturayı onayla' }}
+  </button>
+  <span class="text-muted" style="margin-left: 10px; font-size: 0.9em;">
+    Alış faturasında GİB’e gönderim yoktur (belgeyi karşı taraf keser). Onayladıktan sonra PDF, gelen e-fatura görünümünde indirilebilir.
+  </span>
+  }
+  @if (invoice.isGibSent || invoice.status >= 1) {
+  <button type="button" class="btn btn-primary" (click)="downloadPdf()">PDF İndir</button>
+  }
+  } @else {
   @if (!invoice.isGibSent) {
   <select [(ngModel)]="selectedScenario" class="btn btn-default" style="width: auto; margin-right: 10px; height: 38px;">
     <option [ngValue]="0">Temel Fatura</option>
@@ -90,6 +103,7 @@
   </span>
   } @else {
   <button type="button" class="btn btn-primary" (click)="downloadPdf()">PDF İndir</button>
+  }
   }
 </div>
 } @else {

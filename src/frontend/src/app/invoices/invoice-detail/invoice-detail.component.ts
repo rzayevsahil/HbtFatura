@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { InvoiceService } from '../../services/invoice.service';
-import { InvoiceDto, InvoiceScenario } from '../../core/models';
+import { InvoiceDto, InvoiceScenario, InvoiceStatus } from '../../core/models';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -53,6 +53,26 @@ export class InvoiceDetailComponent implements OnInit {
   }
 
   sendingGib = false;
+  approvingPurchase = false;
+
+  /** Alış faturası: GİB yok; durum Onaylandı yapılır, PDF açılır. */
+  approvePurchaseInvoice(): void {
+    if (!this.invoice || this.invoice.invoiceType !== 1 || this.invoice.status !== 0) return;
+    this.approvingPurchase = true;
+    this.api.setStatus(this.invoice.id, 1 as InvoiceStatus).subscribe({
+      next: () => {
+        this.api.getById(this.invoice!.id).subscribe(inv => {
+          this.invoice = inv;
+          this.approvingPurchase = false;
+          this.toastr.success('Alış faturası onaylandı; PDF indirebilirsiniz.');
+        });
+      },
+      error: () => {
+        this.approvingPurchase = false;
+        this.toastr.error('Onay sırasında bir hata oluştu.');
+      }
+    });
+  }
 
   sendToGib(): void {
     if (!this.invoice || this.invoice.isGibSent) return;

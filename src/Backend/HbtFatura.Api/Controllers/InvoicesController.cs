@@ -134,9 +134,16 @@ public class InvoicesController : ControllerBase
     [HttpPost("{id:guid}/send-to-gib")]
     public async Task<IActionResult> SendToGib(Guid id, [FromBody] SendToGibRequest req, CancellationToken ct)
     {
-        var result = await _service.SendToGibAsync(id, req.Scenario, ct);
-        if (!result) return NotFound();
-        return Ok();
+        try
+        {
+            var result = await _service.SendToGibAsync(id, req.Scenario, ct);
+            if (!result) return NotFound();
+            return Ok();
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
     }
 }
 

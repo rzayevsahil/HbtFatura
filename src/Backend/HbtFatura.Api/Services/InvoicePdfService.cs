@@ -88,6 +88,14 @@ public class InvoicePdfService : IInvoicePdfService
 
         var systemVatRateDisplay = await GetSystemVatRateDisplayAsync(ct);
 
+        var issuerParty = PartyFromCompany(company);
+        var buyerParty = PartyFromCustomer(invoice);
+        var isPurchase = invoice.InvoiceType == InvoiceType.Alis;
+        var pdfIssuer = isPurchase ? buyerParty : issuerParty;
+        var pdfBuyer = isPurchase ? issuerParty : buyerParty;
+        var qrSenderTax = isPurchase ? (invoice.CustomerTaxNumber ?? "") : (company?.TaxNumber ?? "");
+        var qrReceiverTax = isPurchase ? (company?.TaxNumber ?? "") : (invoice.CustomerTaxNumber ?? "");
+
         var document = Document.Create(container =>
         {
             container.Page(page =>
@@ -106,30 +114,7 @@ public class InvoicePdfService : IInvoicePdfService
                         {
                             c.Item().LineHorizontal(2.0f).LineColor(Colors.Black);
                             
-                            c.Item().PaddingTop(5).Column(inner => 
-                            {
-                                inner.Item().Text(company?.CompanyName ?? "Firma Adı").FontSize(8);
-                                
-                                var addressLines = new List<string>();
-                                if (!string.IsNullOrEmpty(company?.Address)) addressLines.Add(company.Address);
-                                
-                                var cityDistrict = "";
-                                if (company?.TaxOffice?.District != null) cityDistrict += company.TaxOffice.District.Name;
-                                if (company?.TaxOffice?.City != null) cityDistrict += (cityDistrict != "" ? " / " : "") + company.TaxOffice.City.Name;
-                                if (!string.IsNullOrEmpty(cityDistrict)) addressLines.Add(cityDistrict);
-                                
-                                foreach(var line in addressLines) inner.Item().Text(line).FontSize(8);
-
-                                if (!string.IsNullOrEmpty(company?.Website)) inner.Item().Text($"Web: {company.Website}").FontSize(8);
-                                if (!string.IsNullOrEmpty(company?.Email)) inner.Item().Text($"E-Posta: {company.Email}").FontSize(8);
-                                if (!string.IsNullOrEmpty(company?.Phone)) inner.Item().Text($"Tel: {company.Phone}").FontSize(8);
-                                if (!string.IsNullOrEmpty(company?.TaxOffice?.Name)) inner.Item().Text($"Vergi Dairesi: {company.TaxOffice.Name}").FontSize(8);
-                                if (!string.IsNullOrEmpty(company?.TaxNumber)) 
-                                {
-                                    var label = (company.TaxNumber.Length == 11) ? "TCKN" : "VKN";
-                                    inner.Item().Text($"{label}: {company.TaxNumber}").FontSize(8);
-                                }
-                            });
+                            c.Item().PaddingTop(5).Column(inner => AppendIssuerBlock(inner, pdfIssuer));
 
                             // Add bottom line for Sender Info
                             c.Item().PaddingTop(5).LineHorizontal(2.0f).LineColor(Colors.Black);
@@ -170,7 +155,7 @@ public class InvoicePdfService : IInvoicePdfService
                         // 3. QR Code & Logo (Right) - Extreme top-right
                         r.RelativeItem(4).AlignRight().AlignTop().Row(row =>
                         {
-                            if (!string.IsNullOrEmpty(company?.LogoUrl))
+                            if (!isPurchase && !string.IsNullOrEmpty(company?.LogoUrl))
                             {
                                 try
                                 {
@@ -209,10 +194,10 @@ public class InvoicePdfService : IInvoicePdfService
                                 }
                                 catch { }
                             }
-                            // Generate rich QR data for a professional look (GIB standard-like)
+                            // GİB benzeri QR: satışta düzenleyen|muhatap; alışta tedarikçi|alıcı (biz)
                         var qrData = string.Join('|', 
-                            company?.TaxNumber ?? "",
-                            invoice.CustomerTaxNumber ?? "",
+                            qrSenderTax,
+                            qrReceiverTax,
                             invoice.InvoiceNumber ?? "",
                             invoice.InvoiceDate.ToString("yyyy-MM-dd"),
                             invoice.SubTotal.ToString("F2"),
@@ -236,27 +221,7 @@ public class InvoicePdfService : IInvoicePdfService
                             // Top line - expand to full 40% column width
                             c.Item().LineHorizontal(2.0f).LineColor(Colors.Black);
 
-                            c.Item().PaddingVertical(5).Column(inner =>
-                            {
-                                inner.Item().Text("SAYIN").Bold().FontSize(8);
-                                inner.Item().Text(invoice.CustomerTitle).FontSize(8);
-                                inner.Item().Text(invoice.CustomerAddress ?? "").FontSize(8);
-                                
-                                var customerCityDistrict = "";
-                                if (!string.IsNullOrEmpty(invoice.CustomerDistrict)) customerCityDistrict += invoice.CustomerDistrict;
-                                if (!string.IsNullOrEmpty(invoice.CustomerCity)) customerCityDistrict += (customerCityDistrict != "" ? " / " : "") + invoice.CustomerCity;
-                                if (!string.IsNullOrEmpty(customerCityDistrict)) inner.Item().Text(customerCityDistrict).FontSize(8);
-                                
-                                if (!string.IsNullOrEmpty(invoice.CustomerWebsite)) inner.Item().Text($"Web: {invoice.CustomerWebsite}").FontSize(8);
-                                if (!string.IsNullOrEmpty(invoice.CustomerEmail)) inner.Item().Text($"E-Posta: {invoice.CustomerEmail}").FontSize(8);
-                                if (!string.IsNullOrEmpty(invoice.CustomerPhone)) inner.Item().Text($"Tel: {invoice.CustomerPhone}").FontSize(8);
-                                if (!string.IsNullOrEmpty(invoice.CustomerTaxOffice)) inner.Item().Text($"Vergi Dairesi: {invoice.CustomerTaxOffice}").FontSize(8);
-                                if (!string.IsNullOrEmpty(invoice.CustomerTaxNumber)) 
-                                {
-                                    var label = (invoice.CustomerTaxNumber.Length == 11) ? "TCKN" : "VKN";
-                                    inner.Item().Text($"{label}: {invoice.CustomerTaxNumber}").FontSize(8);
-                                }
-                            });
+                            c.Item().PaddingVertical(5).Column(inner => AppendBuyerBlock(inner, pdfBuyer));
 
                             // Bottom line - expand to full 40% column width
                             c.Item().LineHorizontal(2.0f).LineColor(Colors.Black);
@@ -324,7 +289,7 @@ public class InvoicePdfService : IInvoicePdfService
                             t.Cell().Element(CellStyle).Text(item.Product?.Code ?? "");
                             t.Cell().Element(CellStyle).Text(item.Description);
                             t.Cell().Element(CellStyle).AlignRight().Text(FormatQuantityWithUnitForPdf(item.Quantity, item.Unit));
-                            t.Cell().Element(CellStyle).AlignRight().Text($"{item.UnitPrice.ToString("G29")} TL");
+                            t.Cell().Element(CellStyle).AlignRight().Text($"{item.UnitPrice.ToString("N2")} TL");
                             t.Cell().Element(CellStyle).AlignRight().Text($"%{item.VatRate}");
                             t.Cell().Element(CellStyle).AlignRight().Text($"{item.LineVatAmount.ToString("N2")} TL");
                             t.Cell().Element(CellStyle).AlignRight().Text($"{item.LineTotalExclVat.ToString("N2")} TL");
@@ -392,6 +357,84 @@ public class InvoicePdfService : IInvoicePdfService
         });
 
         return document.GeneratePdf();
+    }
+
+    private sealed record PdfPartyBlock(
+        string Title,
+        List<string> AddressLines,
+        string? Website,
+        string? Email,
+        string? Phone,
+        string? TaxOfficeName,
+        string? TaxNumber);
+
+    private static PdfPartyBlock PartyFromCompany(CompanySettings? c)
+    {
+        var lines = new List<string>();
+        if (!string.IsNullOrEmpty(c?.Address)) lines.Add(c.Address);
+        var cityDistrict = "";
+        if (c?.TaxOffice?.District != null) cityDistrict += c.TaxOffice.District.Name;
+        if (c?.TaxOffice?.City != null) cityDistrict += (cityDistrict != "" ? " / " : "") + c.TaxOffice.City.Name;
+        if (!string.IsNullOrEmpty(cityDistrict)) lines.Add(cityDistrict);
+        return new PdfPartyBlock(
+            c?.CompanyName ?? "Firma Adı",
+            lines,
+            c?.Website,
+            c?.Email,
+            c?.Phone,
+            c?.TaxOffice?.Name,
+            c?.TaxNumber);
+    }
+
+    private static PdfPartyBlock PartyFromCustomer(Invoice inv)
+    {
+        var lines = new List<string>();
+        if (!string.IsNullOrEmpty(inv.CustomerAddress)) lines.Add(inv.CustomerAddress);
+        var cityDistrict = "";
+        if (!string.IsNullOrEmpty(inv.CustomerDistrict)) cityDistrict += inv.CustomerDistrict;
+        if (!string.IsNullOrEmpty(inv.CustomerCity)) cityDistrict += (cityDistrict != "" ? " / " : "") + inv.CustomerCity;
+        if (!string.IsNullOrEmpty(cityDistrict)) lines.Add(cityDistrict);
+        return new PdfPartyBlock(
+            inv.CustomerTitle,
+            lines,
+            inv.CustomerWebsite,
+            inv.CustomerEmail,
+            inv.CustomerPhone,
+            inv.CustomerTaxOffice,
+            inv.CustomerTaxNumber);
+    }
+
+    private static void AppendIssuerBlock(ColumnDescriptor inner, PdfPartyBlock p)
+    {
+        inner.Item().Text(p.Title).FontSize(8);
+        foreach (var line in p.AddressLines)
+            inner.Item().Text(line).FontSize(8);
+        if (!string.IsNullOrEmpty(p.Website)) inner.Item().Text($"Web: {p.Website}").FontSize(8);
+        if (!string.IsNullOrEmpty(p.Email)) inner.Item().Text($"E-Posta: {p.Email}").FontSize(8);
+        if (!string.IsNullOrEmpty(p.Phone)) inner.Item().Text($"Tel: {p.Phone}").FontSize(8);
+        if (!string.IsNullOrEmpty(p.TaxOfficeName)) inner.Item().Text($"Vergi Dairesi: {p.TaxOfficeName}").FontSize(8);
+        if (!string.IsNullOrEmpty(p.TaxNumber))
+        {
+            var label = (p.TaxNumber.Length == 11) ? "TCKN" : "VKN";
+            inner.Item().Text($"{label}: {p.TaxNumber}").FontSize(8);
+        }
+    }
+
+    private static void AppendBuyerBlock(ColumnDescriptor inner, PdfPartyBlock p)
+    {
+        inner.Item().Text("SAYIN").Bold().FontSize(8);
+        inner.Item().Text(p.Title).FontSize(8);
+        foreach (var line in p.AddressLines)
+            inner.Item().Text(line).FontSize(8);
+        if (!string.IsNullOrEmpty(p.Website)) inner.Item().Text($"Web: {p.Website}").FontSize(8);
+        if (!string.IsNullOrEmpty(p.Email)) inner.Item().Text($"E-Posta: {p.Email}").FontSize(8);
+        if (!string.IsNullOrEmpty(p.Phone)) inner.Item().Text($"Tel: {p.Phone}").FontSize(8);
+        if (!string.IsNullOrEmpty(p.TaxOfficeName)) inner.Item().Text($"Vergi Dairesi: {p.TaxOfficeName}").FontSize(8);
+        if (!string.IsNullOrEmpty(p.TaxNumber))
+        {
+            var label = (p.TaxNumber.Length == 11) ? "TCKN" : "VKN";
+            inner.Item().Text($"{label}: {p.TaxNumber}").FontSize(8);
+        }
     }
 
     /// <summary>Miktar ve birimi tek satırda tutmak için normal boşluk yerine satır kırılmayan boşluk (NBSP).</summary>
