@@ -11,11 +11,13 @@ public class ChequeOrPromissoryService : IChequeOrPromissoryService
 {
     private readonly AppDbContext _db;
     private readonly ICurrentUserContext _currentUser;
+    private readonly ILogService _log;
 
-    public ChequeOrPromissoryService(AppDbContext db, ICurrentUserContext currentUser)
+    public ChequeOrPromissoryService(AppDbContext db, ICurrentUserContext currentUser, ILogService log)
     {
         _db = db;
         _currentUser = currentUser;
+        _log = log;
     }
 
     private IQueryable<ChequeOrPromissory> ScopeQuery(Guid? firmIdFilter = null)
@@ -145,6 +147,8 @@ public class ChequeOrPromissoryService : IChequeOrPromissoryService
         };
         _db.ChequeOrPromissories.Add(entity);
         await _db.SaveChangesAsync(ct);
+        var typeLabel = request.Type == ChequeType.Cek ? "Çek" : "Senet";
+        await _log.LogAsync($"{typeLabel} portföye eklendi: {entity.PortfolioNumber}", "Create", "ChequeOrPromissory", "Info", $"Id: {entity.Id}, FirmId: {firmId}, Tutar: {entity.Amount}");
         return (await GetByIdAsync(entity.Id, ct))!;
     }
 
@@ -205,8 +209,10 @@ public class ChequeOrPromissoryService : IChequeOrPromissoryService
     {
         var entity = await ScopeQuery().FirstOrDefaultAsync(x => x.Id == id, ct);
         if (entity == null) return false;
+        var portfolio = entity.PortfolioNumber ?? id.ToString();
         entity.Status = status;
         await _db.SaveChangesAsync(ct);
+        await _log.LogAsync($"Çek/senet durumu güncellendi: {portfolio} → {status}", "SetStatus", "ChequeOrPromissory", "Info", $"Id: {id}");
         return true;
     }
 
@@ -214,8 +220,11 @@ public class ChequeOrPromissoryService : IChequeOrPromissoryService
     {
         var entity = await ScopeQuery().FirstOrDefaultAsync(x => x.Id == id, ct);
         if (entity == null) return false;
+        var portfolio = entity.PortfolioNumber ?? id.ToString();
+        var firmId = entity.FirmId;
         _db.ChequeOrPromissories.Remove(entity);
         await _db.SaveChangesAsync(ct);
+        await _log.LogAsync($"Çek/senet silindi: {portfolio}", "Delete", "ChequeOrPromissory", "Warning", $"Id: {id}, FirmId: {firmId}");
         return true;
     }
 }

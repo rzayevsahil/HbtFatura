@@ -12,12 +12,14 @@ public class EmployeeService : IEmployeeService
     private readonly AppDbContext _db;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly ICurrentUserContext _currentUser;
+    private readonly ILogService _log;
 
-    public EmployeeService(AppDbContext db, UserManager<ApplicationUser> userManager, ICurrentUserContext currentUser)
+    public EmployeeService(AppDbContext db, UserManager<ApplicationUser> userManager, ICurrentUserContext currentUser, ILogService log)
     {
         _db = db;
         _userManager = userManager;
         _currentUser = currentUser;
+        _log = log;
     }
 
     /// <summary>Firma kullanıcıları (çalışan düzenleme). SuperAdmin tüm firmalar; diğer roller kendi firması.</summary>
@@ -79,6 +81,8 @@ public class EmployeeService : IEmployeeService
         if (!result.Succeeded)
             throw new ArgumentException(string.Join(" ", result.Errors.Select(e => e.Description)));
         await _userManager.AddToRoleAsync(user, Roles.Employee);
+
+        await _log.LogAsync($"Personel oluşturuldu: {user.FullName} ({user.Email})", "Create", "Employee", "Info", $"Id: {user.Id}, FirmId: {effectiveFirmId}");
 
         return new EmployeeListDto
         {
@@ -142,6 +146,8 @@ public class EmployeeService : IEmployeeService
                 throw new ArgumentException("Şifre güncellenemedi: " + string.Join(" ", passResult.Errors.Select(e => e.Description)));
         }
 
+        await _log.LogAsync($"Personel güncellendi: {user.FullName} ({user.Email})", "Update", "Employee", "Info", $"Id: {user.Id}");
+
         return new EmployeeListDto
         {
             Id = user.Id,
@@ -161,8 +167,14 @@ public class EmployeeService : IEmployeeService
         if (user == null)
             throw new ArgumentException("Çalışan bulunamadı.");
 
+        var email = user.Email ?? "";
+        var fullName = user.FullName ?? "";
+        var firmId = user.FirmId;
+
         var result = await _userManager.DeleteAsync(user);
         if (!result.Succeeded)
             throw new ArgumentException(string.Join(" ", result.Errors.Select(e => e.Description)));
+
+        await _log.LogAsync($"Personel silindi: {fullName} ({email})", "Delete", "Employee", "Warning", $"Id: {id}, FirmId: {firmId}");
     }
 }

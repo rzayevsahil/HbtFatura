@@ -9,11 +9,13 @@ public class MainAccountCodeService : IMainAccountCodeService
 {
     private readonly AppDbContext _db;
     private readonly ICurrentUserContext _currentUser;
+    private readonly ILogService _log;
 
-    public MainAccountCodeService(AppDbContext db, ICurrentUserContext currentUser)
+    public MainAccountCodeService(AppDbContext db, ICurrentUserContext currentUser, ILogService log)
     {
         _db = db;
         _currentUser = currentUser;
+        _log = log;
     }
 
     /// <summary>Firma kapsamındaki kodlar (sistem kodları hariç). Update/Delete sadece bu kapsamdakilerde yapılabilir.</summary>
@@ -103,6 +105,7 @@ public class MainAccountCodeService : IMainAccountCodeService
         };
         _db.MainAccountCodes.Add(entity);
         await _db.SaveChangesAsync(ct);
+        await _log.LogAsync($"Ana hesap kodu oluşturuldu: {entity.Code} — {entity.Name}", "Create", "MainAccountCode", "Info", $"Id: {entity.Id}, FirmId: {firmId}");
         return new MainAccountCodeDto
         {
             Id = entity.Id,
@@ -130,6 +133,7 @@ public class MainAccountCodeService : IMainAccountCodeService
         entity.Name = request.Name.Trim();
         entity.SortOrder = request.SortOrder;
         await _db.SaveChangesAsync(ct);
+        await _log.LogAsync($"Ana hesap kodu güncellendi: {entity.Code} — {entity.Name}", "Update", "MainAccountCode", "Info", $"Id: {entity.Id}");
         return new MainAccountCodeDto
         {
             Id = entity.Id,
@@ -148,8 +152,12 @@ public class MainAccountCodeService : IMainAccountCodeService
         if (entity == null) return false;
         if (entity.FirmId == null)
             throw new InvalidOperationException("Sistem kodları silinemez.");
+        var code = entity.Code;
+        var name = entity.Name;
+        var firmId = entity.FirmId;
         _db.MainAccountCodes.Remove(entity);
         await _db.SaveChangesAsync(ct);
+        await _log.LogAsync($"Ana hesap kodu silindi: {code} — {name}", "Delete", "MainAccountCode", "Warning", $"Id: {id}, FirmId: {firmId}");
         return true;
     }
 }

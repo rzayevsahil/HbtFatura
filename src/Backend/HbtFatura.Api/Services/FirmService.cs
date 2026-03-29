@@ -13,12 +13,14 @@ public class FirmService : IFirmService
     private readonly AppDbContext _db;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly ICurrentUserContext _currentUser;
+    private readonly ILogService _log;
 
-    public FirmService(AppDbContext db, UserManager<ApplicationUser> userManager, ICurrentUserContext currentUser)
+    public FirmService(AppDbContext db, UserManager<ApplicationUser> userManager, ICurrentUserContext currentUser, ILogService log)
     {
         _db = db;
         _userManager = userManager;
         _currentUser = currentUser;
+        _log = log;
     }
 
     public async Task<IReadOnlyList<FirmDto>> GetAllAsync(CancellationToken ct = default)
@@ -110,6 +112,8 @@ public class FirmService : IFirmService
 
         await _db.SaveChangesAsync(ct);
 
+        await _log.LogAsync($"Firma oluşturuldu: {firm.Name}", "Create", "Firm", "Info", $"Id: {firm.Id}, Admin: {email}");
+
         return new FirmDto { Id = firm.Id, Name = firm.Name, CreatedAt = firm.CreatedAt };
     }
 
@@ -121,6 +125,7 @@ public class FirmService : IFirmService
         if (firm == null) return null;
         firm.Name = request.Name.Trim();
         await _db.SaveChangesAsync(ct);
+        await _log.LogAsync($"Firma güncellendi: {firm.Name}", "Update", "Firm", "Info", $"Id: {firm.Id}");
         return new FirmDto { Id = firm.Id, Name = firm.Name, CreatedAt = firm.CreatedAt };
     }
 }

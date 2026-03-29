@@ -1,6 +1,7 @@
 using HbtFatura.Api.Data;
 using HbtFatura.Api.DTOs.Permissions;
 using HbtFatura.Api.Entities;
+using HbtFatura.Api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -15,11 +16,13 @@ public class PermissionsController : ControllerBase
 {
     private readonly AppDbContext _db;
     private readonly RoleManager<ApplicationRole> _roleManager;
+    private readonly ILogService _log;
 
-    public PermissionsController(AppDbContext db, RoleManager<ApplicationRole> roleManager)
+    public PermissionsController(AppDbContext db, RoleManager<ApplicationRole> roleManager, ILogService log)
     {
         _db = db;
         _roleManager = roleManager;
+        _log = log;
     }
 
     [HttpGet]
@@ -54,6 +57,7 @@ public class PermissionsController : ControllerBase
 
         _db.Permissions.Add(permission);
         await _db.SaveChangesAsync();
+        await _log.LogAsync($"Yetki oluşturuldu: {permission.Code} — {permission.Name}", "Create", "Permission", "Info", $"Id: {permission.Id}, Grup: {permission.Group}");
 
         return CreatedAtAction(nameof(GetPermissions), new { id = permission.Id }, new PermissionDto
         {
@@ -75,6 +79,7 @@ public class PermissionsController : ControllerBase
         // Code should probably be immutable or updated carefully as it links to code/DB
         
         await _db.SaveChangesAsync();
+        await _log.LogAsync($"Yetki güncellendi: {permission.Code} — {permission.Name}", "Update", "Permission", "Info", $"Id: {id}");
         return NoContent();
     }
 
@@ -88,8 +93,11 @@ public class PermissionsController : ControllerBase
         if (await _db.RolePermissions.AnyAsync(rp => rp.PermissionId == id))
             return BadRequest("Permission is assigned to roles and cannot be deleted.");
 
+        var code = permission.Code;
+        var name = permission.Name;
         _db.Permissions.Remove(permission);
         await _db.SaveChangesAsync();
+        await _log.LogAsync($"Yetki silindi: {code} — {name}", "Delete", "Permission", "Warning", $"Id: {id}");
         return NoContent();
     }
 
@@ -137,6 +145,7 @@ public class PermissionsController : ControllerBase
         }
 
         await _db.SaveChangesAsync();
+        await _log.LogAsync($"Rol yetkileri güncellendi: {role.DisplayName ?? role.Name}", "UpdateRolePermissions", "Permission", "Info", $"RoleId: {roleId}, Yetki sayısı: {requestedPerms.Count}");
         return NoContent();
     }
 }

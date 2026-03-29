@@ -14,13 +14,15 @@ public class CompanySettingsService : ICompanySettingsService
     private readonly ICurrentUserContext _currentUser;
     private readonly IWebHostEnvironment _env;
     private readonly ITaxNumberUniquenessService _taxNumberUniqueness;
+    private readonly ILogService _log;
 
-    public CompanySettingsService(AppDbContext db, ICurrentUserContext currentUser, IWebHostEnvironment env, ITaxNumberUniquenessService taxNumberUniqueness)
+    public CompanySettingsService(AppDbContext db, ICurrentUserContext currentUser, IWebHostEnvironment env, ITaxNumberUniquenessService taxNumberUniqueness, ILogService log)
     {
         _db = db;
         _currentUser = currentUser;
         _env = env;
         _taxNumberUniqueness = taxNumberUniqueness;
+        _log = log;
     }
 
     public async Task<CompanySettingsDto?> GetByFirmIdAsync(Guid? firmId, CancellationToken ct = default)
@@ -51,6 +53,7 @@ public class CompanySettingsService : ICompanySettingsService
             return null;
 
         var entity = await _db.CompanySettings.FirstOrDefaultAsync(x => x.FirmId == effectiveFirmId.Value, ct);
+        var isNew = entity == null;
         if (entity == null)
         {
             entity = new CompanySettings
@@ -136,6 +139,14 @@ public class CompanySettingsService : ICompanySettingsService
 
         await _taxNumberUniqueness.EnsureUniqueForCompanyAsync(entity.TaxNumber, effectiveFirmId.Value, ct);
         await _db.SaveChangesAsync(ct);
+
+        var title = string.IsNullOrWhiteSpace(entity.CompanyName) ? effectiveFirmId.Value.ToString() : entity.CompanyName.Trim();
+        await _log.LogAsync(
+            isNew ? $"Şirket ayarları oluşturuldu: {title}" : $"Şirket ayarları güncellendi: {title}",
+            isNew ? "Create" : "Update",
+            "CompanySettings",
+            "Info",
+            $"FirmId: {effectiveFirmId}");
         
         // Final return with navigation names
         return await GetByFirmIdAsync(effectiveFirmId, ct);

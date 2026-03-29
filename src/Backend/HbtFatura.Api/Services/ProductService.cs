@@ -361,6 +361,8 @@ public class ProductService : IProductService
 
 
         await _db.SaveChangesAsync(ct);
+        var typeLabel = request.Type == StockMovementType.Giris ? "Giriş" : "Çıkış";
+        await _log.LogAsync($"Manuel stok hareketi: {entity.Code} — {typeLabel} {request.Quantity}", "StockMovement", "Product", "Info", $"ProductId: {productId}, HareketId: {entityStock.Id}");
         return new StockMovementDto
         {
             Id = entityStock.Id,

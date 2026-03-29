@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using HbtFatura.Api.Data;
 using HbtFatura.Api.DTOs.Menu;
+using HbtFatura.Api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,10 +14,12 @@ namespace HbtFatura.Api.Controllers;
 public class MenuController : ControllerBase
 {
     private readonly AppDbContext _db;
+    private readonly ILogService _log;
 
-    public MenuController(AppDbContext db)
+    public MenuController(AppDbContext db, ILogService log)
     {
         _db = db;
+        _log = log;
     }
 
     [HttpGet]
@@ -80,6 +83,7 @@ public class MenuController : ControllerBase
 
         _db.Menus.Add(menu);
         await _db.SaveChangesAsync();
+        await _log.LogAsync($"Menü öğesi oluşturuldu: {menu.Label}", "Create", "Menu", "Info", $"Id: {menu.Id}, RouterLink: {menu.RouterLink}");
 
         return MapToDto(menu, new List<Entities.Menu>());
     }
@@ -105,6 +109,7 @@ public class MenuController : ControllerBase
         menu.IsActive = dto.IsActive;
 
         await _db.SaveChangesAsync();
+        await _log.LogAsync($"Menü öğesi güncellendi: {menu.Label}", "Update", "Menu", "Info", $"Id: {id}");
         return NoContent();
     }
 
@@ -116,8 +121,10 @@ public class MenuController : ControllerBase
         if (menu == null) return NotFound();
         if (menu.IsSystemMenu) return BadRequest("System menus cannot be deleted.");
 
+        var label = menu.Label;
         _db.Menus.Remove(menu);
         await _db.SaveChangesAsync();
+        await _log.LogAsync($"Menü öğesi silindi: {label}", "Delete", "Menu", "Warning", $"Id: {id}");
         return NoContent();
     }
 

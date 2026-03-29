@@ -1,6 +1,7 @@
 using System.Globalization;
 using HbtFatura.Api.Data;
 using HbtFatura.Api.Entities;
+using HbtFatura.Api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -16,7 +17,13 @@ public class LookupsController : ControllerBase
     private const string VatRateGroupName = "VatRate";
 
     private readonly AppDbContext _db;
-    public LookupsController(AppDbContext db) => _db = db;
+    private readonly ILogService _log;
+
+    public LookupsController(AppDbContext db, ILogService log)
+    {
+        _db = db;
+        _log = log;
+    }
 
     private static bool IsValidVatRateCode(string? code) =>
         !string.IsNullOrWhiteSpace(code)
@@ -116,6 +123,7 @@ public class LookupsController : ControllerBase
         if (lookup.Id == Guid.Empty) lookup.Id = Guid.NewGuid();
         _db.Lookups.Add(lookup);
         await _db.SaveChangesAsync();
+        await _log.LogAsync($"Lookup oluşturuldu: {lookup.Code} — {lookup.Name}", "Create", "Lookup", "Info", $"Id: {lookup.Id}, GrupId: {lookup.LookupGroupId}");
         return Ok(lookup);
     }
 
@@ -137,6 +145,7 @@ public class LookupsController : ControllerBase
             existing.IsActive = true;
             // Grup, sıra ve pasifleştirme değiştirilemez — tek sistem KDV satırı
             await _db.SaveChangesAsync();
+            await _log.LogAsync($"KDV oranı (lookup) güncellendi: {existing.Code}", "Update", "Lookup", "Info", $"Id: {id}");
             return Ok(existing);
         }
 
@@ -148,6 +157,7 @@ public class LookupsController : ControllerBase
         existing.IsActive = lookup.IsActive;
 
         await _db.SaveChangesAsync();
+        await _log.LogAsync($"Lookup güncellendi: {existing.Code} — {existing.Name}", "Update", "Lookup", "Info", $"Id: {id}");
         return Ok(existing);
     }
 
@@ -161,8 +171,11 @@ public class LookupsController : ControllerBase
         if (existing.Group?.Name == VatRateGroupName)
             return BadRequest(new { message = "KDV oranı tanımı silinemez; yalnızca oran değerini güncelleyebilirsiniz." });
 
+        var code = existing.Code;
+        var name = existing.Name;
         _db.Lookups.Remove(existing);
         await _db.SaveChangesAsync();
+        await _log.LogAsync($"Lookup silindi: {code} — {name}", "Delete", "Lookup", "Warning", $"Id: {id}");
         return Ok();
     }
 }
