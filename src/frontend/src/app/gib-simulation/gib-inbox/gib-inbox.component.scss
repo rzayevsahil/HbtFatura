@@ -1,0 +1,152 @@
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.disclaimer-banner {
+  margin-bottom: 1.25rem;
+  padding: 1rem 1.25rem;
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  overflow: hidden;
+}
+
+.gib-table-card {
+  position: relative;
+  min-height: 200px;
+  padding: 0;
+  overflow: hidden;
+}
+
+.empty-state {
+  margin: 0;
+  padding: 2.5rem 1.25rem;
+  text-align: center;
+  font-size: 0.9375rem;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+
+  th {
+    text-align: left;
+    padding: 0.75rem 1rem;
+    background: var(--color-background);
+    font-weight: 600;
+    color: var(--color-text);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--color-border);
+    color: var(--color-text);
+    vertical-align: middle;
+  }
+
+  th.col-amount,
+  td.col-amount {
+    white-space: nowrap;
+  }
+
+  th.col-actions,
+  td.col-actions {
+    width: 1%;
+    white-space: nowrap;
+  }
+
+  tbody tr:hover {
+    background: #f8fafc;
+  }
+}
+
+.invoice-number {
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+th.col-pdf,
+td.col-pdf {
+  width: 1%;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.th-pdf-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+.icon-btn--pdf {
+  color: #b91c1c;
+
+  &:hover:not(:disabled) {
+    background: #fef2f2;
+    border-color: #fecaca;
+    color: #991b1b;
+  }
+}
+
+.actions-cell {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: nowrap;
+}
+
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+
+  .material-icons {
+    font-size: 22px;
+    line-height: 1;
+  }
+
+  &:hover:not(:disabled) {
+    background: var(--color-background);
+  }
+
+  &:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+}
+
+.icon-btn--approve {
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+
+  &:hover:not(:disabled) {
+    background: var(--color-primary-light);
+    border-color: var(--color-primary-hover);
+  }
+}
+
+.icon-btn--reject {
+  &:hover:not(:disabled) {
+    color: #b91c1c;
+    border-color: #fecaca;
+    background: #fef2f2;
+  }
+}

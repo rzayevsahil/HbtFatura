@@ -32,6 +32,17 @@
     background: #fee2e2;
     color: #991b1b;
   }
+
+  &.pending-gib {
+    background: #ffedd5;
+    color: #9a3412;
+  }
+}
+
+.gib-sim-note {
+  max-width: 52rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.45;
 }
 
 .card {
@@ -113,24 +124,30 @@ th, td {
   margin-top: 0.75rem;
   padding: 0.75rem 1rem 0.25rem;
   border-top: 1px solid var(--color-border);
-  max-width: 320px;
+  max-width: min(24rem, 100%);
   margin-left: auto;
 
   p {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
+    gap: 0.75rem;
     margin: 0 0 0.35rem;
     font-size: 0.9375rem;
 
     span:first-child {
       color: var(--color-text-muted);
-      margin-right: 1rem;
-      white-space: nowrap;
+      flex: 1;
+      min-width: 0;
+      padding-right: 0.25rem;
+      line-height: 1.35;
     }
 
     span:last-child {
       font-variant-numeric: tabular-nums;
+      flex-shrink: 0;
+      white-space: nowrap;
+      text-align: right;
     }
   }
 

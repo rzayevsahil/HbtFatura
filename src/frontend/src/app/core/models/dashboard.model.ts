@@ -12,6 +12,8 @@ export interface RecentInvoice {
     amount: string;
     date: string;
     status: string;
+    /** InvoiceStatus enum; yoksa SuperAdmin firma satırı */
+    statusCode?: number | null;
 }
 
 export interface RecentActivity {

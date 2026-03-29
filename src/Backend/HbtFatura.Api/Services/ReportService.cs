@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Globalization;
 using Microsoft.EntityFrameworkCore;
 using QuestPDF.Fluent;
@@ -283,6 +284,7 @@ public class ReportService : IReportService
     public async Task<byte[]?> GetStockLevelsPdfAsync(Guid? firmId, CancellationToken ct = default)
     {
         var data = await GetStockLevelsAsync(firmId, ct);
+        var unitLabels = await LookupMaps.LoadStringCodeMapAsync(_db, "ProductUnit", ct);
         QuestPDF.Settings.License = LicenseType.Community;
 
         var document = Document.Create(container =>
@@ -315,7 +317,7 @@ public class ReportService : IReportService
                         {
                             t.Cell().Padding(4).Text(row.Code);
                             t.Cell().Padding(4).Text(row.Name);
-                            t.Cell().Padding(4).Text(row.Unit);
+                            t.Cell().Padding(4).Text(LookupMaps.FormatStringCode(row.Unit, unitLabels));
                             t.Cell().Padding(4).AlignRight().Text(row.Quantity.ToString("N2", CultureInfo.GetCultureInfo("tr-TR")));
                         }
                     });
@@ -462,7 +464,7 @@ public class ReportService : IReportService
 
         var title = data.CustomerTitle != null ? $"Fatura raporu - {data.CustomerTitle}" : "Fatura raporu";
         var period = $"Dönem: {(data.DateFrom?.ToString("d", CultureInfo.GetCultureInfo("tr-TR")) ?? "—")} - {(data.DateTo?.ToString("d", CultureInfo.GetCultureInfo("tr-TR")) ?? "—")}  |  Rapor tarihi: {DateTime.Now.ToString("dd.MM.yyyy HH:mm", CultureInfo.GetCultureInfo("tr-TR"))}";
-        var statusNames = new[] { "Taslak", "Kesildi", "Ödendi", "İptal" };
+        var statusLabels = await LookupMaps.LoadIntCodeMapAsync(_db, "InvoiceStatus", ct);
 
         var document = Document.Create(container =>
         {
@@ -500,7 +502,7 @@ public class ReportService : IReportService
                             t.Cell().Padding(4).Text(row.InvoiceNumber);
                             t.Cell().Padding(4).Text(row.InvoiceDate.ToString("dd.MM.yyyy HH:mm", culture));
                             t.Cell().Padding(4).Text(row.CustomerTitle);
-                            t.Cell().Padding(4).Text(row.Status >= 0 && row.Status < statusNames.Length ? statusNames[row.Status] : "");
+                            t.Cell().Padding(4).Text(LookupMaps.FormatIntCode(row.Status, statusLabels));
                             t.Cell().Padding(4).AlignRight().Text(row.GrandTotal.ToString("N2", culture));
                             t.Cell().Padding(4).Text(row.Currency);
                         }
@@ -514,7 +516,7 @@ public class ReportService : IReportService
     public async Task<byte[]?> GetInvoiceReportExcelAsync(DateTime? dateFrom, DateTime? dateTo, Guid? customerId, CancellationToken ct = default)
     {
         var data = await GetInvoiceReportAsync(dateFrom, dateTo, customerId, ct);
-        var statusNames = new[] { "Taslak", "Kesildi", "Ödendi", "İptal" };
+        var statusLabels = await LookupMaps.LoadIntCodeMapAsync(_db, "InvoiceStatus", ct);
         var culture = CultureInfo.GetCultureInfo("tr-TR");
 
         using var wb = new XLWorkbook();
@@ -534,7 +536,7 @@ public class ReportService : IReportService
             ws.Cell(row, 1).Value = r.InvoiceNumber;
             ws.Cell(row, 2).Value = r.InvoiceDate.ToString("dd.MM.yyyy HH:mm", culture);
             ws.Cell(row, 3).Value = r.CustomerTitle;
-            ws.Cell(row, 4).Value = r.Status >= 0 && r.Status < statusNames.Length ? statusNames[r.Status] : "";
+            ws.Cell(row, 4).Value = LookupMaps.FormatIntCode(r.Status, statusLabels);
             ws.Cell(row, 5).Value = r.GrandTotal;
             ws.Cell(row, 6).Value = r.Currency;
             row++;
@@ -546,7 +548,8 @@ public class ReportService : IReportService
 
     public async Task<MonthlyProductSalesReportDto> GetMonthlyProductSalesAsync(DateTime? dateFrom, DateTime? dateTo, Guid? productId, CancellationToken ct = default)
     {
-        var invScope = InvoiceScope().Where(i => i.InvoiceType == InvoiceType.Satis);
+        var invScope = InvoiceScope().Where(i => i.InvoiceType == InvoiceType.Satis
+            && (i.Status == InvoiceStatus.Issued || i.Status == InvoiceStatus.Paid));
         var query = _db.InvoiceItems
             .Where(i => i.ProductId != null)
             .Join(invScope, i => i.InvoiceId, inv => inv.Id, (i, inv) => new { i.ProductId, i.Quantity, inv.InvoiceDate });
@@ -640,7 +643,7 @@ public class ReportService : IReportService
 
         var title = data.CustomerTitle != null ? $"Sipariş raporu - {data.CustomerTitle}" : "Sipariş raporu";
         var period = $"Dönem: {(data.DateFrom?.ToString("d", CultureInfo.GetCultureInfo("tr-TR")) ?? "—")} - {(data.DateTo?.ToString("d", CultureInfo.GetCultureInfo("tr-TR")) ?? "—")}  |  Rapor tarihi: {DateTime.Now.ToString("dd.MM.yyyy HH:mm", CultureInfo.GetCultureInfo("tr-TR"))}";
-        var statusNames = new[] { "Bekliyor", "Onaylandı", "Tamamı Teslim", "Kısmi Teslim", "İptal" };
+        var orderStatusLabels = await LookupMaps.LoadIntCodeMapAsync(_db, "OrderStatus", ct);
 
         var document = Document.Create(container =>
         {
@@ -656,9 +659,9 @@ public class ReportService : IReportService
                     {
                         col.Item().Text($"Arama: {data.Search}");
                     }
-                    if (data.Status.HasValue && data.Status.Value >= 0 && data.Status.Value < statusNames.Length)
+                    if (data.Status.HasValue)
                     {
-                        col.Item().Text($"Durum: {statusNames[data.Status.Value]}");
+                        col.Item().Text($"Durum: {LookupMaps.FormatIntCode(data.Status.Value, orderStatusLabels)}");
                     }
                     col.Item().PaddingTop(10).Table(t =>
                     {
@@ -685,7 +688,7 @@ public class ReportService : IReportService
                             t.Cell().Padding(4).Text(row.OrderNumber);
                             t.Cell().Padding(4).Text(row.OrderDate.ToString("dd.MM.yyyy HH:mm", culture));
                             t.Cell().Padding(4).Text(row.CustomerTitle ?? string.Empty);
-                            t.Cell().Padding(4).Text(row.Status >= 0 && row.Status < statusNames.Length ? statusNames[row.Status] : "");
+                            t.Cell().Padding(4).Text(LookupMaps.FormatIntCode(row.Status, orderStatusLabels));
                             t.Cell().Padding(4).AlignRight().Text($"{row.TotalAmount.ToString("N2", culture)} {row.Currency}");
                         }
                     });
@@ -698,7 +701,7 @@ public class ReportService : IReportService
     public async Task<byte[]?> GetOrderReportExcelAsync(DateTime? dateFrom, DateTime? dateTo, int? status, Guid? customerId, string? search, Guid? firmId, CancellationToken ct = default)
     {
         var data = await GetOrderReportAsync(dateFrom, dateTo, status, customerId, search, firmId, ct);
-        var statusNames = new[] { "Bekliyor", "Onaylandı", "Tamamı Teslim", "Kısmi Teslim", "İptal" };
+        var orderStatusLabels = await LookupMaps.LoadIntCodeMapAsync(_db, "OrderStatus", ct);
 
         var culture = CultureInfo.GetCultureInfo("tr-TR");
         using var wb = new XLWorkbook();
@@ -712,9 +715,9 @@ public class ReportService : IReportService
             ws.Cell(infoRow, 1).Value = $"Arama: {data.Search}";
             infoRow++;
         }
-        if (data.Status.HasValue && data.Status.Value >= 0 && data.Status.Value < statusNames.Length)
+        if (data.Status.HasValue)
         {
-            ws.Cell(infoRow, 1).Value = $"Durum: {statusNames[data.Status.Value]}";
+            ws.Cell(infoRow, 1).Value = $"Durum: {LookupMaps.FormatIntCode(data.Status.Value, orderStatusLabels)}";
             infoRow++;
         }
         var headerRow = infoRow + 1;
@@ -731,7 +734,7 @@ public class ReportService : IReportService
             ws.Cell(row, 1).Value = r.OrderNumber;
             ws.Cell(row, 2).Value = r.OrderDate.ToString("dd.MM.yyyy HH:mm", culture);
             ws.Cell(row, 3).Value = r.CustomerTitle;
-            ws.Cell(row, 4).Value = r.Status >= 0 && r.Status < statusNames.Length ? statusNames[r.Status] : "";
+            ws.Cell(row, 4).Value = LookupMaps.FormatIntCode(r.Status, orderStatusLabels);
             ws.Cell(row, 5).Value = r.TotalAmount;
             ws.Cell(row, 6).Value = r.Currency;
             row++;
@@ -805,7 +808,7 @@ public class ReportService : IReportService
 
         var title = data.CustomerTitle != null ? $"İrsaliye raporu - {data.CustomerTitle}" : "İrsaliye raporu";
         var period = $"Dönem: {(data.DateFrom?.ToString("d", CultureInfo.GetCultureInfo("tr-TR")) ?? "—")} - {(data.DateTo?.ToString("d", CultureInfo.GetCultureInfo("tr-TR")) ?? "—")}  |  Rapor tarihi: {DateTime.Now.ToString("dd.MM.yyyy HH:mm", CultureInfo.GetCultureInfo("tr-TR"))}";
-        var statusNames = new[] { "Taslak", "Onaylandı", "İptal", "Faturalandı" };
+        var dnStatusLabels = await LookupMaps.LoadIntCodeMapAsync(_db, "DeliveryNoteStatus", ct);
 
         var document = Document.Create(container =>
         {
@@ -821,9 +824,9 @@ public class ReportService : IReportService
                     {
                         col.Item().Text($"Arama: {data.Search}");
                     }
-                    if (data.Status.HasValue && data.Status.Value >= 0 && data.Status.Value < statusNames.Length)
+                    if (data.Status.HasValue)
                     {
-                        col.Item().Text($"Durum: {statusNames[data.Status.Value]}");
+                        col.Item().Text($"Durum: {LookupMaps.FormatIntCode(data.Status.Value, dnStatusLabels)}");
                     }
                     col.Item().PaddingTop(10).Table(t =>
                     {
@@ -852,7 +855,7 @@ public class ReportService : IReportService
                             t.Cell().Padding(4).Text(row.DeliveryNumber);
                             t.Cell().Padding(4).Text(row.DeliveryDate.ToString("dd.MM.yyyy HH:mm", culture));
                             t.Cell().Padding(4).Text(row.CustomerTitle ?? string.Empty);
-                            t.Cell().Padding(4).Text(row.Status >= 0 && row.Status < statusNames.Length ? statusNames[row.Status] : "");
+                            t.Cell().Padding(4).Text(LookupMaps.FormatIntCode(row.Status, dnStatusLabels));
                             t.Cell().Padding(4).Text(row.OrderNumber ?? string.Empty);
                             t.Cell().Padding(4).AlignRight().Text($"{row.TotalAmount.ToString("N2", culture)} {row.Currency}");
                         }
@@ -866,7 +869,7 @@ public class ReportService : IReportService
     public async Task<byte[]?> GetDeliveryNoteReportExcelAsync(DateTime? dateFrom, DateTime? dateTo, int? status, Guid? customerId, string? search, Guid? firmId, CancellationToken ct = default)
     {
         var data = await GetDeliveryNoteReportAsync(dateFrom, dateTo, status, customerId, search, firmId, ct);
-        var statusNames = new[] { "Taslak", "Onaylandı", "İptal", "Faturalandı" };
+        var dnStatusLabels = await LookupMaps.LoadIntCodeMapAsync(_db, "DeliveryNoteStatus", ct);
 
         var culture = CultureInfo.GetCultureInfo("tr-TR");
         using var wb = new XLWorkbook();
@@ -880,9 +883,9 @@ public class ReportService : IReportService
             ws.Cell(infoRow, 1).Value = $"Arama: {data.Search}";
             infoRow++;
         }
-        if (data.Status.HasValue && data.Status.Value >= 0 && data.Status.Value < statusNames.Length)
+        if (data.Status.HasValue)
         {
-            ws.Cell(infoRow, 1).Value = $"Durum: {statusNames[data.Status.Value]}";
+            ws.Cell(infoRow, 1).Value = $"Durum: {LookupMaps.FormatIntCode(data.Status.Value, dnStatusLabels)}";
             infoRow++;
         }
         var headerRow = infoRow + 1;
@@ -900,7 +903,7 @@ public class ReportService : IReportService
             ws.Cell(row, 1).Value = r.DeliveryNumber;
             ws.Cell(row, 2).Value = r.DeliveryDate.ToString("dd.MM.yyyy HH:mm", culture);
             ws.Cell(row, 3).Value = r.CustomerTitle;
-            ws.Cell(row, 4).Value = r.Status >= 0 && r.Status < statusNames.Length ? statusNames[r.Status] : "";
+            ws.Cell(row, 4).Value = LookupMaps.FormatIntCode(r.Status, dnStatusLabels);
             ws.Cell(row, 5).Value = r.OrderNumber;
             ws.Cell(row, 6).Value = r.TotalAmount;
             ws.Cell(row, 7).Value = r.Currency;

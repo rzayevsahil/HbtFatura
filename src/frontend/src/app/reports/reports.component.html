@@ -203,7 +203,7 @@
         <tr>
           <td><a [routerLink]="['/products', r.productId]" class="product-link">{{ r.code }}</a></td>
           <td><a [routerLink]="['/products', r.productId]" class="product-link">{{ r.name }}</a></td>
-          <td>{{ r.unit }}</td>
+          <td>{{ lookups.getName('ProductUnit', r.unit) }}</td>
           <td class="amount">{{ r.quantity | number:'1.2-2' }}</td>
         </tr>
         }

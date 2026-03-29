@@ -37,6 +37,12 @@ export const routes: Routes = [
   },
 
   {
+    path: 'gib-simulation/inbox',
+    loadComponent: () => import('./gib-simulation/gib-inbox/gib-inbox.component').then(m => m.GibInboxComponent),
+    canActivate: [authGuard, PermissionGuard], data: { permission: 'GibSimulation.ViewInbox' }
+  },
+
+  {
     path: 'orders',
     loadComponent: () => import('./orders/order-list/order-list.component').then(m => m.OrderListComponent),
     canActivate: [authGuard, PermissionGuard], data: { permission: 'Orders.View' }

@@ -6,6 +6,7 @@ using HbtFatura.Api.DTOs.Dashboard;
 using HbtFatura.Api.Entities;
 using System.Security.Claims;
 using HbtFatura.Api.Constants;
+using HbtFatura.Api.Services;
 
 namespace HbtFatura.Api.Controllers;
 
@@ -85,7 +86,8 @@ public class DashboardController : ControllerBase
                 Customer = f.Name,
                 Amount = "-", // Not applicable for firms
                 Date = f.CreatedAt.ToString("dd.MM.yyyy"),
-                Status = "Aktif"
+                Status = "Aktif",
+                StatusCode = null
             }).ToList();
 
             var logsForSuper = await _db.LogEntries
@@ -106,7 +108,8 @@ public class DashboardController : ControllerBase
         {
             // FirmAdmin / Employee Stats
             var monthlySales = await invoicesQuery
-                .Where(i => i.InvoiceDate >= startOfMonth && i.InvoiceType == InvoiceType.Satis && i.Status != InvoiceStatus.Cancelled)
+                .Where(i => i.InvoiceDate >= startOfMonth && i.InvoiceType == InvoiceType.Satis
+                    && (i.Status == InvoiceStatus.Issued || i.Status == InvoiceStatus.Paid))
                 .SumAsync(i => i.GrandTotal, ct);
             
             var pendingPayments = await invoicesQuery
@@ -136,15 +139,16 @@ public class DashboardController : ControllerBase
                 .Take(5)
                 .ToListAsync(ct);
 
+            var invoiceStatusLabels = await LookupMaps.LoadIntCodeMapAsync(_db, "InvoiceStatus", ct);
+
             response.RecentInvoices = recentInvoices.Select(i => new RecentInvoiceDto
             {
                 Id = i.InvoiceNumber,
                 Customer = i.CustomerTitle,
                 Amount = $"₺{i.GrandTotal:N2}",
                 Date = i.InvoiceDate.ToString("dd.MM.yyyy"),
-                Status = i.Status == InvoiceStatus.Paid ? "Ödendi" : 
-                         i.Status == InvoiceStatus.Cancelled ? "İptal" :
-                         i.Status == InvoiceStatus.Issued ? "Gönderildi" : "Taslak"
+                Status = LookupMaps.FormatIntCode((int)i.Status, invoiceStatusLabels),
+                StatusCode = (int)i.Status
             }).ToList();
 
             var recentLogs = await logsQuery

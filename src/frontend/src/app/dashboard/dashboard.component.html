@@ -90,10 +90,10 @@
                             <td>{{ inv.date }}</td>
                             <td>
                                 <span class="status-badge"
-                                    [class.bg-success]="inv.status === 'Ödendi' || inv.status === 'Aktif'"
-                                    [class.bg-warning]="inv.status === 'Gönderildi'"
-                                    [class.bg-danger]="inv.status === 'İptal'"
-                                    [class.bg-info]="inv.status === 'Taslak'">
+                                    [class.bg-success]="inv.statusCode === 2 || inv.status === 'Aktif'"
+                                    [class.bg-warning]="inv.statusCode === 1 || inv.statusCode === 4"
+                                    [class.bg-danger]="inv.statusCode === 3"
+                                    [class.bg-info]="inv.statusCode === 0">
                                     {{ inv.status }}
                                 </span>
                             </td>

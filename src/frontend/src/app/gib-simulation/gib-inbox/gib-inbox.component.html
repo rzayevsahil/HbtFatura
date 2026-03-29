@@ -1,0 +1,65 @@
+<div class="page-header">
+  <h1 class="page-title">GİB Kutusu</h1>
+</div>
+<p class="card disclaimer-banner">
+  <strong>Simülasyon:</strong> Bu ekran gerçek Gelir İdaresi Bağlantısı (GİB) değildir; yalnızca uygulama içi onay ve bildirim akışını gösterir.
+</p>
+<div class="card table-wrap gib-table-card">
+  @if (loading) {
+  <div class="loading-overlay">
+    <div class="spinner"></div>
+  </div>
+  }
+  @if (!loading && items.length === 0) {
+  <p class="empty-state text-muted">Bekleyen fatura yok.</p>
+  }
+  @if (!loading && items.length > 0) {
+  <table>
+    <thead>
+      <tr>
+        <th>Fatura no</th>
+        <th>Tarih</th>
+        <th>Gönderen firma</th>
+        <th>Cari ünvan</th>
+        <th>VKN</th>
+        <th class="col-amount">Tutar</th>
+        <th class="col-pdf"><span class="th-pdf-label" title="PDF">PDF</span></th>
+        <th class="col-actions"></th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (row of items; track row.submissionId) {
+      <tr>
+        <td>
+          <span class="invoice-number">{{ row.invoiceNumber }}</span>
+        </td>
+        <td>{{ row.invoiceDate | date:'dd.MM.yyyy HH:mm' }}</td>
+        <td>{{ row.senderFirmName }}</td>
+        <td>{{ row.customerTitle }}</td>
+        <td>{{ row.recipientTaxNumber }}</td>
+        <td class="col-amount">{{ row.grandTotal | number:'1.2-2' }} {{ row.currency }}</td>
+        <td class="col-pdf">
+          <button type="button" class="icon-btn icon-btn--pdf" (click)="downloadPdf(row)"
+            [disabled]="busyId === row.submissionId || pdfBusyId === row.invoiceId" title="PDF indir"
+            aria-label="PDF indir">
+            <span class="material-icons" aria-hidden="true">picture_as_pdf</span>
+          </button>
+        </td>
+        <td class="col-actions">
+          <div class="actions-cell">
+            <button type="button" class="icon-btn icon-btn--approve" (click)="accept(row)"
+              [disabled]="busyId === row.submissionId" title="Onayla" aria-label="Onayla">
+              <span class="material-icons" aria-hidden="true">check_circle</span>
+            </button>
+            <button type="button" class="icon-btn icon-btn--reject" (click)="reject(row)"
+              [disabled]="busyId === row.submissionId" title="Reddet" aria-label="Reddet">
+              <span class="material-icons" aria-hidden="true">cancel</span>
+            </button>
+          </div>
+        </td>
+      </tr>
+      }
+    </tbody>
+  </table>
+  }
+</div>

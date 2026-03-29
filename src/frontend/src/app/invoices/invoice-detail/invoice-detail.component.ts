@@ -37,7 +37,8 @@ export class InvoiceDetailComponent implements OnInit {
       0: 'Fatura Oluşturuldu', 'Draft': 'Fatura Oluşturuldu',
       1: 'Onaylandı', 'Issued': 'Onaylandı',
       2: 'Ödendi', 'Paid': 'Ödendi',
-      3: 'İptal', 'Cancelled': 'İptal'
+      3: 'İptal', 'Cancelled': 'İptal',
+      4: 'GİB onayı bekliyor', 'PendingGibAcceptance': 'GİB onayı bekliyor'
     };
     return map[s] ?? (s !== null && s !== undefined ? s.toString() : '');
   }
@@ -47,7 +48,8 @@ export class InvoiceDetailComponent implements OnInit {
       0: 'draft', 'Draft': 'draft',
       1: 'issued', 'Issued': 'issued',
       2: 'paid', 'Paid': 'paid',
-      3: 'cancelled', 'Cancelled': 'cancelled'
+      3: 'cancelled', 'Cancelled': 'cancelled',
+      4: 'pending-gib', 'PendingGibAcceptance': 'pending-gib'
     };
     return map[s] ?? '';
   }
@@ -75,22 +77,20 @@ export class InvoiceDetailComponent implements OnInit {
   }
 
   sendToGib(): void {
-    if (!this.invoice || this.invoice.isGibSent) return;
+    if (!this.invoice || this.invoice.isGibSent || this.invoice.status === 4) return;
 
     this.sendingGib = true;
     this.api.sendToGib(this.invoice.id, this.selectedScenario).subscribe({
       next: () => {
         this.sendingGib = false;
-        if (this.invoice) {
-          this.invoice.isGibSent = true;
-          this.invoice.status = 1; // Onaylandı
-          this.invoice.scenario = this.selectedScenario;
-        }
-        this.toastr.success("Fatura başarıyla GİB'e gönderildi.");
+        this.api.getById(this.invoice!.id).subscribe(inv => {
+          this.invoice = inv;
+          this.toastr.success('Fatura GİB simülasyon kuyruğuna alındı; karşı firma onayından sonra kesinleşir.');
+        });
       },
-      error: () => {
+      error: e => {
         this.sendingGib = false;
-        this.toastr.error("GİB'e gönderim sırasında bir hata oluştu.");
+        this.toastr.error(e.error?.message ?? "GİB simülasyon gönderiminde hata oluştu.");
       }
     });
   }

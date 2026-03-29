@@ -87,6 +87,7 @@ public static class LookupSeed
             lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = invoiceStatusId, Code = "1", Name = "Onaylandı", Color = "#007bff", SortOrder = 2 });
             lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = invoiceStatusId, Code = "2", Name = "Ödendi", Color = "#28a745", SortOrder = 3 });
             lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = invoiceStatusId, Code = "3", Name = "İptal", Color = "#dc3545", SortOrder = 4 });
+            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = invoiceStatusId, Code = "4", Name = "GİB onayı bekliyor", Color = "#fd7e14", SortOrder = 5 });
         }
 
         // DeliveryNoteStatus
@@ -160,6 +161,21 @@ public static class LookupSeed
         if (lookups.Any())
         {
             await db.Lookups.AddRangeAsync(lookups);
+            await db.SaveChangesAsync();
+        }
+
+        var invoiceStatusGroup = await db.LookupGroups.FirstOrDefaultAsync(g => g.Name == "InvoiceStatus");
+        if (invoiceStatusGroup != null && !await db.Lookups.AnyAsync(x => x.LookupGroupId == invoiceStatusGroup.Id && x.Code == "4"))
+        {
+            await db.Lookups.AddAsync(new Lookup
+            {
+                Id = Guid.NewGuid(),
+                LookupGroupId = invoiceStatusGroup.Id,
+                Code = "4",
+                Name = "GİB onayı bekliyor",
+                Color = "#fd7e14",
+                SortOrder = 5
+            });
             await db.SaveChangesAsync();
         }
     }

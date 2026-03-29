@@ -23,6 +23,8 @@ public class RecentInvoiceDto
     public string Amount { get; set; } = string.Empty;
     public string Date { get; set; } = string.Empty;
     public string Status { get; set; } = string.Empty;
+    /// <summary>Fatura durumu enum değeri (firma özeti); SuperAdmin firma satırında null.</summary>
+    public int? StatusCode { get; set; }
 }
 
 public class RecentActivityDto

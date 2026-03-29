@@ -80,6 +80,8 @@ public class DeliveryNoteService : IDeliveryNoteService
     public async Task<DeliveryNoteDto?> GetByIdAsync(Guid id, CancellationToken ct = default)
     {
         var dn = await ScopeQuery()
+            .Include(x => x.User)
+            .Include(x => x.Creator)
             .Include(x => x.Customer)
             .Include(x => x.Order)
             .Include(x => x.Items.OrderBy(i => i.SortOrder))
@@ -153,7 +155,13 @@ public class DeliveryNoteService : IDeliveryNoteService
         _db.DeliveryNotes.Add(dn);
         await _db.SaveChangesAsync(ct);
         await _log.LogAsync($"İrsaliye oluşturuldu: {dn.DeliveryNumber}", "Create", "DeliveryNote", "Info", $"Id: {dn.Id}, Cari: {customerTitle}");
-        dn = (await ScopeQuery().Include(x => x.Customer).Include(x => x.Order).Include(x => x.Items.OrderBy(i => i.SortOrder)).ThenInclude(i => i.Product).FirstOrDefaultAsync(x => x.Id == dn.Id, ct))!;
+        dn = (await ScopeQuery()
+            .Include(x => x.User)
+            .Include(x => x.Creator)
+            .Include(x => x.Customer)
+            .Include(x => x.Order)
+            .Include(x => x.Items.OrderBy(i => i.SortOrder)).ThenInclude(i => i.Product)
+            .FirstOrDefaultAsync(x => x.Id == dn.Id, ct))!;
         return MapToDto(dn);
     }
 
@@ -215,7 +223,13 @@ public class DeliveryNoteService : IDeliveryNoteService
         await _db.SaveChangesAsync(ct);
         await _log.LogAsync($"Siparişten irsaliye oluşturuldu: {dn.DeliveryNumber} (Sipariş: {order.OrderNumber})", "CreateFromOrder", "DeliveryNote", "Info", $"Id: {dn.Id}");
 
-        dn = (await ScopeQuery().Include(x => x.Customer).Include(x => x.Order).Include(x => x.Items.OrderBy(i => i.SortOrder)).ThenInclude(i => i.Product).FirstOrDefaultAsync(x => x.Id == dn.Id, ct))!;
+        dn = (await ScopeQuery()
+            .Include(x => x.User)
+            .Include(x => x.Creator)
+            .Include(x => x.Customer)
+            .Include(x => x.Order)
+            .Include(x => x.Items.OrderBy(i => i.SortOrder)).ThenInclude(i => i.Product)
+            .FirstOrDefaultAsync(x => x.Id == dn.Id, ct))!;
         return MapToDto(dn);
     }
 
@@ -262,7 +276,13 @@ public class DeliveryNoteService : IDeliveryNoteService
 
         await _db.SaveChangesAsync(ct);
         await _log.LogAsync($"İrsaliye güncellendi: {dn.DeliveryNumber}", "Update", "DeliveryNote", "Info", $"Id: {dn.Id}");
-        dn = (await ScopeQuery().Include(x => x.Customer).Include(x => x.Order).Include(x => x.Items.OrderBy(i => i.SortOrder)).ThenInclude(i => i.Product).FirstOrDefaultAsync(x => x.Id == id, ct))!;
+        dn = (await ScopeQuery()
+            .Include(x => x.User)
+            .Include(x => x.Creator)
+            .Include(x => x.Customer)
+            .Include(x => x.Order)
+            .Include(x => x.Items.OrderBy(i => i.SortOrder)).ThenInclude(i => i.Product)
+            .FirstOrDefaultAsync(x => x.Id == id, ct))!;
         return MapToDto(dn);
     }
 
@@ -380,6 +400,8 @@ public class DeliveryNoteService : IDeliveryNoteService
         Status = (int)d.Status,
         DeliveryType = (int)d.DeliveryType,
         CreatedAt = d.CreatedAt,
+        CreatedByUserId = d.CreatedBy ?? d.UserId,
+        CreatedByUserName = d.Creator?.FullName ?? d.User?.FullName,
         Items = d.Items.OrderBy(x => x.SortOrder).Select(x => new DeliveryNoteItemDto
         {
             Id = x.Id,

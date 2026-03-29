@@ -14,13 +14,15 @@ public class InvoiceService : IInvoiceService
     private readonly IInvoiceCalculationService _calc;
     private readonly ICurrentUserContext _currentUser;
     private readonly ILogService _log;
+    private readonly IUserNotificationService _notifications;
 
-    public InvoiceService(AppDbContext db, IInvoiceCalculationService calc, ICurrentUserContext currentUser, ILogService log)
+    public InvoiceService(AppDbContext db, IInvoiceCalculationService calc, ICurrentUserContext currentUser, ILogService log, IUserNotificationService notifications)
     {
         _db = db;
         _calc = calc;
         _currentUser = currentUser;
         _log = log;
+        _notifications = notifications;
     }
 
     private IQueryable<Invoice> ScopeQuery(Guid? firmIdFilter = null)
@@ -82,6 +84,8 @@ public class InvoiceService : IInvoiceService
     public async Task<InvoiceDto?> GetByIdAsync(Guid id, CancellationToken ct = default)
     {
         var inv = await ScopeQuery()
+            .Include(x => x.User)
+            .Include(x => x.Creator)
             .Include(x => x.Items.OrderBy(i => i.SortOrder))
                 .ThenInclude(i => i.Product)
             .FirstOrDefaultAsync(x => x.Id == id, ct);
@@ -216,7 +220,11 @@ public class InvoiceService : IInvoiceService
             throw;
         }
 
-        invoice = (await ScopeQuery().Include(x => x.Items.OrderBy(i => i.SortOrder)).ThenInclude(i => i.Product).FirstOrDefaultAsync(x => x.Id == invoice.Id, ct))!;
+        invoice = (await ScopeQuery()
+            .Include(x => x.User)
+            .Include(x => x.Creator)
+            .Include(x => x.Items.OrderBy(i => i.SortOrder)).ThenInclude(i => i.Product)
+            .FirstOrDefaultAsync(x => x.Id == invoice.Id, ct))!;
         await _log.LogAsync($"Fatura oluşturuldu: {invoice.InvoiceNumber}", "Create", "Invoice", "Info", $"Id: {invoice.Id}, Cari: {invoice.CustomerTitle}");
         return MapToDto(invoice);
     }
@@ -320,6 +328,8 @@ public class InvoiceService : IInvoiceService
             throw new InvalidOperationException("Paid invoice cannot be updated.");
         if (invoice.Status == InvoiceStatus.Cancelled)
             throw new InvalidOperationException("Cancelled invoice cannot be modified.");
+        if (invoice.Status == InvoiceStatus.PendingGibAcceptance)
+            throw new InvalidOperationException("GİB onayı bekleyen fatura düzenlenemez.");
 
         if (rowVersion != null && (invoice.RowVersion == null || !invoice.RowVersion.SequenceEqual(rowVersion)))
             throw new InvalidOperationException("Invoice was modified by another user. Please refresh and try again.");
@@ -421,23 +431,87 @@ public class InvoiceService : IInvoiceService
 
         if (invoice.InvoiceType == InvoiceType.Alis)
             throw new InvalidOperationException("Alış faturaları GİB'e gönderilmez; karşı tarafın kestiği belgedir. Onayladığınızda kayıt tamamlanır ve PDF indirilebilir.");
-        
-        if (invoice.IsGibSent) return true;
 
-        var ok = await SetStatusAsync(id, InvoiceStatus.Issued, ct);
-        if (!ok) return false;
+        if (invoice.Status != InvoiceStatus.Draft)
+            throw new InvalidOperationException("Sadece taslak satış faturaları simülasyon kuyruğuna gönderilebilir.");
+
+        if (invoice.IsGibSent)
+            return true;
+
+        var alreadyPending = await _db.GibSimulationSubmissions.AnyAsync(s => s.InvoiceId == id && s.Status == GibSimulationSubmissionStatus.Pending, ct);
+        if (alreadyPending)
+            return true;
+
+        var normalized = TaxNumberNormalization.Normalize(invoice.CustomerTaxNumber);
+        if (string.IsNullOrEmpty(normalized))
+            throw new InvalidOperationException("Geçerli bir vergi veya T.C. kimlik numarası (10 veya 11 hane) gerekir.");
+
+        var settingsRows = await _db.CompanySettings.AsNoTracking()
+            .Where(cs => cs.TaxNumber != null && cs.TaxNumber != "")
+            .Select(cs => new { cs.FirmId, cs.TaxNumber })
+            .ToListAsync(ct);
+        Guid? recipientFirmId = null;
+        foreach (var row in settingsRows)
+        {
+            if (TaxNumberNormalization.Normalize(row.TaxNumber) == normalized)
+            {
+                recipientFirmId = row.FirmId;
+                break;
+            }
+        }
+
+        if (!recipientFirmId.HasValue)
+            throw new InvalidOperationException("Bu VKN sistemde kayıtlı bir firma ile eşleşmiyor. Karşı tarafın şirket profilinde vergi numarası tanımlı olmalıdır.");
+
+        if (recipientFirmId == _currentUser.FirmId)
+            throw new InvalidOperationException("Gönderen ve alıcı firma aynı olamaz.");
+
+        var senderFirmId = _currentUser.FirmId;
 
         invoice.Scenario = scenario;
-        invoice.IsGibSent = true;
-        if (string.IsNullOrEmpty(invoice.Ettn))
+        invoice.Status = InvoiceStatus.PendingGibAcceptance;
+        invoice.IsGibSent = false;
+        invoice.Ettn = null;
+        invoice.UpdatedAt = DateTime.UtcNow;
+        invoice.UpdatedBy = _currentUser.UserId;
+
+        var submission = new GibSimulationSubmission
         {
-            invoice.Ettn = Guid.NewGuid().ToString().ToUpper();
-        }
+            Id = Guid.NewGuid(),
+            InvoiceId = invoice.Id,
+            SenderUserId = _currentUser.UserId,
+            SenderFirmId = senderFirmId,
+            RecipientFirmId = recipientFirmId,
+            RecipientTaxNumber = normalized,
+            Status = GibSimulationSubmissionStatus.Pending,
+            CreatedAt = DateTime.UtcNow
+        };
+        _db.GibSimulationSubmissions.Add(submission);
         await _db.SaveChangesAsync(ct);
 
-        await _log.LogAsync($"Fatura GİB'e gönderildi: {invoice.InvoiceNumber}", "SendToGib", "Invoice", "Info", $"Id: {invoice.Id}");
+        await _notifications.NotifyUsersInFirmAsync(
+            recipientFirmId.Value,
+            NotificationTypes.GibInvoiceReceived,
+            "GİB simülasyonu: gelen fatura",
+            $"{invoice.InvoiceNumber} numaralı satış faturası onayınızı bekliyor (uygulama içi simülasyon, gerçek GİB değildir).",
+            ReferenceType.Fatura,
+            invoice.Id,
+            ct);
+
+        await _log.LogAsync($"Fatura GİB simülasyon kuyruğuna alındı: {invoice.InvoiceNumber}", "SendToGib", "Invoice", "Info", $"Id: {invoice.Id}, RecipientFirmId: {recipientFirmId}");
 
         return true;
+    }
+
+    public async Task ApplyIssuedForGibAcceptedSaleAsync(Invoice invoice, Guid actingUserId, CancellationToken ct = default)
+    {
+        await ApplyIssuedFinancialAndStockEffectsAsync(invoice, invoice.Id, InvoiceStatus.Issued, ct);
+        invoice.Status = InvoiceStatus.Issued;
+        invoice.IsGibSent = true;
+        if (string.IsNullOrEmpty(invoice.Ettn))
+            invoice.Ettn = Guid.NewGuid().ToString().ToUpper();
+        invoice.UpdatedAt = DateTime.UtcNow;
+        invoice.UpdatedBy = actingUserId;
     }
 
     public async Task<bool> SetStatusAsync(Guid id, InvoiceStatus status, CancellationToken ct = default)
@@ -447,9 +521,55 @@ public class InvoiceService : IInvoiceService
         if (invoice.Status == InvoiceStatus.Cancelled) return false;
         if (invoice.Status == InvoiceStatus.Paid && status != InvoiceStatus.Paid) return false;
 
-        if ((status == InvoiceStatus.Issued || status == InvoiceStatus.Paid) && invoice.CustomerId.HasValue)
+        if (invoice.InvoiceType == InvoiceType.Satis && status == InvoiceStatus.Issued && invoice.Status == InvoiceStatus.Draft)
+            throw new InvalidOperationException("Satış faturaları doğrudan kesinleştirilemez. Önce GİB simülasyonu ile gönderin; karşı taraf onayından sonra kesinleşir.");
+
+        if (invoice.Status == InvoiceStatus.PendingGibAcceptance)
         {
-            var alreadyCreated = await _db.AccountTransactions.AnyAsync(t => t.ReferenceType == ReferenceType.Fatura && t.ReferenceId == id, ct);
+            if (status == InvoiceStatus.Issued)
+                throw new InvalidOperationException("Bu fatura karşı firmanın GİB kutusundan onaylanınca kesinleşir.");
+            if (status != InvoiceStatus.Cancelled && status != InvoiceStatus.PendingGibAcceptance)
+                throw new InvalidOperationException("GİB onayı beklerken yalnızca iptal edebilirsiniz.");
+        }
+
+        if (status == InvoiceStatus.Issued || status == InvoiceStatus.Paid)
+            await ApplyIssuedFinancialAndStockEffectsAsync(invoice, id, status, ct);
+
+        // Alış: GİB'e gönderim yok; onaylandığında e-belge görünümü (PDF/ETTN) için işaretlenir.
+        if (invoice.InvoiceType == InvoiceType.Alis && (status == InvoiceStatus.Issued || status == InvoiceStatus.Paid) && !invoice.IsGibSent)
+        {
+            invoice.IsGibSent = true;
+            if (string.IsNullOrEmpty(invoice.Ettn))
+                invoice.Ettn = Guid.NewGuid().ToString().ToUpper();
+        }
+
+        if (status == InvoiceStatus.Cancelled)
+        {
+            var pendingSub = await _db.GibSimulationSubmissions.FirstOrDefaultAsync(s => s.InvoiceId == id && s.Status == GibSimulationSubmissionStatus.Pending, ct);
+            if (pendingSub != null)
+            {
+                pendingSub.Status = GibSimulationSubmissionStatus.Cancelled;
+                pendingSub.ResolvedAt = DateTime.UtcNow;
+                pendingSub.ResolvedByUserId = _currentUser.UserId;
+            }
+        }
+
+        invoice.Status = status;
+        invoice.UpdatedAt = DateTime.UtcNow;
+        invoice.UpdatedBy = _currentUser.UserId;
+        await _db.SaveChangesAsync(ct);
+        await _log.LogAsync($"Fatura durumu değişti: {invoice.InvoiceNumber} -> {status}", "SetStatus", "Invoice", "Info", $"Id: {id}");
+        return true;
+    }
+
+    private async Task ApplyIssuedFinancialAndStockEffectsAsync(Invoice invoice, Guid invoiceId, InvoiceStatus targetStatus, CancellationToken ct)
+    {
+        if (targetStatus != InvoiceStatus.Issued && targetStatus != InvoiceStatus.Paid)
+            return;
+
+        if (invoice.CustomerId.HasValue)
+        {
+            var alreadyCreated = await _db.AccountTransactions.AnyAsync(t => t.ReferenceType == ReferenceType.Fatura && t.ReferenceId == invoiceId, ct);
             if (!alreadyCreated)
             {
                 var cariType = invoice.InvoiceType == InvoiceType.Alis ? AccountTransactionType.Borc : AccountTransactionType.Alacak;
@@ -464,58 +584,40 @@ public class InvoiceService : IInvoiceService
                     Currency = invoice.Currency,
                     Description = invoice.InvoiceNumber,
                     ReferenceType = ReferenceType.Fatura,
-                    ReferenceId = id,
+                    ReferenceId = invoiceId,
                     CreatedAt = DateTime.UtcNow
                 });
             }
         }
 
-        if (status == InvoiceStatus.Issued || status == InvoiceStatus.Paid)
+        var stockAlreadyCreated = await _db.StockMovements.AnyAsync(m => m.ReferenceType == ReferenceType.Fatura && m.ReferenceId == invoiceId, ct);
+        if (!stockAlreadyCreated && invoice.SourceType != ReferenceType.Irsaliye)
         {
-            var stockAlreadyCreated = await _db.StockMovements.AnyAsync(m => m.ReferenceType == ReferenceType.Fatura && m.ReferenceId == id, ct);
-            if (!stockAlreadyCreated && invoice.SourceType != ReferenceType.Irsaliye)
+            var stockDirection = InventoryStockMovementHelper.MovementTypeForDocument(invoice.InvoiceType);
+            foreach (var item in invoice.Items.Where(i => i.ProductId.HasValue))
             {
-                var stockDirection = InventoryStockMovementHelper.MovementTypeForDocument(invoice.InvoiceType);
-                foreach (var item in invoice.Items.Where(i => i.ProductId.HasValue))
+                var product = await _db.Products.FirstOrDefaultAsync(p => p.Id == item.ProductId!.Value, ct);
+                if (product != null)
                 {
-                    var product = await _db.Products.FirstOrDefaultAsync(p => p.Id == item.ProductId!.Value, ct);
-                    if (product != null)
-                    {
-                        if (stockDirection == StockMovementType.Giris)
-                            product.StockQuantity += item.Quantity;
-                        else
-                            product.StockQuantity -= item.Quantity;
-                    }
-
-                    _db.StockMovements.Add(new StockMovement
-                    {
-                        Id = Guid.NewGuid(),
-                        ProductId = item.ProductId!.Value,
-                        Date = invoice.InvoiceDate,
-                        Type = stockDirection,
-                        Quantity = item.Quantity,
-                        ReferenceType = ReferenceType.Fatura,
-                        ReferenceId = id,
-                        CreatedAt = DateTime.UtcNow
-                    });
+                    if (stockDirection == StockMovementType.Giris)
+                        product.StockQuantity += item.Quantity;
+                    else
+                        product.StockQuantity -= item.Quantity;
                 }
+
+                _db.StockMovements.Add(new StockMovement
+                {
+                    Id = Guid.NewGuid(),
+                    ProductId = item.ProductId!.Value,
+                    Date = invoice.InvoiceDate,
+                    Type = stockDirection,
+                    Quantity = item.Quantity,
+                    ReferenceType = ReferenceType.Fatura,
+                    ReferenceId = invoiceId,
+                    CreatedAt = DateTime.UtcNow
+                });
             }
         }
-
-        // Alış: GİB'e gönderim yok; onaylandığında e-belge görünümü (PDF/ETTN) için işaretlenir.
-        if (invoice.InvoiceType == InvoiceType.Alis && (status == InvoiceStatus.Issued || status == InvoiceStatus.Paid) && !invoice.IsGibSent)
-        {
-            invoice.IsGibSent = true;
-            if (string.IsNullOrEmpty(invoice.Ettn))
-                invoice.Ettn = Guid.NewGuid().ToString().ToUpper();
-        }
-
-        invoice.Status = status;
-        invoice.UpdatedAt = DateTime.UtcNow;
-        invoice.UpdatedBy = _currentUser.UserId;
-        await _db.SaveChangesAsync(ct);
-        await _log.LogAsync($"Fatura durumu değişti: {invoice.InvoiceNumber} -> {status}", "SetStatus", "Invoice", "Info", $"Id: {id}");
-        return true;
     }
 
     private async Task<string> GetNextInvoiceNumberAsync(Guid userId, int year, CancellationToken ct)
@@ -593,6 +695,8 @@ public class InvoiceService : IInvoiceService
         SourceType = inv.SourceType,
         SourceId = inv.SourceId,
         IsGibSent = inv.IsGibSent,
+        CreatedByUserId = inv.CreatedBy ?? inv.UserId,
+        CreatedByUserName = inv.Creator?.FullName ?? inv.User?.FullName,
         Items = inv.Items.OrderBy(x => x.SortOrder).Select(x => new InvoiceItemDto
         {
             Id = x.Id,

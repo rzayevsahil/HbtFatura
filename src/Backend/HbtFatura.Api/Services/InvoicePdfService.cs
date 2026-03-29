@@ -67,13 +67,26 @@ public class InvoicePdfService : IInvoicePdfService
         return _db.Invoices.Where(i => i.UserId == _currentUser.UserId);
     }
 
-    public async Task<byte[]?> GeneratePdfAsync(Guid invoiceId, CancellationToken ct = default)
+    public async Task<InvoicePdfFile?> GeneratePdfAsync(Guid invoiceId, CancellationToken ct = default)
     {
         var invoice = await ScopeQuery()
             .Include(x => x.User)
             .Include(x => x.Items.OrderBy(i => i.SortOrder))
                 .ThenInclude(i => i.Product)
             .FirstOrDefaultAsync(x => x.Id == invoiceId, ct);
+        if (invoice == null && _currentUser.FirmId.HasValue)
+        {
+            var asRecipient = await _db.GibSimulationSubmissions.AsNoTracking()
+                .AnyAsync(s => s.InvoiceId == invoiceId && s.RecipientFirmId == _currentUser.FirmId.Value && s.Status == GibSimulationSubmissionStatus.Pending, ct);
+            if (asRecipient)
+            {
+                invoice = await _db.Invoices
+                    .Include(x => x.User)
+                    .Include(x => x.Items.OrderBy(i => i.SortOrder))
+                        .ThenInclude(i => i.Product)
+                    .FirstOrDefaultAsync(x => x.Id == invoiceId, ct);
+            }
+        }
         if (invoice == null) return null;
 
         var firmId = invoice.User?.FirmId;
@@ -356,7 +369,8 @@ public class InvoicePdfService : IInvoicePdfService
             });
         });
 
-        return document.GeneratePdf();
+        var bytes = document.GeneratePdf();
+        return new InvoicePdfFile(bytes, invoice.InvoiceNumber);
     }
 
     private sealed record PdfPartyBlock(

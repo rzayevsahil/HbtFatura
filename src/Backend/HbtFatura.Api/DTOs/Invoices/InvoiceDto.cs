@@ -28,6 +28,8 @@ public class InvoiceDto
     public Guid? SourceId { get; set; }
     public string? SourceNumber { get; set; }
     public bool IsGibSent { get; set; }
+    public Guid CreatedByUserId { get; set; }
+    public string? CreatedByUserName { get; set; }
     public List<InvoiceItemDto> Items { get; set; } = new();
 }
 

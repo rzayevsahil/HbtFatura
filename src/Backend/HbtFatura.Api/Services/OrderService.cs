@@ -75,6 +75,8 @@ public class OrderService : IOrderService
     public async Task<OrderDto?> GetByIdAsync(Guid id, CancellationToken ct = default)
     {
         var order = await ScopeQuery()
+            .Include(x => x.User)
+            .Include(x => x.Creator)
             .Include(x => x.Customer)
             .Include(x => x.Items.OrderBy(i => i.SortOrder))
                 .ThenInclude(i => i.Product)
@@ -154,7 +156,12 @@ public class OrderService : IOrderService
         await _db.SaveChangesAsync(ct);
         await _log.LogAsync($"Sipariş oluşturuldu: {order.OrderNumber}", "Create", "Order", "Info", $"Id: {order.Id}, Cari: {customerTitle}");
 
-        order = (await ScopeQuery().Include(x => x.Customer).Include(x => x.Items.OrderBy(i => i.SortOrder)).ThenInclude(i => i.Product).FirstOrDefaultAsync(x => x.Id == order.Id, ct))!;
+        order = (await ScopeQuery()
+            .Include(x => x.User)
+            .Include(x => x.Creator)
+            .Include(x => x.Customer)
+            .Include(x => x.Items.OrderBy(i => i.SortOrder)).ThenInclude(i => i.Product)
+            .FirstOrDefaultAsync(x => x.Id == order.Id, ct))!;
         return MapToDto(order);
     }
 
@@ -203,7 +210,12 @@ public class OrderService : IOrderService
 
         await _db.SaveChangesAsync(ct);
         await _log.LogAsync($"Sipariş güncellendi: {order.OrderNumber}", "Update", "Order", "Info", $"Id: {order.Id}");
-        order = (await ScopeQuery().Include(x => x.Customer).Include(x => x.Items.OrderBy(i => i.SortOrder)).ThenInclude(i => i.Product).FirstOrDefaultAsync(x => x.Id == id, ct))!;
+        order = (await ScopeQuery()
+            .Include(x => x.User)
+            .Include(x => x.Creator)
+            .Include(x => x.Customer)
+            .Include(x => x.Items.OrderBy(i => i.SortOrder)).ThenInclude(i => i.Product)
+            .FirstOrDefaultAsync(x => x.Id == id, ct))!;
         return MapToDto(order);
     }
 
@@ -250,6 +262,8 @@ public class OrderService : IOrderService
         Status = (int)o.Status,
         OrderType = (int)o.OrderType,
         CreatedAt = o.CreatedAt,
+        CreatedByUserId = o.CreatedBy ?? o.UserId,
+        CreatedByUserName = o.Creator?.FullName ?? o.User?.FullName,
         Items = o.Items.OrderBy(x => x.SortOrder).Select(x => new OrderItemDto
         {
             Id = x.Id,

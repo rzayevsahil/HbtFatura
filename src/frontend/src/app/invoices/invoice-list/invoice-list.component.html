@@ -74,7 +74,7 @@
       @for (inv of items; track inv.id) {
       <tr>
         <td><strong>{{ inv.invoiceNumber }}</strong></td>
-        <td>{{ inv.invoiceDate | date:'dd.MM.yyyy' }}</td>
+        <td>{{ inv.invoiceDate | date:'dd.MM.yyyy HH:mm' }}</td>
         <td [style.color]="lookups.getColor('InvoiceType', inv.invoiceType)" style="font-weight: 500;">
           {{ typeLabel(inv.invoiceType) }}
         </td>

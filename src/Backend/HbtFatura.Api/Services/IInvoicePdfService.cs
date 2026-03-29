@@ -1,6 +1,8 @@
 namespace HbtFatura.Api.Services;
 
+public sealed record InvoicePdfFile(byte[] Content, string InvoiceNumber);
+
 public interface IInvoicePdfService
 {
-    Task<byte[]?> GeneratePdfAsync(Guid invoiceId, CancellationToken ct = default);
+    Task<InvoicePdfFile?> GeneratePdfAsync(Guid invoiceId, CancellationToken ct = default);
 }

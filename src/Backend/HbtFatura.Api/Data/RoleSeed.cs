@@ -45,6 +45,9 @@ public static class RoleSeed
             new() { Id = Guid.NewGuid(), Group = "Faturalar", Code = "Invoices.Create", Name = "Oluştur" },
             new() { Id = Guid.NewGuid(), Group = "Faturalar", Code = "Invoices.Edit", Name = "Düzenle" },
             new() { Id = Guid.NewGuid(), Group = "Faturalar", Code = "Invoices.Delete", Name = "Sil" },
+
+            new() { Id = Guid.NewGuid(), Group = "GİB Simülasyonu", Code = "GibSimulation.ViewInbox", Name = "Kutu görüntüle" },
+            new() { Id = Guid.NewGuid(), Group = "GİB Simülasyonu", Code = "GibSimulation.Accept", Name = "Onayla / reddet" },
             
             new() { Id = Guid.NewGuid(), Group = "Siparişler", Code = "Orders.View", Name = "Görüntüle" },
             new() { Id = Guid.NewGuid(), Group = "Siparişler", Code = "Orders.Create", Name = "Oluştur" },
@@ -141,7 +144,7 @@ public static class RoleSeed
         {
             var firmPermCodes = new[] 
             { 
-                "Dashboard.View", "Invoices.", "Orders.", "DeliveryNotes.", "Products.", 
+                "Dashboard.View", "Invoices.", "GibSimulation.", "Orders.", "DeliveryNotes.", "Products.", 
                 "Employees.", "Customers.", "MainAccountCodes.", "Banking.", "Cash.", "Payments.", "Cheques.", 
                 "Reports.View", "CompanyProfile."
             };
@@ -170,7 +173,7 @@ public static class RoleSeed
         {
             var empPermCodes = new[] 
             { 
-                "Dashboard.View", "Invoices.", "Orders.", "DeliveryNotes.", "Products.", 
+                "Dashboard.View", "Invoices.", "GibSimulation.", "Orders.", "DeliveryNotes.", "Products.", 
                 "Customers.", "MainAccountCodes.", "Banking.", "Cash.", "Payments.", "Cheques.", 
                 "Reports.View", "CompanyProfile.View" // Note: ONLY View for CompanyProfile
             };
@@ -201,6 +204,7 @@ public static class RoleSeed
         {
             new() { Label = "Dashboard", Icon = "dashboard", RouterLink = "/dashboard", SortOrder = 1, RequiredPermissionCode = "Dashboard.View" },
             new() { Label = "Faturalar", Icon = "receipt", RouterLink = "/invoices", SortOrder = 2, RequiredPermissionCode = "Invoices.View" },
+            new() { Label = "GİB Kutusu (simülasyon)", Icon = "description", RouterLink = "/gib-simulation/inbox", SortOrder = 25, RequiredPermissionCode = "GibSimulation.ViewInbox" },
             new() { Label = "Siparişler", Icon = "shopping_cart", RouterLink = "/orders", SortOrder = 3, RequiredPermissionCode = "Orders.View" },
             new() { Label = "İrsaliyeler", Icon = "local_shipping", RouterLink = "/delivery-notes", SortOrder = 4, RequiredPermissionCode = "DeliveryNotes.View" },
             new() { Label = "Ürünler", Icon = "inventory_2", RouterLink = "/products", SortOrder = 5, RequiredPermissionCode = "Products.View" },

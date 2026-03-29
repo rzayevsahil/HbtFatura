@@ -35,6 +35,10 @@
       <span class="status-badge {{ statusClass(invoice.status) }}">{{ statusLabel(invoice.status, invoice.sourceType) }}</span>
     </span>
   </div>
+  <div class="info-item">
+    <span class="info-label">Oluşturan:</span>
+    <span class="info-value">{{ invoice.createdByUserName || '—' }}</span>
+  </div>
 </div>
 <h2 class="section-title">Kalemler</h2>
 <div class="card table-wrap">
@@ -90,16 +94,21 @@
   <button type="button" class="btn btn-primary" (click)="downloadPdf()">PDF İndir</button>
   }
   } @else {
-  @if (!invoice.isGibSent) {
+  @if (invoice.status === 4) {
+  <p class="text-muted gib-sim-note">
+    <strong>GİB simülasyonu:</strong> Fatura karşı firmanın kutusunda; onay sonrası kesinleşir ve cari/stok işlenir. Bu süreç gerçek GİB entegrasyonu değildir.
+  </p>
+  <button type="button" class="btn btn-primary" (click)="downloadPdf()">PDF Önizleme</button>
+  } @else if (!invoice.isGibSent) {
   <select [(ngModel)]="selectedScenario" class="btn btn-default" style="width: auto; margin-right: 10px; height: 38px;">
     <option [ngValue]="0">Temel Fatura</option>
     <option [ngValue]="1">Ticari Fatura</option>
   </select>
   <button type="button" class="btn btn-primary" (click)="sendToGib()" [disabled]="sendingGib">
-    {{ sendingGib ? 'Gönderiliyor...' : 'GİB\'e Gönder' }}
+    {{ sendingGib ? 'Gönderiliyor...' : 'GİB simülasyonuna gönder' }}
   </button>
   <span class="text-muted" style="margin-right: 15px; font-size: 0.9em;">
-    * Faturayı PDF olarak indirebilmek için önce GİB'e göndermelisiniz.
+    * Karşı tarafın şirket profilindeki VKN eşleşmesi gerekir. Simülasyondur; gerçek GİB değildir.
   </span>
   } @else {
   <button type="button" class="btn btn-primary" (click)="downloadPdf()">PDF İndir</button>

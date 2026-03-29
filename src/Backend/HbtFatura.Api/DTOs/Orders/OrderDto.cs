@@ -25,6 +25,8 @@ public class OrderDto
     public int Status { get; set; }
     public int OrderType { get; set; }
     public DateTime CreatedAt { get; set; }
+    public Guid CreatedByUserId { get; set; }
+    public string? CreatedByUserName { get; set; }
     public Guid? DeliveryNoteId { get; set; }
     public string? DeliveryNoteNumber { get; set; }
     public List<OrderItemDto> Items { get; set; } = new();

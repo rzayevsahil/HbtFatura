@@ -1,6 +1,6 @@
 import { InvoiceType } from './common.model';
 
-export type InvoiceStatus = 0 | 1 | 2 | 3; // Draft, Issued, Paid, Cancelled
+export type InvoiceStatus = 0 | 1 | 2 | 3 | 4; // Draft, Issued, Paid, Cancelled, PendingGibAcceptance
 export type InvoiceScenario = 0 | 1; // TemelFatura, TicariFatura
 
 export interface InvoiceItemDto {
@@ -55,6 +55,8 @@ export interface InvoiceDto {
     sourceId?: string | null;
     sourceNumber?: string | null;
     isGibSent?: boolean;
+    createdByUserId?: string;
+    createdByUserName?: string | null;
 }
 
 export interface InvoiceListDto {

@@ -13,4 +13,6 @@ public interface IInvoiceService
     Task<InvoiceDto?> UpdateAsync(Guid id, UpdateInvoiceRequest request, byte[]? rowVersion, CancellationToken ct = default);
     Task<bool> SendToGibAsync(Guid id, InvoiceScenario scenario, CancellationToken ct = default);
     Task<bool> SetStatusAsync(Guid id, InvoiceStatus status, CancellationToken ct = default);
+    /// <summary>Karşı taraf GİB simülasyonu onayı: stok/cari + kesinleşme (aynı DbContext üzerinde izlenen fatura).</summary>
+    Task ApplyIssuedForGibAcceptedSaleAsync(Invoice invoice, Guid actingUserId, CancellationToken ct = default);
 }

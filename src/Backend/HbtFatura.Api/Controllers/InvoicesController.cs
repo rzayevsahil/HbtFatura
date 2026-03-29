@@ -113,12 +113,10 @@ public class InvoicesController : ControllerBase
     [HttpGet("{id:guid}/pdf")]
     public async Task<IActionResult> GetPdf(Guid id, CancellationToken ct)
     {
-        var invoice = await _service.GetByIdAsync(id, ct);
-        if (invoice == null) return NotFound();
         var pdf = await _pdfService.GeneratePdfAsync(id, ct);
         if (pdf == null) return NotFound();
-        var suffix = SafeInvoicePdfFileSuffix(invoice.InvoiceNumber, id);
-        return File(pdf, "application/pdf", $"fatura-{suffix}.pdf");
+        var suffix = SafeInvoicePdfFileSuffix(pdf.InvoiceNumber, id);
+        return File(pdf.Content, "application/pdf", $"fatura-{suffix}.pdf");
     }
 
     /// <summary>Detay ekranı / liste ile aynı: fatura-{InvoiceNumber}.pdf; geçersiz dosya adı karakterleri '_' yapılır.</summary>

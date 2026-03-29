@@ -39,6 +39,8 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, 
     public DbSet<Permission> Permissions => Set<Permission>();
     public DbSet<RolePermission> RolePermissions => Set<RolePermission>();
     public DbSet<Menu> Menus => Set<Menu>();
+    public DbSet<GibSimulationSubmission> GibSimulationSubmissions => Set<GibSimulationSubmission>();
+    public DbSet<UserNotification> UserNotifications => Set<UserNotification>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -277,6 +279,34 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, 
             e.HasIndex(x => x.ParentId);
             e.HasIndex(x => x.RequiredPermissionCode);
             e.Property(x => x.SortOrder).HasDefaultValue(0);
+        });
+
+        modelBuilder.Entity<GibSimulationSubmission>(e =>
+        {
+            e.HasOne(x => x.Invoice).WithMany().HasForeignKey(x => x.InvoiceId).OnDelete(DeleteBehavior.Cascade);
+            e.HasOne(x => x.SenderUser).WithMany().HasForeignKey(x => x.SenderUserId).OnDelete(DeleteBehavior.Restrict);
+            e.HasOne(x => x.SenderFirm).WithMany().HasForeignKey(x => x.SenderFirmId).OnDelete(DeleteBehavior.Restrict);
+            e.HasOne(x => x.RecipientFirm).WithMany().HasForeignKey(x => x.RecipientFirmId).OnDelete(DeleteBehavior.Restrict);
+            e.HasOne(x => x.ResolvedByUser).WithMany().HasForeignKey(x => x.ResolvedByUserId).OnDelete(DeleteBehavior.SetNull);
+            e.HasIndex(x => x.InvoiceId)
+                .IsUnique()
+                .HasFilter("[Status] = 0");
+            e.HasIndex(x => x.SenderUserId);
+            e.HasIndex(x => x.ResolvedByUserId);
+            e.HasIndex(x => new { x.RecipientFirmId, x.Status });
+            e.HasIndex(x => new { x.SenderFirmId, x.Status });
+            e.Property(x => x.RecipientTaxNumber).HasMaxLength(32);
+        });
+
+        modelBuilder.Entity<UserNotification>(e =>
+        {
+            e.HasOne(x => x.User).WithMany().HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Cascade);
+            e.HasIndex(x => new { x.UserId, x.ReadAt });
+            e.HasIndex(x => x.CreatedAt);
+            e.Property(x => x.Type).HasMaxLength(64);
+            e.Property(x => x.Title).HasMaxLength(256);
+            e.Property(x => x.Body).HasMaxLength(1024);
+            e.Property(x => x.ReferenceType).HasMaxLength(64);
         });
     }
 }

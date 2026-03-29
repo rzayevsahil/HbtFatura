@@ -29,6 +29,8 @@ public class DeliveryNoteDto
     public int Status { get; set; }
     public int DeliveryType { get; set; }
     public DateTime CreatedAt { get; set; }
+    public Guid CreatedByUserId { get; set; }
+    public string? CreatedByUserName { get; set; }
     public List<DeliveryNoteItemDto> Items { get; set; } = new();
 }
 

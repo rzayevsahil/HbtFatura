@@ -26,6 +26,8 @@ export interface DeliveryNoteDto {
     status: DeliveryNoteStatus | string;
     deliveryType: InvoiceType;
     createdAt: string;
+    createdByUserId?: string;
+    createdByUserName?: string | null;
     items: DeliveryNoteItemDto[];
 }
 

@@ -13,6 +13,7 @@ import {
   CustomerDto, CashRegisterDto, BankAccountDto, ProductDto
 } from '../core/models';
 import { ToastrService } from 'ngx-toastr';
+import { LookupService } from '../core/services/lookup.service';
 
 @Component({
   selector: 'app-reports',
@@ -66,7 +67,8 @@ export class ReportsComponent implements OnInit {
     private cashApi: CashRegisterService,
     private bankApi: BankAccountService,
     private productApi: ProductService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    public lookups: LookupService
   ) { }
 
   ngOnInit(): void {
@@ -252,7 +254,6 @@ export class ReportsComponent implements OnInit {
   }
 
   statusLabel(s: number): string {
-    const map: Record<number, string> = { 0: 'Taslak', 1: 'Kesildi', 2: 'Ödendi', 3: 'İptal' };
-    return map[s] ?? '';
+    return this.lookups.getName('InvoiceStatus', s);
   }
 }

@@ -4,6 +4,7 @@ using HbtFatura.Api.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HbtFatura.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260329020505_mig_3")]
+    partial class mig_3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -70,7 +73,7 @@ namespace HbtFatura.Api.Migrations
 
                     b.HasIndex("CustomerId", "Date");
 
-                    b.ToTable("AccountTransactions", (string)null);
+                    b.ToTable("AccountTransactions");
                 });
 
             modelBuilder.Entity("HbtFatura.Api.Entities.ApplicationRole", b =>
@@ -215,7 +218,7 @@ namespace HbtFatura.Api.Migrations
 
                     b.HasIndex("FirmId");
 
-                    b.ToTable("BankAccounts", (string)null);
+                    b.ToTable("BankAccounts");
                 });
 
             modelBuilder.Entity("HbtFatura.Api.Entities.BankTransaction", b =>
@@ -257,7 +260,7 @@ namespace HbtFatura.Api.Migrations
 
                     b.HasIndex("BankAccountId", "Date");
 
-                    b.ToTable("BankTransactions", (string)null);
+                    b.ToTable("BankTransactions");
                 });
 
             modelBuilder.Entity("HbtFatura.Api.Entities.CashRegister", b =>
@@ -287,7 +290,7 @@ namespace HbtFatura.Api.Migrations
 
                     b.HasIndex("FirmId");
 
-                    b.ToTable("CashRegisters", (string)null);
+                    b.ToTable("CashRegisters");
                 });
 
             modelBuilder.Entity("HbtFatura.Api.Entities.CashTransaction", b =>
@@ -329,7 +332,7 @@ namespace HbtFatura.Api.Migrations
 
                     b.HasIndex("CashRegisterId", "Date");
 
-                    b.ToTable("CashTransactions", (string)null);
+                    b.ToTable("CashTransactions");
                 });
 
             modelBuilder.Entity("HbtFatura.Api.Entities.ChequeOrPromissory", b =>
@@ -398,7 +401,7 @@ namespace HbtFatura.Api.Migrations
                     b.HasIndex("FirmId", "PortfolioNumber")
                         .IsUnique();
 
-                    b.ToTable("ChequeOrPromissories", (string)null);
+                    b.ToTable("ChequeOrPromissories");
                 });
 
             modelBuilder.Entity("HbtFatura.Api.Entities.City", b =>
@@ -423,7 +426,7 @@ namespace HbtFatura.Api.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Cities", (string)null);
+                    b.ToTable("Cities");
                 });
 
             modelBuilder.Entity("HbtFatura.Api.Entities.CompanySettings", b =>
@@ -487,7 +490,7 @@ namespace HbtFatura.Api.Migrations
 
                     b.HasIndex("TaxOfficeId");
 
-                    b.ToTable("CompanySettings", (string)null);
+                    b.ToTable("CompanySettings");
                 });
 
             modelBuilder.Entity("HbtFatura.Api.Entities.Customer", b =>
@@ -577,7 +580,7 @@ namespace HbtFatura.Api.Migrations
                         .IsUnique()
                         .HasFilter("[Code] IS NOT NULL");
 
-                    b.ToTable("Customers", (string)null);
+                    b.ToTable("Customers");
                 });
 
             modelBuilder.Entity("HbtFatura.Api.Entities.DeliveryNote", b =>
@@ -634,7 +637,7 @@ namespace HbtFatura.Api.Migrations
                     b.HasIndex("UserId", "DeliveryNumber")
                         .IsUnique();
 
-                    b.ToTable("DeliveryNotes", (string)null);
+                    b.ToTable("DeliveryNotes");
                 });
 
             modelBuilder.Entity("HbtFatura.Api.Entities.DeliveryNoteItem", b =>
@@ -684,7 +687,7 @@ namespace HbtFatura.Api.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("DeliveryNoteItems", (string)null);
+                    b.ToTable("DeliveryNoteItems");
                 });
 
             modelBuilder.Entity("HbtFatura.Api.Entities.District", b =>
@@ -705,7 +708,7 @@ namespace HbtFatura.Api.Migrations
                     b.HasIndex("CityId", "Name")
                         .IsUnique();
 
-                    b.ToTable("Districts", (string)null);
+                    b.ToTable("Districts");
                 });
 
             modelBuilder.Entity("HbtFatura.Api.Entities.Firm", b =>
@@ -725,7 +728,7 @@ namespace HbtFatura.Api.Migrations
 
                     b.HasIndex("Name");
 
-                    b.ToTable("Firms", (string)null);
+                    b.ToTable("Firms");
                 });
 
             modelBuilder.Entity("HbtFatura.Api.Entities.GibSimulationSubmission", b =>
@@ -777,7 +780,7 @@ namespace HbtFatura.Api.Migrations
 
                     b.HasIndex("SenderFirmId", "Status");
 
-                    b.ToTable("GibSimulationSubmissions", (string)null);
+                    b.ToTable("GibSimulationSubmissions");
                 });
 
             modelBuilder.Entity("HbtFatura.Api.Entities.Invoice", b =>
@@ -894,7 +897,7 @@ namespace HbtFatura.Api.Migrations
                     b.HasIndex("UserId", "InvoiceNumber")
                         .IsUnique();
 
-                    b.ToTable("Invoices", (string)null);
+                    b.ToTable("Invoices");
                 });
 
             modelBuilder.Entity("HbtFatura.Api.Entities.InvoiceItem", b =>
@@ -954,7 +957,7 @@ namespace HbtFatura.Api.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("InvoiceItems", (string)null);
+                    b.ToTable("InvoiceItems");
                 });
 
             modelBuilder.Entity("HbtFatura.Api.Entities.LogEntry", b =>
@@ -1000,7 +1003,7 @@ namespace HbtFatura.Api.Migrations
 
                     b.HasIndex("Timestamp");
 
-                    b.ToTable("LogEntries", (string)null);
+                    b.ToTable("LogEntries");
                 });
 
             modelBuilder.Entity("HbtFatura.Api.Entities.Lookup", b =>
@@ -1035,7 +1038,7 @@ namespace HbtFatura.Api.Migrations
 
                     b.HasIndex("LookupGroupId", "IsActive");
 
-                    b.ToTable("Lookups", (string)null);
+                    b.ToTable("Lookups");
                 });
 
             modelBuilder.Entity("HbtFatura.Api.Entities.LookupGroup", b =>
@@ -1063,7 +1066,7 @@ namespace HbtFatura.Api.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("LookupGroups", (string)null);
+                    b.ToTable("LookupGroups");
                 });
 
             modelBuilder.Entity("HbtFatura.Api.Entities.MainAccountCode", b =>
@@ -1101,7 +1104,7 @@ namespace HbtFatura.Api.Migrations
                         .IsUnique()
                         .HasFilter("[FirmId] IS NOT NULL");
 
-                    b.ToTable("MainAccountCodes", (string)null);
+                    b.ToTable("MainAccountCodes");
                 });
 
             modelBuilder.Entity("HbtFatura.Api.Entities.Menu", b =>
@@ -1143,7 +1146,7 @@ namespace HbtFatura.Api.Migrations
 
                     b.HasIndex("RequiredPermissionCode");
 
-                    b.ToTable("Menus", (string)null);
+                    b.ToTable("Menus");
                 });
 
             modelBuilder.Entity("HbtFatura.Api.Entities.Order", b =>
@@ -1192,7 +1195,7 @@ namespace HbtFatura.Api.Migrations
                     b.HasIndex("UserId", "OrderNumber")
                         .IsUnique();
 
-                    b.ToTable("Orders", (string)null);
+                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("HbtFatura.Api.Entities.OrderItem", b =>
@@ -1237,7 +1240,7 @@ namespace HbtFatura.Api.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("OrderItems", (string)null);
+                    b.ToTable("OrderItems");
                 });
 
             modelBuilder.Entity("HbtFatura.Api.Entities.Permission", b =>
@@ -1268,7 +1271,7 @@ namespace HbtFatura.Api.Migrations
 
                     b.HasIndex("Group");
 
-                    b.ToTable("Permissions", (string)null);
+                    b.ToTable("Permissions");
                 });
 
             modelBuilder.Entity("HbtFatura.Api.Entities.Product", b =>
@@ -1317,7 +1320,7 @@ namespace HbtFatura.Api.Migrations
                     b.HasIndex("FirmId", "Code")
                         .IsUnique();
 
-                    b.ToTable("Products", (string)null);
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("HbtFatura.Api.Entities.RefreshToken", b =>
@@ -1357,7 +1360,7 @@ namespace HbtFatura.Api.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("RefreshTokens", (string)null);
+                    b.ToTable("RefreshTokens");
                 });
 
             modelBuilder.Entity("HbtFatura.Api.Entities.RolePermission", b =>
@@ -1372,7 +1375,7 @@ namespace HbtFatura.Api.Migrations
 
                     b.HasIndex("PermissionId");
 
-                    b.ToTable("RolePermissions", (string)null);
+                    b.ToTable("RolePermissions");
                 });
 
             modelBuilder.Entity("HbtFatura.Api.Entities.StockMovement", b =>
@@ -1413,7 +1416,7 @@ namespace HbtFatura.Api.Migrations
 
                     b.HasIndex("ProductId", "Date");
 
-                    b.ToTable("StockMovements", (string)null);
+                    b.ToTable("StockMovements");
                 });
 
             modelBuilder.Entity("HbtFatura.Api.Entities.TaxOffice", b =>
@@ -1444,7 +1447,7 @@ namespace HbtFatura.Api.Migrations
 
                     b.HasIndex("Name");
 
-                    b.ToTable("TaxOffices", (string)null);
+                    b.ToTable("TaxOffices");
                 });
 
             modelBuilder.Entity("HbtFatura.Api.Entities.UserNotification", b =>
@@ -1493,7 +1496,7 @@ namespace HbtFatura.Api.Migrations
 
                     b.HasIndex("UserId", "ReadAt");
 
-                    b.ToTable("UserNotifications", (string)null);
+                    b.ToTable("UserNotifications");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
