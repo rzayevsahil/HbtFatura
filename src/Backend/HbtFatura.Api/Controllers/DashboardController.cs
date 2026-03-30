@@ -105,7 +105,7 @@ public class DashboardController : ControllerBase
                 Id = f.CompanySettings?.TaxNumber ?? "N/A",
                 Customer = f.Name,
                 Amount = "-", // Not applicable for firms
-                Date = f.CreatedAt.ToString("dd.MM.yyyy"),
+                Date = f.CreatedAt.ToString("dd.MM.yyyy HH:mm"),
                 Status = "Aktif",
                 StatusCode = null
             }).ToList();
@@ -187,7 +187,7 @@ public class DashboardController : ControllerBase
                 Id = i.InvoiceNumber,
                 Customer = i.CustomerTitle,
                 Amount = $"₺{i.GrandTotal:N2}",
-                Date = i.InvoiceDate.ToString("dd.MM.yyyy"),
+                Date = i.InvoiceDate.ToString("dd.MM.yyyy HH:mm"),
                 Status = LookupMaps.FormatIntCode((int)i.Status, invoiceStatusLabels),
                 StatusCode = (int)i.Status
             }).ToList();

@@ -184,15 +184,29 @@
     }
 }
 
+.table-responsive {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
 /* Table styling override */
 .dashboard-table {
-    width: 100%;
+    width: max-content;
+    min-width: 100%;
     border-collapse: collapse;
     font-size: 0.9375rem;
+    table-layout: auto;
+
+    th,
+    td {
+        vertical-align: middle;
+    }
 
     th {
         text-align: left;
-        padding: 1rem 1.5rem;
+        padding: 0.875rem 1rem;
         background: var(--color-background);
         color: var(--color-text-muted);
         font-weight: 600;
@@ -202,9 +216,42 @@
     }
 
     td {
-        padding: 1rem 1.5rem;
+        padding: 0.875rem 1rem;
         border-bottom: 1px solid var(--color-border);
         color: var(--color-text);
+    }
+
+    .dashboard-col-nowrap {
+        white-space: nowrap;
+    }
+
+    .dashboard-col-id {
+        width: 1%;
+        white-space: nowrap;
+    }
+
+    .dashboard-col-amount {
+        width: 1%;
+        white-space: nowrap;
+    }
+
+    .dashboard-col-date {
+        width: 1%;
+        white-space: nowrap;
+    }
+
+    .dashboard-col-status,
+    .dashboard-col-status-cell {
+        width: 1%;
+        white-space: nowrap;
+    }
+
+    .dashboard-col-customer,
+    .dashboard-col-customer-cell {
+        min-width: 12.5rem;
+        max-width: 24rem;
+        white-space: normal;
+        overflow-wrap: break-word;
     }
 
     tr:last-child td {

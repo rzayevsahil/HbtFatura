@@ -59,31 +59,31 @@
                     <thead>
                         @if (auth.user()?.role === 'SuperAdmin') {
                         <tr>
-                            <th>{{ 'dashboard.colTaxNo' | translate }}</th>
-                            <th>{{ 'dashboard.colCompanyName' | translate }}</th>
-                            <th>{{ 'dashboard.colRegDate' | translate }}</th>
-                            <th>{{ 'dashboard.colStatus' | translate }}</th>
+                            <th class="dashboard-col-id">{{ 'dashboard.colTaxNo' | translate }}</th>
+                            <th class="dashboard-col-customer">{{ 'dashboard.colCompanyName' | translate }}</th>
+                            <th class="dashboard-col-date">{{ 'dashboard.colRegDate' | translate }}</th>
+                            <th class="dashboard-col-status">{{ 'dashboard.colStatus' | translate }}</th>
                         </tr>
                         } @else {
                         <tr>
-                            <th>{{ 'dashboard.colInvoiceNo' | translate }}</th>
-                            <th>{{ 'dashboard.colCustomer' | translate }}</th>
-                            <th>{{ 'dashboard.colAmount' | translate }}</th>
-                            <th>{{ 'dashboard.colDate' | translate }}</th>
-                            <th>{{ 'dashboard.colStatus' | translate }}</th>
+                            <th class="dashboard-col-id">{{ 'dashboard.colInvoiceNo' | translate }}</th>
+                            <th class="dashboard-col-customer">{{ 'dashboard.colCustomer' | translate }}</th>
+                            <th class="dashboard-col-amount">{{ 'dashboard.colAmount' | translate }}</th>
+                            <th class="dashboard-col-date">{{ 'dashboard.colDate' | translate }}</th>
+                            <th class="dashboard-col-status">{{ 'dashboard.colStatus' | translate }}</th>
                         </tr>
                         }
                     </thead>
                     <tbody>
                         @for (inv of data()?.recentInvoices; track inv.id) {
                         <tr>
-                            <td class="id-cell">{{ inv.id }}</td>
-                            <td>{{ inv.customer }}</td>
+                            <td class="id-cell dashboard-col-nowrap">{{ inv.id }}</td>
+                            <td class="dashboard-col-customer-cell">{{ inv.customer }}</td>
                             @if (auth.user()?.role !== 'SuperAdmin') {
-                            <td class="amount-cell">{{ inv.amount }}</td>
+                            <td class="amount-cell dashboard-col-nowrap">{{ inv.amount }}</td>
                             }
-                            <td>{{ inv.date }}</td>
-                            <td>
+                            <td class="dashboard-col-nowrap">{{ inv.date }}</td>
+                            <td class="dashboard-col-status-cell">
                                 <span class="status-badge"
                                     [class.bg-success]="inv.statusCode === 2 || inv.status === 'Aktif' || inv.status === 'Active'"
                                     [class.bg-warning]="inv.statusCode === 1 || inv.statusCode === 4"
