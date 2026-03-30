@@ -2,6 +2,13 @@
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  --sidebar-width-open: 260px;
+  --sidebar-width: var(--sidebar-width-open);
+  --sidebar-width-collapsed: 72px;
+}
+
+.layout.layout--sidebar-collapsed {
+  --sidebar-width: var(--sidebar-width-collapsed);
 }
 
 .header {
@@ -17,6 +24,41 @@
   left: 0;
   right: 0;
   z-index: 101;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.header-sidebar-toggle {
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, transform 0.15s, border-color 0.15s;
+  position: fixed;
+  top: 8px;
+  left: calc(var(--sidebar-width-open) - 50px);
+  z-index: 102;
+
+  &:hover {
+    background: var(--color-background);
+    border-color: var(--color-primary-light);
+    transform: translateY(-1px);
+  }
+
+  .material-icons {
+    font-size: 22px;
+    line-height: 1;
+  }
 }
 
 .header-brand {
@@ -299,8 +341,8 @@
 }
 
 .sidebar {
-  width: 260px;
-  min-width: 260px;
+  width: var(--sidebar-width);
+  min-width: var(--sidebar-width);
   background: var(--color-surface);
   border-right: 1px solid var(--color-border);
   display: flex;
@@ -310,12 +352,69 @@
   left: 0;
   bottom: 0;
   z-index: 100;
+  transition: width 0.2s ease, min-width 0.2s ease;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.sidebar-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 0.75rem 0.5rem;
+}
+
+.sidebar-brand {
+  font-weight: 800;
+  color: var(--color-primary);
+  font-size: 1.15rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.layout.layout--sidebar-collapsed .sidebar-top-row {
+  justify-content: center;
+}
+
+.layout.layout--sidebar-collapsed .sidebar-brand {
+  display: none;
+}
+
+.sidebar-toggle {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  background: var(--color-surface);
+  cursor: pointer;
+  transition: background 0.15s, transform 0.15s, border-color 0.15s;
+  align-self: auto;
+  margin: 0;
+
+  &:hover {
+    background: var(--color-background);
+    border-color: var(--color-primary-light);
+    transform: translateY(-1px);
+  }
+
+  .sidebar-toggle-icon {
+    font-size: 22px;
+    line-height: 1;
+    color: var(--color-text-muted);
+  }
 }
 
 .sidebar-nav {
   flex: 1;
-  padding: 0.75rem 0;
+  padding: 0.75rem 0 0.5rem;
   overflow-y: auto;
+  overflow-x: hidden;
   display: flex;
   flex-direction: column;
   gap: 0.125rem;
@@ -329,16 +428,30 @@
     color: var(--color-text-muted);
     font-weight: 500;
     font-size: 0.9375rem;
-    transition: color 0.15s, background 0.15s;
+    transition: color 0.15s, background 0.15s, padding 0.2s ease, border-color 0.15s;
     border-left: 3px solid transparent;
 
     .nav-icon {
+      flex-shrink: 0;
       font-size: 1.25rem;
-      width: 20px;
-      height: 20px;
+      width: 24px;
+      height: 24px;
       display: flex;
       align-items: center;
       justify-content: center;
+    }
+
+    .nav-icon-fallback {
+      font-size: 1.125rem !important;
+      opacity: 0.55;
+    }
+
+    .nav-label {
+      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      transition: opacity 0.15s ease;
     }
 
     &:hover {
@@ -352,6 +465,33 @@
       border-left-color: var(--color-primary);
     }
   }
+
+  .nav-group-label {
+    padding: 0.5rem 1.5rem 0.25rem;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-text-muted);
+    transition: opacity 0.15s ease, padding 0.2s ease, min-height 0.2s ease;
+  }
+}
+
+.layout.layout--sidebar-collapsed .sidebar-nav {
+  a {
+    justify-content: center;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    gap: 0;
+
+    .nav-label {
+      display: none;
+    }
+  }
+
+  .nav-group-label {
+    display: none;
+  }
 }
 
 .main-content {
@@ -362,9 +502,10 @@
 }
 
 .layout .main-content {
-  margin-left: 260px;
+  margin-left: var(--sidebar-width);
   margin-top: 56px;
   padding: 1.5rem;
+  transition: margin-left 0.2s ease;
 }
 
 .logout-overlay {

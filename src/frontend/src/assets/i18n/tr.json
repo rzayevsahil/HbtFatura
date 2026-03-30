@@ -15,7 +15,9 @@
     "loggingOut": "Oturum kapatılıyor...",
     "langTurkish": "TR",
     "langEnglish": "EN",
-    "langPickAria": "Dil seçimi"
+    "langPickAria": "Dil seçimi",
+    "sidebarCollapse": "Menüyü daralt",
+    "sidebarExpand": "Menüyü genişlet"
   },
   "auth": {
     "loginTitle": "Giriş",

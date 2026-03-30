@@ -16,13 +16,21 @@
 
 
 
-<div [class.layout]="showAppChrome()">
+<div [class.layout]="showAppChrome()" [class.layout--sidebar-collapsed]="showAppChrome() && sidebarCollapsed()">
 
   @if (showAppChrome()) {
 
   <header class="header">
 
-    <span class="header-brand">{{ 'app.brand' | translate }}</span>
+    <div class="header-left">
+      <span class="header-brand">{{ 'app.brand' | translate }}</span>
+
+      <button type="button" class="header-sidebar-toggle" (click)="toggleSidebar()"
+        [attr.aria-expanded]="!sidebarCollapsed()"
+        [attr.aria-label]="(sidebarCollapsed() ? 'app.sidebarExpand' : 'app.sidebarCollapse') | translate">
+        <span class="material-icons" aria-hidden="true">{{ sidebarCollapsed() ? 'menu' : 'close' }}</span>
+      </button>
+    </div>
 
     <div class="header-right">
 
@@ -160,30 +168,35 @@
 
 
   <aside class="sidebar">
-
     <nav class="sidebar-nav">
 
-      @for (item of menu.menu(); track item.id) {
+      @for (entry of sidebarNavEntries(); track entry.kind + '-' + entry.item.id + '-' + entry.depth) {
 
-      @if (item.routerLink) {
+      @if (entry.kind === 'link') {
 
-      <a [routerLink]="item.routerLink" routerLinkActive="active">
+      <a [routerLink]="entry.item.routerLink!" routerLinkActive="active"
+        [title]="menuDisplayLabel(entry.item)"
+        [style.paddingLeft.rem]="sidebarCollapsed() ? null : sidebarIndentRem(entry.depth)">
 
-        @if (item.icon) { <span class="nav-icon material-icons">{{ item.icon }}</span> }
+        @if (entry.item.icon) { <span class="nav-icon material-icons">{{ entry.item.icon }}</span> } @else {
+        <span class="nav-icon nav-icon-fallback material-icons" aria-hidden="true">label</span>
+        }
 
-        {{ menuDisplayLabel(item) }}
+        <span class="nav-label">{{ menuDisplayLabel(entry.item) }}</span>
 
       </a>
 
       } @else {
 
-      <div class="nav-group-label">{{ menuDisplayLabel(item) }}</div>
+      <div class="nav-group-label" [style.paddingLeft.rem]="sidebarCollapsed() ? null : sidebarIndentRem(entry.depth)">
+
+        {{ menuDisplayLabel(entry.item) }}
+
+      </div>
 
       }
 
       }
-
-
 
     </nav>
 

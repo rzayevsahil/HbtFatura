@@ -15,7 +15,9 @@
     "loggingOut": "Signing out...",
     "langTurkish": "TR",
     "langEnglish": "EN",
-    "langPickAria": "Choose language"
+    "langPickAria": "Choose language",
+    "sidebarCollapse": "Collapse menu",
+    "sidebarExpand": "Expand menu"
   },
   "auth": {
     "loginTitle": "Sign in",
