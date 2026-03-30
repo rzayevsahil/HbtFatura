@@ -70,6 +70,23 @@
     "activitiesSuperAdmin": "Sistem Hareketleri",
     "activitiesFirm": "Son Hareketler",
     "noActivity": "Son hareket bulunmuyor.",
+    "activityTitles": {
+      "SendToGib": "GİB'e gönderildi",
+      "SendToGibAsync": "GİB'e gönderildi",
+      "Sent to GİB": "GİB'e gönderildi",
+      "Login": "Giriş",
+      "Register": "Kayıt",
+      "UpdateProfile": "Profil güncellendi",
+      "CreateFromDeliveryNote": "İrsaliyeden fatura oluşturuldu",
+      "CreateFromDeliveryNoteAsync": "İrsaliyeden fatura oluşturuldu",
+      "Invoice created from delivery note": "İrsaliyeden fatura oluşturuldu",
+      "SetStatus": "Durum güncellendi",
+      "SetStatusAsync": "Durum güncellendi",
+      "Status updated": "Durum güncellendi",
+      "CreateFromOrder": "Siparişten fatura oluşturuldu",
+      "CreateFromOrderAsync": "Siparişten fatura oluşturuldu",
+      "Invoice created from order": "Siparişten fatura oluşturuldu"
+    },
     "stats": {
       "monthly_sales": { "label": "Aylık Satış" },
       "pending_collection": { "label": "Bekleyen Tahsilat" },

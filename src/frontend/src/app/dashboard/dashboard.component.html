@@ -152,9 +152,9 @@
                     <div class="activity-item">
                         <div class="activity-icon" [class]="act.type"></div>
                         <div class="activity-info">
-                            <span class="activity-title">{{ act.title }}</span>
-                            <p class="activity-desc">{{ act.description }}</p>
-                            <span class="activity-time">{{ act.time }}</span>
+                            <span class="activity-title">{{ activityTitle(act.title) }}</span>
+                            <p class="activity-desc">{{ activityDescription(act.description, act.title) }}</p>
+                            <span class="activity-time">{{ activityTimeAgo(act.time) }}</span>
                         </div>
                     </div>
                     }
