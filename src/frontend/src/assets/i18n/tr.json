@@ -222,6 +222,11 @@
     "month11": "Kasım",
     "month12": "Aralık"
   },
+  "iconPicker": {
+    "title": "İkon seçin",
+    "searchPlaceholder": "Ada göre filtrele…",
+    "noResults": "Aramanıza uygun ikon yok."
+  },
   "invoices": {
     "pageTitle": "Faturalar",
     "searchLabel": "Ara (FaturaNo/Cari)",
@@ -751,6 +756,8 @@
     "labelPlaceholder": "Menü adı",
     "icon": "İkon (Material Icon)",
     "iconPlaceholder": "home, settings vb.",
+    "pickIcon": "İkon listesi",
+    "pickIconAria": "İkon galerisini aç",
     "order": "Sıralama",
     "route": "Rota (Router Link)",
     "routePlaceholder": "/dashboard, /invoices vb.",

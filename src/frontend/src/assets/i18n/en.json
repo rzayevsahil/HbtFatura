@@ -234,6 +234,11 @@
     "month11": "November",
     "month12": "December"
   },
+  "iconPicker": {
+    "title": "Choose an icon",
+    "searchPlaceholder": "Filter by name…",
+    "noResults": "No icons match your search."
+  },
   "invoices": {
     "pageTitle": "Invoices",
     "searchLabel": "Search (invoice no. / customer)",
@@ -747,6 +752,8 @@
     "labelPlaceholder": "Menu name",
     "icon": "Icon (Material Icon)",
     "iconPlaceholder": "home, settings etc.",
+    "pickIcon": "Browse icons",
+    "pickIconAria": "Open icon gallery",
     "order": "Sort order",
     "route": "Route (Router Link)",
     "routePlaceholder": "/dashboard, /invoices etc.",

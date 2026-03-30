@@ -1,0 +1,23 @@
+<div class="icon-picker-backdrop" (click)="onBackdropClick()">
+  <div class="icon-picker-dialog" (click)="stopBubble($event)" role="dialog" aria-modal="true"
+    [attr.aria-label]="'iconPicker.title' | translate">
+    <div class="icon-picker-header">
+      <h2 class="icon-picker-title">{{ 'iconPicker.title' | translate }}</h2>
+      <button type="button" class="icon-picker-close" (click)="dismiss.emit()" [attr.aria-label]="'common.cancel' | translate">&times;</button>
+    </div>
+    <div class="icon-picker-toolbar">
+      <input type="search" class="icon-picker-search" [(ngModel)]="search"
+        [placeholder]="'iconPicker.searchPlaceholder' | translate" autocomplete="off">
+    </div>
+    <div class="icon-picker-body">
+      <button type="button" class="icon-tile" *ngFor="let name of filteredIcons"
+        (click)="pick(name)" [title]="name">
+        <span class="material-icons icon-tile-glyph">{{ name }}</span>
+        <span class="icon-tile-name">{{ name }}</span>
+      </button>
+      <p class="icon-picker-empty" *ngIf="filteredIcons.length === 0">
+        {{ 'iconPicker.noResults' | translate }}
+      </p>
+    </div>
+  </div>
+</div>

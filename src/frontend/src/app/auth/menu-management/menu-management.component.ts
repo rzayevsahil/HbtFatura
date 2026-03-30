@@ -20,11 +20,20 @@ import {
   isValidPreorderDepths,
   MenuRowVm
 } from './menu-reorder';
+import { IconPickerModalComponent } from '../../shared/icon-picker/icon-picker-modal.component';
+import { MaterialIconLigaturePipe } from '../../shared/icon-picker/material-icon-ligature.pipe';
 
 @Component({
   selector: 'app-menu-management',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslateModule, DragDropModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    TranslateModule,
+    DragDropModule,
+    IconPickerModalComponent,
+    MaterialIconLigaturePipe
+  ],
   templateUrl: './menu-management.component.html',
   styleUrls: ['./menu-management.component.scss']
 })
@@ -37,6 +46,8 @@ export class MenuManagementComponent implements OnInit {
   loading = signal(false);
 
   showModal = signal(false);
+  /** Material ikon galerisi (üstteki menü modalının üzerinde, z-index:1100) */
+  showIconPicker = signal(false);
   editingMenu = signal<Partial<MenuItem> | null>(null);
 
   readonly sortRows = (index: number, item: CdkDrag<MenuRowVm>, drop: CdkDropList<MenuRowVm[]>) => {
@@ -143,7 +154,25 @@ export class MenuManagementComponent implements OnInit {
 
   closeModal() {
     this.showModal.set(false);
+    this.showIconPicker.set(false);
     this.editingMenu.set(null);
+  }
+
+  openIconPicker(): void {
+    if (this.editingMenu()) {
+      this.showIconPicker.set(true);
+    }
+  }
+
+  onIconPicked(name: string): void {
+    const m = this.editingMenu();
+    if (!m) return;
+    this.editingMenu.set({ ...m, icon: name });
+    this.showIconPicker.set(false);
+  }
+
+  closeIconPicker(): void {
+    this.showIconPicker.set(false);
   }
 
   save() {

@@ -107,15 +107,22 @@
                 <input type="text" [(ngModel)]="editingMenu()!.label" [placeholder]="'menuManagement.labelPlaceholder' | translate">
             </div>
 
-            <div class="form-row">
-                <div class="form-group flex-1">
+            <div class="form-row form-row--icon-and-order">
+                <div class="form-group form-group--icon-field">
                     <label>{{ 'menuManagement.icon' | translate }}</label>
                     <div class="icon-input">
-                        <span class="material-icons">{{ editingMenu()!.icon || 'help' }}</span>
-                        <input type="text" [(ngModel)]="editingMenu()!.icon" [placeholder]="'menuManagement.iconPlaceholder' | translate">
+                        <span class="icon-input-preview" aria-hidden="true">
+                            <span class="material-icons">{{ editingMenu()!.icon | materialIconLigature }}</span>
+                        </span>
+                        <input type="text" [(ngModel)]="editingMenu()!.icon" [placeholder]="'menuManagement.iconPlaceholder' | translate" autocomplete="off">
+                        <button type="button" class="btn-icon-gallery" (click)="openIconPicker()"
+                            [title]="'menuManagement.pickIcon' | translate"
+                            [attr.aria-label]="'menuManagement.pickIconAria' | translate">
+                            <span class="material-icons" aria-hidden="true">apps</span>
+                        </button>
                     </div>
                 </div>
-                <div class="form-group flex-1">
+                <div class="form-group form-group--sort-narrow">
                     <label>{{ 'menuManagement.order' | translate }}</label>
                     <input type="number" [(ngModel)]="editingMenu()!.sortOrder">
                 </div>
@@ -158,3 +165,6 @@
         </div>
     </div>
 </div>
+
+<app-icon-picker-modal *ngIf="showIconPicker()" (iconSelected)="onIconPicked($event)" (dismiss)="closeIconPicker()">
+</app-icon-picker-modal>

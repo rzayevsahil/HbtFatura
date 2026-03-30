@@ -465,24 +465,87 @@ table.menu-admin-table {
 .form-row {
     display: flex;
     gap: 16px;
+    align-items: flex-start;
 
     .flex-1 {
         flex: 1;
+        min-width: 0;
+    }
+}
+
+/* İkon + sıra: sıra dar sabit; ikon satırı kalan genişliği alır (input yazarken sıkışmaz). */
+.form-row--icon-and-order {
+    .form-group--icon-field {
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+
+    .form-group--sort-narrow {
+        flex: 0 0 7.5rem;
+        max-width: 7.5rem;
     }
 }
 
 .icon-input {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
 
-    .material-icons {
-        font-size: 24px;
-        color: #64748b;
+    .icon-input-preview {
+        flex: 0 0 32px;
+        width: 32px;
+        height: 32px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+
+        .material-icons {
+            font-size: 24px;
+            line-height: 1;
+            color: #64748b;
+        }
     }
 
     input {
-        flex: 1;
+        flex: 1 1 auto;
+        min-width: 11rem;
+        width: 100%;
+        box-sizing: border-box;
+    }
+}
+
+.btn-icon-gallery {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    background: #f8fafc;
+    cursor: pointer;
+    color: #475569;
+    transition: background 0.15s, border-color 0.15s;
+
+    .material-icons {
+        font-size: 22px;
+        color: #0d9488;
+    }
+
+    &:hover {
+        background: #ecfdf5;
+        border-color: #0d9488;
+    }
+
+    &:focus-visible {
+        outline: 2px solid #0d9488;
+        outline-offset: 2px;
     }
 }
 
