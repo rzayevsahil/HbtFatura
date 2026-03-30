@@ -277,6 +277,26 @@ html.dark #toast-container .toast-progress {
   }
 }
 
+/* Giriş / kayıt — sayfa gövdesi (global: html.dark burada çalışır; component SCSS içinde kırılıyordu) */
+app-login,
+app-register {
+  display: block;
+  min-height: 100vh;
+}
+
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background: linear-gradient(145deg, #f0fdfa 0%, #f8fafc 50%);
+}
+
+html.dark .auth-page {
+  background: linear-gradient(145deg, #0f1917 0%, #0f0f10 55%);
+}
+
 /* Giriş / kayıt — dil + tema (sağ üst, yan yana) */
 .auth-top-actions {
   position: fixed;
