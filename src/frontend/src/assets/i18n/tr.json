@@ -730,6 +730,8 @@
     "title": "Menü Yönetimi",
     "description": "Sol menü öğelerini, rotaları ve görünürlük ayarlarını buradan yönetebilirsiniz.",
     "newRootMenu": "Yeni Ana Menü Ekle",
+    "colDrag": "Sürükle",
+    "dragAria": "Satırı sürükleyerek sırayı değiştir",
     "colIcon": "İkon",
     "colLabel": "Başlık",
     "colRoute": "Rota",
@@ -765,7 +767,10 @@
       "created": "Menü oluşturuldu.",
       "createError": "Menü oluşturulurken hata oluştu.",
       "deleted": "Menü silindi.",
-      "deleteError": "Menü silinemedi."
+      "deleteError": "Menü silinemedi.",
+      "reordered": "Menü sıralaması kaydedildi.",
+      "reorderError": "Sıralama kaydedilemedi.",
+      "reorderInvalid": "Bu konuma taşınamaz; yalnızca geçerli hiyerarşi korunarak sıralayabilirsiniz."
     }
   },
   "firmsPage": {

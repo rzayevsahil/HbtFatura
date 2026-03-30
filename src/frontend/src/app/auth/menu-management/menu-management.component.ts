@@ -1,128 +1,185 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import {
+  CdkDrag,
+  CdkDragDrop,
+  CdkDropList,
+  DragDropModule,
+  moveItemInArray
+} from '@angular/cdk/drag-drop';
 import { MenuService } from '../../core/services/menu.service';
 import { PermissionService } from '../../core/services/permission.service';
 import { MenuItem, PermissionDto } from '../../core/models';
 import { ToastrService } from 'ngx-toastr';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import {
+  buildReorderPayload,
+  buildTreeFromPreorderRows,
+  flattenMenuTreeWithDepth,
+  isValidPreorderDepths,
+  MenuRowVm
+} from './menu-reorder';
 
 @Component({
-    selector: 'app-menu-management',
-    standalone: true,
-    imports: [CommonModule, FormsModule, TranslateModule],
-    templateUrl: './menu-management.component.html',
-    styleUrls: ['./menu-management.component.scss']
+  selector: 'app-menu-management',
+  standalone: true,
+  imports: [CommonModule, FormsModule, TranslateModule, DragDropModule],
+  templateUrl: './menu-management.component.html',
+  styleUrls: ['./menu-management.component.scss']
 })
 export class MenuManagementComponent implements OnInit {
-    allMenus = signal<MenuItem[]>([]);
-    flatMenus = signal<MenuItem[]>([]);
-    permissions = signal<PermissionDto[]>([]);
-    loading = signal(false);
+  allMenus = signal<MenuItem[]>([]);
+  /** Sürükle-bırak için DFS düz liste (CDK bu diziyi günceller). */
+  dragRows = signal<MenuRowVm[]>([]);
+  flatMenus = signal<MenuItem[]>([]);
+  permissions = signal<PermissionDto[]>([]);
+  loading = signal(false);
 
-    showModal = signal(false);
-    editingMenu = signal<Partial<MenuItem> | null>(null);
+  showModal = signal(false);
+  editingMenu = signal<Partial<MenuItem> | null>(null);
 
-    constructor(
-        private menuService: MenuService,
-        private permService: PermissionService,
-        private toastr: ToastrService,
-        private translate: TranslateService
-    ) { }
+  readonly sortRows = (index: number, item: CdkDrag<MenuRowVm>, drop: CdkDropList<MenuRowVm[]>) => {
+    const data = drop.data;
+    const dragRow = item.data;
+    const prevIndex = data.indexOf(dragRow);
+    if (prevIndex === -1) return false;
+    const copy = [...data];
+    moveItemInArray(copy, prevIndex, index);
+    return isValidPreorderDepths(copy);
+  };
 
-    ngOnInit() {
+  constructor(
+    private menuService: MenuService,
+    private permService: PermissionService,
+    private toastr: ToastrService,
+    private translate: TranslateService
+  ) {}
+
+  ngOnInit() {
+    this.loadData();
+  }
+
+  loadData() {
+    this.loading.set(true);
+    this.menuService.getAllMenus().subscribe({
+      next: (menus) => {
+        this.allMenus.set(menus);
+        this.dragRows.set(flattenMenuTreeWithDepth(menus));
+        this.flatMenus.set(this.flattenMenus(menus));
+        this.loading.set(false);
+      },
+      error: () => {
+        this.toastr.error(this.translate.instant('menuManagement.toasts.loadError'));
+        this.loading.set(false);
+      }
+    });
+
+    this.permService.getPermissions().subscribe({
+      next: (perms) => this.permissions.set(perms)
+    });
+  }
+
+  trackByRowId(_index: number, row: MenuRowVm): string {
+    return row.menu.id;
+  }
+
+  onRowDrop(event: CdkDragDrop<MenuRowVm[]>) {
+    if (event.previousContainer !== event.container) return;
+    const data = event.container.data;
+    moveItemInArray(data, event.previousIndex, event.currentIndex);
+    if (!isValidPreorderDepths(data)) {
+      moveItemInArray(data, event.currentIndex, event.previousIndex);
+      this.toastr.warning(this.translate.instant('menuManagement.toasts.reorderInvalid'));
+      return;
+    }
+
+    const tree = buildTreeFromPreorderRows(data);
+    const payload = buildReorderPayload(tree);
+
+    this.menuService.reorderMenus(payload).subscribe({
+      next: () => {
+        this.allMenus.set(tree);
+        this.dragRows.set(flattenMenuTreeWithDepth(tree));
+        this.flatMenus.set(this.flattenMenus(tree));
+        this.menuService.fetchMenu().subscribe({ error: () => {} });
+        this.toastr.success(this.translate.instant('menuManagement.toasts.reordered'));
+      },
+      error: () => {
+        this.toastr.error(this.translate.instant('menuManagement.toasts.reorderError'));
         this.loadData();
+      }
+    });
+  }
+
+  flattenMenus(menus: MenuItem[], level = 0): MenuItem[] {
+    let result: MenuItem[] = [];
+    for (const menu of menus) {
+      result.push(menu);
+      if (menu.children && menu.children.length > 0) {
+        result = [...result, ...this.flattenMenus(menu.children, level + 1)];
+      }
     }
+    return result;
+  }
 
-    loadData() {
-        this.loading.set(true);
-        this.menuService.getAllMenus().subscribe({
-            next: (menus) => {
-                this.allMenus.set(menus);
-                this.flatMenus.set(this.flattenMenus(menus));
-                this.loading.set(false);
-            },
-            error: () => {
-                this.toastr.error(this.translate.instant('menuManagement.toasts.loadError'));
-                this.loading.set(false);
-            }
-        });
+  openCreateModal(parentId: string | null = null) {
+    this.editingMenu.set({
+      parentId: parentId || undefined,
+      label: '',
+      icon: '',
+      routerLink: '',
+      sortOrder: 0,
+      requiredPermissionCode: '',
+      isActive: true
+    });
+    this.showModal.set(true);
+  }
 
-        this.permService.getPermissions().subscribe({
-            next: (perms) => this.permissions.set(perms)
-        });
+  openEditModal(menu: MenuItem) {
+    this.editingMenu.set({ ...menu });
+    this.showModal.set(true);
+  }
+
+  closeModal() {
+    this.showModal.set(false);
+    this.editingMenu.set(null);
+  }
+
+  save() {
+    const menu = this.editingMenu();
+    if (!menu) return;
+
+    if (menu.id) {
+      this.menuService.updateMenu(menu.id, menu).subscribe({
+        next: () => {
+          this.toastr.success(this.translate.instant('menuManagement.toasts.updated'));
+          this.loadData();
+          this.closeModal();
+        },
+        error: () => this.toastr.error(this.translate.instant('menuManagement.toasts.updateError'))
+      });
+    } else {
+      this.menuService.createMenu(menu).subscribe({
+        next: () => {
+          this.toastr.success(this.translate.instant('menuManagement.toasts.created'));
+          this.loadData();
+          this.closeModal();
+        },
+        error: () => this.toastr.error(this.translate.instant('menuManagement.toasts.createError'))
+      });
     }
+  }
 
-    flattenMenus(menus: MenuItem[], level = 0): MenuItem[] {
-        let result: MenuItem[] = [];
-        for (const menu of menus) {
-            // We add a 'level' property for UI indentation if needed, but MenuItem doesn't have it
-            // Let's just create a list for the dropdown
-            result.push(menu);
-            if (menu.children && menu.children.length > 0) {
-                result = [...result, ...this.flattenMenus(menu.children, level + 1)];
-            }
-        }
-        return result;
+  deleteMenu(id: string) {
+    if (confirm(this.translate.instant('menuManagement.confirmDelete'))) {
+      this.menuService.deleteMenu(id).subscribe({
+        next: () => {
+          this.toastr.success(this.translate.instant('menuManagement.toasts.deleted'));
+          this.loadData();
+        },
+        error: (err) => this.toastr.error(err.error || this.translate.instant('menuManagement.toasts.deleteError'))
+      });
     }
-
-    openCreateModal(parentId: string | null = null) {
-        this.editingMenu.set({
-            parentId: parentId || undefined,
-            label: '',
-            icon: '',
-            routerLink: '',
-            sortOrder: 0,
-            requiredPermissionCode: '',
-            isActive: true
-        });
-        this.showModal.set(true);
-    }
-
-    openEditModal(menu: MenuItem) {
-        this.editingMenu.set({ ...menu });
-        this.showModal.set(true);
-    }
-
-    closeModal() {
-        this.showModal.set(false);
-        this.editingMenu.set(null);
-    }
-
-    save() {
-        const menu = this.editingMenu();
-        if (!menu) return;
-
-        if (menu.id) {
-            this.menuService.updateMenu(menu.id, menu).subscribe({
-                next: () => {
-                    this.toastr.success(this.translate.instant('menuManagement.toasts.updated'));
-                    this.loadData();
-                    this.closeModal();
-                },
-                error: () => this.toastr.error(this.translate.instant('menuManagement.toasts.updateError'))
-            });
-        } else {
-            this.menuService.createMenu(menu).subscribe({
-                next: () => {
-                    this.toastr.success(this.translate.instant('menuManagement.toasts.created'));
-                    this.loadData();
-                    this.closeModal();
-                },
-                error: () => this.toastr.error(this.translate.instant('menuManagement.toasts.createError'))
-            });
-        }
-    }
-
-    deleteMenu(id: string) {
-        if (confirm(this.translate.instant('menuManagement.confirmDelete'))) {
-            this.menuService.deleteMenu(id).subscribe({
-                next: () => {
-                    this.toastr.success(this.translate.instant('menuManagement.toasts.deleted'));
-                    this.loadData();
-                },
-                error: (err) => this.toastr.error(err.error || this.translate.instant('menuManagement.toasts.deleteError'))
-            });
-        }
-    }
+  }
 }

@@ -14,6 +14,7 @@
             <div class="table-container">
                 <table class="menu-admin-table">
                     <colgroup>
+                        <col class="col-menu-drag" />
                         <col class="col-menu-icon" />
                         <col class="col-menu-label" />
                         <col class="col-menu-route" />
@@ -24,6 +25,7 @@
                     </colgroup>
                     <thead>
                         <tr>
+                            <th class="th-drag" scope="col"><span class="sr-only">{{ 'menuManagement.colDrag' | translate }}</span></th>
                             <th class="th-menu-icon">{{ 'menuManagement.colIcon' | translate }}</th>
                             <th>{{ 'menuManagement.colLabel' | translate }}</th>
                             <th class="th-menu-route">{{ 'menuManagement.colRoute' | translate }}</th>
@@ -33,53 +35,56 @@
                             <th class="th-actions">{{ 'menuManagement.colActions' | translate }}</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <ng-container *ngFor="let m of allMenus()">
-                            <ng-container *ngTemplateOutlet="menuRow; context: { $implicit: m, level: 0 }"></ng-container>
-                        </ng-container>
+                    <tbody cdkDropList
+                        [cdkDropListData]="dragRows()"
+                        [cdkDropListSortPredicate]="sortRows"
+                        (cdkDropListDropped)="onRowDrop($event)">
+                        <tr *ngFor="let row of dragRows(); trackBy: trackByRowId"
+                            cdkDrag
+                            cdkDragPreviewClass="menu-drag-preview-row"
+                            [cdkDragData]="row"
+                            [cdkDragDisabled]="row.menu.isSystemMenu"
+                            class="menu-drag-row">
+                            <td class="td-drag">
+                                <span *ngIf="!row.menu.isSystemMenu" class="material-icons drag-handle cdk-drag-handle"
+                                    [attr.aria-label]="'menuManagement.dragAria' | translate">drag_indicator</span>
+                            </td>
+                            <td class="td-menu-icon" [style.padding-left.px]="20 + row.depth * 24">
+                                <span class="material-icons menu-row-icon">{{ row.menu.icon || 'folder' }}</span>
+                            </td>
+                            <td class="menu-label-cell">
+                                <div class="menu-label-inner">
+                                    <span class="menu-label-text">{{ row.menu.label }}</span>
+                                    <span class="badge badge-system" *ngIf="row.menu.isSystemMenu">{{ 'menuManagement.systemBadge' | translate }}</span>
+                                </div>
+                            </td>
+                            <td class="td-route">
+                                <code class="code-badge" *ngIf="row.menu.routerLink">{{ row.menu.routerLink }}</code>
+                                <span class="muted-ellipsis" *ngIf="!row.menu.routerLink">—</span>
+                            </td>
+                            <td class="td-perm" [attr.title]="row.menu.requiredPermissionCode || null">{{ row.menu.requiredPermissionCode || '—' }}</td>
+                            <td class="td-sort">{{ row.menu.sortOrder }}</td>
+                            <td class="td-status">
+                                <span class="badge" [class.badge-success]="row.menu.isActive" [class.badge-danger]="!row.menu.isActive">
+                                    {{ row.menu.isActive ? ('menuManagement.active' | translate) : ('menuManagement.passive' | translate) }}
+                                </span>
+                            </td>
+                            <td class="td-actions">
+                                <div class="actions">
+                                    <button type="button" class="btn-action edit" (click)="openCreateModal(row.menu.id)"
+                                        [title]="'menuManagement.addSubmenu' | translate">{{ 'menuManagement.addSubmenuAction' | translate }}</button>
+                                    <button type="button" class="btn-action edit" (click)="openEditModal(row.menu)"
+                                        [title]="'common.edit' | translate">{{ 'common.edit' | translate }}</button>
+                                    <button type="button" class="btn-action delete" (click)="deleteMenu(row.menu.id)" [disabled]="row.menu.isSystemMenu"
+                                        [title]="'common.delete' | translate">{{ 'common.delete' | translate }}</button>
+                                </div>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
         </div>
     </ng-container>
-
-    <ng-template #menuRow let-m let-level="level">
-        <tr>
-            <td class="td-menu-icon" [style.padding-left.px]="20 + level * 24">
-                <span class="material-icons menu-row-icon">{{ m.icon || 'folder' }}</span>
-            </td>
-            <td class="menu-label-cell">
-                <div class="menu-label-inner">
-                    <span class="menu-label-text">{{ m.label }}</span>
-                    <span class="badge badge-system" *ngIf="m.isSystemMenu">{{ 'menuManagement.systemBadge' | translate }}</span>
-                </div>
-            </td>
-            <td class="td-route">
-                <code class="code-badge" *ngIf="m.routerLink">{{ m.routerLink }}</code>
-                <span class="muted-ellipsis" *ngIf="!m.routerLink">—</span>
-            </td>
-            <td class="td-perm" [attr.title]="m.requiredPermissionCode || null">{{ m.requiredPermissionCode || '—' }}</td>
-            <td class="td-sort">{{ m.sortOrder }}</td>
-            <td>
-                <span class="badge" [class.badge-success]="m.isActive" [class.badge-danger]="!m.isActive">
-                    {{ m.isActive ? ('menuManagement.active' | translate) : ('menuManagement.passive' | translate) }}
-                </span>
-            </td>
-            <td class="td-actions">
-                <div class="actions">
-                    <button type="button" class="btn-action edit" (click)="openCreateModal(m.id)"
-                        [title]="'menuManagement.addSubmenu' | translate">{{ 'menuManagement.addSubmenuAction' | translate }}</button>
-                    <button type="button" class="btn-action edit" (click)="openEditModal(m)"
-                        [title]="'common.edit' | translate">{{ 'common.edit' | translate }}</button>
-                    <button type="button" class="btn-action delete" (click)="deleteMenu(m.id)" [disabled]="m.isSystemMenu"
-                        [title]="'common.delete' | translate">{{ 'common.delete' | translate }}</button>
-                </div>
-            </td>
-        </tr>
-        <ng-container *ngFor="let child of m.children">
-            <ng-container *ngTemplateOutlet="menuRow; context: { $implicit: child, level: level + 1 }"></ng-container>
-        </ng-container>
-    </ng-template>
 
     <ng-template #loadingTemplate>
         <div class="card table-card table-card-loading">

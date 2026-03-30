@@ -88,6 +88,26 @@ public class MenuController : ControllerBase
         return MapToDto(menu, new List<Entities.Menu>());
     }
 
+    /// <summary>Sürükle-bırak sıralama: çoklu menü için parent ve sıra numarasını tek işlemde günceller.</summary>
+    [HttpPut("reorder")]
+    [Authorize(Roles = "SuperAdmin")]
+    public async Task<IActionResult> ReorderMenus([FromBody] List<MenuReorderItemDto> items, CancellationToken ct)
+    {
+        if (items == null || items.Count == 0) return BadRequest(new { message = "Empty payload." });
+
+        foreach (var dto in items)
+        {
+            var menu = await _db.Menus.FirstOrDefaultAsync(m => m.Id == dto.Id, ct);
+            if (menu == null) continue;
+            menu.ParentId = dto.ParentId;
+            menu.SortOrder = dto.SortOrder;
+        }
+
+        await _db.SaveChangesAsync(ct);
+        await _log.LogAsync($"Menü sıralaması güncellendi ({items.Count} kayıt)", "Reorder", "Menu", "Info", null);
+        return NoContent();
+    }
+
     [HttpPut("{id}")]
     [Authorize(Roles = "SuperAdmin")]
     public async Task<IActionResult> UpdateMenu(Guid id, [FromBody] MenuDto dto)

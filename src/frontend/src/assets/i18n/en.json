@@ -726,6 +726,8 @@
     "title": "Menu Management",
     "description": "Manage sidebar items, routes, and visibility from here.",
     "newRootMenu": "Add new root menu",
+    "colDrag": "Drag",
+    "dragAria": "Drag row to change order",
     "colIcon": "Icon",
     "colLabel": "Label",
     "colRoute": "Route",
@@ -761,7 +763,10 @@
       "created": "Menu created.",
       "createError": "Failed to create menu.",
       "deleted": "Menu deleted.",
-      "deleteError": "Could not delete menu."
+      "deleteError": "Could not delete menu.",
+      "reordered": "Menu order saved.",
+      "reorderError": "Could not save order.",
+      "reorderInvalid": "Cannot move here; only valid hierarchy is allowed."
     }
   },
   "firmsPage": {

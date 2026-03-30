@@ -54,4 +54,8 @@ export class MenuService {
     deleteMenu(id: string): Observable<void> {
         return this.http.delete<void>(`/api/menu/${id}`);
     }
+
+    reorderMenus(items: { id: string; parentId?: string; sortOrder: number }[]): Observable<void> {
+        return this.http.put<void>('/api/menu/reorder', items);
+    }
 }
