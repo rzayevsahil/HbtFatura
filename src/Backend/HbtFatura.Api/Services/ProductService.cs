@@ -10,6 +10,15 @@ namespace HbtFatura.Api.Services;
 
 public class ProductService : IProductService
 {
+    private static readonly string[] AllowedStockTypes =
+    {
+        "hammadde",
+        "yarı mamul",
+        "mamul",
+        "ticari mal",
+        "demirbaş"
+    };
+
     private readonly AppDbContext _db;
     private readonly ICurrentUserContext _currentUser;
     private readonly ILogService _log;
@@ -36,6 +45,19 @@ public class ProductService : IProductService
     }
 
     private static string NormalizeProductCode(string code) => code.Trim().ToLowerInvariant();
+
+    private static string NormalizeStockType(string? stockType, string fallback = "ticari mal")
+    {
+        var raw = (stockType ?? string.Empty).Trim();
+        if (string.IsNullOrWhiteSpace(raw))
+            return fallback;
+
+        var normalized = raw.ToLowerInvariant();
+        var match = AllowedStockTypes.FirstOrDefault(x => x.Equals(normalized, StringComparison.OrdinalIgnoreCase));
+        if (match == null)
+            throw new ArgumentException("Geçersiz stok türü. Geçerli türler: hammadde, yarı mamul, mamul, ticari mal, demirbaş.");
+        return match;
+    }
 
     private async Task<bool> IsDuplicateProductCodeAsync(Guid firmId, string code, Guid? excludeProductId, CancellationToken ct)
     {
@@ -80,6 +102,7 @@ public class ProductService : IProductService
                 Code = x.Code,
                 Name = x.Name,
                 Barcode = x.Barcode,
+                StockType = x.StockType,
                 Unit = x.Unit,
                 StockQuantity = x.StockQuantity,
                 UnitPrice = x.UnitPrice,
@@ -101,6 +124,7 @@ public class ProductService : IProductService
             Code = entity.Code,
             Name = entity.Name,
             Barcode = entity.Barcode,
+            StockType = entity.StockType,
             Unit = entity.Unit,
             StockQuantity = entity.StockQuantity,
             UnitPrice = entity.UnitPrice,
@@ -131,6 +155,7 @@ public class ProductService : IProductService
             Code = request.Code.Trim(),
             Name = request.Name.Trim(),
             Barcode = request.Barcode?.Trim(),
+            StockType = NormalizeStockType(request.StockType),
             Unit = request.Unit?.Trim() ?? "Adet",
             StockQuantity = request.StockQuantity,
             UnitPrice = request.UnitPrice,
@@ -171,6 +196,7 @@ public class ProductService : IProductService
         entity.Code = request.Code.Trim();
         entity.Name = request.Name.Trim();
         entity.Barcode = request.Barcode?.Trim();
+        entity.StockType = NormalizeStockType(request.StockType, string.IsNullOrWhiteSpace(entity.StockType) ? "ticari mal" : entity.StockType);
         entity.Unit = request.Unit?.Trim() ?? "Adet";
         entity.UnitPrice = request.UnitPrice;
         entity.Currency = string.IsNullOrWhiteSpace(request.Currency) ? entity.Currency : request.Currency.Trim();
@@ -386,6 +412,7 @@ public class ProductService : IProductService
                 Code = x.Code,
                 Name = x.Name,
                 Barcode = x.Barcode,
+                StockType = x.StockType,
                 Unit = x.Unit,
                 StockQuantity = x.StockQuantity,
                 UnitPrice = x.UnitPrice,

@@ -37,6 +37,14 @@
         <input formControlName="barcode" placeholder="İsteğe bağlı" />
       </div>
       <div class="row">
+        <label>Stok Türü</label>
+        <select formControlName="stockType">
+          @for (t of stockTypes; track t.id) {
+          <option [value]="t.code">{{ ('products.stockTypes.' + t.code) | translate }}</option>
+          }
+        </select>
+      </div>
+      <div class="row">
         <label>Birim</label>
         <app-unit-field-select [itemGroup]="form" emptyLabel="Birim seçin" />
       </div>

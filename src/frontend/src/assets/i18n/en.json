@@ -129,7 +129,15 @@
     "newProduct": "New product",
     "colCode": "Code",
     "colName": "Name",
+    "colStockType": "Stock type",
     "colUnit": "Unit",
+    "stockTypes": {
+      "hammadde": "Raw material",
+      "yarı mamul": "Semi-finished product",
+      "mamul": "Finished product",
+      "ticari mal": "Commercial good",
+      "demirbaş": "Fixture/asset"
+    },
     "colPrice": "Price",
     "colStock": "Stock",
     "detail": "Detail",

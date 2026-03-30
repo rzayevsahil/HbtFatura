@@ -16,9 +16,10 @@
 } @else if (product) {
 <div class="card info-grid">
   <p><strong>Kod:</strong> {{ product.code }}</p>
-  <p><strong>Birim:</strong> {{ product.unit }}</p>
+  <p><strong>Stok türü:</strong> {{ ('products.stockTypes.' + product.stockType) | translate }}</p>
   <p class="unit-price"><strong>Birim Fiyat:</strong> {{ product.unitPrice | number:'1.2-2' }} {{ product.currency || 'TRY' }}</p>
   <p><strong>Stok miktarı:</strong> {{ product.stockQuantity | number:'1.2-2' }}</p>
+  <p><strong>Birim:</strong> {{ product.unit }}</p>
   @if (product.barcode) { <p><strong>Barkod:</strong> {{ product.barcode }}</p> }
 </div>
 <h2 class="section-title">Stok hareketleri</h2>

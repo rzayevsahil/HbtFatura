@@ -5,11 +5,12 @@ import { FormsModule } from '@angular/forms';
 import { ProductService } from '../../services/product.service';
 import { ProductDto, StockMovementDto, PagedResult, StockMovementType } from '../../core/models';
 import { ToastrService } from 'ngx-toastr';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-product-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [CommonModule, RouterLink, FormsModule, TranslateModule],
   templateUrl: './product-detail.component.html',
   styleUrls: ['./product-detail.component.scss']
 })

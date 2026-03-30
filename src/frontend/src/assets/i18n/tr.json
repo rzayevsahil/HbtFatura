@@ -117,7 +117,15 @@
     "newProduct": "Yeni Ürün",
     "colCode": "Kod",
     "colName": "Ad",
+    "colStockType": "Stok Türü",
     "colUnit": "Birim",
+    "stockTypes": {
+      "hammadde": "Hammadde",
+      "yarı mamul": "Yarı mamul",
+      "mamul": "Mamul",
+      "ticari mal": "Ticari mal",
+      "demirbaş": "Demirbaş"
+    },
     "colPrice": "Fiyat",
     "colStock": "Stok",
     "detail": "Detay",

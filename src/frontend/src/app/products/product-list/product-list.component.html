@@ -19,9 +19,10 @@
       <tr>
         <th>{{ 'products.colCode' | translate }}</th>
         <th>{{ 'products.colName' | translate }}</th>
-        <th>{{ 'products.colUnit' | translate }}</th>
+        <th>{{ 'products.colStockType' | translate }}</th>
         <th>{{ 'products.colPrice' | translate }}</th>
         <th>{{ 'products.colStock' | translate }}</th>
+        <th>{{ 'products.colUnit' | translate }}</th>
         <th></th>
       </tr>
     </thead>
@@ -30,9 +31,10 @@
       <tr>
         <td>{{ p.code }}</td>
         <td>{{ p.name }}</td>
-        <td>{{ p.unit }}</td>
+        <td>{{ ('products.stockTypes.' + p.stockType) | translate }}</td>
         <td class="amount">{{ p.unitPrice | number:'1.2-2' }} {{ formatCurrencyLabel(p.currency) }}</td>
         <td class="amount">{{ p.stockQuantity | number:'1.2-2' }}</td>
+        <td>{{ p.unit }}</td>
         <td>
           <div class="actions-cell">
             <a [routerLink]="['/products', p.id]">{{ 'products.detail' | translate }}</a>

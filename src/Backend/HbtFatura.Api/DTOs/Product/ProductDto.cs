@@ -7,6 +7,7 @@ public class ProductDto
     public string Code { get; set; } = string.Empty;
     public string Name { get; set; } = string.Empty;
     public string? Barcode { get; set; }
+    public string StockType { get; set; } = "ticari mal";
     public string Unit { get; set; } = "Adet";
     public decimal StockQuantity { get; set; }
     public decimal UnitPrice { get; set; }
@@ -21,6 +22,7 @@ public class CreateProductRequest
     public string Code { get; set; } = string.Empty;
     public string Name { get; set; } = string.Empty;
     public string? Barcode { get; set; }
+    public string StockType { get; set; } = "ticari mal";
     public string Unit { get; set; } = "Adet";
     public decimal StockQuantity { get; set; }
     public decimal UnitPrice { get; set; }
@@ -33,6 +35,7 @@ public class UpdateProductRequest
     public string Code { get; set; } = string.Empty;
     public string Name { get; set; } = string.Empty;
     public string? Barcode { get; set; }
+    public string StockType { get; set; } = "ticari mal";
     public string Unit { get; set; } = "Adet";
     public decimal StockQuantity { get; set; }
     public decimal UnitPrice { get; set; }

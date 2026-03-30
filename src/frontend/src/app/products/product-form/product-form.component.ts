@@ -12,11 +12,12 @@ import { ToastrService } from 'ngx-toastr';
 import { LookupService } from '../../core/services/lookup.service';
 import { LookupDto } from '../../core/models';
 import { UnitFieldSelectComponent } from '../../shared/unit-field-select/unit-field-select.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-product-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, UnitFieldSelectComponent],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, UnitFieldSelectComponent, TranslateModule],
   templateUrl: './product-form.component.html',
   styleUrls: ['./product-form.component.scss']
 })
@@ -27,6 +28,7 @@ export class ProductFormComponent implements OnInit {
     code: ['', Validators.required],
     name: ['', Validators.required],
     barcode: [''],
+    stockType: ['ticari mal', Validators.required],
     unit: ['Adet'],
     stockQuantity: [0],
     unitPrice: [0],
@@ -39,6 +41,7 @@ export class ProductFormComponent implements OnInit {
   private firmIdForScope: string | null = null;
   firms: { id: string; name: string }[] = [];
   currencies: LookupDto[] = [];
+  stockTypes: LookupDto[] = [];
   error = '';
   saving = false;
 
@@ -59,6 +62,7 @@ export class ProductFormComponent implements OnInit {
     }
     this.lookups.load().subscribe(list => {
       this.currencies = list.filter(x => x.group?.name === 'Currency' && x.isActive);
+      this.stockTypes = list.filter(x => x.group?.name === 'ProductStockType' && x.isActive);
     });
     this.id = this.route.snapshot.paramMap.get('id');
 
@@ -88,6 +92,7 @@ export class ProductFormComponent implements OnInit {
             code: p.code,
             name: p.name,
             barcode: p.barcode ?? '',
+            stockType: p.stockType ?? 'ticari mal',
             unit: p.unit ?? 'Adet',
             stockQuantity: p.stockQuantity ?? 0,
             unitPrice: p.unitPrice ?? 0,
@@ -128,6 +133,7 @@ export class ProductFormComponent implements OnInit {
       code: v.code,
       name: v.name,
       barcode: v.barcode || undefined,
+      stockType: (v.stockType || 'ticari mal'),
       unit: v.unit || 'Adet',
       stockQuantity: v.stockQuantity ?? 0,
       unitPrice: v.unitPrice ?? 0,

@@ -8,7 +8,7 @@ public static class LookupSeed
     public static async Task SeedIfEmptyAsync(AppDbContext db)
     {
         // 1. Ensure Groups exist
-        var groupNames = new[] { "OrderType", "OrderStatus", "InvoiceStatus", "DeliveryNoteStatus", "InvoiceType", "DeliveryNoteType", "ChequeStatus", "Currency", "ProductUnit" };
+        var groupNames = new[] { "OrderType", "OrderStatus", "InvoiceStatus", "DeliveryNoteStatus", "InvoiceType", "DeliveryNoteType", "ChequeStatus", "Currency", "ProductUnit", "ProductStockType" };
         var existingGroups = await db.LookupGroups.ToListAsync();
         
         var groupsToCreate = new List<LookupGroup>();
@@ -42,6 +42,9 @@ public static class LookupSeed
         if (!existingGroups.Any(x => x.Name == "ProductUnit"))
             groupsToCreate.Add(new LookupGroup { Id = Guid.NewGuid(), Name = "ProductUnit", DisplayName = "Ürün birimi", IsSystemGroup = true });
 
+        if (!existingGroups.Any(x => x.Name == "ProductStockType"))
+            groupsToCreate.Add(new LookupGroup { Id = Guid.NewGuid(), Name = "ProductStockType", DisplayName = "Stok türü", IsSystemGroup = true });
+
         if (groupsToCreate.Any())
         {
             await db.LookupGroups.AddRangeAsync(groupsToCreate);
@@ -60,6 +63,7 @@ public static class LookupSeed
         var currencyGroupId = existingGroups.First(x => x.Name == "Currency").Id;
         var vatRateGroupId = existingGroups.First(x => x.Name == "VatRate").Id;
         var productUnitGroupId = existingGroups.First(x => x.Name == "ProductUnit").Id;
+        var productStockTypeGroupId = existingGroups.First(x => x.Name == "ProductStockType").Id;
 
         var lookups = new List<Lookup>();
 
@@ -156,6 +160,22 @@ public static class LookupSeed
             var sort = 1;
             foreach (var u in productUnits)
                 lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = productUnitGroupId, Code = u.Code, Name = u.Name, Color = u.Color, SortOrder = sort++ });
+        }
+
+        // Stok türü (ürün kartı)
+        if (!await db.Lookups.AnyAsync(x => x.LookupGroupId == productStockTypeGroupId))
+        {
+            var stockTypes = new (string Code, string Name, string Color)[]
+            {
+                ("hammadde", "Hammadde", "#0ea5e9"),
+                ("yarı mamul", "Yarı mamul", "#8b5cf6"),
+                ("mamul", "Mamul", "#16a34a"),
+                ("ticari mal", "Ticari mal", "#f59e0b"),
+                ("demirbaş", "Demirbaş", "#64748b")
+            };
+            var sort = 1;
+            foreach (var st in stockTypes)
+                lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = productStockTypeGroupId, Code = st.Code, Name = st.Name, Color = st.Color, SortOrder = sort++ });
         }
 
         if (lookups.Any())
