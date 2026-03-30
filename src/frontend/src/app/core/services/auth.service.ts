@@ -23,26 +23,42 @@ export class AuthService {
     private http: HttpClient,
     private router: Router
   ) {
-    const localStored = localStorage.getItem(this.storageKey);
-    const sessionStored = sessionStorage.getItem(this.storageKey);
-    const stored = localStored ?? sessionStored;
+    this.migrateSessionAuthToLocalIfNeeded();
+    const stored = localStorage.getItem(this.storageKey) ?? sessionStorage.getItem(this.storageKey);
 
     if (stored) {
       try {
         const data = JSON.parse(stored) as AuthResponse;
         this.currentUser.set(data.user);
         this.accessToken.set(data.accessToken);
-        if (localStored) {
-          localStorage.setItem(this.tokenKey, data.accessToken);
-          localStorage.setItem(this.refreshKey, data.refreshToken);
-        } else {
-          sessionStorage.setItem(this.tokenKey, data.accessToken);
-          sessionStorage.setItem(this.refreshKey, data.refreshToken);
-        }
+        // Tüm sekmeler aynı oturumu görsün diye jetonlar her zaman localStorage’da tutulur
+        localStorage.setItem(this.tokenKey, data.accessToken);
+        localStorage.setItem(this.refreshKey, data.refreshToken);
       } catch { }
     } else {
       const t = localStorage.getItem(this.tokenKey) ?? sessionStorage.getItem(this.tokenKey);
       if (t) this.accessToken.set(t);
+    }
+  }
+
+  /**
+   * Eski davranış: rememberMe kapalı iken sessionStorage kullanılıyordu; bu depo sekme bazlıdır,
+   * yeni sekmede oturum görünmezdi. Mevcut oturumu bir kez localStorage’a taşır.
+   */
+  private migrateSessionAuthToLocalIfNeeded(): void {
+    if (localStorage.getItem(this.storageKey)) return;
+    const sessionBlob = sessionStorage.getItem(this.storageKey);
+    if (!sessionBlob) return;
+    try {
+      const data = JSON.parse(sessionBlob) as AuthResponse;
+      localStorage.setItem(this.storageKey, sessionBlob);
+      localStorage.setItem(this.tokenKey, data.accessToken);
+      localStorage.setItem(this.refreshKey, data.refreshToken);
+      sessionStorage.removeItem(this.storageKey);
+      sessionStorage.removeItem(this.tokenKey);
+      sessionStorage.removeItem(this.refreshKey);
+    } catch {
+      /* */
     }
   }
 
@@ -54,13 +70,15 @@ export class AuthService {
     return localStorage.getItem(this.refreshKey) ?? sessionStorage.getItem(this.refreshKey);
   }
 
+  /** Oturum her zaman localStorage’da; rememberMe yalnızca sunucuda refresh token ömrünü uzatır. */
   login(email: string, password: string, rememberMe: boolean): Observable<AuthResponse> {
     const url = '/api/auth/login';
     console.log('[AuthService] login → relative URL:', url);
     return this.http.post<AuthResponse>(url, {
       email,
-      password
-    }).pipe(tap((res) => this.handleAuthResponse(res, rememberMe)));
+      password,
+      rememberMe
+    }).pipe(tap((res) => this.handleAuthResponse(res)));
   }
 
   refreshToken(): Observable<AuthResponse | null> {
@@ -106,45 +124,27 @@ export class AuthService {
       const newUser = { ...current, ...updatedFields };
       this.currentUser.set(newUser);
 
-      const localStored = localStorage.getItem(this.storageKey);
-      const sessionStored = sessionStorage.getItem(this.storageKey);
-      const stored = localStored ?? sessionStored;
-
+      const stored = localStorage.getItem(this.storageKey) ?? sessionStorage.getItem(this.storageKey);
       if (stored) {
         try {
           const data = JSON.parse(stored) as AuthResponse;
           data.user = newUser;
-          const target = localStored ? localStorage : sessionStorage;
-          target.setItem(this.storageKey, JSON.stringify(data));
+          localStorage.setItem(this.storageKey, JSON.stringify(data));
+          sessionStorage.removeItem(this.storageKey);
         } catch { }
       }
     }
   }
 
-  private handleAuthResponse(res: AuthResponse, rememberMe?: boolean): void {
+  private handleAuthResponse(res: AuthResponse): void {
     this.currentUser.set(res.user);
     this.accessToken.set(res.accessToken);
-
-    // Refresh akışında `rememberMe` gelmez; refresh token nerede duruyorsa oraya yazar.
-    const shouldStoreLocal = rememberMe ?? !!localStorage.getItem(this.refreshKey);
-
-    if (shouldStoreLocal) {
-      localStorage.setItem(this.tokenKey, res.accessToken);
-      localStorage.setItem(this.refreshKey, res.refreshToken);
-      localStorage.setItem(this.storageKey, JSON.stringify(res));
-
-      sessionStorage.removeItem(this.storageKey);
-      sessionStorage.removeItem(this.tokenKey);
-      sessionStorage.removeItem(this.refreshKey);
-    } else {
-      sessionStorage.setItem(this.tokenKey, res.accessToken);
-      sessionStorage.setItem(this.refreshKey, res.refreshToken);
-      sessionStorage.setItem(this.storageKey, JSON.stringify(res));
-
-      localStorage.removeItem(this.storageKey);
-      localStorage.removeItem(this.tokenKey);
-      localStorage.removeItem(this.refreshKey);
-    }
+    localStorage.setItem(this.tokenKey, res.accessToken);
+    localStorage.setItem(this.refreshKey, res.refreshToken);
+    localStorage.setItem(this.storageKey, JSON.stringify(res));
+    sessionStorage.removeItem(this.storageKey);
+    sessionStorage.removeItem(this.tokenKey);
+    sessionStorage.removeItem(this.refreshKey);
   }
 
   hasPermission(code: string): boolean {

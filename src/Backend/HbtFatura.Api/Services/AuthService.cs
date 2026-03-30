@@ -103,7 +103,7 @@ public class AuthService : IAuthService
 
         await _log.LogAsync($"Yeni kullanıcı kaydedildi: {user.Email} ({roleToAssign})", "Register", "Auth", "Info", $"UserId: {user.Id}");
 
-        return await BuildAuthResponseAsync(user, ipAddress, ct);
+        return await BuildAuthResponseAsync(user, ipAddress, rememberMe: false, ct);
     }
 
     public async Task<AuthResponse?> LoginAsync(LoginRequest request, string? ipAddress, CancellationToken ct = default)
@@ -115,8 +115,8 @@ public class AuthService : IAuthService
             return null;
         }
 
-        await _log.LogAsync($"Kullanıcı giriş yaptı: {user.Email}", "Login", "Auth", "Info", $"UserId: {user.Id}");
-        return await BuildAuthResponseAsync(user, ipAddress, ct);
+        await _log.LogAsync($"Kullanıcı giriş yaptı: {user.Email}", "Login", "Auth", "Info", $"UserId: {user.Id}; RememberMe: {request.RememberMe}");
+        return await BuildAuthResponseAsync(user, ipAddress, request.RememberMe, ct);
     }
 
     public async Task<AuthResponse?> RefreshTokenAsync(string refreshToken, string? ipAddress, CancellationToken ct = default)
@@ -131,7 +131,7 @@ public class AuthService : IAuthService
         token.RevokedByIp = ipAddress;
         await _db.SaveChangesAsync(ct);
 
-        return await BuildAuthResponseAsync(token.User, ipAddress, ct);
+        return await BuildAuthResponseAsync(token.User, ipAddress, token.IsPersistent, ct);
     }
 
     public async Task RevokeTokenAsync(string refreshToken, string? ipAddress, CancellationToken ct = default)
@@ -143,7 +143,7 @@ public class AuthService : IAuthService
         await _db.SaveChangesAsync(ct);
     }
 
-    private async Task<AuthResponse> BuildAuthResponseAsync(ApplicationUser user, string? ipAddress, CancellationToken ct)
+    private async Task<AuthResponse> BuildAuthResponseAsync(ApplicationUser user, string? ipAddress, bool rememberMe, CancellationToken ct)
     {
         var roles = await _userManager.GetRolesAsync(user);
         var roleName = roles.FirstOrDefault() ?? "";
@@ -163,7 +163,7 @@ public class AuthService : IAuthService
                                      select p.Code).ToListAsync(ct);
 
         var accessToken = GenerateAccessToken(user, roleName, firmName);
-        var refreshTokenEntity = await CreateRefreshTokenAsync(user.Id, ipAddress, ct);
+        var refreshTokenEntity = await CreateRefreshTokenAsync(user.Id, ipAddress, rememberMe, ct);
         var expiresAt = DateTime.UtcNow.AddMinutes(GetAccessTokenExpirationMinutes());
         return new AuthResponse
         {
@@ -210,14 +210,16 @@ public class AuthService : IAuthService
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
-    private async Task<RefreshToken> CreateRefreshTokenAsync(Guid userId, string? ipAddress, CancellationToken ct)
+    private async Task<RefreshToken> CreateRefreshTokenAsync(Guid userId, string? ipAddress, bool rememberMe, CancellationToken ct)
     {
+        var days = GetRefreshTokenExpirationDays(rememberMe);
         var token = new RefreshToken
         {
             Id = Guid.NewGuid(),
             UserId = userId,
             Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)),
-            ExpiresAt = DateTime.UtcNow.AddDays(GetRefreshTokenExpirationDays()),
+            IsPersistent = rememberMe,
+            ExpiresAt = DateTime.UtcNow.AddDays(days),
             CreatedAt = DateTime.UtcNow,
             CreatedByIp = ipAddress
         };
@@ -228,5 +230,16 @@ public class AuthService : IAuthService
 
     private string GetJwtKey() => _config["Jwt:Key"] ?? throw new InvalidOperationException("Jwt:Key not set");
     private int GetAccessTokenExpirationMinutes() => int.TryParse(_config["Jwt:AccessTokenExpirationMinutes"], out var m) ? m : 15;
-    private int GetRefreshTokenExpirationDays() => int.TryParse(_config["Jwt:RefreshTokenExpirationDays"], out var d) ? d : 7;
+    private int GetRefreshTokenExpirationDays(bool rememberMe)
+    {
+        if (rememberMe)
+        {
+            if (int.TryParse(_config["Jwt:RefreshTokenExpirationDaysRememberMe"], out var d) && d > 0) return d;
+            if (int.TryParse(_config["Jwt:RefreshTokenExpirationDays"], out var legacy) && legacy > 0) return legacy;
+            return 30;
+        }
+
+        if (int.TryParse(_config["Jwt:RefreshTokenExpirationDaysSession"], out var s) && s > 0) return s;
+        return 2;
+    }
 }
