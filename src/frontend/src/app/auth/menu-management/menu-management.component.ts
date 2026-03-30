@@ -5,11 +5,12 @@ import { MenuService } from '../../core/services/menu.service';
 import { PermissionService } from '../../core/services/permission.service';
 import { MenuItem, PermissionDto } from '../../core/models';
 import { ToastrService } from 'ngx-toastr';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-menu-management',
     standalone: true,
-    imports: [CommonModule, FormsModule],
+    imports: [CommonModule, FormsModule, TranslateModule],
     templateUrl: './menu-management.component.html',
     styleUrls: ['./menu-management.component.scss']
 })
@@ -25,7 +26,8 @@ export class MenuManagementComponent implements OnInit {
     constructor(
         private menuService: MenuService,
         private permService: PermissionService,
-        private toastr: ToastrService
+        private toastr: ToastrService,
+        private translate: TranslateService
     ) { }
 
     ngOnInit() {
@@ -41,7 +43,7 @@ export class MenuManagementComponent implements OnInit {
                 this.loading.set(false);
             },
             error: () => {
-                this.toastr.error('Menüler yüklenemedi.');
+                this.toastr.error(this.translate.instant('menuManagement.toasts.loadError'));
                 this.loading.set(false);
             }
         });
@@ -94,32 +96,32 @@ export class MenuManagementComponent implements OnInit {
         if (menu.id) {
             this.menuService.updateMenu(menu.id, menu).subscribe({
                 next: () => {
-                    this.toastr.success('Menü güncellendi.');
+                    this.toastr.success(this.translate.instant('menuManagement.toasts.updated'));
                     this.loadData();
                     this.closeModal();
                 },
-                error: () => this.toastr.error('Menü güncellenirken hata oluştu.')
+                error: () => this.toastr.error(this.translate.instant('menuManagement.toasts.updateError'))
             });
         } else {
             this.menuService.createMenu(menu).subscribe({
                 next: () => {
-                    this.toastr.success('Menü oluşturuldu.');
+                    this.toastr.success(this.translate.instant('menuManagement.toasts.created'));
                     this.loadData();
                     this.closeModal();
                 },
-                error: () => this.toastr.error('Menü oluşturulurken hata oluştu.')
+                error: () => this.toastr.error(this.translate.instant('menuManagement.toasts.createError'))
             });
         }
     }
 
     deleteMenu(id: string) {
-        if (confirm('Bu menüyü silmek istediğinize emin misiniz?')) {
+        if (confirm(this.translate.instant('menuManagement.confirmDelete'))) {
             this.menuService.deleteMenu(id).subscribe({
                 next: () => {
-                    this.toastr.success('Menü silindi.');
+                    this.toastr.success(this.translate.instant('menuManagement.toasts.deleted'));
                     this.loadData();
                 },
-                error: (err) => this.toastr.error(err.error || 'Menü silinemedi.')
+                error: (err) => this.toastr.error(err.error || this.translate.instant('menuManagement.toasts.deleteError'))
             });
         }
     }

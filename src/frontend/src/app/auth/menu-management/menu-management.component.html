@@ -1,65 +1,89 @@
 <div class="menu-admin-container">
-    <div class="header-section">
-        <h1>Menü Yönetimi</h1>
-        <button class="btn btn-primary" (click)="openCreateModal()">
-            <span class="material-icons">add</span> Yeni Ana Menü Ekle
-        </button>
-    </div>
-
-    <div class="menu-list" *ngIf="!loading(); else loadingTemplate">
-        <div class="menu-table-header">
-            <div class="col-icon">İkon</div>
-            <div class="col-label">Başlık</div>
-            <div class="col-link">Rota</div>
-            <div class="col-perm">Yetki Kodu</div>
-            <div class="col-sort">Sıra</div>
-            <div class="col-status">Durum</div>
-            <div class="col-actions">İşlemler</div>
+    <div class="page-header">
+        <div class="header-top-row">
+            <h1 class="page-title">{{ 'menuManagement.title' | translate }}</h1>
+            <button type="button" class="btn btn-primary header-add-btn" (click)="openCreateModal()">
+                <span class="material-icons" aria-hidden="true">add</span> {{ 'menuManagement.newRootMenu' | translate }}
+            </button>
         </div>
-
-        <ng-container *ngFor="let m of allMenus()">
-            <ng-container *ngTemplateOutlet="menuRow; context: { $implicit: m, level: 0 }"></ng-container>
-        </ng-container>
+        <p class="page-description">{{ 'menuManagement.description' | translate }}</p>
     </div>
+
+    <ng-container *ngIf="!loading(); else loadingTemplate">
+        <div class="card table-card">
+            <div class="table-container">
+                <table class="menu-admin-table">
+                    <colgroup>
+                        <col class="col-menu-icon" />
+                        <col class="col-menu-label" />
+                        <col class="col-menu-route" />
+                        <col class="col-menu-perm" />
+                        <col class="col-menu-sort" />
+                        <col class="col-menu-status" />
+                        <col class="col-menu-actions" />
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th class="th-menu-icon">{{ 'menuManagement.colIcon' | translate }}</th>
+                            <th>{{ 'menuManagement.colLabel' | translate }}</th>
+                            <th class="th-menu-route">{{ 'menuManagement.colRoute' | translate }}</th>
+                            <th class="th-menu-perm">{{ 'menuManagement.colPermissionCode' | translate }}</th>
+                            <th class="th-sort">{{ 'menuManagement.colOrder' | translate }}</th>
+                            <th class="th-status">{{ 'menuManagement.colStatus' | translate }}</th>
+                            <th class="th-actions">{{ 'menuManagement.colActions' | translate }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <ng-container *ngFor="let m of allMenus()">
+                            <ng-container *ngTemplateOutlet="menuRow; context: { $implicit: m, level: 0 }"></ng-container>
+                        </ng-container>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </ng-container>
 
     <ng-template #menuRow let-m let-level="level">
-        <div class="menu-item-row" [style.padding-left.px]="24 + level * 32">
-            <div class="col-icon">
-                <span class="material-icons">{{ m.icon || 'folder' }}</span>
-            </div>
-            <div class="col-label">
-                <span class="label-text">{{ m.label }}</span>
-                <span class="badge system" *ngIf="m.isSystemMenu">Sistem</span>
-            </div>
-            <div class="col-link">{{ m.routerLink }}</div>
-            <div class="col-perm">{{ m.requiredPermissionCode }}</div>
-            <div class="col-sort">{{ m.sortOrder }}</div>
-            <div class="col-status">
-                <span class="status-indicator" [class.active]="m.isActive">
-                    {{ m.isActive ? 'Aktif' : 'Pasif' }}
+        <tr>
+            <td class="td-menu-icon" [style.padding-left.px]="20 + level * 24">
+                <span class="material-icons menu-row-icon">{{ m.icon || 'folder' }}</span>
+            </td>
+            <td class="menu-label-cell">
+                <div class="menu-label-inner">
+                    <span class="menu-label-text">{{ m.label }}</span>
+                    <span class="badge badge-system" *ngIf="m.isSystemMenu">{{ 'menuManagement.systemBadge' | translate }}</span>
+                </div>
+            </td>
+            <td class="td-route">
+                <code class="code-badge" *ngIf="m.routerLink">{{ m.routerLink }}</code>
+                <span class="muted-ellipsis" *ngIf="!m.routerLink">—</span>
+            </td>
+            <td class="td-perm" [attr.title]="m.requiredPermissionCode || null">{{ m.requiredPermissionCode || '—' }}</td>
+            <td class="td-sort">{{ m.sortOrder }}</td>
+            <td>
+                <span class="badge" [class.badge-success]="m.isActive" [class.badge-danger]="!m.isActive">
+                    {{ m.isActive ? ('menuManagement.active' | translate) : ('menuManagement.passive' | translate) }}
                 </span>
-            </div>
-            <div class="col-actions">
-                <button class="btn-icon" (click)="openCreateModal(m.id)" title="Alt Menü Ekle">
-                    <span class="material-icons text-success">add_circle</span>
-                </button>
-                <button class="btn-icon" (click)="openEditModal(m)" title="Düzenle">
-                    <span class="material-icons text-primary">edit</span>
-                </button>
-                <button class="btn-icon" (click)="deleteMenu(m.id)" [disabled]="m.isSystemMenu" title="Sil">
-                    <span class="material-icons" [class.text-danger]="!m.isSystemMenu">delete</span>
-                </button>
-            </div>
-        </div>
-
+            </td>
+            <td class="td-actions">
+                <div class="actions">
+                    <button type="button" class="btn-action edit" (click)="openCreateModal(m.id)"
+                        [title]="'menuManagement.addSubmenu' | translate">{{ 'menuManagement.addSubmenuAction' | translate }}</button>
+                    <button type="button" class="btn-action edit" (click)="openEditModal(m)"
+                        [title]="'common.edit' | translate">{{ 'common.edit' | translate }}</button>
+                    <button type="button" class="btn-action delete" (click)="deleteMenu(m.id)" [disabled]="m.isSystemMenu"
+                        [title]="'common.delete' | translate">{{ 'common.delete' | translate }}</button>
+                </div>
+            </td>
+        </tr>
         <ng-container *ngFor="let child of m.children">
             <ng-container *ngTemplateOutlet="menuRow; context: { $implicit: child, level: level + 1 }"></ng-container>
         </ng-container>
     </ng-template>
 
     <ng-template #loadingTemplate>
-        <div class="loading-state">
-            <p>Menüler yükleniyor...</p>
+        <div class="card table-card table-card-loading">
+            <p class="loading-state">{{ 'menuManagement.loading' | translate }}</p>
         </div>
     </ng-template>
 </div>
@@ -68,48 +92,48 @@
 <div class="modal-backdrop" *ngIf="showModal()" (click)="closeModal()">
     <div class="modal-content" (click)="$event.stopPropagation()">
         <div class="modal-header">
-            <h2>{{ editingMenu()?.id ? 'Menü Düzenle' : 'Yeni Menü Ekle' }}</h2>
+            <h2>{{ editingMenu()?.id ? ('menuManagement.editMenu' | translate) : ('menuManagement.newMenu' | translate) }}</h2>
             <button class="btn-close" (click)="closeModal()">&times;</button>
         </div>
 
         <div class="modal-body" *ngIf="editingMenu()">
             <div class="form-group">
-                <label>Başlık</label>
-                <input type="text" [(ngModel)]="editingMenu()!.label" placeholder="Menü adı">
+                <label>{{ 'menuManagement.label' | translate }}</label>
+                <input type="text" [(ngModel)]="editingMenu()!.label" [placeholder]="'menuManagement.labelPlaceholder' | translate">
             </div>
 
             <div class="form-row">
                 <div class="form-group flex-1">
-                    <label>İkon (Material Icon)</label>
+                    <label>{{ 'menuManagement.icon' | translate }}</label>
                     <div class="icon-input">
                         <span class="material-icons">{{ editingMenu()!.icon || 'help' }}</span>
-                        <input type="text" [(ngModel)]="editingMenu()!.icon" placeholder="home, settings vb.">
+                        <input type="text" [(ngModel)]="editingMenu()!.icon" [placeholder]="'menuManagement.iconPlaceholder' | translate">
                     </div>
                 </div>
                 <div class="form-group flex-1">
-                    <label>Sıralama</label>
+                    <label>{{ 'menuManagement.order' | translate }}</label>
                     <input type="number" [(ngModel)]="editingMenu()!.sortOrder">
                 </div>
             </div>
 
             <div class="form-group">
-                <label>Rota (Router Link)</label>
-                <input type="text" [(ngModel)]="editingMenu()!.routerLink" placeholder="/dashboard, /invoices vb.">
+                <label>{{ 'menuManagement.route' | translate }}</label>
+                <input type="text" [(ngModel)]="editingMenu()!.routerLink" [placeholder]="'menuManagement.routePlaceholder' | translate">
             </div>
 
             <div class="form-group">
-                <label>Gerekli Yetki Kodu</label>
+                <label>{{ 'menuManagement.requiredPermission' | translate }}</label>
                 <select [(ngModel)]="editingMenu()!.requiredPermissionCode">
-                    <option value="">Yetki Gerekmiyor</option>
+                    <option value="">{{ 'menuManagement.noPermissionRequired' | translate }}</option>
                     <option *ngFor="let p of permissions()" [value]="p.code">{{ p.group }} - {{ p.name }} ({{ p.code }})
                     </option>
                 </select>
             </div>
 
             <div class="form-group">
-                <label>Üst Menü</label>
+                <label>{{ 'menuManagement.parentMenu' | translate }}</label>
                 <select [(ngModel)]="editingMenu()!.parentId">
-                    <option [value]="undefined">Ana Menü</option>
+                    <option [value]="undefined">{{ 'menuManagement.rootMenu' | translate }}</option>
                     <ng-container *ngFor="let m of flatMenus()">
                         <option *ngIf="m.id !== editingMenu()!.id" [value]="m.id">{{ m.label }}</option>
                     </ng-container>
@@ -118,14 +142,14 @@
 
             <div class="form-group checkbox-group">
                 <label>
-                    <input type="checkbox" [(ngModel)]="editingMenu()!.isActive"> Aktif mi?
+                    <input type="checkbox" [(ngModel)]="editingMenu()!.isActive"> {{ 'menuManagement.isActive' | translate }}
                 </label>
             </div>
         </div>
 
         <div class="modal-footer">
-            <button class="btn btn-secondary" (click)="closeModal()">Vazgeç</button>
-            <button class="btn btn-primary" (click)="save()">Kaydet</button>
+            <button class="btn btn-secondary" (click)="closeModal()">{{ 'common.cancel' | translate }}</button>
+            <button class="btn btn-primary" (click)="save()">{{ 'common.save' | translate }}</button>
         </div>
     </div>
 </div>

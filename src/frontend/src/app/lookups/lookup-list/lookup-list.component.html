@@ -1,13 +1,13 @@
 <div class="page-header">
-  <div class="header-content">
-    <h1 class="page-title">Sistem Tanımları <span class="subtitle">(KeyValues)</span></h1>
-    <p class="page-description">Sistem genelindeki açılır menü, durum ve tip tanımlarını buradan yönetebilirsiniz.</p>
+  <div class="header-top-row">
+    <h1 class="page-title">{{ 'lookupsPage.title' | translate }} <span class="subtitle">({{ 'lookupsPage.titleTag' | translate }})</span></h1>
+    <button type="button" class="btn btn-primary header-add-btn" (click)="openAdd()"
+      [disabled]="groupsForAdd().length === 0"
+      [attr.title]="groupsForAdd().length === 0 ? ('lookupsPage.addDisabledTitle' | translate) : ('lookupsPage.addTitle' | translate)">
+      <span class="material-icons" aria-hidden="true">add</span> {{ 'lookupsPage.addButton' | translate }}
+    </button>
   </div>
-  <button type="button" class="btn btn-primary" (click)="openAdd()"
-    [disabled]="groupsForAdd().length === 0"
-    [title]="groupsForAdd().length === 0 ? 'Eklenebilecek grup kalmadı' : 'Yeni tanım'">
-    <span class="icon">+</span> Yeni Tanım Ekle
-  </button>
+  <p class="page-description">{{ 'lookupsPage.description' | translate }}</p>
 </div>
 
 <div class="card table-card">
@@ -15,13 +15,13 @@
     <table>
       <thead>
         <tr>
-          <th>Grup / Kategori</th>
-          <th class="th-code">Kod</th>
-          <th>Ad (Değer)</th>
-          <th class="th-visual">Görsel / Renk</th>
-          <th class="th-sort">Sıra</th>
-          <th class="th-status">Durum</th>
-          <th class="th-actions">İşlemler</th>
+          <th>{{ 'lookupsPage.colGroup' | translate }}</th>
+          <th class="th-code">{{ 'lookupsPage.colCode' | translate }}</th>
+          <th>{{ 'lookupsPage.colName' | translate }}</th>
+          <th class="th-visual">{{ 'lookupsPage.colVisual' | translate }}</th>
+          <th class="th-sort">{{ 'lookupsPage.colSort' | translate }}</th>
+          <th class="th-status">{{ 'lookupsPage.colStatus' | translate }}</th>
+          <th class="th-actions">{{ 'lookupsPage.colActions' | translate }}</th>
         </tr>
       </thead>
       <tbody>
@@ -36,28 +36,28 @@
               }
             </td>
             <td><code class="code-badge">{{ item.code }}</code></td>
-            <td class="name-cell">{{ item.name }}</td>
+            <td class="name-cell">{{ displayLookupName(item) }}</td>
             <td>
               <div class="color-item">
                 @if (item.color) {
                   <span class="color-preview" [style.backgroundColor]="item.color"></span>
                   <span class="color-code">{{ item.color }}</span>
                 } @else {
-                  <span class="no-color">—</span>
+                  <span class="no-color">{{ 'lookupsPage.noColor' | translate }}</span>
                 }
               </div>
             </td>
             <td class="td-sort">{{ item.sortOrder }}</td>
             <td>
               <span class="badge" [class.badge-success]="item.isActive" [class.badge-danger]="!item.isActive">
-                {{ item.isActive ? 'Aktif' : 'Pasif' }}
+                {{ item.isActive ? ('lookupsPage.active' | translate) : ('lookupsPage.passive' | translate) }}
               </span>
             </td>
             <td class="td-actions">
               <div class="actions">
-                <button type="button" class="btn-action edit" (click)="openEdit(item)" title="Düzenle">Düzenle</button>
+                <button type="button" class="btn-action edit" (click)="openEdit(item)" [title]="'common.edit' | translate">{{ 'common.edit' | translate }}</button>
                 @if (!isVatRateRow(item)) {
-                  <button type="button" class="btn-action delete" (click)="delete(item)" title="Sil">Sil</button>
+                  <button type="button" class="btn-action delete" (click)="delete(item)" [title]="'common.delete' | translate">{{ 'common.delete' | translate }}</button>
                 }
               </div>
             </td>
@@ -72,58 +72,58 @@
   <div class="modal-overlay">
     <div class="modal-card" (click)="$event.stopPropagation()">
       <div class="modal-header">
-        <h3>{{ editId ? 'Tanım Düzenle' : 'Yeni Tanım Ekle' }}</h3>
-        <button type="button" class="modal-close" (click)="showForm = false">×</button>
+        <h3>{{ editId ? ('lookupsPage.modalEdit' | translate) : ('lookupsPage.modalAdd' | translate) }}</h3>
+        <button type="button" class="modal-close" (click)="showForm = false" [attr.aria-label]="'common.cancel' | translate">×</button>
       </div>
       <form (ngSubmit)="save()">
         <div class="modal-body">
           @if (isVatRateForm()) {
             <p class="vat-hint">
-              Görünen ad, koda göre otomatik oluşturulur: yazdığınız oranın başına <strong>%</strong> eklenir (örn. 20 → %20).
+              {{ 'lookupsPage.vatHintIntro' | translate }}
               @if (editingVatRate) {
-                <span> KDV sistemde tek kayıttır; silinemez veya başka gruba taşınamaz; yalnızca oran ve renk değiştirilebilir.</span>
+                <span>{{ 'lookupsPage.vatHintEditNote' | translate }}</span>
               }
             </p>
           }
           <div class="form-grid">
             <div class="form-group full">
-              <label>Grup / Kategori</label>
+              <label>{{ 'lookupsPage.labelGroup' | translate }}</label>
               <select [(ngModel)]="model.lookupGroupId" name="lookupGroupId" required [disabled]="editingVatRate"
                 (ngModelChange)="onLookupGroupChange()">
-                <option [value]="undefined" disabled>Grup seçiniz...</option>
+                <option [value]="undefined" disabled>{{ 'lookupsPage.selectGroupPlaceholder' | translate }}</option>
                 @for (g of formGroupOptions(); track g.id) {
                   <option [value]="g.id">{{ g.displayName }} ({{ g.name }})</option>
                 }
               </select>
-              <small>Hangi kategoriye ait olduğunu belirler.</small>
+              <small>{{ 'lookupsPage.groupHelp' | translate }}</small>
             </div>
             <div class="form-group">
-              <label>Kod (Value)</label>
+              <label>{{ 'lookupsPage.labelCode' | translate }}</label>
               <input type="text" [(ngModel)]="model.code" name="code" required
                 (ngModelChange)="onCodeChange()"
-                [placeholder]="isVatRateForm() ? 'KDV yüzdesi, örn: 20' : '0, 1 veya StatusKey'" />
+                [placeholder]="(isVatRateForm() ? 'lookupsPage.codePlaceholderVat' : 'lookupsPage.codePlaceholderDefault') | translate" />
             </div>
             @if (isVatRateForm()) {
               <div class="form-group full">
-                <label>Görünen ad</label>
+                <label>{{ 'lookupsPage.labelDisplayNameVat' | translate }}</label>
                 <p class="vat-name-preview">{{ vatDisplayPreview() }}</p>
-                <small>Kod alanına yazdığınız değerin başına % eklenir (örn. 20 → %20).</small>
+                <small>{{ 'lookupsPage.vatNameHelp' | translate }}</small>
               </div>
             } @else {
               <div class="form-group">
-                <label>Görünen Ad</label>
-                <input type="text" [(ngModel)]="model.name" name="name" required placeholder="Ekranda görünecek metin" />
+                <label>{{ 'lookupsPage.labelDisplayName' | translate }}</label>
+                <input type="text" [(ngModel)]="model.name" name="name" required [placeholder]="'lookupsPage.displayNamePlaceholder' | translate" />
               </div>
             }
             <div class="form-group">
-              <label>Renk</label>
+              <label>{{ 'lookupsPage.labelColor' | translate }}</label>
               <div class="color-input-wrap">
                 <input type="color" [value]="model.color || '#000000'" (input)="model.color = $any($event.target).value" />
-                <input type="text" [(ngModel)]="model.color" name="color" placeholder="#hex" />
+                <input type="text" [(ngModel)]="model.color" name="color" [placeholder]="'lookupsPage.colorPlaceholder' | translate" />
               </div>
             </div>
             <div class="form-group">
-              <label>Sıralama</label>
+              <label>{{ 'lookupsPage.labelSortOrder' | translate }}</label>
               <input type="number" [(ngModel)]="model.sortOrder" name="sortOrder" [disabled]="editingVatRate" />
             </div>
             <div class="form-group full checkbox-group">
@@ -131,14 +131,14 @@
                 <input type="checkbox" [(ngModel)]="model.isActive" name="isActive" [disabled]="editingVatRate" />
                 <span class="slider"></span>
               </label>
-              <span>Tanım sistemde aktif olarak kullanılsın</span>
+              <span>{{ 'lookupsPage.isActiveLabel' | translate }}</span>
             </div>
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="showForm = false">Vazgeç</button>
+          <button type="button" class="btn btn-secondary" (click)="showForm = false">{{ 'common.cancel' | translate }}</button>
           <button type="submit" class="btn btn-primary" [disabled]="saving">
-            {{ saving ? 'Kaydediliyor...' : 'Kaydet' }}
+            {{ saving ? ('lookupsPage.saving' | translate) : ('common.save' | translate) }}
           </button>
         </div>
       </form>

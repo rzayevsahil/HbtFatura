@@ -1,20 +1,33 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { ChangeDetectorRef, Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { LookupService } from '../../core/services/lookup.service';
 import { LookupDto, LookupGroupDto } from '../../core/models';
 import { ToastrService } from 'ngx-toastr';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 const VAT_RATE_GROUP_NAME = 'VatRate';
+
+/** Lookup code → i18n key suffix (lookups.names.<Group>.<suffix>) for codes that are not plain alphanumeric. */
+const LOOKUP_CODE_KEY_SUFFIX: Record<string, string> = {
+  'yarı mamul': 'yari_mamul',
+  'ticari mal': 'ticari_mal',
+  'demirbaş': 'demirbas',
+  'm²': 'm2',
+  'm³': 'm3'
+};
 
 @Component({
   selector: 'app-lookup-list',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslateModule],
   templateUrl: './lookup-list.component.html',
   styleUrls: ['./lookup-list.component.scss']
 })
 export class LookupListComponent implements OnInit {
+  private readonly destroyRef = inject(DestroyRef);
+
   rawLookups = signal<LookupDto[]>([]);
   groups = signal<LookupGroupDto[]>([]);
   showForm = false;
@@ -24,11 +37,33 @@ export class LookupListComponent implements OnInit {
   editingVatRate = false;
   model: Partial<LookupDto> = {};
 
-  constructor(private service: LookupService, private toastr: ToastrService) { }
+  constructor(
+    private service: LookupService,
+    private toastr: ToastrService,
+    private translate: TranslateService,
+    private cdr: ChangeDetectorRef
+  ) { }
 
   ngOnInit(): void {
     this.refresh();
     this.service.loadGroups().subscribe(g => this.groups.set(g));
+    this.translate.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.cdr.markForCheck());
+  }
+
+  /** i18n key segment for lookup code (matches JSON under lookups.names.<Group>.<segment>). */
+  static lookupCodeKeySuffix(code: string | undefined | null): string {
+    const c = (code ?? '').trim();
+    return LOOKUP_CODE_KEY_SUFFIX[c] ?? c;
+  }
+
+  /** Seed / sistem lookup adları: EN’de çeviri, bilinmeyen veya özel kayıtta veritabanı adı. */
+  displayLookupName(item: LookupDto): string {
+    const g = item.group?.name;
+    if (!g) return item.name;
+    const suffix = LookupListComponent.lookupCodeKeySuffix(item.code);
+    const key = `lookups.names.${g}.${suffix}`;
+    const t = this.translate.instant(key);
+    return t === key ? item.name : t;
   }
 
   refresh(): void {
@@ -72,7 +107,7 @@ export class LookupListComponent implements OnInit {
 
   vatDisplayPreview(): string {
     const c = (this.model.code ?? '').toString().trim();
-    return c.length > 0 ? `%${c}` : '—';
+    return c.length > 0 ? `%${c}` : this.translate.instant('lookupsPage.vatPreviewEmpty');
   }
 
   onLookupGroupChange(): void {
@@ -87,7 +122,7 @@ export class LookupListComponent implements OnInit {
     this.editId = null;
     this.editingVatRate = false;
     if (this.groupsForAdd().length === 0) {
-      this.toastr.warning('Eklenebilecek grup bulunmuyor.');
+      this.toastr.warning(this.translate.instant('lookupsPage.toasts.noGroupToAdd'));
       return;
     }
     this.model = { isActive: true, sortOrder: 0 };
@@ -104,17 +139,17 @@ export class LookupListComponent implements OnInit {
 
   save() {
     if (!this.model.lookupGroupId) {
-      this.toastr.error('Lütfen bir grup seçiniz');
+      this.toastr.error(this.translate.instant('lookupsPage.toasts.selectGroup'));
       return;
     }
     if (this.isVatRateForm()) {
       this.syncVatRateDisplayName();
       if (!(this.model.code ?? '').toString().trim()) {
-        this.toastr.error('KDV oranı (kod) gerekli');
+        this.toastr.error(this.translate.instant('lookupsPage.toasts.vatCodeRequired'));
         return;
       }
     } else if (!(this.model.name ?? '').toString().trim()) {
-      this.toastr.error('Görünen ad gerekli');
+      this.toastr.error(this.translate.instant('lookupsPage.toasts.displayNameRequired'));
       return;
     }
     this.saving = true;
@@ -124,29 +159,29 @@ export class LookupListComponent implements OnInit {
 
     obs.subscribe({
       next: () => {
-        this.toastr.success('Kaydedildi');
+        this.toastr.success(this.translate.instant('lookupsPage.toasts.saved'));
         this.showForm = false;
         this.saving = false;
         this.refresh();
       },
       error: (e: unknown) => {
         const err = e as { error?: { message?: string } };
-        this.toastr.error(err?.error?.message ?? 'Hata oluştu');
+        this.toastr.error(err?.error?.message ?? this.translate.instant('lookupsPage.toasts.saveError'));
         this.saving = false;
       }
     });
   }
 
   delete(item: LookupDto) {
-    if (!confirm(`"${item.name}" tanımını silmek istediğinize emin misiniz?`)) return;
+    if (!confirm(this.translate.instant('lookupsPage.confirmDelete', { name: this.displayLookupName(item) }))) return;
     this.service.delete(item.id).subscribe({
       next: () => {
-        this.toastr.success('Silindi');
+        this.toastr.success(this.translate.instant('lookupsPage.toasts.deleted'));
         this.refresh();
       },
       error: (e: unknown) => {
         const err = e as { error?: { message?: string } };
-        this.toastr.error(err?.error?.message ?? 'Silinemedi');
+        this.toastr.error(err?.error?.message ?? this.translate.instant('lookupsPage.toasts.deleteError'));
       }
     });
   }

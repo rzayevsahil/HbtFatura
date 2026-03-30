@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FirmService } from '../../services/firm.service';
 import { FirmDto } from '../../core/models';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-firm-list',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, TranslateModule],
   templateUrl: './firm-list.component.html',
   styleUrls: ['./firm-list.component.scss']
 })

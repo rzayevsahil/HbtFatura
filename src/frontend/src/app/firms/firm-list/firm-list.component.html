@@ -1,9 +1,9 @@
 <div class="page-header">
-  <h1 class="page-title">Firmalar</h1>
-  <p class="page-subtitle">Tüm firmaları yönetin.</p>
+  <h1 class="page-title">{{ 'firmsPage.title' | translate }}</h1>
+  <p class="page-subtitle">{{ 'firmsPage.subtitle' | translate }}</p>
 </div>
 <div class="toolbar">
-  <a routerLink="/firms/new" class="btn btn-primary">Yeni Firma</a>
+  <a routerLink="/firms/new" class="btn btn-primary">{{ 'firmsPage.newFirm' | translate }}</a>
 </div>
 <div class="card table-wrap" style="position: relative; min-height: 200px;">
   @if (loading) {
@@ -14,8 +14,8 @@
   <table>
     <thead>
       <tr>
-        <th>Firma Adı</th>
-        <th>Oluşturulma</th>
+        <th>{{ 'firmsPage.colName' | translate }}</th>
+        <th>{{ 'firmsPage.colCreatedAt' | translate }}</th>
         <th></th>
       </tr>
     </thead>
@@ -25,7 +25,7 @@
           <td>{{ f.name }}</td>
           <td>{{ f.createdAt | date:'dd.MM.yyyy' }}</td>
           <td>
-            <a [routerLink]="['/firms', f.id]">Detay</a>
+            <a [routerLink]="['/firms', f.id]">{{ 'common.detail' | translate }}</a>
           </td>
         </tr>
       }

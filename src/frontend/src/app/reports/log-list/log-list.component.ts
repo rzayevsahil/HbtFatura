@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { LogService } from '../../services/log.service';
 import { LogEntry, LogLevel } from '../../core/models';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-log-list',
     standalone: true,
-    imports: [CommonModule, FormsModule],
+    imports: [CommonModule, FormsModule, TranslateModule],
     templateUrl: './log-list.component.html',
     styleUrls: ['./log-list.component.scss']
 })

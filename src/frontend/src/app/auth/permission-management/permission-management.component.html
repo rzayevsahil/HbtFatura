@@ -1,15 +1,15 @@
 <div class="permission-container">
     <div class="header-section">
-        <h1>Rol ve Yetki Yönetimi</h1>
-        <p>Sistemdeki rollerin erişebileceği modülleri ve yetkileri buradan yönetebilirsiniz.</p>
+        <h1>{{ 'permissionManagement.title' | translate }}</h1>
+        <p>{{ 'permissionManagement.subtitle' | translate }}</p>
     </div>
 
     <div class="content-grid">
         <!-- Role List -->
         <div class="roles-sidebar">
             <div class="sidebar-header">
-                <h3>Roller</h3>
-                <button class="btn-icon mini" (click)="openRoleModal()" title="Yeni Rol">
+                <h3>{{ 'permissionManagement.roles' | translate }}</h3>
+                <button class="btn-icon mini" (click)="openRoleModal()" [title]="'permissionManagement.newRole' | translate">
                     <span class="material-icons">add</span>
                 </button>
             </div>
@@ -39,22 +39,21 @@
         <div class="permissions-panel">
             @if (selectedRoleId()) {
             <div class="panel-header">
-                <h2>{{ getSelectedRoleName() }} Yetkileri</h2>
+                <h2>{{ getSelectedRoleName() }} {{ 'permissionManagement.permissionsSuffix' | translate }}</h2>
                 <div class="actions">
                     <button class="btn btn-secondary" (click)="openPermModal()" style="margin-right: 12px;">
-                        <span class="material-icons">add</span> Yeni Yetki
+                        <span class="material-icons">add</span> {{ 'permissionManagement.newPermission' | translate }}
                     </button>
                     <button type="button" class="btn btn-primary" (click)="saveRolePermissions()"
                         [disabled]="saving() || getSelectedRoleName() === 'SuperAdmin'">
-                        {{ saving() ? 'Kaydediliyor...' : 'Değişiklikleri Kaydet' }}
+                        {{ saving() ? ('permissionManagement.saving' | translate) : ('permissionManagement.saveChanges' | translate) }}
                     </button>
                 </div>
             </div>
 
             @if (getSelectedRoleName() === 'SuperAdmin') {
             <div class="alert alert-info">
-                SuperAdmin rolünün yetkileri veritabanı seed ile tanımlıdır. Personel düzenleme firma detayı üzerinden
-                yapılır; yan menüde &quot;Personel&quot; gizlenir. Bu ekrandan değiştirilemez.
+                {{ 'permissionManagement.superAdminInfo' | translate }}
             </div>
             }
 
@@ -88,7 +87,7 @@
             } @else {
             <div class="empty-state">
                 <span class="material-icons">security</span>
-                <p>Yönetmek istediğiniz rolü soldaki listeden seçiniz.</p>
+                <p>{{ 'permissionManagement.selectRoleHint' | translate }}</p>
             </div>
             }
         </div>
@@ -99,25 +98,24 @@
 <div class="modal-backdrop" *ngIf="showRoleModal()" (click)="showRoleModal.set(false)">
     <div class="modal-content" (click)="$event.stopPropagation()">
         <div class="modal-header">
-            <h2>{{ editingRole()?.id ? 'Rol Düzenle' : 'Yeni Rol Oluştur' }}</h2>
+            <h2>{{ editingRole()?.id ? ('permissionManagement.editRole' | translate) : ('permissionManagement.createRole' | translate) }}</h2>
             <button class="btn-close" (click)="showRoleModal.set(false)">&times;</button>
         </div>
         <div class="modal-body" *ngIf="editingRole()">
             <div class="form-group">
-                <label>Görünen Ad (Ekran için)</label>
-                <input type="text" [(ngModel)]="editingRole()!.displayName" placeholder="Örn: Muhasebe Sorumlusu">
+                <label>{{ 'permissionManagement.visibleName' | translate }}</label>
+                <input type="text" [(ngModel)]="editingRole()!.displayName" [placeholder]="'permissionManagement.visibleNamePlaceholder' | translate">
             </div>
             <div class="form-group">
-                <label>Sistem Adı (Kod ve Yetki için)</label>
-                <input type="text" [(ngModel)]="editingRole()!.name" placeholder="Örn: Muhasebe, Depo"
+                <label>{{ 'permissionManagement.systemName' | translate }}</label>
+                <input type="text" [(ngModel)]="editingRole()!.name" [placeholder]="'permissionManagement.systemNamePlaceholder' | translate"
                     [disabled]="editingRole()?.name === 'SuperAdmin'">
-                <small class="help-text" *ngIf="editingRole()?.name !== 'SuperAdmin'">Dikkat: Sistem adını değiştirmek
-                    yetki kontrollerini bozabilir.</small>
+                <small class="help-text" *ngIf="editingRole()?.name !== 'SuperAdmin'">{{ 'permissionManagement.systemNameWarning' | translate }}</small>
             </div>
         </div>
         <div class="modal-footer">
-            <button class="btn btn-secondary" (click)="showRoleModal.set(false)">Vazgeç</button>
-            <button class="btn btn-primary" (click)="saveRole()">Kaydet</button>
+            <button class="btn btn-secondary" (click)="showRoleModal.set(false)">{{ 'common.cancel' | translate }}</button>
+            <button class="btn btn-primary" (click)="saveRole()">{{ 'common.save' | translate }}</button>
         </div>
     </div>
 </div>
@@ -126,26 +124,26 @@
 <div class="modal-backdrop" *ngIf="showPermModal()" (click)="showPermModal.set(false)">
     <div class="modal-content" (click)="$event.stopPropagation()">
         <div class="modal-header">
-            <h2>Yeni Yetki Tanımla</h2>
+            <h2>{{ 'permissionManagement.newPermissionDefine' | translate }}</h2>
             <button class="btn-close" (click)="showPermModal.set(false)">&times;</button>
         </div>
         <div class="modal-body" *ngIf="editingPerm()">
             <div class="form-group">
-                <label>Grup Adı</label>
-                <input type="text" [(ngModel)]="editingPerm()!.group" placeholder="Örn: Faturalar, Ayarlar">
+                <label>{{ 'permissionManagement.groupName' | translate }}</label>
+                <input type="text" [(ngModel)]="editingPerm()!.group" [placeholder]="'permissionManagement.groupNamePlaceholder' | translate">
             </div>
             <div class="form-group">
-                <label>Yetki Adı</label>
-                <input type="text" [(ngModel)]="editingPerm()!.name" placeholder="Örn: Faturayı İptal Et">
+                <label>{{ 'permissionManagement.permissionName' | translate }}</label>
+                <input type="text" [(ngModel)]="editingPerm()!.name" [placeholder]="'permissionManagement.permissionNamePlaceholder' | translate">
             </div>
             <div class="form-group">
-                <label>Yetki Kodu (Tekil Olmalı)</label>
-                <input type="text" [(ngModel)]="editingPerm()!.code" placeholder="Örn: Invoices.Cancel">
+                <label>{{ 'permissionManagement.permissionCode' | translate }}</label>
+                <input type="text" [(ngModel)]="editingPerm()!.code" [placeholder]="'permissionManagement.permissionCodePlaceholder' | translate">
             </div>
         </div>
         <div class="modal-footer">
-            <button class="btn btn-secondary" (click)="showPermModal.set(false)">Vazgeç</button>
-            <button class="btn btn-primary" (click)="savePermission()">Kaydet</button>
+            <button class="btn btn-secondary" (click)="showPermModal.set(false)">{{ 'common.cancel' | translate }}</button>
+            <button class="btn btn-primary" (click)="savePermission()">{{ 'common.save' | translate }}</button>
         </div>
     </div>
 </div>

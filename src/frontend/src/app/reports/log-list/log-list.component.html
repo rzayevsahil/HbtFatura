@@ -1,18 +1,18 @@
 <div class="page-header">
-    <h1 class="page-title">Sistem Log Kayıtları</h1>
+    <h1 class="page-title">{{ 'logsPage.title' | translate }}</h1>
 </div>
 
 <div class="toolbar">
     <div class="filter-group">
         <select [(ngModel)]="level" (change)="page=1; load()">
-            <option value="">Tüm Seviyeler</option>
-            <option value="Info">Bilgi (Info)</option>
-            <option value="Warning">Uyarı (Warning)</option>
-            <option value="Error">Hata (Error)</option>
+            <option value="">{{ 'logsPage.levelAll' | translate }}</option>
+            <option value="Info">{{ 'logsPage.levelInfo' | translate }}</option>
+            <option value="Warning">{{ 'logsPage.levelWarning' | translate }}</option>
+            <option value="Error">{{ 'logsPage.levelError' | translate }}</option>
         </select>
     </div>
     <div class="filter-group">
-        <input type="text" [(ngModel)]="module" placeholder="Modül (örn: Auth, Invoice)" (keyup.enter)="page=1; load()">
+        <input type="text" [(ngModel)]="module" [placeholder]="'logsPage.modulePlaceholder' | translate" (keyup.enter)="page=1; load()">
     </div>
     <div class="filter-group">
         <input type="date" [(ngModel)]="dateFrom" (change)="page=1; load()">
@@ -20,7 +20,7 @@
     <div class="filter-group">
         <input type="date" [(ngModel)]="dateTo" (change)="page=1; load()">
     </div>
-    <button (click)="page=1; load()" class="btn-refresh">Yenile</button>
+    <button (click)="page=1; load()" class="btn-refresh">{{ 'logsPage.refresh' | translate }}</button>
 </div>
 
 <div class="card table-wrap" style="position: relative; min-height: 400px;">
@@ -33,12 +33,12 @@
     <table>
         <thead>
             <tr>
-                <th>Tarih</th>
-                <th>Seviye</th>
-                <th>Modül / İşlem</th>
-                <th>Kullanıcı</th>
-                <th>Mesaj</th>
-                <th>IP Adresi</th>
+                <th>{{ 'logsPage.colDate' | translate }}</th>
+                <th>{{ 'logsPage.colLevel' | translate }}</th>
+                <th>{{ 'logsPage.colModuleAction' | translate }}</th>
+                <th>{{ 'logsPage.colUser' | translate }}</th>
+                <th>{{ 'logsPage.colMessage' | translate }}</th>
+                <th>{{ 'logsPage.colIp' | translate }}</th>
             </tr>
         </thead>
         <tbody>
@@ -63,7 +63,7 @@
             </tr>
             } @empty {
             <tr>
-                <td colspan="6" class="empty-state">Kayıt bulunamadı.</td>
+                <td colspan="6" class="empty-state">{{ 'logsPage.empty' | translate }}</td>
             </tr>
             }
         </tbody>
@@ -71,9 +71,9 @@
 </div>
 
 <div class="pagination">
-    <span>Toplam {{ totalCount }} kayıt | Sayfa {{ page }}</span>
+    <span>{{ 'logsPage.pagination' | translate: { total: totalCount, page: page } }}</span>
     <div class="pagination-actions">
-        <button [disabled]="page === 1" (click)="prevPage()">Önceki</button>
-        <button [disabled]="items.length < pageSize" (click)="nextPage()">Sonraki</button>
+        <button [disabled]="page === 1" (click)="prevPage()">{{ 'common.previous' | translate }}</button>
+        <button [disabled]="items.length < pageSize" (click)="nextPage()">{{ 'common.next' | translate }}</button>
     </div>
 </div>

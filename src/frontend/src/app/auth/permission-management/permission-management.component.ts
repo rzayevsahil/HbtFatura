@@ -4,11 +4,12 @@ import { PermissionService } from '../../core/services/permission.service';
 import { PermissionDto, RoleDto } from '../../core/models';
 import { ToastrService } from 'ngx-toastr';
 import { FormsModule } from '@angular/forms';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-permission-management',
     standalone: true,
-    imports: [CommonModule, FormsModule],
+    imports: [CommonModule, FormsModule, TranslateModule],
     templateUrl: './permission-management.component.html',
     styleUrls: ['./permission-management.component.scss']
 })
@@ -31,7 +32,8 @@ export class PermissionManagementComponent implements OnInit {
 
     constructor(
         private permService: PermissionService,
-        private toastr: ToastrService
+        private toastr: ToastrService,
+        private translate: TranslateService
     ) { }
 
     ngOnInit() {
@@ -47,7 +49,7 @@ export class PermissionManagementComponent implements OnInit {
                     this.selectRole(roles[0].id);
                 }
             },
-            error: () => this.toastr.error('Roller yüklenemedi.')
+            error: () => this.toastr.error(this.translate.instant('permissionManagement.toasts.rolesLoadError'))
         });
 
         this.permService.getPermissions().subscribe({
@@ -57,7 +59,7 @@ export class PermissionManagementComponent implements OnInit {
                 this.loading.set(false);
             },
             error: () => {
-                this.toastr.error('Yetkiler yüklenemedi.');
+                this.toastr.error(this.translate.instant('permissionManagement.toasts.permissionsLoadError'));
                 this.loading.set(false);
             }
         });
@@ -75,7 +77,7 @@ export class PermissionManagementComponent implements OnInit {
         this.selectedRoleId.set(roleId);
         this.permService.getRolePermissions(roleId).subscribe({
             next: (perms) => this.rolePermissions.set(perms),
-            error: () => this.toastr.error('Rol yetkileri yüklenemedi.')
+            error: () => this.toastr.error(this.translate.instant('permissionManagement.toasts.rolePermissionsLoadError'))
         });
     }
 
@@ -99,11 +101,11 @@ export class PermissionManagementComponent implements OnInit {
         this.saving.set(true);
         this.permService.updateRolePermissions(roleId, this.rolePermissions()).subscribe({
             next: () => {
-                this.toastr.success('Yetkiler başarıyla güncellendi.');
+                this.toastr.success(this.translate.instant('permissionManagement.toasts.permissionsUpdated'));
                 this.saving.set(false);
             },
             error: (err) => {
-                this.toastr.error(err.error?.message || 'Yetkiler güncellenirken hata oluştu.');
+                this.toastr.error(err.error?.message || this.translate.instant('permissionManagement.toasts.permissionsUpdateError'));
                 this.saving.set(false);
             }
         });
@@ -122,36 +124,36 @@ export class PermissionManagementComponent implements OnInit {
         if (role.id) {
             this.permService.updateRole(role.id, role).subscribe({
                 next: () => {
-                    this.toastr.success('Rol güncellendi.');
+                    this.toastr.success(this.translate.instant('permissionManagement.toasts.roleUpdated'));
                     this.loadInitialData();
                     this.showRoleModal.set(false);
                 },
-                error: (err) => this.toastr.error(err.error?.message || 'Rol güncellenemedi.')
+                error: (err) => this.toastr.error(err.error?.message || this.translate.instant('permissionManagement.toasts.roleUpdateError'))
             });
         } else {
             this.permService.createRole(role).subscribe({
                 next: () => {
-                    this.toastr.success('Rol oluşturuldu.');
+                    this.toastr.success(this.translate.instant('permissionManagement.toasts.roleCreated'));
                     this.loadInitialData();
                     this.showRoleModal.set(false);
                 },
-                error: (err) => this.toastr.error(err.error?.message || 'Rol oluşturulamadı.')
+                error: (err) => this.toastr.error(err.error?.message || this.translate.instant('permissionManagement.toasts.roleCreateError'))
             });
         }
     }
 
     deleteRole(id: string) {
-        if (confirm('Bu rolü silmek istediğinize emin misiniz?')) {
+        if (confirm(this.translate.instant('permissionManagement.confirmDeleteRole'))) {
             this.permService.deleteRole(id).subscribe({
                 next: () => {
-                    this.toastr.success('Rol silindi.');
+                    this.toastr.success(this.translate.instant('permissionManagement.toasts.roleDeleted'));
                     if (this.selectedRoleId() === id) {
                         this.selectedRoleId.set(null);
                         this.rolePermissions.set([]);
                     }
                     this.loadInitialData();
                 },
-                error: (err) => this.toastr.error(err.error?.message || 'Rol silinemedi.')
+                error: (err) => this.toastr.error(err.error?.message || this.translate.instant('permissionManagement.toasts.roleDeleteError'))
             });
         }
     }
@@ -168,22 +170,22 @@ export class PermissionManagementComponent implements OnInit {
 
         this.permService.createPermission(perm).subscribe({
             next: () => {
-                this.toastr.success('Yetki oluşturuldu.');
+                this.toastr.success(this.translate.instant('permissionManagement.toasts.permissionCreated'));
                 this.loadInitialData();
                 this.showPermModal.set(false);
             },
-            error: (err) => this.toastr.error(err.error || 'Yetki oluşturulamadı.')
+            error: (err) => this.toastr.error(err.error || this.translate.instant('permissionManagement.toasts.permissionCreateError'))
         });
     }
 
     deletePermission(id: string) {
-        if (confirm('Bu yetkiyi silmek istediğinize emin misiniz?')) {
+        if (confirm(this.translate.instant('permissionManagement.confirmDeletePermission'))) {
             this.permService.deletePermission(id).subscribe({
                 next: () => {
-                    this.toastr.success('Yetki silindi.');
+                    this.toastr.success(this.translate.instant('permissionManagement.toasts.permissionDeleted'));
                     this.loadInitialData();
                 },
-                error: (err) => this.toastr.error(err.error || 'Yetki silinemedi.')
+                error: (err) => this.toastr.error(err.error || this.translate.instant('permissionManagement.toasts.permissionDeleteError'))
             });
         }
     }

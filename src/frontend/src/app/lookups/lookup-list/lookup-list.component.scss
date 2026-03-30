@@ -1,5 +1,32 @@
-.header-content {
+.page-header {
+  margin-bottom: 1.5rem;
+}
+
+.header-top-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.header-top-row .page-title {
+  margin: 0;
   flex: 1;
+  min-width: 12rem;
+}
+
+.header-add-btn {
+  flex-shrink: 0;
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+
+  .material-icons {
+    font-size: 1.25rem;
+    line-height: 1;
+  }
 }
 
 .subtitle {
@@ -10,7 +37,8 @@
 
 .page-description {
   color: #666;
-  margin-top: 4px;
+  margin: 0.5rem 0 0;
+  max-width: 52rem;
   font-size: 0.95rem;
 }
 
