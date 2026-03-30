@@ -43,6 +43,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("login")]
+    [AllowAnonymous]
     public async Task<ActionResult<AuthResponse>> Login([FromBody] LoginRequest request, CancellationToken ct)
     {
         var ip = HttpContext.Connection.RemoteIpAddress?.ToString();
@@ -53,6 +54,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("refresh")]
+    [AllowAnonymous]
     public async Task<ActionResult<AuthResponse>> Refresh([FromBody] RefreshTokenRequest request, CancellationToken ct)
     {
         var ip = HttpContext.Connection.RemoteIpAddress?.ToString();
@@ -63,6 +65,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("revoke")]
+    [AllowAnonymous]
     public async Task<IActionResult> Revoke([FromBody] RefreshTokenRequest request, CancellationToken ct)
     {
         var ip = HttpContext.Connection.RemoteIpAddress?.ToString();

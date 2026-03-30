@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../core/services/auth.service';
@@ -26,6 +26,7 @@ export class LoginComponent {
 
   constructor(
     private fb: FormBuilder,
+    private router: Router,
     private auth: AuthService,
     private toastr: ToastrService,
     public theme: ThemeService,
@@ -51,8 +52,8 @@ export class LoginComponent {
     this.error = '';
     this.loading = true;
     this.auth.login(this.form.getRawValue().email, this.form.getRawValue().password).subscribe({
-      next: (res) => {
-        window.location.href = '/dashboard';
+      next: () => {
+        void this.router.navigateByUrl('/dashboard');
       },
       error: (e) => {
         const msg = e.error?.message

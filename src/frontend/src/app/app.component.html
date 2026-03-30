@@ -16,9 +16,9 @@
 
 
 
-<div [class.layout]="auth.isAuthenticated()">
+<div [class.layout]="showAppChrome()">
 
-  @if (auth.isAuthenticated()) {
+  @if (showAppChrome()) {
 
   <header class="header">
 

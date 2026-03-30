@@ -1,5 +1,7 @@
-import { Component, effect } from '@angular/core';
-import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { Component, computed, effect, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { filter } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { Subscription, interval } from 'rxjs';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -66,6 +68,13 @@ export class AppComponent {
     'Şirket Profili': 'menu.companyProfile'
   };
 
+  private readonly urlPath = signal<string>('/');
+
+  /** Header + sidebar: oturum açık olsa bile giriş rotasında chrome gösterme (giriş sırasında titreme önlemi). */
+  readonly showAppChrome = computed(
+    () => this.auth.isAuthenticated() && this.urlPath() !== '/login'
+  );
+
   headerMenuOpen = false;
   notifOpen = false;
   notifItems: UserNotificationDto[] = [];
@@ -81,6 +90,14 @@ export class AppComponent {
     private notifApi: NotificationService,
     private router: Router
   ) {
+    this.urlPath.set(AppComponent.pathOnly(this.router.url));
+    this.router.events
+      .pipe(
+        filter((e): e is NavigationEnd => e instanceof NavigationEnd),
+        takeUntilDestroyed()
+      )
+      .subscribe(e => this.urlPath.set(AppComponent.pathOnly(e.urlAfterRedirects)));
+
     this.lookup.load().subscribe();
     effect(() => {
       if (!this.auth.isAuthenticated()) {
@@ -186,6 +203,11 @@ export class AppComponent {
 
   canViewGibInbox(): boolean {
     return !!this.auth.user()?.permissions?.includes('GibSimulation.ViewInbox');
+  }
+
+  private static pathOnly(url: string): string {
+    const q = url.split(/[?#]/)[0] ?? '/';
+    return q || '/';
   }
 
   /** Angular `DatePipe` yerel ayarı (dil değişince güncellenir) */
