@@ -41,6 +41,7 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, 
     public DbSet<Menu> Menus => Set<Menu>();
     public DbSet<GibSimulationSubmission> GibSimulationSubmissions => Set<GibSimulationSubmission>();
     public DbSet<UserNotification> UserNotifications => Set<UserNotification>();
+    public DbSet<MaterialIconOption> MaterialIconOptions => Set<MaterialIconOption>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -307,6 +308,13 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, 
             e.Property(x => x.Title).HasMaxLength(256);
             e.Property(x => x.Body).HasMaxLength(1024);
             e.Property(x => x.ReferenceType).HasMaxLength(64);
+        });
+
+        modelBuilder.Entity<MaterialIconOption>(e =>
+        {
+            e.HasIndex(x => x.LigatureName).IsUnique();
+            e.Property(x => x.LigatureName).HasMaxLength(128);
+            e.Property(x => x.SortOrder).HasDefaultValue(0);
         });
     }
 }

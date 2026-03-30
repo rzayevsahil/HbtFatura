@@ -415,6 +415,7 @@
     "lookups": "System lookups",
     "permissions": "Roles & permissions",
     "menus": "Menu management",
+    "materialIcons": "Material icons",
     "firms": "Company management",
     "employees": "HR / personnel",
     "logs": "System logs",
@@ -774,6 +775,37 @@
       "reordered": "Menu order saved.",
       "reorderError": "Could not save order.",
       "reorderInvalid": "Cannot move here; only valid hierarchy is allowed."
+    }
+  },
+  "materialIconsPage": {
+    "title": "Material icons",
+    "description": "Ligature names for the classic Material Icons web font. These entries appear in the icon picker (e.g. menu editor). Use lowercase snake_case.",
+    "addButton": "Add icon",
+    "searchPlaceholder": "Search by ligature name…",
+    "paginationInfo": "Page {{current}} of {{total}} · {{count}} icons",
+    "emptyList": "No icons yet. Add one with the button above.",
+    "noRows": "No icons match your search.",
+    "colGlyph": "Preview",
+    "colLigature": "Ligature",
+    "colSort": "Order",
+    "colStatus": "Status",
+    "colActions": "Actions",
+    "active": "Active",
+    "passive": "Inactive",
+    "modalAdd": "New icon",
+    "modalEdit": "Edit icon",
+    "fieldLigature": "Ligature name",
+    "fieldLigatureHint": "e.g. shopping_cart",
+    "fieldSort": "Sort order",
+    "fieldActive": "Active (show in picker)",
+    "confirmDelete": "Delete \"{{name}}\" from the list?",
+    "toasts": {
+      "loadError": "Could not load icons.",
+      "saved": "Saved.",
+      "saveError": "Could not save.",
+      "nameRequired": "Enter a ligature name.",
+      "deleted": "Deleted.",
+      "deleteError": "Could not delete."
     }
   },
   "firmsPage": {

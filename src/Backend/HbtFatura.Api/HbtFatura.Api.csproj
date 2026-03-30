@@ -4,6 +4,8 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <!-- dotnet build -p:IntermediateOutputPath=obj_foo ile oluşan klasörler glob ile derlenip CS0579 üretmesin -->
+    <DefaultItemExcludes>$(DefaultItemExcludes);**/obj_manual/**;**/obj_manual2/**;**/obj_verify/**;**/bin_manual/**;**/bin_manual2/**;**/bin_verify/**</DefaultItemExcludes>
   </PropertyGroup>
 
   <ItemGroup>

@@ -403,6 +403,7 @@
     "lookups": "Sistem Tanımları",
     "permissions": "Rol ve Yetki Yönetimi",
     "menus": "Menü Yönetimi",
+    "materialIcons": "Material İkonları",
     "firms": "Firma Yönetimi",
     "employees": "Personel Yönetimi",
     "logs": "Sistem Logları",
@@ -778,6 +779,37 @@
       "reordered": "Menü sıralaması kaydedildi.",
       "reorderError": "Sıralama kaydedilemedi.",
       "reorderInvalid": "Bu konuma taşınamaz; yalnızca geçerli hiyerarşi korunarak sıralayabilirsiniz."
+    }
+  },
+  "materialIconsPage": {
+    "title": "Material İkonları",
+    "description": "Klasik Material+Icons web fontu ligature adları. Menü düzenleyici gibi ekranlardaki ikon listesinde görünür. Küçük harf ve alt çizgi (snake_case) kullanın.",
+    "addButton": "İkon ekle",
+    "searchPlaceholder": "Ligature adına göre ara…",
+    "paginationInfo": "Sayfa {{current}} / {{total}} · {{count}} ikon",
+    "emptyList": "Henüz ikon yok. Yukarıdaki düğmeyle ekleyebilirsiniz.",
+    "noRows": "Aramaya uygun ikon yok.",
+    "colGlyph": "Önizleme",
+    "colLigature": "Ligature",
+    "colSort": "Sıra",
+    "colStatus": "Durum",
+    "colActions": "İşlemler",
+    "active": "Aktif",
+    "passive": "Pasif",
+    "modalAdd": "Yeni ikon",
+    "modalEdit": "İkonu düzenle",
+    "fieldLigature": "Ligature adı",
+    "fieldLigatureHint": "örn. shopping_cart",
+    "fieldSort": "Sıralama",
+    "fieldActive": "Aktif (seçicide listele)",
+    "confirmDelete": "\"{{name}}\" kaydını silmek istiyor musunuz?",
+    "toasts": {
+      "loadError": "İkonlar yüklenemedi.",
+      "saved": "Kaydedildi.",
+      "saveError": "Kaydedilemedi.",
+      "nameRequired": "Ligature adı girin.",
+      "deleted": "Silindi.",
+      "deleteError": "Silinemedi."
     }
   },
   "firmsPage": {

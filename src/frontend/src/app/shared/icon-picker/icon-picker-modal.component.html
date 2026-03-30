@@ -12,7 +12,7 @@
     <div class="icon-picker-body">
       <button type="button" class="icon-tile" *ngFor="let name of filteredIcons"
         (click)="pick(name)" [title]="name">
-        <span class="material-icons icon-tile-glyph">{{ name }}</span>
+        <span class="material-icons icon-tile-glyph">{{ name | materialIconLigature }}</span>
         <span class="icon-tile-name">{{ name }}</span>
       </button>
       <p class="icon-picker-empty" *ngIf="filteredIcons.length === 0">

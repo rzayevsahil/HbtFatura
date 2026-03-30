@@ -70,6 +70,9 @@ public static class RoleSeed
             
             new() { Id = Guid.NewGuid(), Group = "Menü Yönetimi", Code = "Menus.View", Name = "Görüntüle" },
             new() { Id = Guid.NewGuid(), Group = "Menü Yönetimi", Code = "Menus.Edit", Name = "Düzenle" },
+
+            new() { Id = Guid.NewGuid(), Group = "Sistem", Code = "MaterialIcons.View", Name = "Material ikon listesi" },
+            new() { Id = Guid.NewGuid(), Group = "Sistem", Code = "MaterialIcons.Edit", Name = "Material ikonları düzenle" },
             
             new() { Id = Guid.NewGuid(), Group = "Firma Yönetimi", Code = "Firms.View", Name = "Görüntüle" },
             new() { Id = Guid.NewGuid(), Group = "Firma Yönetimi", Code = "Firms.Edit", Name = "Düzenle" },
@@ -114,7 +117,7 @@ public static class RoleSeed
         if (superAdminRole != null)
         {
             // SuperAdmin: sistem + firma yönetimi; Employees.* firma detayından çalışan düzenleme ve API (genel /employees listesi menü ve servis tarafında kısıtlı).
-            var adminPermCodes = new[] { "Dashboard.View", "Lookups.", "Roles.", "Menus.", "Logs.", "Firms.", "CompanyProfile.Edit", "Employees." };
+            var adminPermCodes = new[] { "Dashboard.View", "Lookups.", "Roles.", "Menus.", "MaterialIcons.", "Logs.", "Firms.", "CompanyProfile.Edit", "Employees." };
             var adminPerms = allPerms.Where(x => adminPermCodes.Any(code => x.Code.StartsWith(code))).ToList();
 
             // Add missing permissions
@@ -218,9 +221,10 @@ public static class RoleSeed
             new() { Label = "Sistem Tanımları", Icon = "settings", RouterLink = "/lookups", SortOrder = 101, RequiredPermissionCode = "Lookups.View" },
             new() { Label = "Rol ve Yetki Yönetimi", Icon = "security", RouterLink = "/permissions", SortOrder = 102, RequiredPermissionCode = "Roles.View" },
             new() { Label = "Menü Yönetimi", Icon = "menu", RouterLink = "/menus", SortOrder = 103, RequiredPermissionCode = "Menus.View" },
-            new() { Label = "Firma Yönetimi", Icon = "business", RouterLink = "/firms", SortOrder = 104, RequiredPermissionCode = "Firms.View" },
-            new() { Label = "Personel Yönetimi", Icon = "badge", RouterLink = "/employees", SortOrder = 105, RequiredPermissionCode = "Employees.View" },
-            new() { Label = "Sistem Logları", Icon = "history", RouterLink = "/logs", SortOrder = 106, RequiredPermissionCode = "Logs.View" },
+            new() { Label = "Material İkonları", Icon = "palette", RouterLink = "/material-icons", SortOrder = 104, RequiredPermissionCode = "MaterialIcons.View" },
+            new() { Label = "Firma Yönetimi", Icon = "business", RouterLink = "/firms", SortOrder = 105, RequiredPermissionCode = "Firms.View" },
+            new() { Label = "Personel Yönetimi", Icon = "badge", RouterLink = "/employees", SortOrder = 106, RequiredPermissionCode = "Employees.View" },
+            new() { Label = "Sistem Logları", Icon = "history", RouterLink = "/logs", SortOrder = 107, RequiredPermissionCode = "Logs.View" },
             new() { Label = "Şirket Profili", Icon = "business", RouterLink = "/company/profile", SortOrder = 11, RequiredPermissionCode = "CompanyProfile.View" }
         };
 

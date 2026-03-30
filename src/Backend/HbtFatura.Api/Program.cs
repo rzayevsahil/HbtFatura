@@ -155,6 +155,7 @@ using (var scope = app.Services.CreateScope())
     await CityDistrictSeed.SeedIfEmptyAsync(db);
     await TaxOfficeSeed.SeedTaxOfficesIfEmptyAsync(db);
     await LookupSeed.SeedIfEmptyAsync(db);
+    await MaterialIconSeed.SeedIfEmptyAsync(db);
 
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
