@@ -32,6 +32,12 @@
     "registerSubmit": "Kayıt",
     "goToLogin": "Giriş yap"
   },
+  "notFound": {
+    "title": "Sayfa bulunamadı",
+    "hint": "Aradığınız adres yanlış veya kaldırılmış olabilir.",
+    "backDashboard": "Panele dön",
+    "backLogin": "Giriş sayfasına git"
+  },
   "dashboard": {
     "loading": "Veriler yükleniyor...",
     "welcome": "Hoş Geldiniz, {{name}} 👋",

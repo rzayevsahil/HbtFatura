@@ -1,0 +1,12 @@
+<div class="not-found">
+  <div class="not-found-card">
+    <p class="not-found-code">404</p>
+    <h1>{{ 'notFound.title' | translate }}</h1>
+    <p class="not-found-hint">{{ 'notFound.hint' | translate }}</p>
+    @if (auth.isAuthenticated()) {
+    <a routerLink="/dashboard" class="btn-primary">{{ 'notFound.backDashboard' | translate }}</a>
+    } @else {
+    <a routerLink="/login" class="btn-primary">{{ 'notFound.backLogin' | translate }}</a>
+    }
+  </div>
+</div>

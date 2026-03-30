@@ -32,6 +32,12 @@
     "registerSubmit": "Register",
     "goToLogin": "Sign in"
   },
+  "notFound": {
+    "title": "Page not found",
+    "hint": "The address may be wrong or the page was removed.",
+    "backDashboard": "Back to panel",
+    "backLogin": "Go to sign in"
+  },
   "dashboard": {
     "loading": "Loading data...",
     "welcome": "Welcome, {{name}} 👋",

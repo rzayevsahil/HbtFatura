@@ -256,5 +256,8 @@ export const routes: Routes = [
   { path: 'employees/:id/edit', loadComponent: () => import('./employees/employee-form/employee-form.component').then(m => m.EmployeeFormComponent), canActivate: [authGuard, PermissionGuard], data: { permission: 'Employees.Edit' } },
 
   { path: 'dashboard', loadComponent: () => import('./dashboard/dashboard.component').then(m => m.DashboardComponent), canActivate: [authGuard] },
-  { path: '**', redirectTo: 'dashboard' }
+  {
+    path: '**',
+    loadComponent: () => import('./not-found/not-found.component').then(m => m.NotFoundComponent)
+  }
 ];
