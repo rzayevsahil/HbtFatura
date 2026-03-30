@@ -46,6 +46,10 @@
           </button>
         </div>
       </div>
+      <label class="remember-row">
+        <input type="checkbox" formControlName="rememberMe" />
+        <span>{{ 'auth.rememberMe' | translate }}</span>
+      </label>
       @if (error) { <p class="error">{{ error }}</p> }
       <button type="submit" [disabled]="form.invalid || loading">
         @if (loading) {

@@ -30,6 +30,7 @@
     "fullNamePlaceholder": "Adınız Soyadınız",
     "passwordMinPlaceholder": "En az 6 karakter",
     "loginSubmit": "Giriş",
+    "rememberMe": "Beni hatırla",
     "loggingIn": "Giriş yapılıyor...",
     "registerSubmit": "Kayıt",
     "goToLogin": "Giriş yap"

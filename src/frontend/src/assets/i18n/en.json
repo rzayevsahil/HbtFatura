@@ -30,6 +30,7 @@
     "fullNamePlaceholder": "Your full name",
     "passwordMinPlaceholder": "At least 6 characters",
     "loginSubmit": "Sign in",
+    "rememberMe": "Remember me",
     "loggingIn": "Signing in...",
     "registerSubmit": "Register",
     "goToLogin": "Sign in"

@@ -18,7 +18,8 @@ import { ToastrService } from 'ngx-toastr';
 export class LoginComponent {
   form = this.fb.nonNullable.group({
     email: ['', [Validators.required, Validators.email]],
-    password: ['', Validators.required]
+    password: ['', Validators.required],
+    rememberMe: [false]
   });
   error = '';
   loading = false;
@@ -51,7 +52,8 @@ export class LoginComponent {
   onSubmit(): void {
     this.error = '';
     this.loading = true;
-    this.auth.login(this.form.getRawValue().email, this.form.getRawValue().password).subscribe({
+    const v = this.form.getRawValue();
+    this.auth.login(v.email, v.password, v.rememberMe).subscribe({
       next: () => {
         void this.router.navigateByUrl('/dashboard');
       },

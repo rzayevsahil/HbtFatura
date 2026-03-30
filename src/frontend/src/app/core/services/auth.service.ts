@@ -23,36 +23,44 @@ export class AuthService {
     private http: HttpClient,
     private router: Router
   ) {
-    const stored = localStorage.getItem(this.storageKey);
+    const localStored = localStorage.getItem(this.storageKey);
+    const sessionStored = sessionStorage.getItem(this.storageKey);
+    const stored = localStored ?? sessionStored;
+
     if (stored) {
       try {
         const data = JSON.parse(stored) as AuthResponse;
         this.currentUser.set(data.user);
         this.accessToken.set(data.accessToken);
-        localStorage.setItem(this.tokenKey, data.accessToken);
-        localStorage.setItem(this.refreshKey, data.refreshToken);
+        if (localStored) {
+          localStorage.setItem(this.tokenKey, data.accessToken);
+          localStorage.setItem(this.refreshKey, data.refreshToken);
+        } else {
+          sessionStorage.setItem(this.tokenKey, data.accessToken);
+          sessionStorage.setItem(this.refreshKey, data.refreshToken);
+        }
       } catch { }
     } else {
-      const t = localStorage.getItem(this.tokenKey);
+      const t = localStorage.getItem(this.tokenKey) ?? sessionStorage.getItem(this.tokenKey);
       if (t) this.accessToken.set(t);
     }
   }
 
   getToken(): string | null {
-    return this.accessToken() ?? localStorage.getItem(this.tokenKey);
+    return this.accessToken() ?? localStorage.getItem(this.tokenKey) ?? sessionStorage.getItem(this.tokenKey);
   }
 
   getRefreshToken(): string | null {
-    return localStorage.getItem(this.refreshKey);
+    return localStorage.getItem(this.refreshKey) ?? sessionStorage.getItem(this.refreshKey);
   }
 
-  login(email: string, password: string): Observable<AuthResponse> {
+  login(email: string, password: string, rememberMe: boolean): Observable<AuthResponse> {
     const url = '/api/auth/login';
     console.log('[AuthService] login → relative URL:', url);
     return this.http.post<AuthResponse>(url, {
       email,
       password
-    }).pipe(tap((res) => this.handleAuthResponse(res)));
+    }).pipe(tap((res) => this.handleAuthResponse(res, rememberMe)));
   }
 
   refreshToken(): Observable<AuthResponse | null> {
@@ -83,6 +91,9 @@ export class AuthService {
       localStorage.removeItem(this.storageKey);
       localStorage.removeItem(this.tokenKey);
       localStorage.removeItem(this.refreshKey);
+      sessionStorage.removeItem(this.storageKey);
+      sessionStorage.removeItem(this.tokenKey);
+      sessionStorage.removeItem(this.refreshKey);
       this.router.navigate(['/login']).then(() => {
         this._loggingOut.set(false);
       });
@@ -95,23 +106,45 @@ export class AuthService {
       const newUser = { ...current, ...updatedFields };
       this.currentUser.set(newUser);
 
-      const stored = localStorage.getItem(this.storageKey);
+      const localStored = localStorage.getItem(this.storageKey);
+      const sessionStored = sessionStorage.getItem(this.storageKey);
+      const stored = localStored ?? sessionStored;
+
       if (stored) {
         try {
           const data = JSON.parse(stored) as AuthResponse;
           data.user = newUser;
-          localStorage.setItem(this.storageKey, JSON.stringify(data));
+          const target = localStored ? localStorage : sessionStorage;
+          target.setItem(this.storageKey, JSON.stringify(data));
         } catch { }
       }
     }
   }
 
-  private handleAuthResponse(res: AuthResponse): void {
+  private handleAuthResponse(res: AuthResponse, rememberMe?: boolean): void {
     this.currentUser.set(res.user);
     this.accessToken.set(res.accessToken);
-    localStorage.setItem(this.tokenKey, res.accessToken);
-    localStorage.setItem(this.refreshKey, res.refreshToken);
-    localStorage.setItem(this.storageKey, JSON.stringify(res));
+
+    // Refresh akışında `rememberMe` gelmez; refresh token nerede duruyorsa oraya yazar.
+    const shouldStoreLocal = rememberMe ?? !!localStorage.getItem(this.refreshKey);
+
+    if (shouldStoreLocal) {
+      localStorage.setItem(this.tokenKey, res.accessToken);
+      localStorage.setItem(this.refreshKey, res.refreshToken);
+      localStorage.setItem(this.storageKey, JSON.stringify(res));
+
+      sessionStorage.removeItem(this.storageKey);
+      sessionStorage.removeItem(this.tokenKey);
+      sessionStorage.removeItem(this.refreshKey);
+    } else {
+      sessionStorage.setItem(this.tokenKey, res.accessToken);
+      sessionStorage.setItem(this.refreshKey, res.refreshToken);
+      sessionStorage.setItem(this.storageKey, JSON.stringify(res));
+
+      localStorage.removeItem(this.storageKey);
+      localStorage.removeItem(this.tokenKey);
+      localStorage.removeItem(this.refreshKey);
+    }
   }
 
   hasPermission(code: string): boolean {

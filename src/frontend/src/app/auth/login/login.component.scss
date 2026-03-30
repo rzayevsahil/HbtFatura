@@ -83,6 +83,24 @@
   }
 }
 
+.remember-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: -0.5rem 0 1.25rem;
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+  user-select: none;
+
+  input[type='checkbox'] {
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    padding: 0;
+    accent-color: var(--color-primary);
+  }
+}
+
 .spinner-sm {
   width: 18px;
   height: 18px;
