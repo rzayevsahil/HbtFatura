@@ -47,10 +47,6 @@ export class IconPickerModalComponent implements OnInit {
     this.iconSelected.emit(name);
   }
 
-  onBackdropClick(): void {
-    this.dismiss.emit();
-  }
-
   stopBubble(event: Event): void {
     event.stopPropagation();
   }

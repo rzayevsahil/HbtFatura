@@ -94,7 +94,7 @@
 </div>
 
 <!-- Modal -->
-<div class="modal-backdrop" *ngIf="showModal()" (click)="closeModal()">
+<div class="modal-backdrop" *ngIf="showModal()">
     <div class="modal-content" (click)="$event.stopPropagation()">
         <div class="modal-header">
             <h2>{{ editingMenu()?.id ? ('menuManagement.editMenu' | translate) : ('menuManagement.newMenu' | translate) }}</h2>

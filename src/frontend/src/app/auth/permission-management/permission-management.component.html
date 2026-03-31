@@ -95,7 +95,7 @@
 </div>
 
 <!-- Role Modal -->
-<div class="modal-backdrop" *ngIf="showRoleModal()" (click)="showRoleModal.set(false)">
+<div class="modal-backdrop" *ngIf="showRoleModal()">
     <div class="modal-content" (click)="$event.stopPropagation()">
         <div class="modal-header">
             <h2>{{ editingRole()?.id ? ('permissionManagement.editRole' | translate) : ('permissionManagement.createRole' | translate) }}</h2>
@@ -121,7 +121,7 @@
 </div>
 
 <!-- Permission Modal -->
-<div class="modal-backdrop" *ngIf="showPermModal()" (click)="showPermModal.set(false)">
+<div class="modal-backdrop" *ngIf="showPermModal()">
     <div class="modal-content" (click)="$event.stopPropagation()">
         <div class="modal-header">
             <h2>{{ 'permissionManagement.newPermissionDefine' | translate }}</h2>

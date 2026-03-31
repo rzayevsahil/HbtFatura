@@ -57,7 +57,7 @@
 </section>
 }
 @if (showAddModal) {
-<div class="modal-overlay" (click)="closeAddModal()">
+<div class="modal-overlay">
   <div class="modal" (click)="$event.stopPropagation()">
     <h3>{{ 'bankAccountsPage.receiptModalTitle' | translate }}</h3>
     <div class="form-grid">

@@ -76,7 +76,7 @@
 }
 
 @if (showModal) {
-  <div class="modal-overlay" (click)="closeModal()">
+  <div class="modal-overlay">
     <div class="modal-card" (click)="$event.stopPropagation()">
       <div class="modal-header">
         <h3>{{ editId ? ('materialIconsPage.modalEdit' | translate) : ('materialIconsPage.modalAdd' | translate) }}</h3>
