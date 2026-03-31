@@ -28,7 +28,8 @@ public class RolesController : ControllerBase
             {
                 Id = r.Id,
                 Name = r.Name ?? "",
-                DisplayName = r.DisplayName
+                DisplayName = r.DisplayName,
+                IsSystem = r.IsSystem
             })
             .ToListAsync();
     }
@@ -41,12 +42,12 @@ public class RolesController : ControllerBase
         if (await _roleManager.RoleExistsAsync(dto.Name))
             return BadRequest("Role already exists.");
 
-        var role = new ApplicationRole(dto.Name) { DisplayName = dto.DisplayName };
+        var role = new ApplicationRole(dto.Name) { DisplayName = dto.DisplayName, IsSystem = false };
         var result = await _roleManager.CreateAsync(role);
 
         if (!result.Succeeded) return BadRequest(result.Errors);
 
-        return Ok(new RoleDto { Id = role.Id, Name = role.Name ?? "", DisplayName = role.DisplayName });
+        return Ok(new RoleDto { Id = role.Id, Name = role.Name ?? "", DisplayName = role.DisplayName, IsSystem = role.IsSystem });
     }
 
     [HttpPut("{id}")]
@@ -73,7 +74,7 @@ public class RolesController : ControllerBase
         var role = await _roleManager.FindByIdAsync(id.ToString());
         if (role == null) return NotFound();
 
-        if (role.Name == "SuperAdmin") return BadRequest("SuperAdmin role cannot be deleted.");
+        if (role.IsSystem) return BadRequest("System roles cannot be deleted.");
 
         // AspNetCore Identity handles foreign key checks or cascade if configured
         var result = await _roleManager.DeleteAsync(role);

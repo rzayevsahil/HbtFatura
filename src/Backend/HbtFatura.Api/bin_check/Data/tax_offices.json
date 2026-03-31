@@ -1,0 +1,5212 @@
+[
+    {
+        "City": "ADANA",
+        "District": "Merkez",
+        "Name": "Adana İhtisas Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ADANA",
+        "District": "Merkez",
+        "Name": "5 Ocak Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ADANA",
+        "District": "Merkez",
+        "Name": "Yüreğir Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ADANA",
+        "District": "Merkez",
+        "Name": "Seyhan Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ADANA",
+        "District": "Merkez",
+        "Name": "Ziyapaşa Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ADANA",
+        "District": "Merkez",
+        "Name": "Çukurova Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ADANA",
+        "District": "Ceyhan",
+        "Name": "Ceyhan Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ADANA",
+        "District": "Kozan",
+        "Name": "Kozan Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ADANA",
+        "District": "Karataş",
+        "Name": "Karataş Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ADANA",
+        "District": "Feke",
+        "Name": "Feke Malmüdürlüğü"
+    },
+    {
+        "City": "ADANA",
+        "District": "Karaisalı",
+        "Name": "Karaisalı Malmüdürlüğü"
+    },
+    {
+        "City": "ADANA",
+        "District": "Pozantı",
+        "Name": "Pozantı Malmüdürlüğü"
+    },
+    {
+        "City": "ADANA",
+        "District": "Saimbeyli",
+        "Name": "Saimbeyli Malmüdürlüğü"
+    },
+    {
+        "City": "ADANA",
+        "District": "Tufanbeyli",
+        "Name": "Tufanbeyli Malmüdürlüğü"
+    },
+    {
+        "City": "ADANA",
+        "District": "Yumurtalık",
+        "Name": "Yumurtalık Malmüdürlüğü"
+    },
+    {
+        "City": "ADANA",
+        "District": "Aladağ",
+        "Name": "Aladağ Malmüdürlüğü"
+    },
+    {
+        "City": "ADANA",
+        "District": "İmamoğlu",
+        "Name": "İmamoğlu Malmüdürlüğü"
+    },
+    {
+        "City": "ADIYAMAN",
+        "District": "Merkez",
+        "Name": "Adıyaman Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ADIYAMAN",
+        "District": "Kahta",
+        "Name": "Kahta Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ADIYAMAN",
+        "District": "Besni",
+        "Name": "Besni Malmüdürlüğü"
+    },
+    {
+        "City": "ADIYAMAN",
+        "District": "Çelikhan",
+        "Name": "Çelikhan Malmüdürlüğü"
+    },
+    {
+        "City": "ADIYAMAN",
+        "District": "Gerger",
+        "Name": "Gerger Malmüdürlüğü"
+    },
+    {
+        "City": "ADIYAMAN",
+        "District": "Gölbaşı",
+        "Name": "Gölbaşı Malmüdürlüğü"
+    },
+    {
+        "City": "ADIYAMAN",
+        "District": "Samsat",
+        "Name": "Samsat Malmüdürlüğü"
+    },
+    {
+        "City": "ADIYAMAN",
+        "District": "Sincik",
+        "Name": "Sincik Malmüdürlüğü"
+    },
+    {
+        "City": "ADIYAMAN",
+        "District": "Tut",
+        "Name": "Tut Malmüdürlüğü"
+    },
+    {
+        "City": "AFYONKARAHİSAR",
+        "District": "Merkez",
+        "Name": "Tınaztepe Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "AFYONKARAHİSAR",
+        "District": "Merkez",
+        "Name": "Kocatepe Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "AFYONKARAHİSAR",
+        "District": "Dinar",
+        "Name": "Dinar Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "AFYONKARAHİSAR",
+        "District": "Bolvadin",
+        "Name": "Bolvadin Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "AFYONKARAHİSAR",
+        "District": "Emirdağ",
+        "Name": "Emirdağ Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "AFYONKARAHİSAR",
+        "District": "Sandıklı",
+        "Name": "Sandıklı Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "AFYONKARAHİSAR",
+        "District": "İscehisar",
+        "Name": "İscehisar Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "AFYONKARAHİSAR",
+        "District": "Çay",
+        "Name": "Çay Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "AFYONKARAHİSAR",
+        "District": "Dazkırı",
+        "Name": "Dazkırı Malmüdürlüğü"
+    },
+    {
+        "City": "AFYONKARAHİSAR",
+        "District": "İhsaniye",
+        "Name": "İhsaniye Malmüdürlüğü"
+    },
+    {
+        "City": "AFYONKARAHİSAR",
+        "District": "Sinanpaşa",
+        "Name": "Sinanpaşa Malmüdürlüğü"
+    },
+    {
+        "City": "AFYONKARAHİSAR",
+        "District": "Sultandağı",
+        "Name": "Sultandağı Malmüdürlüğü"
+    },
+    {
+        "City": "AFYONKARAHİSAR",
+        "District": "Şuhut",
+        "Name": "Şuhut Malmüdürlüğü"
+    },
+    {
+        "City": "AFYONKARAHİSAR",
+        "District": "Başmakçı",
+        "Name": "Başmakçı Malmüdürlüğü"
+    },
+    {
+        "City": "AFYONKARAHİSAR",
+        "District": "Bayat",
+        "Name": "Bayat Malmüdürlüğü"
+    },
+    {
+        "City": "AFYONKARAHİSAR",
+        "District": "Çobanlar",
+        "Name": "Çobanlar Malmüdürlüğü"
+    },
+    {
+        "City": "AFYONKARAHİSAR",
+        "District": "Evciler",
+        "Name": "Evciler Malmüdürlüğü"
+    },
+    {
+        "City": "AFYONKARAHİSAR",
+        "District": "Hocalar",
+        "Name": "Hocalar Malmüdürlüğü"
+    },
+    {
+        "City": "AFYONKARAHİSAR",
+        "District": "Kızılören",
+        "Name": "Kızılören Malmüdürlüğü"
+    },
+    {
+        "City": "AĞRI",
+        "District": "Merkez",
+        "Name": "Ağrı Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "AĞRI",
+        "District": "Doğubeyazıt",
+        "Name": "Doğubeyazıt Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "AĞRI",
+        "District": "Patnos",
+        "Name": "Patnos Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "AĞRI",
+        "District": "Diyadin",
+        "Name": "Diyadin Malmüdürlüğü"
+    },
+    {
+        "City": "AĞRI",
+        "District": "Eleşkirt",
+        "Name": "Eleşkirt Malmüdürlüğü"
+    },
+    {
+        "City": "AĞRI",
+        "District": "Hamur",
+        "Name": "Hamur Malmüdürlüğü"
+    },
+    {
+        "City": "AĞRI",
+        "District": "Taşlıçay",
+        "Name": "Taşlıçay Malmüdürlüğü"
+    },
+    {
+        "City": "AĞRI",
+        "District": "Tutak",
+        "Name": "Tutak Malmüdürlüğü"
+    },
+    {
+        "City": "AMASYA",
+        "District": "Merkez",
+        "Name": "Amasya Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "AMASYA",
+        "District": "Merzifon",
+        "Name": "Merzifon Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "AMASYA",
+        "District": "Gümüşhacıköy",
+        "Name": "Gümüşhacıköy Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "AMASYA",
+        "District": "Taşova",
+        "Name": "Taşova Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "AMASYA",
+        "District": "Suluova",
+        "Name": "Suluova Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "AMASYA",
+        "District": "Göynücek",
+        "Name": "Göynücek Malmüdürlüğü"
+    },
+    {
+        "City": "AMASYA",
+        "District": "Hamamözü",
+        "Name": "Hamamözü Malmüdürlüğü"
+    },
+    {
+        "City": "ANKARA",
+        "District": "Merkez",
+        "Name": "Anadolu İhtisas Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ANKARA",
+        "District": "Merkez",
+        "Name": "Ankara İhtisas Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ANKARA",
+        "District": "Merkez",
+        "Name": "Veraset ve Harçlar Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ANKARA",
+        "District": "Merkez",
+        "Name": "Kavaklıdere Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ANKARA",
+        "District": "Merkez",
+        "Name": "Maltepe Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ANKARA",
+        "District": "Merkez",
+        "Name": "Yenimahalle Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ANKARA",
+        "District": "Merkez",
+        "Name": "Çankaya Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ANKARA",
+        "District": "Merkez",
+        "Name": "Kızılbey Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ANKARA",
+        "District": "Merkez",
+        "Name": "Mithatpaşa Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ANKARA",
+        "District": "Merkez",
+        "Name": "Ulus Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ANKARA",
+        "District": "Merkez",
+        "Name": "Yıldırım Beyazıt Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ANKARA",
+        "District": "Merkez",
+        "Name": "Seğmenler Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ANKARA",
+        "District": "Merkez",
+        "Name": "Dikimevi Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ANKARA",
+        "District": "Merkez",
+        "Name": "Doğanbey Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ANKARA",
+        "District": "Merkez",
+        "Name": "Yeğenbey Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ANKARA",
+        "District": "Merkez",
+        "Name": "Hitit Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ANKARA",
+        "District": "Merkez",
+        "Name": "Yahya Galip Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ANKARA",
+        "District": "Merkez",
+        "Name": "Muhammet Karagüzel Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ANKARA",
+        "District": "Merkez",
+        "Name": "Ostim Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ANKARA",
+        "District": "Merkez",
+        "Name": "Gölbaşı Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ANKARA",
+        "District": "Merkez",
+        "Name": "Sincan Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ANKARA",
+        "District": "Merkez",
+        "Name": "Dışkapı Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ANKARA",
+        "District": "Merkez",
+        "Name": "Etimesgut Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ANKARA",
+        "District": "Merkez",
+        "Name": "Başkent Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ANKARA",
+        "District": "Merkez",
+        "Name": "Cumhuriyet Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ANKARA",
+        "District": "Merkez",
+        "Name": "Keçiören Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ANKARA",
+        "District": "Merkez",
+        "Name": "Kahramankazan Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ANKARA",
+        "District": "Polatlı",
+        "Name": "Polatlı Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ANKARA",
+        "District": "Şereflikoçhisar",
+        "Name": "Şereflikoçhisar Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ANKARA",
+        "District": "Beypazarı",
+        "Name": "Beypazarı Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ANKARA",
+        "District": "Merkez",
+        "Name": "Çubuk Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ANKARA",
+        "District": "Haymana",
+        "Name": "Haymana Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ANKARA",
+        "District": "Merkez",
+        "Name": "Elmadağ Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ANKARA",
+        "District": "Merkez",
+        "Name": "Ayaş Malmüdürlüğü"
+    },
+    {
+        "City": "ANKARA",
+        "District": "Merkez",
+        "Name": "Balâ Malmüdürlüğü"
+    },
+    {
+        "City": "ANKARA",
+        "District": "Çamlıdere",
+        "Name": "Çamlıdere Malmüdürlüğü"
+    },
+    {
+        "City": "ANKARA",
+        "District": "Güdül",
+        "Name": "Güdül Malmüdürlüğü"
+    },
+    {
+        "City": "ANKARA",
+        "District": "Merkez",
+        "Name": "Kalecik Malmüdürlüğü"
+    },
+    {
+        "City": "ANKARA",
+        "District": "Kızılcahamam",
+        "Name": "Kızılcahamam Malmüdürlüğü"
+    },
+    {
+        "City": "ANKARA",
+        "District": "Nallıhan",
+        "Name": "Nallıhan Malmüdürlüğü"
+    },
+    {
+        "City": "ANKARA",
+        "District": "Merkez",
+        "Name": "Akyurt Malmüdürlüğü"
+    },
+    {
+        "City": "ANKARA",
+        "District": "Evren",
+        "Name": "Evren Malmüdürlüğü"
+    },
+    {
+        "City": "ANTALYA",
+        "District": "Merkez",
+        "Name": "Üçkapılar Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ANTALYA",
+        "District": "Merkez",
+        "Name": "Kalekapı Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ANTALYA",
+        "District": "Merkez",
+        "Name": "Muratpaşa Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ANTALYA",
+        "District": "Merkez",
+        "Name": "Düden Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ANTALYA",
+        "District": "Merkez",
+        "Name": "Antalya Kurumlar Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ANTALYA",
+        "District": "Merkez",
+        "Name": "Antalya İhtisas Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ANTALYA",
+        "District": "Korkuteli",
+        "Name": "Korkuteli Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ANTALYA",
+        "District": "Alanya",
+        "Name": "Alanya Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ANTALYA",
+        "District": "Serik",
+        "Name": "Serik Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ANTALYA",
+        "District": "Manavgat",
+        "Name": "Manavgat Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ANTALYA",
+        "District": "Elmalı",
+        "Name": "Elmalı Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ANTALYA",
+        "District": "Kemer",
+        "Name": "Kemer Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ANTALYA",
+        "District": "Kumluca",
+        "Name": "Kumluca Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ANTALYA",
+        "District": "Akseki",
+        "Name": "Akseki Malmüdürlüğü"
+    },
+    {
+        "City": "ANTALYA",
+        "District": "Finike",
+        "Name": "Finike Malmüdürlüğü"
+    },
+    {
+        "City": "ANTALYA",
+        "District": "Gazipaşa",
+        "Name": "Gazipaşa Malmüdürlüğü"
+    },
+    {
+        "City": "ANTALYA",
+        "District": "Gündoğmuş",
+        "Name": "Gündoğmuş Malmüdürlüğü"
+    },
+    {
+        "City": "ANTALYA",
+        "District": "Kaş",
+        "Name": "Kaş Malmüdürlüğü"
+    },
+    {
+        "City": "ANTALYA",
+        "District": "Demre",
+        "Name": "Demre Malmüdürlüğü"
+    },
+    {
+        "City": "ANTALYA",
+        "District": "İbradı",
+        "Name": "İbradı Malmüdürlüğü"
+    },
+    {
+        "City": "ARTVİN",
+        "District": "Merkez",
+        "Name": "Artvin Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ARTVİN",
+        "District": "Hopa",
+        "Name": "Hopa Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ARTVİN",
+        "District": "Arhavi",
+        "Name": "Arhavi Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ARTVİN",
+        "District": "Ardanuç",
+        "Name": "Ardanuç Malmüdürlüğü"
+    },
+    {
+        "City": "ARTVİN",
+        "District": "Borçka",
+        "Name": "Borçka Malmüdürlüğü"
+    },
+    {
+        "City": "ARTVİN",
+        "District": "Şavşat",
+        "Name": "Şavşat Malmüdürlüğü"
+    },
+    {
+        "City": "ARTVİN",
+        "District": "Yusufeli",
+        "Name": "Yusufeli Malmüdürlüğü"
+    },
+    {
+        "City": "ARTVİN",
+        "District": "Murgul",
+        "Name": "Murgul Malmüdürlüğü"
+    },
+    {
+        "City": "AYDIN",
+        "District": "Merkez",
+        "Name": "Efeler Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "AYDIN",
+        "District": "Merkez",
+        "Name": "Güzelhisar Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "AYDIN",
+        "District": "Nazilli",
+        "Name": "Nazilli Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "AYDIN",
+        "District": "Söke",
+        "Name": "Söke Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "AYDIN",
+        "District": "Çine",
+        "Name": "Çine Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "AYDIN",
+        "District": "Germencik",
+        "Name": "Germencik Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "AYDIN",
+        "District": "Kuşadası",
+        "Name": "Kuşadası Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "AYDIN",
+        "District": "Didim",
+        "Name": "Didim Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "AYDIN",
+        "District": "Bozdoğan",
+        "Name": "Bozdoğan Malmüdürlüğü"
+    },
+    {
+        "City": "AYDIN",
+        "District": "Karacasu",
+        "Name": "Karacasu Malmüdürlüğü"
+    },
+    {
+        "City": "AYDIN",
+        "District": "Koçarlı",
+        "Name": "Koçarlı Malmüdürlüğü"
+    },
+    {
+        "City": "AYDIN",
+        "District": "Kuyucak",
+        "Name": "Kuyucak Malmüdürlüğü"
+    },
+    {
+        "City": "AYDIN",
+        "District": "Sultanhisar",
+        "Name": "Sultanhisar Malmüdürlüğü"
+    },
+    {
+        "City": "AYDIN",
+        "District": "Yenipazar",
+        "Name": "Yenipazar Malmüdürlüğü"
+    },
+    {
+        "City": "AYDIN",
+        "District": "Buharkent",
+        "Name": "Buharkent Malmüdürlüğü"
+    },
+    {
+        "City": "AYDIN",
+        "District": "İncirliova",
+        "Name": "İncirliova Malmüdürlüğü"
+    },
+    {
+        "City": "AYDIN",
+        "District": "Karpuzlu",
+        "Name": "Karpuzlu Malmüdürlüğü"
+    },
+    {
+        "City": "AYDIN",
+        "District": "Köşk",
+        "Name": "Köşk Malmüdürlüğü"
+    },
+    {
+        "City": "BALIKESİR",
+        "District": "Merkez",
+        "Name": "Karesi Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "BALIKESİR",
+        "District": "Merkez",
+        "Name": "Kurtdereli Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "BALIKESİR",
+        "District": "Ayvalık",
+        "Name": "Ayvalık Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "BALIKESİR",
+        "District": "Bandırma",
+        "Name": "Bandırma Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "BALIKESİR",
+        "District": "Burhaniye",
+        "Name": "Burhaniye Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "BALIKESİR",
+        "District": "Edremit",
+        "Name": "Edremit Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "BALIKESİR",
+        "District": "Gönen",
+        "Name": "Gönen Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "BALIKESİR",
+        "District": "Susurluk",
+        "Name": "Susurluk Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "BALIKESİR",
+        "District": "Erdek",
+        "Name": "Erdek Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "BALIKESİR",
+        "District": "Bigadiç",
+        "Name": "Bigadiç Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "BALIKESİR",
+        "District": "Sındırgı",
+        "Name": "Sındırgı Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "BALIKESİR",
+        "District": "Dursunbey",
+        "Name": "Dursunbey Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "BALIKESİR",
+        "District": "Balya",
+        "Name": "Balya Malmüdürlüğü"
+    },
+    {
+        "City": "BALIKESİR",
+        "District": "Havran",
+        "Name": "Havran Malmüdürlüğü"
+    },
+    {
+        "City": "BALIKESİR",
+        "District": "İvrindi",
+        "Name": "İvrindi Malmüdürlüğü"
+    },
+    {
+        "City": "BALIKESİR",
+        "District": "Kepsut",
+        "Name": "Kepsut Malmüdürlüğü"
+    },
+    {
+        "City": "BALIKESİR",
+        "District": "Manyas",
+        "Name": "Manyas Malmüdürlüğü"
+    },
+    {
+        "City": "BALIKESİR",
+        "District": "Savaştepe",
+        "Name": "Savaştepe Malmüdürlüğü"
+    },
+    {
+        "City": "BALIKESİR",
+        "District": "Marmara",
+        "Name": "Marmara Malmüdürlüğü"
+    },
+    {
+        "City": "BALIKESİR",
+        "District": "Gömeç",
+        "Name": "Gömeç Malmüdürlüğü"
+    },
+    {
+        "City": "BİLECİK",
+        "District": "Merkez",
+        "Name": "Bilecik Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "BİLECİK",
+        "District": "Bozüyük",
+        "Name": "Bozüyük Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "BİLECİK",
+        "District": "Gölpazarı",
+        "Name": "Gölpazarı Malmüdürlüğü"
+    },
+    {
+        "City": "BİLECİK",
+        "District": "Osmaneli",
+        "Name": "Osmaneli Malmüdürlüğü"
+    },
+    {
+        "City": "BİLECİK",
+        "District": "Pazaryeri",
+        "Name": "Pazaryeri Malmüdürlüğü"
+    },
+    {
+        "City": "BİLECİK",
+        "District": "Söğüt",
+        "Name": "Söğüt Malmüdürlüğü"
+    },
+    {
+        "City": "BİLECİK",
+        "District": "Yenipazar",
+        "Name": "Yenipazar Malmüdürlüğü"
+    },
+    {
+        "City": "BİLECİK",
+        "District": "İnhisar",
+        "Name": "İnhisar Malmüdürlüğü"
+    },
+    {
+        "City": "BİNGÖL",
+        "District": "Merkez",
+        "Name": "Bingöl Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "BİNGÖL",
+        "District": "Genç",
+        "Name": "Genç Malmüdürlüğü"
+    },
+    {
+        "City": "BİNGÖL",
+        "District": "Karlıova",
+        "Name": "Karlıova Malmüdürlüğü"
+    },
+    {
+        "City": "BİNGÖL",
+        "District": "Kiğı",
+        "Name": "Kiğı Malmüdürlüğü"
+    },
+    {
+        "City": "BİNGÖL",
+        "District": "Solhan",
+        "Name": "Solhan Malmüdürlüğü"
+    },
+    {
+        "City": "BİNGÖL",
+        "District": "Adaklı",
+        "Name": "Adaklı Malmüdürlüğü"
+    },
+    {
+        "City": "BİNGÖL",
+        "District": "Yayladere",
+        "Name": "Yayladere Malmüdürlüğü"
+    },
+    {
+        "City": "BİNGÖL",
+        "District": "Yedisu",
+        "Name": "Yedisu Malmüdürlüğü"
+    },
+    {
+        "City": "BİTLİS",
+        "District": "Merkez",
+        "Name": "Bitlis Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "BİTLİS",
+        "District": "Tatvan",
+        "Name": "Tatvan Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "BİTLİS",
+        "District": "Adilcevaz",
+        "Name": "Adilcevaz Malmüdürlüğü"
+    },
+    {
+        "City": "BİTLİS",
+        "District": "Ahlat",
+        "Name": "Ahlat Malmüdürlüğü"
+    },
+    {
+        "City": "BİTLİS",
+        "District": "Hizan",
+        "Name": "Hizan Malmüdürlüğü"
+    },
+    {
+        "City": "BİTLİS",
+        "District": "Mutki",
+        "Name": "Mutki Malmüdürlüğü"
+    },
+    {
+        "City": "BİTLİS",
+        "District": "Göroymak",
+        "Name": "Güroymak Malmüdürlüğü"
+    },
+    {
+        "City": "BOLU",
+        "District": "Merkez",
+        "Name": "Bolu Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "BOLU",
+        "District": "Gerede",
+        "Name": "Gerede Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "BOLU",
+        "District": "Göynük",
+        "Name": "Göynük Malmüdürlüğü"
+    },
+    {
+        "City": "BOLU",
+        "District": "Kıbrıscık",
+        "Name": "Kıbrıscık Malmüdürlüğü"
+    },
+    {
+        "City": "BOLU",
+        "District": "Mengen",
+        "Name": "Mengen Malmüdürlüğü"
+    },
+    {
+        "City": "BOLU",
+        "District": "Mudurnu",
+        "Name": "Mudurnu Malmüdürlüğü"
+    },
+    {
+        "City": "BOLU",
+        "District": "Seben",
+        "Name": "Seben Malmüdürlüğü"
+    },
+    {
+        "City": "BOLU",
+        "District": "Dörtdivan",
+        "Name": "Dörtdivan Malmüdürlüğü"
+    },
+    {
+        "City": "BOLU",
+        "District": "Yeniçağa",
+        "Name": "Yeniçağa Malmüdürlüğü"
+    },
+    {
+        "City": "BURDUR",
+        "District": "Merkez",
+        "Name": "Burdur Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "BURDUR",
+        "District": "Bucak",
+        "Name": "Bucak Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "BURDUR",
+        "District": "Ağlasun",
+        "Name": "Ağlasun Malmüdürlüğü"
+    },
+    {
+        "City": "BURDUR",
+        "District": "Gölhisar",
+        "Name": "Gölhisar Malmüdürlüğü"
+    },
+    {
+        "City": "BURDUR",
+        "District": "Tefenni",
+        "Name": "Tefenni Malmüdürlüğü"
+    },
+    {
+        "City": "BURDUR",
+        "District": "Yeşilova",
+        "Name": "Yeşilova Malmüdürlüğü"
+    },
+    {
+        "City": "BURDUR",
+        "District": "Karamanlı",
+        "Name": "Karamanlı Malmüdürlüğü"
+    },
+    {
+        "City": "BURDUR",
+        "District": "Kemer",
+        "Name": "Kemer Malmüdürlüğü"
+    },
+    {
+        "City": "BURDUR",
+        "District": "Altınyayla",
+        "Name": "Altınyayla Malmüdürlüğü"
+    },
+    {
+        "City": "BURDUR",
+        "District": "Çavdır",
+        "Name": "Çavdır Malmüdürlüğü"
+    },
+    {
+        "City": "BURDUR",
+        "District": "Çeltikçi",
+        "Name": "Çeltikçi Malmüdürlüğü"
+    },
+    {
+        "City": "BURSA",
+        "District": "Merkez",
+        "Name": "Bursa İhtisas Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "BURSA",
+        "District": "Merkez",
+        "Name": "Osmangazi Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "BURSA",
+        "District": "Merkez",
+        "Name": "Yıldırım Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "BURSA",
+        "District": "Merkez",
+        "Name": "Çekirge Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "BURSA",
+        "District": "Merkez",
+        "Name": "Setbaşı Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "BURSA",
+        "District": "Merkez",
+        "Name": "Uludağ Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "BURSA",
+        "District": "Merkez",
+        "Name": "Yeşil Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "BURSA",
+        "District": "Merkez",
+        "Name": "Nilüfer Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "BURSA",
+        "District": "Merkez",
+        "Name": "Ertuğrulgazi Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "BURSA",
+        "District": "Merkez",
+        "Name": "Gökdere Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "BURSA",
+        "District": "Merkez",
+        "Name": "Bursa Veraset ve Harçlar Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "BURSA",
+        "District": "Merkez",
+        "Name": "Gemlik Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "BURSA",
+        "District": "İnegöl",
+        "Name": "İnegöl Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "BURSA",
+        "District": "Karacabey",
+        "Name": "Karacabey Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "BURSA",
+        "District": "Mustafakemalpaşa",
+        "Name": "Mustafakemalpaşa Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "BURSA",
+        "District": "Merkez",
+        "Name": "Mudanya Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "BURSA",
+        "District": "Orhangazi",
+        "Name": "Orhangazi Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "BURSA",
+        "District": "İznik",
+        "Name": "İznik Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "BURSA",
+        "District": "Yenişehir",
+        "Name": "Yenişehir Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "BURSA",
+        "District": "Keles",
+        "Name": "Keles Malmüdürlüğü"
+    },
+    {
+        "City": "BURSA",
+        "District": "Orhaneli",
+        "Name": "Orhaneli Malmüdürlüğü"
+    },
+    {
+        "City": "BURSA",
+        "District": "Harmancık",
+        "Name": "Harmancık Malmüdürlüğü"
+    },
+    {
+        "City": "BURSA",
+        "District": "Büyükorhan",
+        "Name": "Büyükorhan Malmüdürlüğü"
+    },
+    {
+        "City": "ÇANAKKALE",
+        "District": "Merkez",
+        "Name": "Çanakkale Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ÇANAKKALE",
+        "District": "Biga",
+        "Name": "Biga Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ÇANAKKALE",
+        "District": "Çan",
+        "Name": "Çan Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ÇANAKKALE",
+        "District": "Gelibolu",
+        "Name": "Gelibolu Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ÇANAKKALE",
+        "District": "Ayvacık",
+        "Name": "Ayvacık Malmüdürlüğü"
+    },
+    {
+        "City": "ÇANAKKALE",
+        "District": "Bayramiç",
+        "Name": "Bayramiç Malmüdürlüğü"
+    },
+    {
+        "City": "ÇANAKKALE",
+        "District": "Bozcaada",
+        "Name": "Bozcaada Malmüdürlüğü"
+    },
+    {
+        "City": "ÇANAKKALE",
+        "District": "Eceabat",
+        "Name": "Eceabat Malmüdürlüğü"
+    },
+    {
+        "City": "ÇANAKKALE",
+        "District": "Ezine",
+        "Name": "Ezine Malmüdürlüğü"
+    },
+    {
+        "City": "ÇANAKKALE",
+        "District": "Gökçeada",
+        "Name": "Gökçeada Malmüdürlüğü"
+    },
+    {
+        "City": "ÇANAKKALE",
+        "District": "Lapseki",
+        "Name": "Lapseki Malmüdürlüğü"
+    },
+    {
+        "City": "ÇANAKKALE",
+        "District": "Yenice",
+        "Name": "Yenice Malmüdürlüğü"
+    },
+    {
+        "City": "ÇANKIRI",
+        "District": "Merkez",
+        "Name": "Çankırı Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ÇANKIRI",
+        "District": "Çerkeş",
+        "Name": "Çerkeş Malmüdürlüğü"
+    },
+    {
+        "City": "ÇANKIRI",
+        "District": "Eldivan",
+        "Name": "Eldivan Malmüdürlüğü"
+    },
+    {
+        "City": "ÇANKIRI",
+        "District": "Ilgaz",
+        "Name": "Ilgaz Malmüdürlüğü"
+    },
+    {
+        "City": "ÇANKIRI",
+        "District": "Kurşunlu",
+        "Name": "Kurşunlu Malmüdürlüğü"
+    },
+    {
+        "City": "ÇANKIRI",
+        "District": "Orta",
+        "Name": "Orta Malmüdürlüğü"
+    },
+    {
+        "City": "ÇANKIRI",
+        "District": "Şabanözü",
+        "Name": "Şabanözü Malmüdürlüğü"
+    },
+    {
+        "City": "ÇANKIRI",
+        "District": "Yapraklı",
+        "Name": "Yapraklı Malmüdürlüğü"
+    },
+    {
+        "City": "ÇANKIRI",
+        "District": "Atkaracalar",
+        "Name": "Atkaracalar Malmüdürlüğü"
+    },
+    {
+        "City": "ÇANKIRI",
+        "District": "Kızılırmak",
+        "Name": "Kızılırmak Malmüdürlüğü"
+    },
+    {
+        "City": "ÇANKIRI",
+        "District": "Bayramören",
+        "Name": "Bayramören Malmüdürlüğü"
+    },
+    {
+        "City": "ÇANKIRI",
+        "District": "Korgun",
+        "Name": "Korgun Malmüdürlüğü"
+    },
+    {
+        "City": "ÇORUM",
+        "District": "Merkez",
+        "Name": "Çorum Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ÇORUM",
+        "District": "Sungurlu",
+        "Name": "Sungurlu Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ÇORUM",
+        "District": "Alaca",
+        "Name": "Alaca Malmüdürlüğü"
+    },
+    {
+        "City": "ÇORUM",
+        "District": "Bayat",
+        "Name": "Bayat Malmüdürlüğü"
+    },
+    {
+        "City": "ÇORUM",
+        "District": "İskilip",
+        "Name": "İskilip Malmüdürlüğü"
+    },
+    {
+        "City": "ÇORUM",
+        "District": "Kargı",
+        "Name": "Kargı Malmüdürlüğü"
+    },
+    {
+        "City": "ÇORUM",
+        "District": "Mecitözü",
+        "Name": "Mecitözü Malmüdürlüğü"
+    },
+    {
+        "City": "ÇORUM",
+        "District": "Ortaköy",
+        "Name": "Ortaköy Malmüdürlüğü"
+    },
+    {
+        "City": "ÇORUM",
+        "District": "Osmancık",
+        "Name": "Osmancık Malmüdürlüğü"
+    },
+    {
+        "City": "ÇORUM",
+        "District": "Boğazkale",
+        "Name": "Boğazkale Malmüdürlüğü"
+    },
+    {
+        "City": "ÇORUM",
+        "District": "Uğurludağ",
+        "Name": "Uğurludağ Malmüdürlüğü"
+    },
+    {
+        "City": "ÇORUM",
+        "District": "Dodurga",
+        "Name": "Dodurga Malmüdürlüğü"
+    },
+    {
+        "City": "ÇORUM",
+        "District": "Oğuzlar",
+        "Name": "Oğuzlar Malmüdürlüğü"
+    },
+    {
+        "City": "ÇORUM",
+        "District": "Laçin",
+        "Name": "Laçin Malmüdürlüğü"
+    },
+    {
+        "City": "DENİZLİ",
+        "District": "Merkez",
+        "Name": "Saraylar Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "DENİZLİ",
+        "District": "Merkez",
+        "Name": "Çınar Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "DENİZLİ",
+        "District": "Merkez",
+        "Name": "Gökpınar Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "DENİZLİ",
+        "District": "Merkez",
+        "Name": "Denizli İhtisas Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "DENİZLİ",
+        "District": "Merkez",
+        "Name": "Pamukkale Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "DENİZLİ",
+        "District": "Sarayköy",
+        "Name": "Sarayköy Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "DENİZLİ",
+        "District": "Acıpayam",
+        "Name": "Acıpayam Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "DENİZLİ",
+        "District": "Tavas",
+        "Name": "Tavas Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "DENİZLİ",
+        "District": "Buldan",
+        "Name": "Buldan Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "DENİZLİ",
+        "District": "Çal",
+        "Name": "Çal Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "DENİZLİ",
+        "District": "Çivril",
+        "Name": "Çivril Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "DENİZLİ",
+        "District": "Çameli",
+        "Name": "Çameli Malmüdürlüğü"
+    },
+    {
+        "City": "DENİZLİ",
+        "District": "Çardak",
+        "Name": "Çardak Malmüdürlüğü"
+    },
+    {
+        "City": "DENİZLİ",
+        "District": "Güney",
+        "Name": "Güney Malmüdürlüğü"
+    },
+    {
+        "City": "DENİZLİ",
+        "District": "Kale",
+        "Name": "Kale Malmüdürlüğü"
+    },
+    {
+        "City": "DENİZLİ",
+        "District": "Babadağ",
+        "Name": "Babadağ Malmüdürlüğü"
+    },
+    {
+        "City": "DENİZLİ",
+        "District": "Bekilli",
+        "Name": "Bekilli Malmüdürlüğü"
+    },
+    {
+        "City": "DENİZLİ",
+        "District": "Honaz",
+        "Name": "Honaz Malmüdürlüğü"
+    },
+    {
+        "City": "DENİZLİ",
+        "District": "Serinhisar",
+        "Name": "Serinhisar Malmüdürlüğü"
+    },
+    {
+        "City": "DENİZLİ",
+        "District": "Pamukkale",
+        "Name": "Pamukkale Malmüdürlüğü (Akköy)"
+    },
+    {
+        "City": "DENİZLİ",
+        "District": "Baklan",
+        "Name": "Baklan Malmüdürlüğü"
+    },
+    {
+        "City": "DENİZLİ",
+        "District": "Beyağaç",
+        "Name": "Beyağaç Malmüdürlüğü"
+    },
+    {
+        "City": "DENİZLİ",
+        "District": "Bozkurt",
+        "Name": "Bozkurt Malmüdürlüğü"
+    },
+    {
+        "City": "DİYARBAKIR",
+        "District": "Merkez",
+        "Name": "Gökalp Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "DİYARBAKIR",
+        "District": "Merkez",
+        "Name": "Süleyman Nazif Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "DİYARBAKIR",
+        "District": "Merkez",
+        "Name": "Cahit Sıtkı Tarancı Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "DİYARBAKIR",
+        "District": "Ergani",
+        "Name": "Ergani Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "DİYARBAKIR",
+        "District": "Bismil",
+        "Name": "Bismil Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "DİYARBAKIR",
+        "District": "Çermik",
+        "Name": "Çermik Malmüdürlüğü"
+    },
+    {
+        "City": "DİYARBAKIR",
+        "District": "Çınar",
+        "Name": "Çınar Malmüdürlüğü"
+    },
+    {
+        "City": "DİYARBAKIR",
+        "District": "Çüngüş",
+        "Name": "Çüngüş Malmüdürlüğü"
+    },
+    {
+        "City": "DİYARBAKIR",
+        "District": "Dicle",
+        "Name": "Dicle Malmüdürlüğü"
+    },
+    {
+        "City": "DİYARBAKIR",
+        "District": "Hani",
+        "Name": "Hani Malmüdürlüğü"
+    },
+    {
+        "City": "DİYARBAKIR",
+        "District": "Hazro",
+        "Name": "Hazro Malmüdürlüğü"
+    },
+    {
+        "City": "DİYARBAKIR",
+        "District": "Kulp",
+        "Name": "Kulp Malmüdürlüğü"
+    },
+    {
+        "City": "DİYARBAKIR",
+        "District": "Lice",
+        "Name": "Lice Malmüdürlüğü"
+    },
+    {
+        "City": "DİYARBAKIR",
+        "District": "Silvan",
+        "Name": "Silvan Malmüdürlüğü"
+    },
+    {
+        "City": "DİYARBAKIR",
+        "District": "Eğil",
+        "Name": "Eğil Malmüdürlüğü"
+    },
+    {
+        "City": "DİYARBAKIR",
+        "District": "Kocaköy",
+        "Name": "Kocaköy Malmüdürlüğü"
+    },
+    {
+        "City": "EDİRNE",
+        "District": "Merkez",
+        "Name": "Arda Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "EDİRNE",
+        "District": "Merkez",
+        "Name": "Kırkpınar Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "EDİRNE",
+        "District": "Keşan",
+        "Name": "Keşan Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "EDİRNE",
+        "District": "Uzunköprü",
+        "Name": "Uzunköprü Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "EDİRNE",
+        "District": "Havsa",
+        "Name": "Havsa Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "EDİRNE",
+        "District": "İpsala",
+        "Name": "İpsala Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "EDİRNE",
+        "District": "Enez",
+        "Name": "Enez Malmüdürlüğü"
+    },
+    {
+        "City": "EDİRNE",
+        "District": "Lalapaşa",
+        "Name": "Lalapaşa Malmüdürlüğü"
+    },
+    {
+        "City": "EDİRNE",
+        "District": "Meriç",
+        "Name": "Meriç Malmüdürlüğü"
+    },
+    {
+        "City": "EDİRNE",
+        "District": "Süloğlu",
+        "Name": "Süloğlu Malmüdürlüğü"
+    },
+    {
+        "City": "ELAZIĞ",
+        "District": "Merkez",
+        "Name": "Harput Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ELAZIĞ",
+        "District": "Merkez",
+        "Name": "Hazar Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ELAZIĞ",
+        "District": "Ağın",
+        "Name": "Ağın Malmüdürlüğü"
+    },
+    {
+        "City": "ELAZIĞ",
+        "District": "Baskil",
+        "Name": "Baskil Malmüdürlüğü"
+    },
+    {
+        "City": "ELAZIĞ",
+        "District": "Karakoçan",
+        "Name": "Karakoçan Malmüdürlüğü"
+    },
+    {
+        "City": "ELAZIĞ",
+        "District": "Keban",
+        "Name": "Keban Malmüdürlüğü"
+    },
+    {
+        "City": "ELAZIĞ",
+        "District": "Maden",
+        "Name": "Maden Malmüdürlüğü"
+    },
+    {
+        "City": "ELAZIĞ",
+        "District": "Palu",
+        "Name": "Palu Malmüdürlüğü"
+    },
+    {
+        "City": "ELAZIĞ",
+        "District": "Sivrice",
+        "Name": "Sivrice Malmüdürlüğü"
+    },
+    {
+        "City": "ELAZIĞ",
+        "District": "Arıcak",
+        "Name": "Arıcak Malmüdürlüğü"
+    },
+    {
+        "City": "ELAZIĞ",
+        "District": "Kovancılar",
+        "Name": "Kovancılar Malmüdürlüğü"
+    },
+    {
+        "City": "ELAZIĞ",
+        "District": "Alacakaya",
+        "Name": "Alacakaya Malmüdürlüğü"
+    },
+    {
+        "City": "ERZİNCAN",
+        "District": "Merkez",
+        "Name": "Fevzipaşa Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ERZİNCAN",
+        "District": "Çayırlı",
+        "Name": "Çayırlı Malmüdürlüğü"
+    },
+    {
+        "City": "ERZİNCAN",
+        "District": "İliç",
+        "Name": "İliç Malmüdürlüğü"
+    },
+    {
+        "City": "ERZİNCAN",
+        "District": "Kemah",
+        "Name": "Kemah Malmüdürlüğü"
+    },
+    {
+        "City": "ERZİNCAN",
+        "District": "Kemaliye",
+        "Name": "Kemaliye Malmüdürlüğü"
+    },
+    {
+        "City": "ERZİNCAN",
+        "District": "Refahiye",
+        "Name": "Refahiye Malmüdürlüğü"
+    },
+    {
+        "City": "ERZİNCAN",
+        "District": "Tercan",
+        "Name": "Tercan Malmüdürlüğü"
+    },
+    {
+        "City": "ERZİNCAN",
+        "District": "Üzümlü",
+        "Name": "Üzümlü Malmüdürlüğü"
+    },
+    {
+        "City": "ERZİNCAN",
+        "District": "Otlukbeli",
+        "Name": "Otlukbeli Malmüdürlüğü"
+    },
+    {
+        "City": "ERZURUM",
+        "District": "Merkez",
+        "Name": "Aziziye Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ERZURUM",
+        "District": "Merkez",
+        "Name": "Kazımkarabekir Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ERZURUM",
+        "District": "Aşkale",
+        "Name": "Aşkale Malmüdürlüğü"
+    },
+    {
+        "City": "ERZURUM",
+        "District": "Çat",
+        "Name": "Çat Malmüdürlüğü"
+    },
+    {
+        "City": "ERZURUM",
+        "District": "Hınıs",
+        "Name": "Hınıs Malmüdürlüğü"
+    },
+    {
+        "City": "ERZURUM",
+        "District": "Horasan",
+        "Name": "Horasan Malmüdürlüğü"
+    },
+    {
+        "City": "ERZURUM",
+        "District": "İspir",
+        "Name": "İspir Malmüdürlüğü"
+    },
+    {
+        "City": "ERZURUM",
+        "District": "Karayazı",
+        "Name": "Karayazı Malmüdürlüğü"
+    },
+    {
+        "City": "ERZURUM",
+        "District": "Narman",
+        "Name": "Narman Malmüdürlüğü"
+    },
+    {
+        "City": "ERZURUM",
+        "District": "Oltu",
+        "Name": "Oltu Malmüdürlüğü"
+    },
+    {
+        "City": "ERZURUM",
+        "District": "Olur",
+        "Name": "Olur Malmüdürlüğü"
+    },
+    {
+        "City": "ERZURUM",
+        "District": "Pasinler",
+        "Name": "Pasinler Malmüdürlüğü"
+    },
+    {
+        "City": "ERZURUM",
+        "District": "Şenkaya",
+        "Name": "Şenkaya Malmüdürlüğü"
+    },
+    {
+        "City": "ERZURUM",
+        "District": "Tekman",
+        "Name": "Tekman Malmüdürlüğü"
+    },
+    {
+        "City": "ERZURUM",
+        "District": "Tortum",
+        "Name": "Tortum Malmüdürlüğü"
+    },
+    {
+        "City": "ERZURUM",
+        "District": "Karaçoban",
+        "Name": "Karaçoban Malmüdürlüğü"
+    },
+    {
+        "City": "ERZURUM",
+        "District": "Uzundere",
+        "Name": "Uzundere Malmüdürlüğü"
+    },
+    {
+        "City": "ERZURUM",
+        "District": "Pazaryolu",
+        "Name": "Pazaryolu Malmüdürlüğü"
+    },
+    {
+        "City": "ERZURUM",
+        "District": "Merkez",
+        "Name": "Aziziye Malmüdürlüğü  (Ilıca)"
+    },
+    {
+        "City": "ERZURUM",
+        "District": "Köprüköy",
+        "Name": "Köprüköy Malmüdürlüğü"
+    },
+    {
+        "City": "ESKİŞEHİR",
+        "District": "Merkez Başkanlık",
+        "Name": "Eskişehir Vergi Dairesi Başkanlığı (*)"
+    },
+    {
+        "City": "ESKİŞEHİR",
+        "District": "Mahmudiye",
+        "Name": "Mahmudiye Malmüdürlüğü"
+    },
+    {
+        "City": "ESKİŞEHİR",
+        "District": "Mihalıççık",
+        "Name": "Mihalıççık Malmüdürlüğü"
+    },
+    {
+        "City": "ESKİŞEHİR",
+        "District": "Sarıcakaya",
+        "Name": "Sarıcakaya Malmüdürlüğü"
+    },
+    {
+        "City": "ESKİŞEHİR",
+        "District": "Seyitgazi",
+        "Name": "Seyitgazi Malmüdürlüğü"
+    },
+    {
+        "City": "ESKİŞEHİR",
+        "District": "Alpu",
+        "Name": "Alpu Malmüdürlüğü"
+    },
+    {
+        "City": "ESKİŞEHİR",
+        "District": "Beylikova",
+        "Name": "Beylikova Malmüdürlüğü"
+    },
+    {
+        "City": "ESKİŞEHİR",
+        "District": "İnönü",
+        "Name": "İnönü Malmüdürlüğü"
+    },
+    {
+        "City": "ESKİŞEHİR",
+        "District": "Günyüzü",
+        "Name": "Günyüzü Malmüdürlüğü"
+    },
+    {
+        "City": "ESKİŞEHİR",
+        "District": "Han",
+        "Name": "Han Malmüdürlüğü"
+    },
+    {
+        "City": "ESKİŞEHİR",
+        "District": "Mihalgazi",
+        "Name": "Mihalgazi Malmüdürlüğü"
+    },
+    {
+        "City": "GAZİANTEP",
+        "District": "Merkez",
+        "Name": "Gaziantep İhtisas Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "GAZİANTEP",
+        "District": "Merkez",
+        "Name": "Suburcu Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "GAZİANTEP",
+        "District": "Merkez",
+        "Name": "Şehitkâmil Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "GAZİANTEP",
+        "District": "Merkez",
+        "Name": "Şahinbey Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "GAZİANTEP",
+        "District": "Merkez",
+        "Name": "Gazikent Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "GAZİANTEP",
+        "District": "Merkez",
+        "Name": "Kozanlı Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "GAZİANTEP",
+        "District": "Nizip",
+        "Name": "Nizip Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "GAZİANTEP",
+        "District": "İslahiye",
+        "Name": "İslahiye Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "GAZİANTEP",
+        "District": "Araban",
+        "Name": "Araban Malmüdürlüğü"
+    },
+    {
+        "City": "GAZİANTEP",
+        "District": "Merkez",
+        "Name": "Oğuzeli Malmüdürlüğü"
+    },
+    {
+        "City": "GAZİANTEP",
+        "District": "Yavuzeli",
+        "Name": "Yavuzeli Malmüdürlüğü"
+    },
+    {
+        "City": "GAZİANTEP",
+        "District": "Karkamış",
+        "Name": "Karkamış Malmüdürlüğü"
+    },
+    {
+        "City": "GAZİANTEP",
+        "District": "Nurdağı",
+        "Name": "Nurdağı Malmüdürlüğü"
+    },
+    {
+        "City": "GİRESUN",
+        "District": "Merkez",
+        "Name": "Giresun Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "GİRESUN",
+        "District": "Bulancak",
+        "Name": "Bulancak Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "GİRESUN",
+        "District": "Alucra",
+        "Name": "Alucra Malmüdürlüğü"
+    },
+    {
+        "City": "GİRESUN",
+        "District": "Dereli",
+        "Name": "Dereli Malmüdürlüğü"
+    },
+    {
+        "City": "GİRESUN",
+        "District": "Espiye",
+        "Name": "Espiye Malmüdürlüğü"
+    },
+    {
+        "City": "GİRESUN",
+        "District": "Eynesil",
+        "Name": "Eynesil Malmüdürlüğü"
+    },
+    {
+        "City": "GİRESUN",
+        "District": "Görele",
+        "Name": "Görele Malmüdürlüğü"
+    },
+    {
+        "City": "GİRESUN",
+        "District": "Keşap",
+        "Name": "Keşap Malmüdürlüğü"
+    },
+    {
+        "City": "GİRESUN",
+        "District": "Şebinkarahisar",
+        "Name": "Şebinkarahisar Malmüdürlüğü"
+    },
+    {
+        "City": "GİRESUN",
+        "District": "Tirebolu",
+        "Name": "Tirebolu Malmüdürlüğü"
+    },
+    {
+        "City": "GİRESUN",
+        "District": "Piraziz",
+        "Name": "Piraziz Malmüdürlüğü"
+    },
+    {
+        "City": "GİRESUN",
+        "District": "Yağlıdere",
+        "Name": "Yağlıdere Malmüdürlüğü"
+    },
+    {
+        "City": "GİRESUN",
+        "District": "Çanakçı",
+        "Name": "Çanakçı Malmüdürlüğü"
+    },
+    {
+        "City": "GİRESUN",
+        "District": "Güce",
+        "Name": "Güce Malmüdürlüğü"
+    },
+    {
+        "City": "GİRESUN",
+        "District": "Çamoluk",
+        "Name": "Çamoluk Malmüdürlüğü"
+    },
+    {
+        "City": "GİRESUN",
+        "District": "Doğankent",
+        "Name": "Doğankent Malmüdürlüğü"
+    },
+    {
+        "City": "GÜMÜŞHANE",
+        "District": "Merkez",
+        "Name": "Gümüşhane Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "GÜMÜŞHANE",
+        "District": "Kelkit",
+        "Name": "Kelkit Malmüdürlüğü"
+    },
+    {
+        "City": "GÜMÜŞHANE",
+        "District": "Şiran",
+        "Name": "Şiran Malmüdürlüğü"
+    },
+    {
+        "City": "GÜMÜŞHANE",
+        "District": "Torul",
+        "Name": "Torul Malmüdürlüğü"
+    },
+    {
+        "City": "GÜMÜŞHANE",
+        "District": "Köse",
+        "Name": "Köse Malmüdürlüğü"
+    },
+    {
+        "City": "GÜMÜŞHANE",
+        "District": "Kürtün",
+        "Name": "Kürtün Malmüdürlüğü"
+    },
+    {
+        "City": "HAKKARİ",
+        "District": "Merkez",
+        "Name": "Hakkari Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "HAKKARİ",
+        "District": "Yüksekova",
+        "Name": "Yüksekova  Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "HAKKARİ",
+        "District": "Çukurca",
+        "Name": "Çukurca Malmüdürlüğü"
+    },
+    {
+        "City": "HAKKARİ",
+        "District": "Şemdinli",
+        "Name": "Şemdinli Malmüdürlüğü"
+    },
+    {
+        "City": "HAKKARİ",
+        "District": "Derecik",
+        "Name": "Derecik Malmüdürlüğü"
+    },
+    {
+        "City": "HATAY",
+        "District": "Merkez",
+        "Name": "23 Temmuz Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "HATAY",
+        "District": "Merkez",
+        "Name": "Antakya Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "HATAY",
+        "District": "Merkez",
+        "Name": "Şükrükanatlı Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "HATAY",
+        "District": "İskenderun",
+        "Name": "Sahil Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "HATAY",
+        "District": "İskenderun",
+        "Name": "Akdeniz Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "HATAY",
+        "District": "İskenderun",
+        "Name": "Asım Gündüz Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "HATAY",
+        "District": "Dörtyol",
+        "Name": "Dörtyol  Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "HATAY",
+        "District": "Kırıkhan",
+        "Name": "Kırıkhan Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "HATAY",
+        "District": "Reyhanlı",
+        "Name": "Reyhanlı Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "HATAY",
+        "District": "Samandağ",
+        "Name": "Samandağ Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "HATAY",
+        "District": "Altınözü",
+        "Name": "Altınözü Malmüdürlüğü"
+    },
+    {
+        "City": "HATAY",
+        "District": "Hassa",
+        "Name": "Hassa Malmüdürlüğü"
+    },
+    {
+        "City": "HATAY",
+        "District": "Yayladağı",
+        "Name": "Yayladağı Malmüdürlüğü"
+    },
+    {
+        "City": "HATAY",
+        "District": "Erzin",
+        "Name": "Erzin Malmüdürlüğü"
+    },
+    {
+        "City": "HATAY",
+        "District": "Belen",
+        "Name": "Belen Malmüdürlüğü"
+    },
+    {
+        "City": "HATAY",
+        "District": "Kumlu",
+        "Name": "Kumlu Malmüdürlüğü"
+    },
+    {
+        "City": "ISPARTA",
+        "District": "Merkez",
+        "Name": "Davraz Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ISPARTA",
+        "District": "Merkez",
+        "Name": "Kaymakkapı Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ISPARTA",
+        "District": "Eğirdir",
+        "Name": "Eğirdir Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ISPARTA",
+        "District": "Yalvaç",
+        "Name": "Yalvaç Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ISPARTA",
+        "District": "Atabey",
+        "Name": "Atabey Malmüdürlüğü"
+    },
+    {
+        "City": "ISPARTA",
+        "District": "Gelendost",
+        "Name": "Gelendost Malmüdürlüğü"
+    },
+    {
+        "City": "ISPARTA",
+        "District": "Keçiborlu",
+        "Name": "Keçiborlu Malmüdürlüğü"
+    },
+    {
+        "City": "ISPARTA",
+        "District": "Senirkent",
+        "Name": "Senirkent Malmüdürlüğü"
+    },
+    {
+        "City": "ISPARTA",
+        "District": "Sütçüler",
+        "Name": "Sütçüler Malmüdürlüğü"
+    },
+    {
+        "City": "ISPARTA",
+        "District": "Şarkikaraağaç",
+        "Name": "Şarkikaraağaç Malmüdürlüğü"
+    },
+    {
+        "City": "ISPARTA",
+        "District": "Uluborlu",
+        "Name": "Uluborlu Malmüdürlüğü"
+    },
+    {
+        "City": "ISPARTA",
+        "District": "Aksu",
+        "Name": "Aksu Malmüdürlüğü"
+    },
+    {
+        "City": "ISPARTA",
+        "District": "Gönen",
+        "Name": "Gönen Malmüdürlüğü"
+    },
+    {
+        "City": "ISPARTA",
+        "District": "Yenişarbademli",
+        "Name": "Yenişarbademli Malmüdürlüğü"
+    },
+    {
+        "City": "MERSİN",
+        "District": "Merkez",
+        "Name": "İstiklâl Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "MERSİN",
+        "District": "Merkez",
+        "Name": "Uray Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "MERSİN",
+        "District": "Merkez",
+        "Name": "Liman Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "MERSİN",
+        "District": "Merkez",
+        "Name": "Toros Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "MERSİN",
+        "District": "Merkez",
+        "Name": "Mersin İhtisas Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "MERSİN",
+        "District": "Erdemli",
+        "Name": "Erdemli Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "MERSİN",
+        "District": "Silifke",
+        "Name": "Silifke Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "MERSİN",
+        "District": "Anamur",
+        "Name": "Anamur Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "MERSİN",
+        "District": "Tarsus",
+        "Name": "Kızılmurat Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "MERSİN",
+        "District": "Tarsus",
+        "Name": "Şehitkerim Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "MERSİN",
+        "District": "Gülnar",
+        "Name": "Gülnar Malmüdürlüğü"
+    },
+    {
+        "City": "MERSİN",
+        "District": "Mut",
+        "Name": "Mut Malmüdürlüğü"
+    },
+    {
+        "City": "MERSİN",
+        "District": "Aydıncık",
+        "Name": "Aydıncık Malmüdürlüğü"
+    },
+    {
+        "City": "MERSİN",
+        "District": "Bozyazı",
+        "Name": "Bozyazı Malmüdürlüğü"
+    },
+    {
+        "City": "MERSİN",
+        "District": "Çamlıyayla",
+        "Name": "Çamlıyayla Malmüdürlüğü"
+    },
+    {
+        "City": "İSTANBUL",
+        "District": "Merkez",
+        "Name": "Haliç İhtisas Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İSTANBUL",
+        "District": "Merkez",
+        "Name": "Vatan İhtisas Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İSTANBUL",
+        "District": "Merkez",
+        "Name": "Çamlıca İhtisas Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İSTANBUL",
+        "District": "Merkez",
+        "Name": "Alemdağ Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İSTANBUL",
+        "District": "Merkez",
+        "Name": "Yenikapı Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İSTANBUL",
+        "District": "Merkez Başkanlık",
+        "Name": "Büyük Mükellefler Vergi Dairesi Başkanlığı (*)"
+    },
+    {
+        "City": "İSTANBUL",
+        "District": "Merkez",
+        "Name": "Boğaziçi Kurumlar Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İSTANBUL",
+        "District": "Merkez",
+        "Name": "Marmara Kurumlar Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İSTANBUL",
+        "District": "Merkez",
+        "Name": "Davutpaşa Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İSTANBUL",
+        "District": "Merkez",
+        "Name": "Esenler Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İSTANBUL",
+        "District": "Merkez",
+        "Name": "Fatih Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İSTANBUL",
+        "District": "Merkez",
+        "Name": "Küçükköy Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İSTANBUL",
+        "District": "Merkez",
+        "Name": "Merter Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İSTANBUL",
+        "District": "Merkez",
+        "Name": "Sultanbeyli Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İSTANBUL",
+        "District": "Merkez",
+        "Name": "Anadolu Kurumlar Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İSTANBUL",
+        "District": "Merkez",
+        "Name": "Tuzla Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İSTANBUL",
+        "District": "Merkez",
+        "Name": "Kozyatağı Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İSTANBUL",
+        "District": "Merkez",
+        "Name": "Maslak Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İSTANBUL",
+        "District": "Merkez",
+        "Name": "Zincirlikuyu Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İSTANBUL",
+        "District": "Merkez",
+        "Name": "İkitelli Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İSTANBUL",
+        "District": "Merkez",
+        "Name": "Beşiktaş Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İSTANBUL",
+        "District": "Merkez",
+        "Name": "Ümraniye Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İSTANBUL",
+        "District": "Merkez",
+        "Name": "Yeditepe Veraset ve Harçlar Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İSTANBUL",
+        "District": "Merkez",
+        "Name": "Kasımpaşa Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İSTANBUL",
+        "District": "Merkez",
+        "Name": "Erenköy Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İSTANBUL",
+        "District": "Merkez",
+        "Name": "Hisar Veraset ve Harçlar Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İSTANBUL",
+        "District": "Merkez",
+        "Name": "Tuna Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İSTANBUL",
+        "District": "Merkez",
+        "Name": "Rıhtım Veraset ve Harçlar Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İSTANBUL",
+        "District": "Merkez",
+        "Name": "Güngören Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İSTANBUL",
+        "District": "Merkez",
+        "Name": "Kocasinan Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İSTANBUL",
+        "District": "Merkez",
+        "Name": "Güneşli Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İSTANBUL",
+        "District": "Merkez",
+        "Name": "Küçükyalı Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İSTANBUL",
+        "District": "Merkez",
+        "Name": "Pendik Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İSTANBUL",
+        "District": "Merkez",
+        "Name": "Bayrampaşa Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İSTANBUL",
+        "District": "Merkez",
+        "Name": "Beyazıt Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İSTANBUL",
+        "District": "Merkez",
+        "Name": "Beyoğlu Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İSTANBUL",
+        "District": "Merkez",
+        "Name": "Gaziosmanpaşa Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İSTANBUL",
+        "District": "Merkez",
+        "Name": "Göztepe Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İSTANBUL",
+        "District": "Merkez",
+        "Name": "Hocapaşa Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İSTANBUL",
+        "District": "Merkez",
+        "Name": "Kadıköy Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İSTANBUL",
+        "District": "Merkez",
+        "Name": "Kocamustafapaşa Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İSTANBUL",
+        "District": "Merkez",
+        "Name": "Mecidiyeköy Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İSTANBUL",
+        "District": "Merkez",
+        "Name": "Şişli Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İSTANBUL",
+        "District": "Merkez",
+        "Name": "Üsküdar Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İSTANBUL",
+        "District": "Merkez",
+        "Name": "Halkalı Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İSTANBUL",
+        "District": "Merkez",
+        "Name": "Kağıthane Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İSTANBUL",
+        "District": "Merkez",
+        "Name": "Zeytinburnu Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İSTANBUL",
+        "District": "Merkez",
+        "Name": "Beykoz Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İSTANBUL",
+        "District": "Merkez",
+        "Name": "Sarıyer Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İSTANBUL",
+        "District": "Merkez",
+        "Name": "Bakırköy Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İSTANBUL",
+        "District": "Merkez",
+        "Name": "Kartal Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İSTANBUL",
+        "District": "Merkez",
+        "Name": "Nakil Vasıtaları Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İSTANBUL",
+        "District": "Merkez",
+        "Name": "Sarıgazi Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İSTANBUL",
+        "District": "Merkez",
+        "Name": "Atışalanı Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İSTANBUL",
+        "District": "Merkez",
+        "Name": "Yakacık Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İSTANBUL",
+        "District": "Merkez",
+        "Name": "Yenibosna Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İSTANBUL",
+        "District": "Merkez",
+        "Name": "Avcılar Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İSTANBUL",
+        "District": "Merkez",
+        "Name": "Adalar Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İSTANBUL",
+        "District": "Merkez",
+        "Name": "Küçükçekmece Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İSTANBUL",
+        "District": "Merkez",
+        "Name": "Beylikdüzü Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İSTANBUL",
+        "District": "Merkez",
+        "Name": "Esenyurt Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İSTANBUL",
+        "District": "Merkez",
+        "Name": "Silivri Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İSTANBUL",
+        "District": "Merkez",
+        "Name": "Büyükçekmece Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İSTANBUL",
+        "District": "Merkez",
+        "Name": "Şile Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İZMİR",
+        "District": "Merkez",
+        "Name": "İzmir İhtisas Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İZMİR",
+        "District": "Merkez",
+        "Name": "9 Eylül Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İZMİR",
+        "District": "Merkez",
+        "Name": "Yamanlar Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İZMİR",
+        "District": "Merkez",
+        "Name": "Belkahve Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İZMİR",
+        "District": "Merkez",
+        "Name": "Karşıyaka Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İZMİR",
+        "District": "Merkez",
+        "Name": "Kemeraltı Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İZMİR",
+        "District": "Merkez",
+        "Name": "Konak Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İZMİR",
+        "District": "Merkez",
+        "Name": "Kordon Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İZMİR",
+        "District": "Merkez",
+        "Name": "Şirinyer Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İZMİR",
+        "District": "Merkez",
+        "Name": "Kadifekale Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İZMİR",
+        "District": "Merkez",
+        "Name": "Taşıtlar Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İZMİR",
+        "District": "Merkez",
+        "Name": "Hasan Tahsin Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İZMİR",
+        "District": "Merkez",
+        "Name": "Bornova Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İZMİR",
+        "District": "Merkez",
+        "Name": "Balçova Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İZMİR",
+        "District": "Merkez",
+        "Name": "Gaziemir Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İZMİR",
+        "District": "Merkez",
+        "Name": "Ege Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İZMİR",
+        "District": "Merkez",
+        "Name": "Çiğli Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İZMİR",
+        "District": "Merkez",
+        "Name": "Çakabey İhtisas Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İZMİR",
+        "District": "Bayındır",
+        "Name": "Bayındır Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İZMİR",
+        "District": "Bergama",
+        "Name": "Bergama Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İZMİR",
+        "District": "Merkez",
+        "Name": "Menemen Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İZMİR",
+        "District": "Ödemiş",
+        "Name": "Ödemiş Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İZMİR",
+        "District": "Tire",
+        "Name": "Tire Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İZMİR",
+        "District": "Merkez",
+        "Name": "Torbalı Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İZMİR",
+        "District": "Merkez",
+        "Name": "Kemalpaşa Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İZMİR",
+        "District": "Merkez",
+        "Name": "Urla Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İZMİR",
+        "District": "Selçuk",
+        "Name": "Selçuk Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İZMİR",
+        "District": "Kınık",
+        "Name": "Kınık Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İZMİR",
+        "District": "Kiraz",
+        "Name": "Kiraz Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İZMİR",
+        "District": "Çeşme",
+        "Name": "Çeşme Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İZMİR",
+        "District": "Merkez",
+        "Name": "Aliağa Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İZMİR",
+        "District": "Merkez",
+        "Name": "Menderes Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "İZMİR",
+        "District": "Dikili",
+        "Name": "Dikili Malmüdürlüğü"
+    },
+    {
+        "City": "İZMİR",
+        "District": "Merkez",
+        "Name": "Foça Malmüdürlüğü"
+    },
+    {
+        "City": "İZMİR",
+        "District": "Karaburun",
+        "Name": "Karaburun Malmüdürlüğü"
+    },
+    {
+        "City": "İZMİR",
+        "District": "Merkez",
+        "Name": "Seferihisar Malmüdürlüğü"
+    },
+    {
+        "City": "İZMİR",
+        "District": "Beydağ",
+        "Name": "Beydağ Malmüdürlüğü"
+    },
+    {
+        "City": "KARS",
+        "District": "Merkez",
+        "Name": "Kars Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "KARS",
+        "District": "Arpaçay",
+        "Name": "Arpaçay Malmüdürlüğü"
+    },
+    {
+        "City": "KARS",
+        "District": "Digor",
+        "Name": "Digor Malmüdürlüğü"
+    },
+    {
+        "City": "KARS",
+        "District": "Kağızman",
+        "Name": "Kağızman Malmüdürlüğü"
+    },
+    {
+        "City": "KARS",
+        "District": "Sarıkamış",
+        "Name": "Sarıkamış Malmüdürlüğü"
+    },
+    {
+        "City": "KARS",
+        "District": "Selim",
+        "Name": "Selim Malmüdürlüğü"
+    },
+    {
+        "City": "KARS",
+        "District": "Susuz",
+        "Name": "Susuz Malmüdürlüğü"
+    },
+    {
+        "City": "KARS",
+        "District": "Akyaka",
+        "Name": "Akyaka Malmüdürlüğü"
+    },
+    {
+        "City": "KASTAMONU",
+        "District": "Merkez",
+        "Name": "Kastamonu Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "KASTAMONU",
+        "District": "Tosya",
+        "Name": "Tosya Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "KASTAMONU",
+        "District": "Taşköprü",
+        "Name": "Taşköprü Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "KASTAMONU",
+        "District": "Araç",
+        "Name": "Araç Malmüdürlüğü"
+    },
+    {
+        "City": "KASTAMONU",
+        "District": "Azdavay",
+        "Name": "Azdavay Malmüdürlüğü"
+    },
+    {
+        "City": "KASTAMONU",
+        "District": "Bozkurt",
+        "Name": "Bozkurt Malmüdürlüğü"
+    },
+    {
+        "City": "KASTAMONU",
+        "District": "Cide",
+        "Name": "Cide Malmüdürlüğü"
+    },
+    {
+        "City": "KASTAMONU",
+        "District": "Çatalzeytin",
+        "Name": "Çatalzeytin Malmüdürlüğü"
+    },
+    {
+        "City": "KASTAMONU",
+        "District": "Daday",
+        "Name": "Daday Malmüdürlüğü"
+    },
+    {
+        "City": "KASTAMONU",
+        "District": "Devrekani",
+        "Name": "Devrekani Malmüdürlüğü"
+    },
+    {
+        "City": "KASTAMONU",
+        "District": "İnebolu",
+        "Name": "İnebolu Malmüdürlüğü"
+    },
+    {
+        "City": "KASTAMONU",
+        "District": "Küre",
+        "Name": "Küre Malmüdürlüğü"
+    },
+    {
+        "City": "KASTAMONU",
+        "District": "Abana",
+        "Name": "Abana Malmüdürlüğü"
+    },
+    {
+        "City": "KASTAMONU",
+        "District": "İhsangazi",
+        "Name": "İhsangazi Malmüdürlüğü"
+    },
+    {
+        "City": "KASTAMONU",
+        "District": "Pınarbaşı",
+        "Name": "Pınarbaşı Malmüdürlüğü"
+    },
+    {
+        "City": "KASTAMONU",
+        "District": "Şenpazar",
+        "Name": "Şenpazar Malmüdürlüğü"
+    },
+    {
+        "City": "KASTAMONU",
+        "District": "Ağlı",
+        "Name": "Ağlı Malmüdürlüğü"
+    },
+    {
+        "City": "KASTAMONU",
+        "District": "Doğanyurt",
+        "Name": "Doğanyurt Malmüdürlüğü"
+    },
+    {
+        "City": "KASTAMONU",
+        "District": "Hanönü",
+        "Name": "Hanönü Malmüdürlüğü"
+    },
+    {
+        "City": "KASTAMONU",
+        "District": "Seydiler",
+        "Name": "Seydiler Malmüdürlüğü"
+    },
+    {
+        "City": "KAYSERİ",
+        "District": "Merkez",
+        "Name": "Kayseri İhtisas Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "KAYSERİ",
+        "District": "Merkez",
+        "Name": "Mimar Sinan Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "KAYSERİ",
+        "District": "Merkez",
+        "Name": "Erciyes Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "KAYSERİ",
+        "District": "Merkez",
+        "Name": "Kaleönü Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "KAYSERİ",
+        "District": "Merkez",
+        "Name": "Gevher Nesibe Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "KAYSERİ",
+        "District": "Develi",
+        "Name": "Develi Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "KAYSERİ",
+        "District": "Pınarbaşı",
+        "Name": "Pınarbaşı Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "KAYSERİ",
+        "District": "Bünyan",
+        "Name": "Bünyan Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "KAYSERİ",
+        "District": "Felahiye",
+        "Name": "Felahiye Malmüdürlüğü"
+    },
+    {
+        "City": "KAYSERİ",
+        "District": "İncesu",
+        "Name": "İncesu Malmüdürlüğü"
+    },
+    {
+        "City": "KAYSERİ",
+        "District": "Sarıoğlan",
+        "Name": "Sarıoğlan Malmüdürlüğü"
+    },
+    {
+        "City": "KAYSERİ",
+        "District": "Sarız",
+        "Name": "Sarız Malmüdürlüğü"
+    },
+    {
+        "City": "KAYSERİ",
+        "District": "Tomarza",
+        "Name": "Tomarza Malmüdürlüğü"
+    },
+    {
+        "City": "KAYSERİ",
+        "District": "Yahyalı",
+        "Name": "Yahyalı Malmüdürlüğü"
+    },
+    {
+        "City": "KAYSERİ",
+        "District": "Yeşilhisar",
+        "Name": "Yeşilhisar Malmüdürlüğü"
+    },
+    {
+        "City": "KAYSERİ",
+        "District": "Akkışla",
+        "Name": "Akkışla Malmüdürlüğü"
+    },
+    {
+        "City": "KAYSERİ",
+        "District": "Merkez",
+        "Name": "Hacılar Malmüdürlüğü"
+    },
+    {
+        "City": "KAYSERİ",
+        "District": "Özvatan",
+        "Name": "Özvatan Malmüdürlüğü"
+    },
+    {
+        "City": "KIRKLARELİ",
+        "District": "Merkez",
+        "Name": "Kırklareli Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "KIRKLARELİ",
+        "District": "Lüleburgaz",
+        "Name": "Lüleburgaz Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "KIRKLARELİ",
+        "District": "Babaeski",
+        "Name": "Babaeski Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "KIRKLARELİ",
+        "District": "Demirköy",
+        "Name": "Demirköy Malmüdürlüğü"
+    },
+    {
+        "City": "KIRKLARELİ",
+        "District": "Kofçaz",
+        "Name": "Kofçaz Malmüdürlüğü"
+    },
+    {
+        "City": "KIRKLARELİ",
+        "District": "Pehlivanköy",
+        "Name": "Pehlivanköy Malmüdürlüğü"
+    },
+    {
+        "City": "KIRKLARELİ",
+        "District": "Pınarhisar",
+        "Name": "Pınarhisar Malmüdürlüğü"
+    },
+    {
+        "City": "KIRKLARELİ",
+        "District": "Vize",
+        "Name": "Vize Malmüdürlüğü"
+    },
+    {
+        "City": "KIRŞEHİR",
+        "District": "Merkez",
+        "Name": "Kırşehir Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "KIRŞEHİR",
+        "District": "Kaman",
+        "Name": "Kaman Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "KIRŞEHİR",
+        "District": "Çiçekdağı",
+        "Name": "Çiçekdağı Malmüdürlüğü"
+    },
+    {
+        "City": "KIRŞEHİR",
+        "District": "Mucur",
+        "Name": "Mucur Malmüdürlüğü"
+    },
+    {
+        "City": "KIRŞEHİR",
+        "District": "Akpınar",
+        "Name": "Akpınar Malmüdürlüğü"
+    },
+    {
+        "City": "KIRŞEHİR",
+        "District": "Akçakent",
+        "Name": "Akçakent Malmüdürlüğü"
+    },
+    {
+        "City": "KIRŞEHİR",
+        "District": "Boztepe",
+        "Name": "Boztepe Malmüdürlüğü"
+    },
+    {
+        "City": "KOCAELİ",
+        "District": "Merkez",
+        "Name": "Kocaeli İhtisas Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "KOCAELİ",
+        "District": "Merkez",
+        "Name": "Tepecik Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "KOCAELİ",
+        "District": "Merkez",
+        "Name": "Alemdar Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "KOCAELİ",
+        "District": "Merkez Gebze",
+        "Name": "Gebze İhtisas Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "KOCAELİ",
+        "District": "Merkez",
+        "Name": "Acısu Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "KOCAELİ",
+        "District": "Merkez",
+        "Name": "Uluçınar Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "KOCAELİ",
+        "District": "Merkez",
+        "Name": "İlyasbey Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "KOCAELİ",
+        "District": "Merkez",
+        "Name": "Gölcük Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "KOCAELİ",
+        "District": "Merkez",
+        "Name": "Karamürsel Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "KOCAELİ",
+        "District": "Merkez",
+        "Name": "Körfez Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "KOCAELİ",
+        "District": "Merkez",
+        "Name": "Derince Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "KOCAELİ",
+        "District": "Merkez",
+        "Name": "Kandıra Malmüdürlüğü"
+    },
+    {
+        "City": "KONYA",
+        "District": "Merkez",
+        "Name": "Konya İhtisas Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "KONYA",
+        "District": "Merkez",
+        "Name": "Selçuk Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "KONYA",
+        "District": "Merkez",
+        "Name": "Mevlana Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "KONYA",
+        "District": "Merkez",
+        "Name": "Meram Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "KONYA",
+        "District": "Merkez",
+        "Name": "Alaaddin Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "KONYA",
+        "District": "Akşehir",
+        "Name": "Akşehir Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "KONYA",
+        "District": "Ereğli",
+        "Name": "Ereğli Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "KONYA",
+        "District": "Beyşehir",
+        "Name": "Beyşehir Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "KONYA",
+        "District": "Cihanbeyli",
+        "Name": "Cihanbeyli Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "KONYA",
+        "District": "Çumra",
+        "Name": "Çumra Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "KONYA",
+        "District": "Seydişehir",
+        "Name": "Seydişehir Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "KONYA",
+        "District": "Ilgın",
+        "Name": "Ilgın Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "KONYA",
+        "District": "Kulu",
+        "Name": "Kulu Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "KONYA",
+        "District": "Karapınar",
+        "Name": "Karapınar Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "KONYA",
+        "District": "Bozkır",
+        "Name": "Bozkır Malmüdürlüğü"
+    },
+    {
+        "City": "KONYA",
+        "District": "Doğanhisar",
+        "Name": "Doğanhisar Malmüdürlüğü"
+    },
+    {
+        "City": "KONYA",
+        "District": "Hadim",
+        "Name": "Hadim Malmüdürlüğü"
+    },
+    {
+        "City": "KONYA",
+        "District": "Kadınhanı",
+        "Name": "Kadınhanı Malmüdürlüğü"
+    },
+    {
+        "City": "KONYA",
+        "District": "Sarayönü",
+        "Name": "Sarayönü Malmüdürlüğü"
+    },
+    {
+        "City": "KONYA",
+        "District": "Yunak",
+        "Name": "Yunak Malmüdürlüğü"
+    },
+    {
+        "City": "KONYA",
+        "District": "Akören",
+        "Name": "Akören Malmüdürlüğü"
+    },
+    {
+        "City": "KONYA",
+        "District": "Altınekin",
+        "Name": "Altınekin Malmüdürlüğü"
+    },
+    {
+        "City": "KONYA",
+        "District": "Derebucak",
+        "Name": "Derebucak Malmüdürlüğü"
+    },
+    {
+        "City": "KONYA",
+        "District": "Hüyük",
+        "Name": "Hüyük Malmüdürlüğü"
+    },
+    {
+        "City": "KONYA",
+        "District": "Taşkent",
+        "Name": "Taşkent Malmüdürlüğü"
+    },
+    {
+        "City": "KONYA",
+        "District": "Ahırlı",
+        "Name": "Ahırlı Malmüdürlüğü"
+    },
+    {
+        "City": "KONYA",
+        "District": "Çeltik",
+        "Name": "Çeltik Malmüdürlüğü"
+    },
+    {
+        "City": "KONYA",
+        "District": "Derbent",
+        "Name": "Derbent Malmüdürlüğü"
+    },
+    {
+        "City": "KONYA",
+        "District": "Emirgazi",
+        "Name": "Emirgazi Malmüdürlüğü"
+    },
+    {
+        "City": "KONYA",
+        "District": "Güneysınır",
+        "Name": "Güneysınır Malmüdürlüğü"
+    },
+    {
+        "City": "KONYA",
+        "District": "Halkapınar",
+        "Name": "Halkapınar Malmüdürlüğü"
+    },
+    {
+        "City": "KONYA",
+        "District": "Tuzlukçu",
+        "Name": "Tuzlukçu Malmüdürlüğü"
+    },
+    {
+        "City": "KONYA",
+        "District": "Yalıhüyük",
+        "Name": "Yalıhüyük Malmüdürlüğü"
+    },
+    {
+        "City": "KÜTAHYA",
+        "District": "Merkez",
+        "Name": "30 Ağustos Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "KÜTAHYA",
+        "District": "Merkez",
+        "Name": "Çinili Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "KÜTAHYA",
+        "District": "Gediz",
+        "Name": "Gediz Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "KÜTAHYA",
+        "District": "Simav",
+        "Name": "Simav Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "KÜTAHYA",
+        "District": "Tavşanlı",
+        "Name": "Tavşanlı Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "KÜTAHYA",
+        "District": "Emet",
+        "Name": "Emet Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "KÜTAHYA",
+        "District": "Altıntaş",
+        "Name": "Altıntaş Malmüdürlüğü"
+    },
+    {
+        "City": "KÜTAHYA",
+        "District": "Domaniç",
+        "Name": "Domaniç Malmüdürlüğü"
+    },
+    {
+        "City": "KÜTAHYA",
+        "District": "Aslanapa",
+        "Name": "Aslanapa Malmüdürlüğü"
+    },
+    {
+        "City": "KÜTAHYA",
+        "District": "Dumlupınar",
+        "Name": "Dumlupınar Malmüdürlüğü"
+    },
+    {
+        "City": "KÜTAHYA",
+        "District": "Hisarcık",
+        "Name": "Hisarcık Malmüdürlüğü"
+    },
+    {
+        "City": "KÜTAHYA",
+        "District": "Şaphane",
+        "Name": "Şaphane Malmüdürlüğü"
+    },
+    {
+        "City": "KÜTAHYA",
+        "District": "Çavdarhisar",
+        "Name": "Çavdarhisar Malmüdürlüğü"
+    },
+    {
+        "City": "KÜTAHYA",
+        "District": "Pazarlar",
+        "Name": "Pazarlar Malmüdürlüğü"
+    },
+    {
+        "City": "MALATYA",
+        "District": "Merkez",
+        "Name": "Fırat Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "MALATYA",
+        "District": "Merkez",
+        "Name": "Beydağı Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "MALATYA",
+        "District": "Akçadağ",
+        "Name": "Akçadağ Malmüdürlüğü"
+    },
+    {
+        "City": "MALATYA",
+        "District": "Arapgir",
+        "Name": "Arapgir Malmüdürlüğü"
+    },
+    {
+        "City": "MALATYA",
+        "District": "Arguvan",
+        "Name": "Arguvan Malmüdürlüğü"
+    },
+    {
+        "City": "MALATYA",
+        "District": "Darende",
+        "Name": "Darende Malmüdürlüğü"
+    },
+    {
+        "City": "MALATYA",
+        "District": "Doğanşehir",
+        "Name": "Doğanşehir Malmüdürlüğü"
+    },
+    {
+        "City": "MALATYA",
+        "District": "Hekimhan",
+        "Name": "Hekimhan Malmüdürlüğü"
+    },
+    {
+        "City": "MALATYA",
+        "District": "Pütürge",
+        "Name": "Pütürge Malmüdürlüğü"
+    },
+    {
+        "City": "MALATYA",
+        "District": "Yeşilyurt",
+        "Name": "Yeşilyurt Malmüdürlüğü"
+    },
+    {
+        "City": "MALATYA",
+        "District": "Battalgazi",
+        "Name": "Battalgazi Malmüdürlüğü"
+    },
+    {
+        "City": "MALATYA",
+        "District": "Doğanyol",
+        "Name": "Doğanyol Malmüdürlüğü"
+    },
+    {
+        "City": "MALATYA",
+        "District": "Kale",
+        "Name": "Kale Malmüdürlüğü"
+    },
+    {
+        "City": "MALATYA",
+        "District": "Kuluncak",
+        "Name": "Kuluncak Malmüdürlüğü"
+    },
+    {
+        "City": "MALATYA",
+        "District": "Yazıhan",
+        "Name": "Yazıhan Malmüdürlüğü"
+    },
+    {
+        "City": "MANİSA",
+        "District": "Merkez",
+        "Name": "Manisa İhtisas Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "MANİSA",
+        "District": "Merkez",
+        "Name": "Şehit Cihan Güneş Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "MANİSA",
+        "District": "Merkez",
+        "Name": "Mesir Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "MANİSA",
+        "District": "Akhisar",
+        "Name": "Akhisar Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "MANİSA",
+        "District": "Alaşehir",
+        "Name": "Alaşehir Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "MANİSA",
+        "District": "Demirci",
+        "Name": "Demirci Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "MANİSA",
+        "District": "Kırkağaç",
+        "Name": "Kırkağaç Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "MANİSA",
+        "District": "Salihli",
+        "Name": "Salihli Adil Oral Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "MANİSA",
+        "District": "Sarıgöl",
+        "Name": "Sarıgöl Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "MANİSA",
+        "District": "Saruhanlı",
+        "Name": "Saruhanlı Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "MANİSA",
+        "District": "Soma",
+        "Name": "Soma Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "MANİSA",
+        "District": "Turgutlu",
+        "Name": "Turgutlu Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "MANİSA",
+        "District": "Gördes",
+        "Name": "Gördes Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "MANİSA",
+        "District": "Kula",
+        "Name": "Kula Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "MANİSA",
+        "District": "Selendi",
+        "Name": "Selendi Malmüdürlüğü"
+    },
+    {
+        "City": "MANİSA",
+        "District": "Ahmetli",
+        "Name": "Ahmetli Malmüdürlüğü"
+    },
+    {
+        "City": "MANİSA",
+        "District": "Gölmarmara",
+        "Name": "Gölmarmara Malmüdürlüğü"
+    },
+    {
+        "City": "MANİSA",
+        "District": "Köprübaşı",
+        "Name": "Köprübaşı Malmüdürlüğü"
+    },
+    {
+        "City": "KAHRAMANMARAŞ",
+        "District": "Merkez",
+        "Name": "Aslanbey Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "KAHRAMANMARAŞ",
+        "District": "Merkez",
+        "Name": "Aksu Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "KAHRAMANMARAŞ",
+        "District": "Elbistan",
+        "Name": "Elbistan Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "KAHRAMANMARAŞ",
+        "District": "Afşin",
+        "Name": "Afşin Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "KAHRAMANMARAŞ",
+        "District": "Pazarcık",
+        "Name": "Pazarcık Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "KAHRAMANMARAŞ",
+        "District": "Andırın",
+        "Name": "Andırın Malmüdürlüğü"
+    },
+    {
+        "City": "KAHRAMANMARAŞ",
+        "District": "Göksun",
+        "Name": "Göksun Malmüdürlüğü"
+    },
+    {
+        "City": "KAHRAMANMARAŞ",
+        "District": "Türkoğlu",
+        "Name": "Türkoğlu Malmüdürlüğü"
+    },
+    {
+        "City": "KAHRAMANMARAŞ",
+        "District": "Çağlayancerit",
+        "Name": "Çağlayancerit Malmüdürlüğü"
+    },
+    {
+        "City": "KAHRAMANMARAŞ",
+        "District": "Ekinözü",
+        "Name": "Ekinözü Malmüdürlüğü"
+    },
+    {
+        "City": "KAHRAMANMARAŞ",
+        "District": "Nurhak",
+        "Name": "Nurhak Malmüdürlüğü"
+    },
+    {
+        "City": "MARDİN",
+        "District": "Merkez",
+        "Name": "Mardin Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "MARDİN",
+        "District": "Kızıltepe",
+        "Name": "Kızıltepe Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "MARDİN",
+        "District": "Nusaybin",
+        "Name": "Nusaybin Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "MARDİN",
+        "District": "Derik",
+        "Name": "Derik Malmüdürlüğü"
+    },
+    {
+        "City": "MARDİN",
+        "District": "Mazıdağı",
+        "Name": "Mazıdağı Malmüdürlüğü"
+    },
+    {
+        "City": "MARDİN",
+        "District": "Midyat",
+        "Name": "Midyat Malmüdürlüğü"
+    },
+    {
+        "City": "MARDİN",
+        "District": "Ömerli",
+        "Name": "Ömerli Malmüdürlüğü"
+    },
+    {
+        "City": "MARDİN",
+        "District": "Savur",
+        "Name": "Savur Malmüdürlüğü"
+    },
+    {
+        "City": "MARDİN",
+        "District": "Dargeçit",
+        "Name": "Dargeçit Malmüdürlüğü"
+    },
+    {
+        "City": "MARDİN",
+        "District": "Yeşilli",
+        "Name": "Yeşilli Malmüdürlüğü"
+    },
+    {
+        "City": "MUĞLA",
+        "District": "Merkez",
+        "Name": "Muğla Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "MUĞLA",
+        "District": "Bodrum",
+        "Name": "Bodrum Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "MUĞLA",
+        "District": "Fethiye",
+        "Name": "Fethiye Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "MUĞLA",
+        "District": "Köyceğiz",
+        "Name": "Köyceğiz Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "MUĞLA",
+        "District": "Milas",
+        "Name": "Milas Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "MUĞLA",
+        "District": "Marmaris",
+        "Name": "Marmaris Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "MUĞLA",
+        "District": "Yatağan",
+        "Name": "Yatağan Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "MUĞLA",
+        "District": "Datça",
+        "Name": "Datça Malmüdürlüğü"
+    },
+    {
+        "City": "MUĞLA",
+        "District": "Ula",
+        "Name": "Ula Malmüdürlüğü"
+    },
+    {
+        "City": "MUĞLA",
+        "District": "Dalaman",
+        "Name": "Dalaman Malmüdürlüğü"
+    },
+    {
+        "City": "MUĞLA",
+        "District": "Ortaca",
+        "Name": "Ortaca Malmüdürlüğü"
+    },
+    {
+        "City": "MUĞLA",
+        "District": "Kavaklıdere",
+        "Name": "Kavaklıdere Malmüdürlüğü"
+    },
+    {
+        "City": "MUĞLA",
+        "District": "Seydiemer",
+        "Name": "Seydikemer Malmüdürlüğü"
+    },
+    {
+        "City": "MUŞ",
+        "District": "Merkez",
+        "Name": "Muş Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "MUŞ",
+        "District": "Bulanık",
+        "Name": "Bulanık Malmüdürlüğü"
+    },
+    {
+        "City": "MUŞ",
+        "District": "Malazgirt",
+        "Name": "Malazgirt Malmüdürlüğü"
+    },
+    {
+        "City": "MUŞ",
+        "District": "Varto",
+        "Name": "Varto Malmüdürlüğü"
+    },
+    {
+        "City": "MUŞ",
+        "District": "Hasköy",
+        "Name": "Hasköy Malmüdürlüğü"
+    },
+    {
+        "City": "MUŞ",
+        "District": "Korkut",
+        "Name": "Korkut Malmüdürlüğü"
+    },
+    {
+        "City": "NEVŞEHİR",
+        "District": "Merkez",
+        "Name": "Nevşehir Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "NEVŞEHİR",
+        "District": "Avanos",
+        "Name": "Avanos Malmüdürlüğü"
+    },
+    {
+        "City": "NEVŞEHİR",
+        "District": "Derinkuyu",
+        "Name": "Derinkuyu Malmüdürlüğü"
+    },
+    {
+        "City": "NEVŞEHİR",
+        "District": "Gülşehir",
+        "Name": "Gülşehir Malmüdürlüğü"
+    },
+    {
+        "City": "NEVŞEHİR",
+        "District": "Hacıbektaş",
+        "Name": "Hacıbektaş Malmüdürlüğü"
+    },
+    {
+        "City": "NEVŞEHİR",
+        "District": "Kozaklı",
+        "Name": "Kozaklı Malmüdürlüğü"
+    },
+    {
+        "City": "NEVŞEHİR",
+        "District": "Ürgüp",
+        "Name": "Ürgüp Malmüdürlüğü"
+    },
+    {
+        "City": "NEVŞEHİR",
+        "District": "Acıgöl",
+        "Name": "Acıgöl Malmüdürlüğü"
+    },
+    {
+        "City": "NİĞDE",
+        "District": "Merkez",
+        "Name": "Niğde Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "NİĞDE",
+        "District": "Bor",
+        "Name": "Bor Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "NİĞDE",
+        "District": "Çamardı",
+        "Name": "Çamardı Malmüdürlüğü"
+    },
+    {
+        "City": "NİĞDE",
+        "District": "Ulukışla",
+        "Name": "Ulukışla Malmüdürlüğü"
+    },
+    {
+        "City": "NİĞDE",
+        "District": "Altunhisar",
+        "Name": "Altunhisar Malmüdürlüğü"
+    },
+    {
+        "City": "NİĞDE",
+        "District": "Çiftlik",
+        "Name": "Çiftlik Malmüdürlüğü"
+    },
+    {
+        "City": "ORDU",
+        "District": "Merkez",
+        "Name": "Boztepe Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ORDU",
+        "District": "Merkez",
+        "Name": "Köprübaşı Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ORDU",
+        "District": "Fatsa",
+        "Name": "Fatsa Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ORDU",
+        "District": "Ünye",
+        "Name": "Ünye Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ORDU",
+        "District": "Akkuş",
+        "Name": "Akkuş Malmüdürlüğü"
+    },
+    {
+        "City": "ORDU",
+        "District": "Aybastı",
+        "Name": "Aybastı Malmüdürlüğü"
+    },
+    {
+        "City": "ORDU",
+        "District": "Gölköy",
+        "Name": "Gölköy Malmüdürlüğü"
+    },
+    {
+        "City": "ORDU",
+        "District": "Korgan",
+        "Name": "Korgan Malmüdürlüğü"
+    },
+    {
+        "City": "ORDU",
+        "District": "Kumru",
+        "Name": "Kumru Malmüdürlüğü"
+    },
+    {
+        "City": "ORDU",
+        "District": "Mesudiye",
+        "Name": "Mesudiye Malmüdürlüğü"
+    },
+    {
+        "City": "ORDU",
+        "District": "Perşembe",
+        "Name": "Perşembe Malmüdürlüğü"
+    },
+    {
+        "City": "ORDU",
+        "District": "Ulubey",
+        "Name": "Ulubey Malmüdürlüğü"
+    },
+    {
+        "City": "ORDU",
+        "District": "Gülyalı",
+        "Name": "Gülyalı Malmüdürlüğü"
+    },
+    {
+        "City": "ORDU",
+        "District": "Gürgentepe",
+        "Name": "Gürgentepe Malmüdürlüğü"
+    },
+    {
+        "City": "ORDU",
+        "District": "Çamaş",
+        "Name": "Çamaş Malmüdürlüğü"
+    },
+    {
+        "City": "ORDU",
+        "District": "Çatalpınar",
+        "Name": "Çatalpınar Malmüdürlüğü"
+    },
+    {
+        "City": "ORDU",
+        "District": "Çaybaşı",
+        "Name": "Çaybaşı Malmüdürlüğü"
+    },
+    {
+        "City": "ORDU",
+        "District": "İkizce",
+        "Name": "İkizce Malmüdürlüğü"
+    },
+    {
+        "City": "ORDU",
+        "District": "Kabadüz",
+        "Name": "Kabadüz Malmüdürlüğü"
+    },
+    {
+        "City": "ORDU",
+        "District": "Kabataş",
+        "Name": "Kabataş Malmüdürlüğü"
+    },
+    {
+        "City": "RİZE",
+        "District": "Merkez",
+        "Name": "Kaçkar Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "RİZE",
+        "District": "Merkez",
+        "Name": "Yeşilçay Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "RİZE",
+        "District": "Çayeli",
+        "Name": "Çayeli Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "RİZE",
+        "District": "Pazar",
+        "Name": "Pazar Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "RİZE",
+        "District": "Ardeşen",
+        "Name": "Ardeşen Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "RİZE",
+        "District": "Çamlıhemşin",
+        "Name": "Çamlıhemşin Malmüdürlüğü"
+    },
+    {
+        "City": "RİZE",
+        "District": "Fındıklı",
+        "Name": "Fındıklı Malmüdürlüğü"
+    },
+    {
+        "City": "RİZE",
+        "District": "İkizdere",
+        "Name": "İkizdere Malmüdürlüğü"
+    },
+    {
+        "City": "RİZE",
+        "District": "Kalkandere",
+        "Name": "Kalkandere Malmüdürlüğü"
+    },
+    {
+        "City": "RİZE",
+        "District": "Güneysu",
+        "Name": "Güneysu Malmüdürlüğü"
+    },
+    {
+        "City": "RİZE",
+        "District": "Derepazarı",
+        "Name": "Derepazarı Malmüdürlüğü"
+    },
+    {
+        "City": "RİZE",
+        "District": "Hemşin",
+        "Name": "Hemşin Malmüdürlüğü"
+    },
+    {
+        "City": "RİZE",
+        "District": "İyidere",
+        "Name": "İyidere Malmüdürlüğü"
+    },
+    {
+        "City": "SAKARYA",
+        "District": "Merkez",
+        "Name": "Sakarya İhtisas Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "SAKARYA",
+        "District": "Merkez",
+        "Name": "Gümrükönü Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "SAKARYA",
+        "District": "Merkez",
+        "Name": "Ali Fuat Cebesoy Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "SAKARYA",
+        "District": "Merkez",
+        "Name": "Sapanca Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "SAKARYA",
+        "District": "Merkez",
+        "Name": "Akyazı Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "SAKARYA",
+        "District": "Geyve",
+        "Name": "Geyve Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "SAKARYA",
+        "District": "Merkez",
+        "Name": "Hendek Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "SAKARYA",
+        "District": "Karasu",
+        "Name": "Karasu Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "SAKARYA",
+        "District": "Kaynarca",
+        "Name": "Kaynarca Malmüdürlüğü"
+    },
+    {
+        "City": "SAKARYA",
+        "District": "Kocaali",
+        "Name": "Kocaali Malmüdürlüğü"
+    },
+    {
+        "City": "SAKARYA",
+        "District": "Pamukova",
+        "Name": "Pamukova Malmüdürlüğü"
+    },
+    {
+        "City": "SAKARYA",
+        "District": "Taraklı",
+        "Name": "Taraklı Malmüdürlüğü"
+    },
+    {
+        "City": "SAKARYA",
+        "District": "Merkez",
+        "Name": "Karapürçek Malmüdürlüğü"
+    },
+    {
+        "City": "SAMSUN",
+        "District": "Merkez",
+        "Name": "19 Mayıs Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "SAMSUN",
+        "District": "Merkez",
+        "Name": "Gaziler Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "SAMSUN",
+        "District": "Merkez",
+        "Name": "Zafer Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "SAMSUN",
+        "District": "Bafra",
+        "Name": "Bafra Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "SAMSUN",
+        "District": "Çarşamba",
+        "Name": "Çarşamba Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "SAMSUN",
+        "District": "Terme",
+        "Name": "Terme Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "SAMSUN",
+        "District": "Havza",
+        "Name": "Havza Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "SAMSUN",
+        "District": "Alaçam",
+        "Name": "Alaçam Malmüdürlüğü"
+    },
+    {
+        "City": "SAMSUN",
+        "District": "Kavak",
+        "Name": "Kavak Malmüdürlüğü"
+    },
+    {
+        "City": "SAMSUN",
+        "District": "Ladik",
+        "Name": "Ladik Malmüdürlüğü"
+    },
+    {
+        "City": "SAMSUN",
+        "District": "Vezirköprü",
+        "Name": "Vezirköprü Malmüdürlüğü"
+    },
+    {
+        "City": "SAMSUN",
+        "District": "Asarcık",
+        "Name": "Asarcık Malmüdürlüğü"
+    },
+    {
+        "City": "SAMSUN",
+        "District": "Ondokuz Mayıs",
+        "Name": "Ondokuz Mayıs Malmüdürlüğü"
+    },
+    {
+        "City": "SAMSUN",
+        "District": "Salıpazarı",
+        "Name": "Salıpazarı Malmüdürlüğü"
+    },
+    {
+        "City": "SAMSUN",
+        "District": "Merkez",
+        "Name": "Tekkeköy Malmüdürlüğü"
+    },
+    {
+        "City": "SAMSUN",
+        "District": "Ayvacık",
+        "Name": "Ayvacık Malmüdürlüğü"
+    },
+    {
+        "City": "SAMSUN",
+        "District": "Yakakent",
+        "Name": "Yakakent Malmüdürlüğü"
+    },
+    {
+        "City": "SİİRT",
+        "District": "Merkez",
+        "Name": "Siirt Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "SİİRT",
+        "District": "Baykan",
+        "Name": "Baykan Malmüdürlüğü"
+    },
+    {
+        "City": "SİİRT",
+        "District": "Eruh",
+        "Name": "Eruh Malmüdürlüğü"
+    },
+    {
+        "City": "SİİRT",
+        "District": "Kurtalan",
+        "Name": "Kurtalan Malmüdürlüğü"
+    },
+    {
+        "City": "SİİRT",
+        "District": "Pervari",
+        "Name": "Pervari Malmüdürlüğü"
+    },
+    {
+        "City": "SİİRT",
+        "District": "Şirvan",
+        "Name": "Şirvan Malmüdürlüğü"
+    },
+    {
+        "City": "SİNOP",
+        "District": "Merkez",
+        "Name": "Sinop Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "SİNOP",
+        "District": "Boyabat",
+        "Name": "Boyabat Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "SİNOP",
+        "District": "Ayancık",
+        "Name": "Ayancık Malmüdürlüğü"
+    },
+    {
+        "City": "SİNOP",
+        "District": "Durağan",
+        "Name": "Durağan Malmüdürlüğü"
+    },
+    {
+        "City": "SİNOP",
+        "District": "Erfelek",
+        "Name": "Erfelek Malmüdürlüğü"
+    },
+    {
+        "City": "SİNOP",
+        "District": "Gerze",
+        "Name": "Gerze Malmüdürlüğü"
+    },
+    {
+        "City": "SİNOP",
+        "District": "Türkeli",
+        "Name": "Türkeli Malmüdürlüğü"
+    },
+    {
+        "City": "SİNOP",
+        "District": "Dikmen",
+        "Name": "Dikmen Malmüdürlüğü"
+    },
+    {
+        "City": "SİNOP",
+        "District": "Saraydüzü",
+        "Name": "Saraydüzü Malmüdürlüğü"
+    },
+    {
+        "City": "SİVAS",
+        "District": "Merkez",
+        "Name": "Kale Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "SİVAS",
+        "District": "Merkez",
+        "Name": "Site Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "SİVAS",
+        "District": "Şarkışla",
+        "Name": "Şarkışla Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "SİVAS",
+        "District": "Divriği",
+        "Name": "Divriği Malmüdürlüğü"
+    },
+    {
+        "City": "SİVAS",
+        "District": "Gemerek",
+        "Name": "Gemerek Malmüdürlüğü"
+    },
+    {
+        "City": "SİVAS",
+        "District": "Gürün",
+        "Name": "Gürün Malmüdürlüğü"
+    },
+    {
+        "City": "SİVAS",
+        "District": "Hafik",
+        "Name": "Hafik Malmüdürlüğü"
+    },
+    {
+        "City": "SİVAS",
+        "District": "İmranlı",
+        "Name": "İmranlı Malmüdürlüğü"
+    },
+    {
+        "City": "SİVAS",
+        "District": "Kangal",
+        "Name": "Kangal Malmüdürlüğü"
+    },
+    {
+        "City": "SİVAS",
+        "District": "Koyulhisar",
+        "Name": "Koyulhisar Malmüdürlüğü"
+    },
+    {
+        "City": "SİVAS",
+        "District": "Suşehri",
+        "Name": "Suşehri Malmüdürlüğü"
+    },
+    {
+        "City": "SİVAS",
+        "District": "Yıldızeli",
+        "Name": "Yıldızeli Malmüdürlüğü"
+    },
+    {
+        "City": "SİVAS",
+        "District": "Zara",
+        "Name": "Zara Malmüdürlüğü"
+    },
+    {
+        "City": "SİVAS",
+        "District": "Akıncılar",
+        "Name": "Akıncılar Malmüdürlüğü"
+    },
+    {
+        "City": "SİVAS",
+        "District": "Altınyayla",
+        "Name": "Altınyayla Malmüdürlüğü"
+    },
+    {
+        "City": "SİVAS",
+        "District": "Doğanşar",
+        "Name": "Doğanşar Malmüdürlüğü"
+    },
+    {
+        "City": "SİVAS",
+        "District": "Gölova",
+        "Name": "Gölova Malmüdürlüğü"
+    },
+    {
+        "City": "SİVAS",
+        "District": "Ulaş",
+        "Name": "Ulaş Malmüdürlüğü"
+    },
+    {
+        "City": "TEKİRDAĞ",
+        "District": "Merkez",
+        "Name": "Süleymanpaşa Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "TEKİRDAĞ",
+        "District": "Merkez",
+        "Name": "Namık Kemal Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "TEKİRDAĞ",
+        "District": "Çorlu",
+        "Name": "Çorlu İhtisas Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "TEKİRDAĞ",
+        "District": "Çerkezköy",
+        "Name": "Çerkezköy Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "TEKİRDAĞ",
+        "District": "Çorlu",
+        "Name": "Çorlu Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "TEKİRDAĞ",
+        "District": "Hayrabolu",
+        "Name": "Hayrabolu Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "TEKİRDAĞ",
+        "District": "Malkara",
+        "Name": "Malkara Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "TEKİRDAĞ",
+        "District": "Muratlı",
+        "Name": "Muratlı Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "TEKİRDAĞ",
+        "District": "Şarköy",
+        "Name": "Şarköy Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "TEKİRDAĞ",
+        "District": "Kapaklı",
+        "Name": "Kapaklı Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "TEKİRDAĞ",
+        "District": "Saray",
+        "Name": "Saray Malmüdürlüğü"
+    },
+    {
+        "City": "TEKİRDAĞ",
+        "District": "Marmara Ereğlisi",
+        "Name": "Marmara Ereğlisi Malmüdürlüğü"
+    },
+    {
+        "City": "TOKAT",
+        "District": "Merkez",
+        "Name": "Tokat Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "TOKAT",
+        "District": "Erbaa",
+        "Name": "Erbaa Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "TOKAT",
+        "District": "Niksar",
+        "Name": "Niksar Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "TOKAT",
+        "District": "Turhal",
+        "Name": "Turhal Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "TOKAT",
+        "District": "Zile",
+        "Name": "Zile Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "TOKAT",
+        "District": "Almus",
+        "Name": "Almus Malmüdürlüğü"
+    },
+    {
+        "City": "TOKAT",
+        "District": "Artova",
+        "Name": "Artova Malmüdürlüğü"
+    },
+    {
+        "City": "TOKAT",
+        "District": "Reşadiye",
+        "Name": "Reşadiye Malmüdürlüğü"
+    },
+    {
+        "City": "TOKAT",
+        "District": "Pazar",
+        "Name": "Pazar Malmüdürlüğü"
+    },
+    {
+        "City": "TOKAT",
+        "District": "Yeşilyurt",
+        "Name": "Yeşilyurt Malmüdürlüğü"
+    },
+    {
+        "City": "TOKAT",
+        "District": "Başçiftlik",
+        "Name": "Başçiftlik Malmüdürlüğü"
+    },
+    {
+        "City": "TOKAT",
+        "District": "Sulusaray",
+        "Name": "Sulusaray Malmüdürlüğü"
+    },
+    {
+        "City": "TRABZON",
+        "District": "Merkez",
+        "Name": "Hızırbey Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "TRABZON",
+        "District": "Merkez",
+        "Name": "Karadeniz Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "TRABZON",
+        "District": "Akçaabat",
+        "Name": "Akçaabat Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "TRABZON",
+        "District": "Of",
+        "Name": "Of Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "TRABZON",
+        "District": "Vakfıkebir",
+        "Name": "Vakfıkebir Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "TRABZON",
+        "District": "Araklı",
+        "Name": "Araklı Malmüdürlüğü"
+    },
+    {
+        "City": "TRABZON",
+        "District": "Arsin",
+        "Name": "Arsin Malmüdürlüğü"
+    },
+    {
+        "City": "TRABZON",
+        "District": "Çaykara",
+        "Name": "Çaykara Malmüdürlüğü"
+    },
+    {
+        "City": "TRABZON",
+        "District": "Maçka",
+        "Name": "Maçka Malmüdürlüğü"
+    },
+    {
+        "City": "TRABZON",
+        "District": "Sürmene",
+        "Name": "Sürmene Malmüdürlüğü"
+    },
+    {
+        "City": "TRABZON",
+        "District": "Tonya",
+        "Name": "Tonya Malmüdürlüğü"
+    },
+    {
+        "City": "TRABZON",
+        "District": "Yomra",
+        "Name": "Yomra Malmüdürlüğü"
+    },
+    {
+        "City": "TRABZON",
+        "District": "Beşikdüzü",
+        "Name": "Beşikdüzü Malmüdürlüğü"
+    },
+    {
+        "City": "TRABZON",
+        "District": "Şalpazarı",
+        "Name": "Şalpazarı Malmüdürlüğü"
+    },
+    {
+        "City": "TRABZON",
+        "District": "Çarşıbaşı",
+        "Name": "Çarşıbaşı Malmüdürlüğü"
+    },
+    {
+        "City": "TRABZON",
+        "District": "Dernekpazarı",
+        "Name": "Dernekpazarı Malmüdürlüğü"
+    },
+    {
+        "City": "TRABZON",
+        "District": "Düzköy",
+        "Name": "Düzköy Malmüdürlüğü"
+    },
+    {
+        "City": "TRABZON",
+        "District": "Hayrat",
+        "Name": "Hayrat Malmüdürlüğü"
+    },
+    {
+        "City": "TRABZON",
+        "District": "Köprübaşı",
+        "Name": "Köprübaşı Malmüdürlüğü"
+    },
+    {
+        "City": "TUNCELİ",
+        "District": "Merkez",
+        "Name": "Tunceli Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "TUNCELİ",
+        "District": "Çemişgezek",
+        "Name": "Çemişgezek Malmüdürlüğü"
+    },
+    {
+        "City": "TUNCELİ",
+        "District": "Hozat",
+        "Name": "Hozat Malmüdürlüğü"
+    },
+    {
+        "City": "TUNCELİ",
+        "District": "Mazgirt",
+        "Name": "Mazgirt Malmüdürlüğü"
+    },
+    {
+        "City": "TUNCELİ",
+        "District": "Nazimiye",
+        "Name": "Nazimiye Malmüdürlüğü"
+    },
+    {
+        "City": "TUNCELİ",
+        "District": "Ovacık",
+        "Name": "Ovacık Malmüdürlüğü"
+    },
+    {
+        "City": "TUNCELİ",
+        "District": "Pertek",
+        "Name": "Pertek Malmüdürlüğü"
+    },
+    {
+        "City": "TUNCELİ",
+        "District": "Pülümür",
+        "Name": "Pülümür Malmüdürlüğü"
+    },
+    {
+        "City": "ŞANLIURFA",
+        "District": "Merkez",
+        "Name": "Şehitlik Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ŞANLIURFA",
+        "District": "Merkez",
+        "Name": "Topçu Meydanı Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ŞANLIURFA",
+        "District": "Merkez",
+        "Name": "Göbeklitepe Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ŞANLIURFA",
+        "District": "Siverek",
+        "Name": "Siverek Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ŞANLIURFA",
+        "District": "Viranşehir",
+        "Name": "Viranşehir Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ŞANLIURFA",
+        "District": "Birecik",
+        "Name": "Birecik Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ŞANLIURFA",
+        "District": "Suruç",
+        "Name": "Suruç  Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ŞANLIURFA",
+        "District": "Akçakale",
+        "Name": "Akçakale Malmüdürlüğü"
+    },
+    {
+        "City": "ŞANLIURFA",
+        "District": "Bozova",
+        "Name": "Bozova Malmüdürlüğü"
+    },
+    {
+        "City": "ŞANLIURFA",
+        "District": "Halfeti",
+        "Name": "Halfeti Malmüdürlüğü"
+    },
+    {
+        "City": "ŞANLIURFA",
+        "District": "Hilvan",
+        "Name": "Hilvan Malmüdürlüğü"
+    },
+    {
+        "City": "ŞANLIURFA",
+        "District": "Ceylanpınar",
+        "Name": "Ceylanpınar Malmüdürlüğü"
+    },
+    {
+        "City": "ŞANLIURFA",
+        "District": "Harran",
+        "Name": "Harran Malmüdürlüğü"
+    },
+    {
+        "City": "UŞAK",
+        "District": "Merkez",
+        "Name": "Uşak Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "UŞAK",
+        "District": "Banaz",
+        "Name": "Banaz Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "UŞAK",
+        "District": "Eşme",
+        "Name": "Eşme Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "UŞAK",
+        "District": "Karahallı",
+        "Name": "Karahallı Malmüdürlüğü"
+    },
+    {
+        "City": "UŞAK",
+        "District": "Ulubey",
+        "Name": "Ulubey Malmüdürlüğü"
+    },
+    {
+        "City": "UŞAK",
+        "District": "Sivaslı",
+        "Name": "Sivaslı Malmüdürlüğü"
+    },
+    {
+        "City": "VAN",
+        "District": "Merkez",
+        "Name": "Van Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "VAN",
+        "District": "Erciş",
+        "Name": "Erciş Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "VAN",
+        "District": "Başkale",
+        "Name": "Başkale Malmüdürlüğü"
+    },
+    {
+        "City": "VAN",
+        "District": "Çatak",
+        "Name": "Çatak Malmüdürlüğü"
+    },
+    {
+        "City": "VAN",
+        "District": "Gevaş",
+        "Name": "Gevaş Malmüdürlüğü"
+    },
+    {
+        "City": "VAN",
+        "District": "Gürpınar",
+        "Name": "Gürpınar Malmüdürlüğü"
+    },
+    {
+        "City": "VAN",
+        "District": "Muradiye",
+        "Name": "Muradiye Malmüdürlüğü"
+    },
+    {
+        "City": "VAN",
+        "District": "Özalp",
+        "Name": "Özalp Malmüdürlüğü"
+    },
+    {
+        "City": "VAN",
+        "District": "Bahçesaray",
+        "Name": "Bahçesaray Malmüdürlüğü"
+    },
+    {
+        "City": "VAN",
+        "District": "Çaldıran",
+        "Name": "Çaldıran Malmüdürlüğü"
+    },
+    {
+        "City": "VAN",
+        "District": "Edremit",
+        "Name": "Edremit Malmüdürlüğü"
+    },
+    {
+        "City": "VAN",
+        "District": "Saray",
+        "Name": "Saray Malmüdürlüğü"
+    },
+    {
+        "City": "YOZGAT",
+        "District": "Merkez",
+        "Name": "Yozgat Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "YOZGAT",
+        "District": "Boğazlıyan",
+        "Name": "Boğazlıyan Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "YOZGAT",
+        "District": "Sorgun",
+        "Name": "Sorgun Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "YOZGAT",
+        "District": "Yerköy",
+        "Name": "Yerköy Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "YOZGAT",
+        "District": "Akdağmadeni",
+        "Name": "Akdağmadeni Malmüdürlüğü"
+    },
+    {
+        "City": "YOZGAT",
+        "District": "Çayıralan",
+        "Name": "Çayıralan Malmüdürlüğü"
+    },
+    {
+        "City": "YOZGAT",
+        "District": "Çekerek",
+        "Name": "Çekerek Malmüdürlüğü"
+    },
+    {
+        "City": "YOZGAT",
+        "District": "Sarıkaya",
+        "Name": "Sarıkaya Malmüdürlüğü"
+    },
+    {
+        "City": "YOZGAT",
+        "District": "Şefaatli",
+        "Name": "Şefaatli Malmüdürlüğü"
+    },
+    {
+        "City": "YOZGAT",
+        "District": "Aydıncık",
+        "Name": "Aydıncık Malmüdürlüğü"
+    },
+    {
+        "City": "YOZGAT",
+        "District": "Çandır",
+        "Name": "Çandır Malmüdürlüğü"
+    },
+    {
+        "City": "YOZGAT",
+        "District": "Kadışehri",
+        "Name": "Kadışehri Malmüdürlüğü"
+    },
+    {
+        "City": "YOZGAT",
+        "District": "Saraykent",
+        "Name": "Saraykent Malmüdürlüğü"
+    },
+    {
+        "City": "YOZGAT",
+        "District": "Yenifakılı",
+        "Name": "Yenifakılı Malmüdürlüğü"
+    },
+    {
+        "City": "ZONGULDAK",
+        "District": "Merkez",
+        "Name": "Uzunmehmet Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ZONGULDAK",
+        "District": "Merkez",
+        "Name": "Kara Elmas Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ZONGULDAK",
+        "District": "Ereğli",
+        "Name": "Ereğli Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ZONGULDAK",
+        "District": "Çaycuma",
+        "Name": "Çaycuma Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ZONGULDAK",
+        "District": "Devrek",
+        "Name": "Devrek Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ZONGULDAK",
+        "District": "Alaplı",
+        "Name": "Alaplı Malmüdürlüğü"
+    },
+    {
+        "City": "ZONGULDAK",
+        "District": "Gökçebey",
+        "Name": "Gökçebey Malmüdürlüğü"
+    },
+    {
+        "City": "AKSARAY",
+        "District": "Merkez",
+        "Name": "Aksaray Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "AKSARAY",
+        "District": "Ağaçören",
+        "Name": "Ağaçören Malmüdürlüğü"
+    },
+    {
+        "City": "AKSARAY",
+        "District": "Güzelyurt",
+        "Name": "Güzelyurt Malmüdürlüğü"
+    },
+    {
+        "City": "AKSARAY",
+        "District": "Ortaköy",
+        "Name": "Ortaköy Malmüdürlüğü"
+    },
+    {
+        "City": "AKSARAY",
+        "District": "Sarıyahşi",
+        "Name": "Sarıyahşi Malmüdürlüğü"
+    },
+    {
+        "City": "AKSARAY",
+        "District": "Eskil",
+        "Name": "Eskil Malmüdürlüğü"
+    },
+    {
+        "City": "AKSARAY",
+        "District": "Gülağaç",
+        "Name": "Gülağaç Malmüdürlüğü"
+    },
+    {
+        "City": "BAYBURT",
+        "District": "Merkez",
+        "Name": "Bayburt Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "BAYBURT",
+        "District": "Aydıntepe",
+        "Name": "Aydıntepe Malmüdürlüğü"
+    },
+    {
+        "City": "BAYBURT",
+        "District": "Demirözü",
+        "Name": "Demirözü Malmüdürlüğü"
+    },
+    {
+        "City": "KARAMAN",
+        "District": "Merkez",
+        "Name": "Karaman Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "KARAMAN",
+        "District": "Ayrancı",
+        "Name": "Ayrancı Malmüdürlüğü"
+    },
+    {
+        "City": "KARAMAN",
+        "District": "Ermenek",
+        "Name": "Ermenek Malmüdürlüğü"
+    },
+    {
+        "City": "KARAMAN",
+        "District": "Kazım Karabekir",
+        "Name": "Kazım Karabekir Malmüdürlüğü"
+    },
+    {
+        "City": "KARAMAN",
+        "District": "Başyayla",
+        "Name": "Başyayla Malmüdürlüğü"
+    },
+    {
+        "City": "KARAMAN",
+        "District": "Sarıveliler",
+        "Name": "Sarıveliler Malmüdürlüğü"
+    },
+    {
+        "City": "KIRIKKALE",
+        "District": "Merkez",
+        "Name": "Irmak Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "KIRIKKALE",
+        "District": "Merkez",
+        "Name": "Kaletepe Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "KIRIKKALE",
+        "District": "Delice",
+        "Name": "Delice Malmüdürlüğü"
+    },
+    {
+        "City": "KIRIKKALE",
+        "District": "Keskin",
+        "Name": "Keskin Malmüdürlüğü"
+    },
+    {
+        "City": "KIRIKKALE",
+        "District": "Sulakyurt",
+        "Name": "Sulakyurt Malmüdürlüğü"
+    },
+    {
+        "City": "KIRIKKALE",
+        "District": "Balışeyh",
+        "Name": "Balışeyh Malmüdürlüğü"
+    },
+    {
+        "City": "KIRIKKALE",
+        "District": "Çelebi",
+        "Name": "Çelebi Malmüdürlüğü"
+    },
+    {
+        "City": "KIRIKKALE",
+        "District": "Karakeçili",
+        "Name": "Karakeçili Malmüdürlüğü"
+    },
+    {
+        "City": "BATMAN",
+        "District": "Merkez",
+        "Name": "Batman Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "BATMAN",
+        "District": "Beşiri",
+        "Name": "Beşiri Malmüdürlüğü"
+    },
+    {
+        "City": "BATMAN",
+        "District": "Gercüş",
+        "Name": "Gercüş Malmüdürlüğü"
+    },
+    {
+        "City": "BATMAN",
+        "District": "Hasankeyf",
+        "Name": "Hasankeyf Malmüdürlüğü"
+    },
+    {
+        "City": "BATMAN",
+        "District": "Kozluk",
+        "Name": "Kozluk Malmüdürlüğü"
+    },
+    {
+        "City": "BATMAN",
+        "District": "Sason",
+        "Name": "Sason Malmüdürlüğü"
+    },
+    {
+        "City": "ŞIRNAK",
+        "District": "Merkez",
+        "Name": "Şırnak Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ŞIRNAK",
+        "District": "Cizre",
+        "Name": "Cizre Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ŞIRNAK",
+        "District": "Silopi",
+        "Name": "Silopi Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ŞIRNAK",
+        "District": "Beytüşşebap",
+        "Name": "Beytüşşebap Malmüdürlüğü"
+    },
+    {
+        "City": "ŞIRNAK",
+        "District": "Güçlükonak",
+        "Name": "Güçlükonak Malmüdürlüğü"
+    },
+    {
+        "City": "ŞIRNAK",
+        "District": "İdil",
+        "Name": "İdil Malmüdürlüğü"
+    },
+    {
+        "City": "ŞIRNAK",
+        "District": "Uludere",
+        "Name": "Uludere Malmüdürlüğü"
+    },
+    {
+        "City": "BARTIN",
+        "District": "Merkez",
+        "Name": "Bartın Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "BARTIN",
+        "District": "Amasra",
+        "Name": "Amasra Malmüdürlüğü"
+    },
+    {
+        "City": "BARTIN",
+        "District": "Kurucaşile",
+        "Name": "Kurucaşile Malmüdürlüğü"
+    },
+    {
+        "City": "BARTIN",
+        "District": "Ulus",
+        "Name": "Ulus Malmüdürlüğü"
+    },
+    {
+        "City": "ARDAHAN",
+        "District": "Merkez",
+        "Name": "Ardahan Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "ARDAHAN",
+        "District": "Çıldır",
+        "Name": "Çıldır Malmüdürlüğü"
+    },
+    {
+        "City": "ARDAHAN",
+        "District": "Damal",
+        "Name": "Damal Malmüdürlüğü"
+    },
+    {
+        "City": "ARDAHAN",
+        "District": "Göle",
+        "Name": "Göle Malmüdürlüğü"
+    },
+    {
+        "City": "ARDAHAN",
+        "District": "Hanak",
+        "Name": "Hanak Malmüdürlüğü"
+    },
+    {
+        "City": "ARDAHAN",
+        "District": "Posof",
+        "Name": "Posof Malmüdürlüğü"
+    },
+    {
+        "City": "IĞDIR",
+        "District": "Merkez",
+        "Name": "Iğdır Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "IĞDIR",
+        "District": "Aralık",
+        "Name": "Aralık Malmüdürlüğü"
+    },
+    {
+        "City": "IĞDIR",
+        "District": "Karakoyunlu",
+        "Name": "Karakoyunlu Malmüdürlüğü"
+    },
+    {
+        "City": "IĞDIR",
+        "District": "Tuzluca",
+        "Name": "Tuzluca Malmüdürlüğü"
+    },
+    {
+        "City": "YALOVA",
+        "District": "Merkez",
+        "Name": "Yalova Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "YALOVA",
+        "District": "Altınova",
+        "Name": "Altınova Malmüdürlüğü"
+    },
+    {
+        "City": "YALOVA",
+        "District": "Armutlu",
+        "Name": "Armutlu Malmüdürlüğü"
+    },
+    {
+        "City": "YALOVA",
+        "District": "Çınarcık",
+        "Name": "Çınarcık Malmüdürlüğü"
+    },
+    {
+        "City": "KARABÜK",
+        "District": "Merkez",
+        "Name": "Karabük Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "KARABÜK",
+        "District": "Safranbolu",
+        "Name": "Safranbolu Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "KARABÜK",
+        "District": "Eflani",
+        "Name": "Eflani Malmüdürlüğü"
+    },
+    {
+        "City": "KARABÜK",
+        "District": "Eskipazar",
+        "Name": "Eskipazar Malmüdürlüğü"
+    },
+    {
+        "City": "KARABÜK",
+        "District": "Ovacık",
+        "Name": "Ovacık Malmüdürlüğü"
+    },
+    {
+        "City": "KARABÜK",
+        "District": "Yenice",
+        "Name": "Yenice Malmüdürlüğü"
+    },
+    {
+        "City": "KİLİS",
+        "District": "Merkez",
+        "Name": "Kilis Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "OSMANİYE",
+        "District": "Merkez",
+        "Name": "Osmaniye Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "OSMANİYE",
+        "District": "Kadirli",
+        "Name": "Kadirli Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "OSMANİYE",
+        "District": "Bahçe",
+        "Name": "Bahçe  Malmüdürlüğü"
+    },
+    {
+        "City": "OSMANİYE",
+        "District": "Düziçi",
+        "Name": "Düziçi Malmüdürlüğü"
+    },
+    {
+        "City": "OSMANİYE",
+        "District": "Hasanbeyli",
+        "Name": "Hasanbeyli Malmüdürlüğü"
+    },
+    {
+        "City": "OSMANİYE",
+        "District": "Sumbas",
+        "Name": "Sumbas Malmüdürlüğü"
+    },
+    {
+        "City": "OSMANİYE",
+        "District": "Toprakkale",
+        "Name": "Toprakkale Malmüdürlüğü"
+    },
+    {
+        "City": "DÜZCE",
+        "District": "Merkez",
+        "Name": "Düzce Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "DÜZCE",
+        "District": "Akçakoca",
+        "Name": "Akçakoca Vergi Dairesi Müdürlüğü"
+    },
+    {
+        "City": "DÜZCE",
+        "District": "Cumayeri",
+        "Name": "Cumayeri Malmüdürlüğü"
+    },
+    {
+        "City": "DÜZCE",
+        "District": "Çilimli",
+        "Name": "Çilimli Malmüdürlüğü"
+    },
+    {
+        "City": "DÜZCE",
+        "District": "Gölyaka",
+        "Name": "Gölyaka Malmüdürlüğü"
+    },
+    {
+        "City": "DÜZCE",
+        "District": "Gümüşova",
+        "Name": "Gümüşova Malmüdürlüğü"
+    },
+    {
+        "City": "DÜZCE",
+        "District": "Kaynaşlı",
+        "Name": "Kaynaşlı Malmüdürlüğü"
+    },
+    {
+        "City": "DÜZCE",
+        "District": "Yığılca",
+        "Name": "Yığılca Malmüdürlüğü"
+    }
+]

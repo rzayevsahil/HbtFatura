@@ -36,7 +36,8 @@ public class PermissionsController : ControllerBase
                 Id = p.Id,
                 Group = p.Group,
                 Code = p.Code,
-                Name = p.Name
+                Name = p.Name,
+                IsSystem = p.IsSystem
             })
             .ToListAsync();
     }
@@ -52,7 +53,8 @@ public class PermissionsController : ControllerBase
             Id = Guid.NewGuid(),
             Group = dto.Group,
             Code = dto.Code,
-            Name = dto.Name
+            Name = dto.Name,
+            IsSystem = false
         };
 
         _db.Permissions.Add(permission);
@@ -64,7 +66,8 @@ public class PermissionsController : ControllerBase
             Id = permission.Id,
             Group = permission.Group,
             Code = permission.Code,
-            Name = permission.Name
+            Name = permission.Name,
+            IsSystem = permission.IsSystem
         });
     }
 
@@ -109,7 +112,8 @@ public class PermissionsController : ControllerBase
             {
                 Id = r.Id,
                 Name = r.Name ?? "",
-                DisplayName = r.DisplayName
+                DisplayName = r.DisplayName,
+                IsSystem = r.IsSystem
             })
             .ToListAsync();
     }

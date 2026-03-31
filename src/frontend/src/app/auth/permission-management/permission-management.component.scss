@@ -380,9 +380,14 @@
 }
 
 .btn-icon.mini {
-    padding: 4px;
+    padding: 6px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    line-height: 0;
+    transition: background 0.15s, color 0.15s, box-shadow 0.15s;
     color: var(--color-text-muted);
-    border-radius: 6px;
+    background: transparent;
 
     .material-icons {
         font-size: 18px;
@@ -391,6 +396,40 @@
     &:hover {
         background: var(--color-row-hover);
         color: var(--color-text);
+    }
+
+    &.btn-icon--add {
+        color: var(--color-primary);
+        background: var(--color-primary-light);
+        box-shadow: 0 0 0 1px rgba(var(--color-primary-rgb), 0.35);
+
+        &:hover {
+            color: var(--color-primary-hover);
+            background: var(--color-primary-light);
+            box-shadow: 0 0 0 1px var(--color-primary);
+        }
+    }
+
+    &.btn-icon--edit {
+        color: var(--color-primary);
+        background: var(--color-primary-light);
+
+        &:hover {
+            color: #fff;
+            background: var(--color-primary);
+            box-shadow: 0 2px 8px rgba(var(--color-primary-rgb), 0.35);
+        }
+    }
+
+    &.btn-icon--danger {
+        color: var(--color-error);
+        background: var(--color-error-bg);
+
+        &:hover {
+            color: #fff;
+            background: var(--color-error);
+            box-shadow: 0 2px 8px rgba(220, 38, 38, 0.35);
+        }
     }
 }
 

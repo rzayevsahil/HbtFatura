@@ -9,7 +9,7 @@
         <div class="roles-sidebar">
             <div class="sidebar-header">
                 <h3>{{ 'permissionManagement.roles' | translate }}</h3>
-                <button class="btn-icon mini" (click)="openRoleModal()" [title]="'permissionManagement.newRole' | translate">
+                <button type="button" class="btn-icon mini btn-icon--add" (click)="openRoleModal()" [title]="'permissionManagement.newRole' | translate">
                     <span class="material-icons">add</span>
                 </button>
             </div>
@@ -23,10 +23,12 @@
                         </div>
                     </button>
                     <div class="role-actions" *ngIf="role.name !== 'SuperAdmin'">
-                        <button class="btn-icon mini" (click)="openRoleModal(role)">
+                        <button type="button" class="btn-icon mini btn-icon--edit" (click)="openRoleModal(role)"
+                            [title]="'common.edit' | translate">
                             <span class="material-icons">edit</span>
                         </button>
-                        <button class="btn-icon mini" (click)="deleteRole(role.id)">
+                        <button type="button" class="btn-icon mini btn-icon--danger" *ngIf="!role.isSystem" (click)="deleteRole(role.id)"
+                            [title]="'common.delete' | translate">
                             <span class="material-icons">delete</span>
                         </button>
                     </div>
@@ -74,8 +76,9 @@
                                     <span class="perm-code">{{ perm.code }}</span>
                                 </div>
                             </label>
-                            <button class="btn-icon mini delete-perm" *ngIf="getSelectedRoleName() !== 'SuperAdmin'"
-                                (click)="deletePermission(perm.id)">
+                            <button type="button" class="btn-icon mini delete-perm btn-icon--danger"
+                                *ngIf="getSelectedRoleName() !== 'SuperAdmin' && !perm.isSystem"
+                                (click)="deletePermission(perm.id)" [title]="'common.delete' | translate">
                                 <span class="material-icons">delete</span>
                             </button>
                         </div>

@@ -21,12 +21,23 @@ public static class RoleSeed
             var role = await roleManager.FindByNameAsync(name);
             if (role == null)
             {
-                await roleManager.CreateAsync(new ApplicationRole(name) { DisplayName = display });
+                await roleManager.CreateAsync(new ApplicationRole(name) { DisplayName = display, IsSystem = true });
             }
-            else if (string.IsNullOrEmpty(role.DisplayName))
+            else
             {
-                role.DisplayName = display;
-                await roleManager.UpdateAsync(role);
+                var needsSave = false;
+                if (string.IsNullOrEmpty(role.DisplayName))
+                {
+                    role.DisplayName = display;
+                    needsSave = true;
+                }
+                if (!role.IsSystem)
+                {
+                    role.IsSystem = true;
+                    needsSave = true;
+                }
+                if (needsSave)
+                    await roleManager.UpdateAsync(role);
             }
         }
 
@@ -105,11 +116,21 @@ public static class RoleSeed
         };
 
         foreach (var p in permissions)
+            p.IsSystem = true;
+
+        foreach (var p in permissions)
         {
             if (!await db.Permissions.AnyAsync(x => x.Code == p.Code, ct))
                 db.Permissions.Add(p);
         }
         await db.SaveChangesAsync(ct);
+
+        var seededCodes = permissions.ConvertAll(x => x.Code);
+        var needFlag = await db.Permissions.Where(x => seededCodes.Contains(x.Code) && !x.IsSystem).ToListAsync(ct);
+        foreach (var p in needFlag)
+            p.IsSystem = true;
+        if (needFlag.Count > 0)
+            await db.SaveChangesAsync(ct);
 
         // 2. Role Permissions
         var allPerms = await db.Permissions.ToListAsync(ct);

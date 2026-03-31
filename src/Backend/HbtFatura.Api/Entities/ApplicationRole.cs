@@ -8,4 +8,7 @@ public class ApplicationRole : IdentityRole<Guid>
     public ApplicationRole(string roleName) : base(roleName) { }
     
     public string? DisplayName { get; set; }
+
+    /// <summary>Seed / sistem rolü; silinemez (SuperAdmin, Firma Yöneticisi, Çalışan).</summary>
+    public bool IsSystem { get; set; }
 }
