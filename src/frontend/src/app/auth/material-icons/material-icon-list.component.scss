@@ -224,8 +224,12 @@
 }
 
 .btn-primary {
-  background: #0d9488;
+  background: var(--color-primary);
   color: #fff;
+
+  &:hover:not(:disabled) {
+    background: var(--color-primary-hover);
+  }
 }
 
 .btn-secondary {
