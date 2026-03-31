@@ -30,7 +30,7 @@
             <td class="group-cell">
               @if (isNewGroup(item, index)) {
                 <div class="group-info">
-                  <span class="group-badge">{{ item.group?.displayName }}</span>
+                  <span class="group-badge">{{ displayLookupGroup(item.group) }}</span>
                   <small class="group-name">{{ item.group?.name }}</small>
                 </div>
               }
@@ -92,7 +92,7 @@
                 (ngModelChange)="onLookupGroupChange()">
                 <option [value]="undefined" disabled>{{ 'lookupsPage.selectGroupPlaceholder' | translate }}</option>
                 @for (g of formGroupOptions(); track g.id) {
-                  <option [value]="g.id">{{ g.displayName }} ({{ g.name }})</option>
+                  <option [value]="g.id">{{ displayLookupGroup(g) }} ({{ g.name }})</option>
                 }
               </select>
               <small>{{ 'lookupsPage.groupHelp' | translate }}</small>

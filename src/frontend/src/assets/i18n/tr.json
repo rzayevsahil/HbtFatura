@@ -960,6 +960,19 @@
         "ticari_mal": "Ticari mal",
         "demirbas": "Demirbaş"
       }
+    },
+    "groups": {
+      "OrderType": "Sipariş Tipi",
+      "OrderStatus": "Sipariş Durumu",
+      "InvoiceStatus": "Fatura Durumu",
+      "DeliveryNoteStatus": "İrsaliye Durumu",
+      "InvoiceType": "Fatura Tipi",
+      "DeliveryNoteType": "İrsaliye Tipi",
+      "ChequeStatus": "Çek / Senet Durumu",
+      "Currency": "Para Birimi",
+      "VatRate": "KDV Oranı",
+      "ProductUnit": "Ürün Birimi",
+      "ProductStockType": "Stok Türü"
     }
   },
   "firmProfile": {

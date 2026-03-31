@@ -66,6 +66,14 @@ export class LookupListComponent implements OnInit {
     return t === key ? item.name : t;
   }
 
+  /** Grup/kategori adı: lookups.groups.<GroupName>; yoksa displayName/name fallback. */
+  displayLookupGroup(group: LookupGroupDto | undefined): string {
+    if (!group) return '';
+    const key = `lookups.groups.${group.name}`;
+    const t = this.translate.instant(key);
+    return t === key ? (group.displayName || group.name) : t;
+  }
+
   refresh(): void {
     this.service.load().subscribe(list => this.rawLookups.set(list));
   }

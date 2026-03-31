@@ -956,6 +956,19 @@
         "ticari_mal": "Commercial good",
         "demirbas": "Fixed asset"
       }
+    },
+    "groups": {
+      "OrderType": "Order type",
+      "OrderStatus": "Order status",
+      "InvoiceStatus": "Invoice status",
+      "DeliveryNoteStatus": "Delivery note status",
+      "InvoiceType": "Invoice type",
+      "DeliveryNoteType": "Delivery note type",
+      "ChequeStatus": "Cheque / note status",
+      "Currency": "Currency",
+      "VatRate": "VAT rate",
+      "ProductUnit": "Product unit",
+      "ProductStockType": "Product stock type"
     }
   },
   "firmProfile": {
