@@ -38,7 +38,7 @@
     }
 
     .page-description {
-        color: #666;
+        color: var(--color-text-muted);
         margin: 0.5rem 0 0;
         max-width: 52rem;
         font-size: 0.95rem;
@@ -50,7 +50,8 @@
     padding: 0;
     overflow: hidden;
     border: none;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    box-shadow: var(--shadow-md);
+    background: var(--color-surface);
 }
 
 .table-card-loading {
@@ -60,7 +61,7 @@
 
 .loading-state {
     margin: 0;
-    color: #666;
+    color: var(--color-text-muted);
     font-size: 0.95rem;
 }
 
@@ -135,7 +136,7 @@ table.menu-admin-table {
 
 .drag-handle {
     cursor: grab;
-    color: #94a3b8;
+    color: var(--color-text-muted);
     font-size: 1.25rem;
     user-select: none;
     line-height: 1;
@@ -149,26 +150,27 @@ table.menu-admin-table {
     display: table;
     width: min(100%, 960px);
     table-layout: fixed;
-    background: #fff;
-    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.15);
+    background: var(--color-surface);
+    color: var(--color-text);
+    box-shadow: var(--shadow-md);
     border-radius: 8px;
 }
 
 .menu-drag-row.cdk-drag-placeholder {
     opacity: 0.35;
-    background: #f1f5f9;
+    background: var(--color-row-hover);
     transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
 
 .menu-admin-table th {
-    background: #f8f9fa;
+    background: var(--color-background);
     padding: 12px 10px;
     font-weight: 600;
     text-transform: uppercase;
     font-size: 0.75rem;
     letter-spacing: 0.05em;
-    color: #555;
-    border-bottom: 2px solid #eee;
+    color: var(--color-text-muted);
+    border-bottom: 2px solid var(--color-border);
     text-align: left;
 }
 
@@ -198,10 +200,14 @@ table.menu-admin-table {
 .menu-admin-table td {
     padding: 12px 10px;
     vertical-align: middle;
-    border-bottom: 1px solid #f0f0f0;
-    color: #333;
+    border-bottom: 1px solid var(--color-border);
+    color: var(--color-text);
     font-size: 0.95rem;
     line-height: 1.4;
+}
+
+.menu-admin-table tbody tr:hover td {
+    background: var(--color-row-hover);
 }
 
 .menu-admin-table .td-route,
@@ -217,7 +223,7 @@ table.menu-admin-table {
 
 .menu-row-icon {
     font-size: 20px;
-    color: #64748b;
+    color: var(--color-text-muted);
     vertical-align: middle;
 }
 
@@ -258,7 +264,7 @@ table.menu-admin-table {
 
 /* .menu-admin-table td ile aynı özgüllükte olmalı; yoksa td rengi/fontu baskın gelir */
 .menu-admin-table .td-perm {
-    color: #333;
+    color: var(--color-text);
     font-size: 0.875rem;
     font-weight: 400;
     min-width: 0;
@@ -278,16 +284,17 @@ table.menu-admin-table {
 }
 
 .muted-ellipsis {
-    color: #ccc;
+    color: var(--color-text-muted);
 }
 
 .code-badge {
-    background: #f1f3f5;
-    color: #0d6efd;
+    background: var(--color-row-hover);
+    color: var(--color-primary);
     padding: 2px 6px;
     border-radius: 4px;
     font-family: 'Monaco', 'Consolas', monospace;
     font-size: 0.85rem;
+    border: 1px solid var(--color-border);
 }
 
 .badge {
@@ -299,13 +306,13 @@ table.menu-admin-table {
 }
 
 .badge-success {
-    background: #e6fcf5;
-    color: #0ca678;
+    background: var(--color-primary-light);
+    color: var(--color-primary-hover);
 }
 
 .badge-danger {
-    background: #fff5f5;
-    color: #fa5252;
+    background: var(--color-error-bg);
+    color: var(--color-error);
 }
 
 .badge-system {
@@ -313,8 +320,9 @@ table.menu-admin-table {
     border-radius: 4px;
     font-size: 11px;
     font-weight: 600;
-    background: #fee2e2;
-    color: #991b1b;
+    background: var(--color-row-hover);
+    color: var(--color-text-muted);
+    border: 1px solid var(--color-border);
 }
 
 .actions {
@@ -341,21 +349,23 @@ table.menu-admin-table {
     }
 
     &.edit {
-        background: #f1f3f5;
-        color: #495057;
+        background: var(--color-row-hover);
+        color: var(--color-text);
+        border: 1px solid var(--color-border);
 
         &:hover:not(:disabled) {
-            background: #e9ecef;
-            color: #111;
+            background: var(--color-background);
+            color: var(--color-text);
         }
     }
 
     &.delete {
-        background: #fff5f5;
-        color: #fa5252;
+        background: var(--color-error-bg);
+        color: var(--color-error);
+        border: 1px solid transparent;
 
         &:hover:not(:disabled) {
-            background: #fa5252;
+            background: var(--color-error);
             color: #fff;
         }
     }

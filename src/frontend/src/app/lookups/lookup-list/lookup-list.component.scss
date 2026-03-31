@@ -36,7 +36,7 @@
 }
 
 .page-description {
-  color: #666;
+  color: var(--color-text-muted);
   margin: 0.5rem 0 0;
   max-width: 52rem;
   font-size: 0.95rem;
@@ -46,7 +46,8 @@
   padding: 0;
   overflow: hidden;
   border: none;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-md);
+  background: var(--color-surface);
 }
 
 .table-container {
@@ -60,14 +61,14 @@ table {
 }
 
 th {
-  background: #f8f9fa;
+  background: var(--color-background);
   padding: 16px 20px;
   font-weight: 600;
   text-transform: uppercase;
   font-size: 0.75rem;
   letter-spacing: 0.05em;
-  color: #555;
-  border-bottom: 2px solid #eee;
+  color: var(--color-text-muted);
+  border-bottom: 2px solid var(--color-border);
   text-align: left;
 }
 
@@ -96,9 +97,13 @@ th {
 td {
   padding: 14px 20px;
   vertical-align: middle;
-  border-bottom: 1px solid #f0f0f0;
-  color: #333;
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text);
   font-size: 0.95rem;
+}
+
+table tbody tr:hover td {
+  background: var(--color-row-hover);
 }
 
 .td-sort {
@@ -110,7 +115,7 @@ td {
 }
 
 .group-start {
-  border-top: 1px solid #eee;
+  border-top: 1px solid var(--color-border);
 }
 
 .group-info {
@@ -120,32 +125,35 @@ td {
 }
 
 .group-badge {
-  background: #e9ecef;
-  color: #495057;
+  background: var(--color-row-hover);
+  color: var(--color-text);
   padding: 4px 10px;
   border-radius: 6px;
   font-size: 0.8rem;
   font-weight: 700;
   width: fit-content;
+  border: 1px solid var(--color-border);
 }
 
 .group-name {
-  color: #999;
+  color: var(--color-text-muted);
   font-size: 0.7rem;
   margin-left: 4px;
 }
 
 .code-badge {
-  background: #f1f3f5;
-  color: #0d6efd;
+  background: var(--color-row-hover);
+  color: var(--color-primary);
   padding: 2px 6px;
   border-radius: 4px;
   font-family: 'Monaco', 'Consolas', monospace;
   font-size: 0.85rem;
+  border: 1px solid var(--color-border);
 }
 
 .name-cell {
   font-weight: 500;
+  color: var(--color-text);
 }
 
 .color-item {
@@ -158,18 +166,18 @@ td {
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  border: 2px solid #fff;
-  box-shadow: 0 0 0 1px #ddd;
+  border: 2px solid var(--color-border);
+  box-shadow: 0 0 0 1px var(--color-background);
 }
 
 .color-code {
   font-size: 0.85rem;
-  color: #777;
+  color: var(--color-text-muted);
   font-family: monospace;
 }
 
 .no-color {
-  color: #ccc;
+  color: var(--color-text-muted);
 }
 
 .badge {
@@ -181,13 +189,13 @@ td {
 }
 
 .badge-success {
-  background: #e6fcf5;
-  color: #0ca678;
+  background: var(--color-primary-light);
+  color: var(--color-primary-hover);
 }
 
 .badge-danger {
-  background: #fff5f5;
-  color: #fa5252;
+  background: var(--color-error-bg);
+  color: var(--color-error);
 }
 
 .actions {
@@ -206,21 +214,23 @@ td {
   transition: all 0.2s;
 
   &.edit {
-    background: #f1f3f5;
-    color: #495057;
+    background: var(--color-row-hover);
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
 
     &:hover {
-      background: #e9ecef;
-      color: #111;
+      background: var(--color-background);
+      color: var(--color-text);
     }
   }
 
   &.delete {
-    background: #fff5f5;
-    color: #fa5252;
+    background: var(--color-error-bg);
+    color: var(--color-error);
+    border: 1px solid transparent;
 
     &:hover {
-      background: #fa5252;
+      background: var(--color-error);
       color: #fff;
     }
   }
