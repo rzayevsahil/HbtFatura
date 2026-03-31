@@ -29,6 +29,9 @@ export class MaterialIconListComponent implements OnInit {
   editId: string | null = null;
   model = { ligatureName: '', isActive: true };
 
+  /** Sayfaya git alanı — currentPage ile effect üzerinden senkron */
+  jumpPageInput = '1';
+
   readonly filteredItems = computed(() => {
     const q = this.searchQuery().trim().toLowerCase();
     const list = this.items();
@@ -62,6 +65,13 @@ export class MaterialIconListComponent implements OnInit {
         untracked(() => this.currentPage.set(tp));
       }
     });
+
+    effect(() => {
+      const cp = this.currentPage();
+      untracked(() => {
+        this.jumpPageInput = String(cp);
+      });
+    });
   }
 
   ngOnInit(): void {
@@ -79,6 +89,29 @@ export class MaterialIconListComponent implements OnInit {
 
   goNext(): void {
     this.currentPage.update((p) => Math.min(this.totalPages(), p + 1));
+  }
+
+  onJumpKeydown(ev: KeyboardEvent): void {
+    if (ev.key !== 'Enter') return;
+    ev.preventDefault();
+    this.commitJumpPage();
+    (ev.target as HTMLInputElement | null)?.blur();
+  }
+
+  commitJumpPage(): void {
+    const max = this.totalPages();
+    const raw = String(this.jumpPageInput ?? '').trim();
+    if (raw === '') {
+      this.jumpPageInput = String(this.currentPage());
+      return;
+    }
+    const n = parseInt(raw, 10);
+    if (Number.isNaN(n)) {
+      this.jumpPageInput = String(this.currentPage());
+      return;
+    }
+    const page = Math.max(1, Math.min(max, n));
+    this.currentPage.set(page);
   }
 
   load(): void {

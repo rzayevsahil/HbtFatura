@@ -50,9 +50,11 @@
                   {{ row.isActive ? ('materialIconsPage.active' | translate) : ('materialIconsPage.passive' | translate) }}
                 </span>
               </td>
-              <td>
-                <button type="button" class="btn-link" (click)="openEdit(row)">{{ 'common.edit' | translate }}</button>
-                <button type="button" class="btn-link danger" (click)="delete(row)">{{ 'common.delete' | translate }}</button>
+              <td class="td-actions-cell">
+                <div class="row-actions">
+                  <button type="button" class="btn-action btn-action--edit" (click)="openEdit(row)">{{ 'common.edit' | translate }}</button>
+                  <button type="button" class="btn-action btn-action--delete" (click)="delete(row)">{{ 'common.delete' | translate }}</button>
+                </div>
               </td>
             </tr>
           }
@@ -63,13 +65,30 @@
       <span class="pagination-info">
         {{ 'materialIconsPage.paginationInfo' | translate: { current: currentPage(), total: totalPages(), count: totalFiltered() } }}
       </span>
-      <div class="pagination-actions">
-        <button type="button" class="btn btn-page" (click)="goPrev()" [disabled]="currentPage() <= 1">
-          {{ 'common.previous' | translate }}
-        </button>
-        <button type="button" class="btn btn-page" (click)="goNext()" [disabled]="currentPage() >= totalPages()">
-          {{ 'common.next' | translate }}
-        </button>
+      <div class="pagination-controls">
+        <div class="pagination-jump">
+          <label for="mi-page-jump" class="pagination-jump-label">{{ 'materialIconsPage.pageJumpLabel' | translate }}</label>
+          <input
+            id="mi-page-jump"
+            type="text"
+            name="pageJump"
+            class="pagination-jump-input"
+            inputmode="numeric"
+            autocomplete="off"
+            [attr.aria-label]="'materialIconsPage.pageJumpAria' | translate: { total: totalPages() }"
+            [(ngModel)]="jumpPageInput"
+            (keydown)="onJumpKeydown($event)"
+            (blur)="commitJumpPage()"
+          />
+        </div>
+        <div class="pagination-actions">
+          <button type="button" class="btn btn-page" (click)="goPrev()" [disabled]="currentPage() <= 1">
+            {{ 'common.previous' | translate }}
+          </button>
+          <button type="button" class="btn btn-page" (click)="goNext()" [disabled]="currentPage() >= totalPages()">
+            {{ 'common.next' | translate }}
+          </button>
+        </div>
       </div>
     </div>
   </div>

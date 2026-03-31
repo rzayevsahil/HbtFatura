@@ -850,6 +850,8 @@
     "addButton": "Add icon",
     "searchPlaceholder": "Search by ligature name…",
     "paginationInfo": "Page {{current}} of {{total}} · {{count}} icons",
+    "pageJumpLabel": "Page:",
+    "pageJumpAria": "Page number, 1–{{total}}",
     "emptyList": "No icons yet. Add one with the button above.",
     "noRows": "No icons match your search.",
     "colGlyph": "Preview",

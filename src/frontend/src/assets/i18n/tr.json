@@ -854,6 +854,8 @@
     "addButton": "İkon ekle",
     "searchPlaceholder": "Ligature adına göre ara…",
     "paginationInfo": "Sayfa {{current}} / {{total}} · {{count}} ikon",
+    "pageJumpLabel": "Sayfa:",
+    "pageJumpAria": "Sayfa numarası, 1–{{total}}",
     "emptyList": "Henüz ikon yok. Yukarıdaki düğmeyle ekleyebilirsiniz.",
     "noRows": "Aramaya uygun ikon yok.",
     "colGlyph": "Önizleme",
