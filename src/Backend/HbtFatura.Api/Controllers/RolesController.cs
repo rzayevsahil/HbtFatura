@@ -56,8 +56,8 @@ public class RolesController : ControllerBase
         var role = await _roleManager.FindByIdAsync(id.ToString());
         if (role == null) return NotFound();
 
-        if (role.Name == "SuperAdmin" && dto.Name != "SuperAdmin") 
-            return BadRequest("SuperAdmin role cannot be renamed.");
+        if (role.IsSystem)
+            return BadRequest("System roles cannot be modified.");
 
         role.Name = dto.Name;
         role.DisplayName = dto.DisplayName;
