@@ -710,6 +710,73 @@
     "permissionCodePlaceholder": "e.g. Invoices.Cancel",
     "confirmDeleteRole": "Are you sure you want to delete this role?",
     "confirmDeletePermission": "Are you sure you want to delete this permission?",
+    "roleLabels": {
+      "SuperAdmin": "Super Admin",
+      "FirmAdmin": "Company administrator",
+      "Employee": "Employee"
+    },
+    "groups": {
+      "Sistem": "System",
+      "Faturalar": "Invoices",
+      "GİB Simülasyonu": "GİB simulation",
+      "Siparişler": "Orders",
+      "İrsaliyeler": "Delivery notes",
+      "Ürünler": "Products",
+      "Tanımlamalar": "System definitions",
+      "Yetkilendirme": "Roles & permissions",
+      "Menü Yönetimi": "Menu management",
+      "Firma Yönetimi": "Company management",
+      "Personel Yönetimi": "Employee management",
+      "Cari Yönetimi": "Customer accounts",
+      "Hesap Kodları": "Account codes",
+      "Banka Yönetimi": "Bank management",
+      "Kasa Yönetimi": "Cash register management",
+      "Tahsilat/Ödemeleri Yönetimi": "Collections & payments",
+      "Çek/Senet Yönetimi": "Cheques & notes",
+      "Raporlar": "Reports",
+      "Şirket Profili": "Company profile"
+    },
+    "perms": {
+      "Dashboard": { "View": "View dashboard" },
+      "Logs": { "View": "View logs" },
+      "Invoices": {
+        "View": "View",
+        "Create": "Create",
+        "Edit": "Edit",
+        "Delete": "Delete"
+      },
+      "GibSimulation": { "ViewInbox": "View inbox", "Accept": "Accept / reject" },
+      "Orders": {
+        "View": "View",
+        "Create": "Create",
+        "Edit": "Edit",
+        "Delete": "Delete"
+      },
+      "DeliveryNotes": {
+        "View": "View",
+        "Create": "Create",
+        "Edit": "Edit",
+        "Delete": "Delete"
+      },
+      "Products": { "View": "View", "Edit": "Edit" },
+      "Lookups": { "View": "View", "Edit": "Edit" },
+      "Roles": { "View": "View", "Edit": "Edit" },
+      "Menus": { "View": "View", "Edit": "Edit" },
+      "MaterialIcons": {
+        "View": "View Material icon list",
+        "Edit": "Edit Material icons"
+      },
+      "Firms": { "View": "View", "Edit": "Edit" },
+      "Employees": { "View": "View", "Edit": "Edit" },
+      "Customers": { "View": "View", "Edit": "Edit" },
+      "MainAccountCodes": { "View": "View", "Edit": "Edit" },
+      "Banking": { "View": "View", "Edit": "Edit" },
+      "Cash": { "View": "View", "Edit": "Edit" },
+      "Payments": { "View": "View", "Create": "Record collection / payment" },
+      "Cheques": { "View": "View", "Edit": "Edit" },
+      "Reports": { "View": "View" },
+      "CompanyProfile": { "View": "View", "Edit": "Edit" }
+    },
     "toasts": {
       "rolesLoadError": "Could not load roles.",
       "permissionsLoadError": "Could not load permissions.",

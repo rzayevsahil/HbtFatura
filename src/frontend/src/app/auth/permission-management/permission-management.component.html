@@ -18,7 +18,7 @@
                 <div class="role-item-wrapper" [class.active]="selectedRoleId() === role.id">
                     <button type="button" class="role-item" (click)="selectRole(role.id)">
                         <div class="role-label-group">
-                            <span class="role-display">{{ role.displayName || role.name }}</span>
+                            <span class="role-display">{{ displayRoleLabel(role) }}</span>
                             <small class="role-technical">{{ role.name }}</small>
                         </div>
                     </button>
@@ -39,7 +39,7 @@
         <div class="permissions-panel">
             @if (selectedRoleId()) {
             <div class="panel-header">
-                <h2>{{ getSelectedRoleName() }} {{ 'permissionManagement.permissionsSuffix' | translate }}</h2>
+                <h2>{{ getSelectedRoleDisplayLabel() }} {{ 'permissionManagement.permissionsSuffix' | translate }}</h2>
                 <div class="actions">
                     <button class="btn btn-secondary" (click)="openPermModal()" style="margin-right: 12px;">
                         <span class="material-icons">add</span> {{ 'permissionManagement.newPermission' | translate }}
@@ -60,7 +60,7 @@
             <div class="permission-groups">
                 @for (group of groupedPermissions(); track group.group) {
                 <div class="permission-group">
-                    <div class="group-title">{{ group.group }}</div>
+                    <div class="group-title">{{ displayPermissionGroup(group.group) }}</div>
                     <div class="group-perms">
                         @for (perm of group.perms; track perm.id) {
                         <div class="perm-item-wrapper">
@@ -70,7 +70,7 @@
                                     [disabled]="getSelectedRoleName() === 'SuperAdmin'">
                                 <span class="checkbox-custom"></span>
                                 <div class="perm-info">
-                                    <span class="perm-name">{{ perm.name }}</span>
+                                    <span class="perm-name">{{ displayPermissionLabel(perm) }}</span>
                                     <span class="perm-code">{{ perm.code }}</span>
                                 </div>
                             </label>

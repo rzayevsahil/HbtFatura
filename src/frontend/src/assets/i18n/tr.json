@@ -714,6 +714,73 @@
     "permissionCodePlaceholder": "Örn: Invoices.Cancel",
     "confirmDeleteRole": "Bu rolü silmek istediğinize emin misiniz?",
     "confirmDeletePermission": "Bu yetkiyi silmek istediğinize emin misiniz?",
+    "roleLabels": {
+      "SuperAdmin": "Super Admin",
+      "FirmAdmin": "Firma Yöneticisi",
+      "Employee": "Çalışan"
+    },
+    "groups": {
+      "Sistem": "Sistem",
+      "Faturalar": "Faturalar",
+      "GİB Simülasyonu": "GİB Simülasyonu",
+      "Siparişler": "Siparişler",
+      "İrsaliyeler": "İrsaliyeler",
+      "Ürünler": "Ürünler",
+      "Tanımlamalar": "Tanımlamalar",
+      "Yetkilendirme": "Yetkilendirme",
+      "Menü Yönetimi": "Menü Yönetimi",
+      "Firma Yönetimi": "Firma Yönetimi",
+      "Personel Yönetimi": "Personel Yönetimi",
+      "Cari Yönetimi": "Cari Yönetimi",
+      "Hesap Kodları": "Hesap Kodları",
+      "Banka Yönetimi": "Banka Yönetimi",
+      "Kasa Yönetimi": "Kasa Yönetimi",
+      "Tahsilat/Ödemeleri Yönetimi": "Tahsilat/Ödemeleri Yönetimi",
+      "Çek/Senet Yönetimi": "Çek/Senet Yönetimi",
+      "Raporlar": "Raporlar",
+      "Şirket Profili": "Şirket Profili"
+    },
+    "perms": {
+      "Dashboard": { "View": "Dashboard Görüntüle" },
+      "Logs": { "View": "Logları Görüntüle" },
+      "Invoices": {
+        "View": "Görüntüle",
+        "Create": "Oluştur",
+        "Edit": "Düzenle",
+        "Delete": "Sil"
+      },
+      "GibSimulation": { "ViewInbox": "Kutu görüntüle", "Accept": "Onayla / reddet" },
+      "Orders": {
+        "View": "Görüntüle",
+        "Create": "Oluştur",
+        "Edit": "Düzenle",
+        "Delete": "Sil"
+      },
+      "DeliveryNotes": {
+        "View": "Görüntüle",
+        "Create": "Oluştur",
+        "Edit": "Düzenle",
+        "Delete": "Sil"
+      },
+      "Products": { "View": "Görüntüle", "Edit": "Düzenle" },
+      "Lookups": { "View": "Görüntüle", "Edit": "Düzenle" },
+      "Roles": { "View": "Görüntüle", "Edit": "Düzenle" },
+      "Menus": { "View": "Görüntüle", "Edit": "Düzenle" },
+      "MaterialIcons": {
+        "View": "Material ikon listesi",
+        "Edit": "Material ikonları düzenle"
+      },
+      "Firms": { "View": "Görüntüle", "Edit": "Düzenle" },
+      "Employees": { "View": "Görüntüle", "Edit": "Düzenle" },
+      "Customers": { "View": "Görüntüle", "Edit": "Düzenle" },
+      "MainAccountCodes": { "View": "Görüntüle", "Edit": "Düzenle" },
+      "Banking": { "View": "Görüntüle", "Edit": "Düzenle" },
+      "Cash": { "View": "Görüntüle", "Edit": "Düzenle" },
+      "Payments": { "View": "Görüntüle", "Create": "Tahsilat/Ödeme girişi" },
+      "Cheques": { "View": "Görüntüle", "Edit": "Düzenle" },
+      "Reports": { "View": "Görüntüle" },
+      "CompanyProfile": { "View": "Görüntüle", "Edit": "Düzenle" }
+    },
     "toasts": {
       "rolesLoadError": "Roller yüklenemedi.",
       "permissionsLoadError": "Yetkiler yüklenemedi.",

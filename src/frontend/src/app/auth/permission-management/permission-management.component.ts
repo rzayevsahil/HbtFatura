@@ -1,4 +1,5 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { ChangeDetectorRef, Component, DestroyRef, OnInit, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { PermissionService } from '../../core/services/permission.service';
 import { PermissionDto, RoleDto } from '../../core/models';
@@ -14,6 +15,8 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
     styleUrls: ['./permission-management.component.scss']
 })
 export class PermissionManagementComponent implements OnInit {
+    private readonly destroyRef = inject(DestroyRef);
+
     roles = signal<RoleDto[]>([]);
     permissions = signal<PermissionDto[]>([]);
     groupedPermissions = signal<{ group: string, perms: PermissionDto[] }[]>([]);
@@ -33,11 +36,44 @@ export class PermissionManagementComponent implements OnInit {
     constructor(
         private permService: PermissionService,
         private toastr: ToastrService,
-        private translate: TranslateService
-    ) { }
+        private translate: TranslateService,
+        private cdr: ChangeDetectorRef
+    ) {
+        this.translate.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.cdr.markForCheck());
+    }
 
     ngOnInit() {
         this.loadInitialData();
+    }
+
+    /** API’de saklanan Türkçe grup adından yerelleştirilmiş grup başlığı. */
+    displayPermissionGroup(group: string): string {
+        const key = `permissionManagement.groups.${group}`;
+        const t = this.translate.instant(key);
+        return t === key ? group : t;
+    }
+
+    /** Yetki koduna (Module.Action) göre yerelleştirilmiş kısa ad; yoksa API `name`. */
+    displayPermissionLabel(perm: PermissionDto): string {
+        const dot = perm.code.indexOf('.');
+        if (dot <= 0) return perm.name;
+        const mod = perm.code.slice(0, dot);
+        const action = perm.code.slice(dot + 1);
+        const key = `permissionManagement.perms.${mod}.${action}`;
+        const t = this.translate.instant(key);
+        return t === key ? perm.name : t;
+    }
+
+    /** Yerleşik roller için i18n; özel rollerde `displayName` / `name`. */
+    displayRoleLabel(role: RoleDto): string {
+        const key = `permissionManagement.roleLabels.${role.name}`;
+        const t = this.translate.instant(key);
+        return t === key ? (role.displayName || role.name) : t;
+    }
+
+    getSelectedRoleDisplayLabel(): string {
+        const role = this.roles().find(r => r.id === this.selectedRoleId());
+        return role ? this.displayRoleLabel(role) : '';
     }
 
     loadInitialData() {
