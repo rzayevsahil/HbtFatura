@@ -252,13 +252,15 @@ table tbody tr:hover td {
 }
 
 .modal-card {
-  background: #fff;
+  background: var(--color-surface);
+  color: var(--color-text);
   width: 100%;
   max-width: 500px;
   max-height: min(92vh, calc(100vh - 24px));
   max-height: min(92vh, calc(100dvh - 24px));
   border-radius: 16px;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--color-border);
   animation: slideUp 0.3s ease-out;
   display: flex;
   flex-direction: column;
@@ -288,7 +290,7 @@ table tbody tr:hover td {
 
 .modal-header {
   padding: 16px 20px;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid var(--color-border);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -297,7 +299,7 @@ table tbody tr:hover td {
   h3 {
     margin: 0;
     font-size: 1.15rem;
-    color: #111;
+    color: var(--color-text);
   }
 }
 
@@ -305,12 +307,12 @@ table tbody tr:hover td {
   background: none;
   border: none;
   font-size: 28px;
-  color: #999;
+  color: var(--color-text-muted);
   cursor: pointer;
   transition: color 0.2s;
 
   &:hover {
-    color: #333;
+    color: var(--color-text);
   }
 }
 
@@ -358,29 +360,32 @@ table tbody tr:hover td {
     margin-bottom: 8px;
     font-weight: 600;
     font-size: 0.85rem;
-    color: #555;
+    color: var(--color-text-muted);
   }
 
   input:not([type='checkbox']),
   select {
     width: 100%;
     padding: 10px 14px;
-    border: 1.5px solid #eee;
+    border: 1.5px solid var(--color-border);
     border-radius: 8px;
     font-size: 0.95rem;
     transition: border-color 0.2s;
+    background: var(--color-surface);
+    color: var(--color-text);
   }
 
   input:focus,
   select:focus {
     outline: none;
-    border-color: #0ca678;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 2px var(--color-primary-light);
   }
 
   small {
     display: block;
     margin-top: 6px;
-    color: #999;
+    color: var(--color-text-muted);
     font-size: 0.8rem;
   }
 }
@@ -425,7 +430,7 @@ table tbody tr:hover td {
   position: absolute;
   cursor: pointer;
   inset: 0;
-  background-color: #dee2e6;
+  background-color: var(--color-border);
   transition: 0.4s;
   border-radius: 24px;
 
@@ -436,14 +441,14 @@ table tbody tr:hover td {
     width: 18px;
     left: 3px;
     bottom: 3px;
-    background-color: white;
+    background-color: var(--color-surface);
     transition: 0.4s;
     border-radius: 50%;
   }
 }
 
 input:checked + .slider {
-  background-color: #0ca678;
+  background-color: var(--color-primary);
 
   &::before {
     transform: translateX(20px);
@@ -452,20 +457,20 @@ input:checked + .slider {
 
 .modal-footer {
   padding: 12px 20px;
-  border-top: 1px solid #f0f0f0;
+  border-top: 1px solid var(--color-border);
   display: flex;
   justify-content: flex-end;
   gap: 12px;
   flex-shrink: 0;
-  background: #fff;
+  background: var(--color-background);
 }
 
 .btn-secondary {
-  background: #f8f9fa;
-  color: #495057;
-  border: 1.5px solid #eee;
+  background: var(--color-row-hover);
+  color: var(--color-text);
+  border: 1.5px solid var(--color-border);
 
   &:hover {
-    background: #e9ecef;
+    background: var(--color-background);
   }
 }

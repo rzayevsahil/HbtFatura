@@ -93,9 +93,9 @@ table { width: 100%; border-collapse: collapse; }
 .sales-table a:hover {
   opacity: 0.85;
 }
-.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; z-index: 1000; }
-.modal { background: #fff; padding: 1.5rem; border-radius: 8px; min-width: 320px; }
-.modal h3 { margin-top: 0; }
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.45); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+.modal { background: var(--color-surface); color: var(--color-text); padding: 1.5rem; border-radius: var(--radius); min-width: 320px; box-shadow: var(--shadow-md); border: 1px solid var(--color-border); }
+.modal h3 { margin-top: 0; color: var(--color-text); }
 .form-grid { display: grid; gap: 0.75rem; margin: 1rem 0; }
 .row { display: grid; grid-template-columns: 80px 1fr; gap: 0.5rem; align-items: center; }
 .modal-actions { display: flex; gap: 0.5rem; margin-top: 1rem; }
