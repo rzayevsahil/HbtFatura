@@ -23,51 +23,61 @@
     <button (click)="page=1; load()" class="btn-refresh">{{ 'logsPage.refresh' | translate }}</button>
 </div>
 
-<div class="card table-wrap" style="position: relative; min-height: 400px;">
+<div class="card table-wrap log-table-card">
     @if (loading) {
     <div class="loading-overlay">
         <div class="spinner"></div>
     </div>
     }
 
-    <table>
-        <thead>
-            <tr>
-                <th>{{ 'logsPage.colDate' | translate }}</th>
-                <th>{{ 'logsPage.colLevel' | translate }}</th>
-                <th>{{ 'logsPage.colModuleAction' | translate }}</th>
-                <th>{{ 'logsPage.colUser' | translate }}</th>
-                <th>{{ 'logsPage.colMessage' | translate }}</th>
-                <th>{{ 'logsPage.colIp' | translate }}</th>
-            </tr>
-        </thead>
-        <tbody>
-            @for (log of items; track log.id) {
-            <tr [ngClass]="getLevelClass(log.level)">
-                <td class="timestamp">{{ log.timestamp | date:'dd.MM.yyyy HH:mm:ss' }}</td>
-                <td>
-                    <span class="level-badge" [class]="log.level.toLowerCase()">{{ log.level }}</span>
-                </td>
-                <td>
-                    <strong>{{ log.module }}</strong><br>
-                    <small class="action-text">{{ log.action }}</small>
-                </td>
-                <td>
-                    {{ log.userFullName }}<br>
-                    <small class="text-muted">{{ log.userId }}</small>
-                </td>
-                <td class="message-cell">
-                    <span class="message-text" [title]="log.details || ''">{{ log.message }}</span>
-                </td>
-                <td class="ip-text">{{ log.ipAddress }}</td>
-            </tr>
-            } @empty {
-            <tr>
-                <td colspan="6" class="empty-state">{{ 'logsPage.empty' | translate }}</td>
-            </tr>
-            }
-        </tbody>
-    </table>
+    <div class="log-table-scroll">
+        <table class="log-table">
+            <thead>
+                <tr>
+                    <th class="col-date">{{ 'logsPage.colDate' | translate }}</th>
+                    <th class="col-level">{{ 'logsPage.colLevel' | translate }}</th>
+                    <th class="col-module">{{ 'logsPage.colModuleAction' | translate }}</th>
+                    <th class="col-user">{{ 'logsPage.colUser' | translate }}</th>
+                    <th class="col-message">{{ 'logsPage.colMessage' | translate }}</th>
+                    <th class="col-ip">{{ 'logsPage.colIp' | translate }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (log of items; track log.id) {
+                <tr class="log-row" [ngClass]="getLevelClass(log.level)">
+                    <td class="col-date cell-date">{{ log.timestamp | date:'dd.MM.yyyy HH:mm:ss' }}</td>
+                    <td class="col-level">
+                        <span class="level-badge" [ngClass]="'is-' + (log.level | lowercase)">{{ log.level }}</span>
+                    </td>
+                    <td class="col-module">
+                        <div class="log-stack">
+                            <span class="log-stack-primary">{{ log.module || '—' }}</span>
+                            @if (log.action) {
+                            <span class="log-stack-secondary">{{ log.action }}</span>
+                            }
+                        </div>
+                    </td>
+                    <td class="col-user">
+                        <div class="log-stack">
+                            <span class="log-stack-primary">{{ log.userFullName || '—' }}</span>
+                            @if (log.userId) {
+                            <span class="log-stack-secondary">{{ log.userId }}</span>
+                            }
+                        </div>
+                    </td>
+                    <td class="col-message">
+                        <span class="message-text" [title]="log.details || log.message || ''">{{ log.message }}</span>
+                    </td>
+                    <td class="col-ip cell-ip">{{ log.ipAddress || '—' }}</td>
+                </tr>
+                } @empty {
+                <tr>
+                    <td colspan="6" class="empty-state">{{ 'logsPage.empty' | translate }}</td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 </div>
 
 <div class="pagination">
