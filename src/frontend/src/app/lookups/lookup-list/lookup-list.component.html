@@ -87,14 +87,21 @@
           }
           <div class="form-grid">
             <div class="form-group full">
-              <label>{{ 'lookupsPage.labelGroup' | translate }}</label>
-              <select [(ngModel)]="model.lookupGroupId" name="lookupGroupId" required [disabled]="editingVatRate"
-                (ngModelChange)="onLookupGroupChange()">
-                <option [value]="undefined" disabled>{{ 'lookupsPage.selectGroupPlaceholder' | translate }}</option>
-                @for (g of formGroupOptions(); track g.id) {
-                  <option [value]="g.id">{{ displayLookupGroup(g) }} ({{ g.name }})</option>
-                }
-              </select>
+              <label for="lookup-modal-group-trigger">{{ 'lookupsPage.labelGroup' | translate }}</label>
+              <app-searchable-select
+                class="lookup-modal-group-picker"
+                [(ngModel)]="model.lookupGroupId"
+                name="lookupGroupId"
+                [options]="formGroupOptionsSelect"
+                [disabled]="editingVatRate"
+                (ngModelChange)="onLookupGroupChange()"
+                triggerId="lookup-modal-group-trigger"
+                [placeholder]="'lookupsPage.selectGroupPlaceholder' | translate"
+                [searchPlaceholder]="'lookupsPage.searchGroupPlaceholder' | translate"
+                searchInputId="lookup-modal-group-search"
+                [noResultsLabel]="'common.noResults' | translate"
+                listMaxHeight="220px"
+              />
               <small>{{ 'lookupsPage.groupHelp' | translate }}</small>
             </div>
             <div class="form-group">

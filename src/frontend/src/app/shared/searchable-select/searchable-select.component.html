@@ -1,0 +1,74 @@
+@if (layout === 'dropdown') {
+<div class="searchable-select searchable-select--dropdown">
+  <button
+    type="button"
+    class="searchable-select__trigger"
+    [attr.id]="triggerId || null"
+    (click)="toggle($event)"
+    [disabled]="isDisabled"
+  >
+    {{ displayLabel }}
+  </button>
+  @if (panelOpen && !isDisabled) {
+  <div class="searchable-select__panel" (click)="$event.stopPropagation()">
+    <input
+      type="text"
+      class="searchable-select__search"
+      [attr.id]="searchInputId || null"
+      [attr.placeholder]="searchPlaceholder"
+      [value]="searchText"
+      [disabled]="isDisabled"
+      (input)="onSearchInput($event)"
+      (click)="$event.stopPropagation()"
+    />
+    <div class="searchable-select__list" [style.max-height]="listMaxHeight">
+      @if (showNoneOption) {
+      <button type="button" class="searchable-select__option" [class.is-selected]="value === null" (click)="pick(null)">
+        <span class="searchable-select__primary">{{ noneOptionLabel }}</span>
+      </button>
+      }
+      @for (opt of filteredOptions; track opt.id) {
+      <button type="button" class="searchable-select__option" [class.is-selected]="value === opt.id" (click)="pick(opt.id)">
+        <span class="searchable-select__primary">{{ opt.primary }}</span>
+        @if (opt.secondary) {
+        <span class="searchable-select__secondary">{{ opt.secondary }}</span>
+        }
+      </button>
+      }
+      @if (filteredOptions.length === 0 && searchText.trim()) {
+      <div class="searchable-select__empty">{{ noResultsLabel }}</div>
+      }
+    </div>
+  </div>
+  }
+</div>
+} @else {
+<div class="searchable-select searchable-select--inline">
+  <input
+    type="text"
+    class="searchable-select__search"
+    [attr.id]="searchInputId || null"
+    [attr.placeholder]="searchPlaceholder"
+    [value]="searchText"
+    [disabled]="isDisabled"
+    (input)="onSearchInput($event)"
+    (click)="$event.stopPropagation()"
+  />
+  <div class="searchable-select__list searchable-select__list--inline" [style.max-height]="listMaxHeight">
+    @for (opt of filteredOptions; track opt.id) {
+    <button type="button" class="searchable-select__option" [class.is-selected]="value === opt.id" (click)="pick(opt.id)">
+      <span class="searchable-select__primary">{{ opt.primary }}</span>
+      @if (opt.secondary) {
+      <span class="searchable-select__secondary">{{ opt.secondary }}</span>
+      }
+    </button>
+    }
+    @if (filteredOptions.length === 0 && searchText.trim()) {
+    <div class="searchable-select__empty">{{ noResultsLabel }}</div>
+    }
+    @if (filteredOptions.length === 0 && !searchText.trim() && options.length === 0) {
+    <div class="searchable-select__empty">{{ placeholder }}</div>
+    }
+  </div>
+</div>
+}

@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { LookupService } from '../../core/services/lookup.service';
 import { LookupDto, LookupGroupDto } from '../../core/models';
+import { SearchableSelectComponent, SearchableSelectOption } from '../../shared/searchable-select/searchable-select.component';
 import { ToastrService } from 'ngx-toastr';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
@@ -21,7 +22,7 @@ const LOOKUP_CODE_KEY_SUFFIX: Record<string, string> = {
 @Component({
   selector: 'app-lookup-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslateModule],
+  imports: [CommonModule, FormsModule, TranslateModule, SearchableSelectComponent],
   templateUrl: './lookup-list.component.html',
   styleUrls: ['./lookup-list.component.scss']
 })
@@ -97,6 +98,14 @@ export class LookupListComponent implements OnInit {
 
   formGroupOptions(): LookupGroupDto[] {
     return this.editId ? this.groups() : this.groupsForAdd();
+  }
+
+  get formGroupOptionsSelect(): SearchableSelectOption[] {
+    return this.formGroupOptions().map(g => ({
+      id: g.id,
+      primary: this.displayLookupGroup(g),
+      secondary: g.name
+    }));
   }
 
   /** Yeni kayıtta KDV grubu seçiliyse veya mevcut KDV düzenleniyorsa. */

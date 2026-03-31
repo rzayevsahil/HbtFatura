@@ -939,6 +939,7 @@
     "vatHintEditNote": " VAT is a single system record; it cannot be deleted or moved to another group; only rate and color can be changed.",
     "labelGroup": "Group / category",
     "selectGroupPlaceholder": "Select a group...",
+    "searchGroupPlaceholder": "Search groups...",
     "groupHelp": "Determines which category this belongs to.",
     "labelCode": "Code (value)",
     "codePlaceholderVat": "VAT percentage, e.g. 20",

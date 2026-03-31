@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators, FormsModule } from '@angular/forms';
@@ -10,18 +10,17 @@ import { CustomerDto, ProductDto, StockLevelsReportDto, CreateOrderRequest, Upda
 import { ToastrService } from 'ngx-toastr';
 import { LookupService } from '../../core/services/lookup.service';
 import { UnitFieldSelectComponent } from '../../shared/unit-field-select/unit-field-select.component';
+import { SearchableSelectComponent, SearchableSelectOption } from '../../shared/searchable-select/searchable-select.component';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-order-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterLink, UnitFieldSelectComponent, TranslateModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterLink, UnitFieldSelectComponent, SearchableSelectComponent, TranslateModule],
   templateUrl: './order-form.component.html',
   styleUrls: ['./order-form.component.scss']
 })
 export class OrderFormComponent implements OnInit {
-  @ViewChild('customerDropdownWrap') customerDropdownWrap?: ElementRef<HTMLElement>;
-
   form: FormGroup;
   id: string | null = null;
   /** Düzenleme sayfasında sipariş API’den gelene kadar */
@@ -33,9 +32,6 @@ export class OrderFormComponent implements OnInit {
   stockLevels: StockLevelsReportDto | null = null;
   error = '';
   saving = false;
-  /** Arama kutusu sadece dropdown içinde (fatura cari gibi) */
-  customerSearchText = '';
-  customerDropdownOpen = false;
   activeItemIndex: number | null = null;
   activeItemField: 'code' | 'description' | null = null;
 
@@ -43,22 +39,12 @@ export class OrderFormComponent implements OnInit {
     return this.form.get('items') as FormArray;
   }
 
-  get selectedCustomerTitle(): string {
-    const cid = this.form.get('customerId')?.value;
-    if (!cid) return this.translate.instant('common.selectShort');
-    const c = this.customers.find(x => x.id === cid);
-    return c?.title ?? this.translate.instant('common.selectShort');
-  }
-
-  /** Dropdown içindeki arama kutusuna göre filtrelenir */
-  get filteredCustomers(): CustomerDto[] {
-    const t = this.customerSearchText?.trim().toLowerCase();
-    if (!t) return this.customers;
-    return this.customers.filter(c =>
-      (c.title?.toLowerCase().includes(t)) ||
-      (c.code?.toLowerCase().includes(t)) ||
-      (c.taxNumber?.toLowerCase().includes(t))
-    );
+  get customerSearchableOptions(): SearchableSelectOption[] {
+    return this.customers.map(c => ({
+      id: c.id,
+      primary: c.title ?? '',
+      secondary: [c.code, c.taxNumber].filter(Boolean).join(' · ')
+    }));
   }
 
   constructor(
@@ -154,21 +140,8 @@ export class OrderFormComponent implements OnInit {
     }
   }
 
-  toggleCustomerDropdown(): void {
-    this.customerDropdownOpen = !this.customerDropdownOpen;
-    if (this.customerDropdownOpen) this.customerSearchText = '';
-  }
-
-  selectCustomer(c: CustomerDto | null): void {
-    this.form.patchValue({ customerId: c?.id ?? null });
-    this.customerDropdownOpen = false;
-  }
-
   @HostListener('document:click', ['$event'])
   onDocumentClick(e: MouseEvent): void {
-    if (this.customerDropdownOpen && this.customerDropdownWrap?.nativeElement && !this.customerDropdownWrap.nativeElement.contains(e.target as Node)) {
-      this.customerDropdownOpen = false;
-    }
     const target = e.target as HTMLElement;
     if (!target.closest('.autocomplete-container')) {
       this.activeItemIndex = null;

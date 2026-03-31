@@ -943,6 +943,7 @@
     "vatHintEditNote": " KDV sistemde tek kayıttır; silinemez veya başka gruba taşınamaz; yalnızca oran ve renk değiştirilebilir.",
     "labelGroup": "Grup / Kategori",
     "selectGroupPlaceholder": "Grup seçiniz...",
+    "searchGroupPlaceholder": "Grup ara...",
     "groupHelp": "Hangi kategoriye ait olduğunu belirler.",
     "labelCode": "Kod (Value)",
     "codePlaceholderVat": "KDV yüzdesi, örn: 20",
