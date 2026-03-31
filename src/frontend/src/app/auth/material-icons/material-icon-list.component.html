@@ -50,7 +50,7 @@
                   {{ row.isActive ? ('materialIconsPage.active' | translate) : ('materialIconsPage.passive' | translate) }}
                 </span>
               </td>
-              <td class="td-actions">
+              <td>
                 <button type="button" class="btn-link" (click)="openEdit(row)">{{ 'common.edit' | translate }}</button>
                 <button type="button" class="btn-link danger" (click)="delete(row)">{{ 'common.delete' | translate }}</button>
               </td>
