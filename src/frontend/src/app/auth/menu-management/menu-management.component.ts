@@ -1,4 +1,5 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { ChangeDetectorRef, Component, DestroyRef, OnInit, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -13,6 +14,7 @@ import { PermissionService } from '../../core/services/permission.service';
 import { MenuItem, PermissionDto } from '../../core/models';
 import { ToastrService } from 'ngx-toastr';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { getMenuDisplayLabel } from '../../core/i18n/menu-display-label';
 import {
   buildReorderPayload,
   buildTreeFromPreorderRows,
@@ -38,6 +40,8 @@ import { MaterialIconLigaturePipe } from '../../shared/icon-picker/material-icon
   styleUrls: ['./menu-management.component.scss']
 })
 export class MenuManagementComponent implements OnInit {
+  private readonly destroyRef = inject(DestroyRef);
+
   allMenus = signal<MenuItem[]>([]);
   /** Sürükle-bırak için DFS düz liste (CDK bu diziyi günceller). */
   dragRows = signal<MenuRowVm[]>([]);
@@ -64,11 +68,19 @@ export class MenuManagementComponent implements OnInit {
     private menuService: MenuService,
     private permService: PermissionService,
     private toastr: ToastrService,
-    private translate: TranslateService
-  ) {}
+    private translate: TranslateService,
+    private cdr: ChangeDetectorRef
+  ) {
+    this.translate.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.cdr.markForCheck());
+  }
 
   ngOnInit() {
     this.loadData();
+  }
+
+  /** Tablo / üst menü seçici: bilinen rotalar ve seed etiketleri `menu.*` ile çevrilir. */
+  displayMenuLabel(item: MenuItem): string {
+    return getMenuDisplayLabel(this.translate, item);
   }
 
   loadData() {

@@ -11,6 +11,7 @@ import { MenuService } from './core/services/menu.service';
 import { NotificationService, UserNotificationDto } from './services/notification.service';
 import { ThemeService } from './core/services/theme.service';
 import { LANG_STORAGE_KEY } from './core/i18n/app-shell.init';
+import { getMenuDisplayLabel } from './core/i18n/menu-display-label';
 import { MenuItem } from './core/models';
 
 /** Düzleştirilmiş sol menü satırı (API ağaç yapısı → sıralı liste). */
@@ -29,55 +30,6 @@ interface SidebarNavEntry {
 })
 export class AppComponent {
   private static readonly SIDEBAR_STORAGE_KEY = 'hbt-sidebar-collapsed';
-
-  /** API menü `routerLink` → i18n anahtarı */
-  private static readonly MENU_LINK_KEYS: Record<string, string> = {
-    '/dashboard': 'menu.dashboard',
-    '/invoices': 'menu.invoices',
-    '/gib-simulation/inbox': 'menu.gibInbox',
-    '/orders': 'menu.orders',
-    '/delivery-notes': 'menu.deliveryNotes',
-    '/products': 'menu.products',
-    '/customers': 'menu.customers',
-    '/main-account-codes': 'menu.mainAccountCodes',
-    '/payments': 'menu.payments',
-    '/cash-registers': 'menu.cashRegisters',
-    '/bank-accounts': 'menu.bankAccounts',
-    '/cheques': 'menu.cheques',
-    '/reports': 'menu.reports',
-    '/lookups': 'menu.lookups',
-    '/permissions': 'menu.permissions',
-    '/menus': 'menu.menus',
-    '/material-icons': 'menu.materialIcons',
-    '/firms': 'menu.firms',
-    '/employees': 'menu.employees',
-    '/logs': 'menu.logs',
-    '/company/profile': 'menu.companyProfile'
-  };
-
-  private static readonly MENU_LABEL_FALLBACK: Record<string, string> = {
-    'Dashboard': 'menu.dashboard',
-    'Faturalar': 'menu.invoices',
-    'GİB Kutusu (simülasyon)': 'menu.gibInbox',
-    'Siparişler': 'menu.orders',
-    'İrsaliyeler': 'menu.deliveryNotes',
-    'Ürünler': 'menu.products',
-    'Cari Kartlar': 'menu.customers',
-    'Hesap Kodları': 'menu.mainAccountCodes',
-    'Tahsilat / Ödeme': 'menu.payments',
-    'Kasa Yönetimi': 'menu.cashRegisters',
-    'Banka Yönetimi': 'menu.bankAccounts',
-    'Çek / Senet': 'menu.cheques',
-    'Raporlar': 'menu.reports',
-    'Sistem Tanımları': 'menu.lookups',
-    'Rol ve Yetki Yönetimi': 'menu.permissions',
-    'Menü Yönetimi': 'menu.menus',
-    'Material İkonları': 'menu.materialIcons',
-    'Firma Yönetimi': 'menu.firms',
-    'Personel Yönetimi': 'menu.employees',
-    'Sistem Logları': 'menu.logs',
-    'Şirket Profili': 'menu.companyProfile'
-  };
 
   private readonly urlPath = signal<string>('/');
 
@@ -288,21 +240,6 @@ export class AppComponent {
   }
 
   menuDisplayLabel(item: MenuItem): string {
-    const link = (item.routerLink || '').trim();
-    const linkKey = link ? AppComponent.MENU_LINK_KEYS[link] : undefined;
-    if (linkKey) {
-      const t = this.translate.instant(linkKey);
-      if (t !== linkKey) {
-        return t;
-      }
-    }
-    const fb = item.label ? AppComponent.MENU_LABEL_FALLBACK[item.label] : undefined;
-    if (fb) {
-      const t = this.translate.instant(fb);
-      if (t !== fb) {
-        return t;
-      }
-    }
-    return item.label;
+    return getMenuDisplayLabel(this.translate, item);
   }
 }

@@ -54,7 +54,7 @@
                             </td>
                             <td class="menu-label-cell">
                                 <div class="menu-label-inner">
-                                    <span class="menu-label-text">{{ row.menu.label }}</span>
+                                    <span class="menu-label-text">{{ displayMenuLabel(row.menu) }}</span>
                                     <span class="badge badge-system" *ngIf="row.menu.isSystemMenu">{{ 'menuManagement.systemBadge' | translate }}</span>
                                 </div>
                             </td>
@@ -147,7 +147,7 @@
                 <select [(ngModel)]="editingMenu()!.parentId">
                     <option [value]="undefined">{{ 'menuManagement.rootMenu' | translate }}</option>
                     <ng-container *ngFor="let m of flatMenus()">
-                        <option *ngIf="m.id !== editingMenu()!.id" [value]="m.id">{{ m.label }}</option>
+                        <option *ngIf="m.id !== editingMenu()!.id" [value]="m.id">{{ displayMenuLabel(m) }}</option>
                     </ng-container>
                 </select>
             </div>
