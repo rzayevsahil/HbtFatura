@@ -18,6 +18,44 @@
         autocomplete="off"
       />
     </div>
+    <div class="toolbar-module-filter toolbar-module-filter--searchable">
+      <label for="tr-module-filter-trigger" class="module-filter-label">{{ 'translationsPage.filterModule' | translate }}</label>
+      <app-searchable-select
+        class="toolbar-module-searchable-select"
+        [ngModel]="groupFilter() === '' ? null : groupFilter()"
+        (ngModelChange)="onModuleSelect($event)"
+        [options]="moduleSelectOptions"
+        layout="dropdown"
+        [placeholder]="'translationsPage.filterAllModules' | translate"
+        [searchPlaceholder]="'translationsPage.filterModuleSearchPh' | translate"
+        [showNoneOption]="true"
+        [noneOptionLabel]="'translationsPage.filterAllModules' | translate"
+        [noResultsLabel]="'common.noResults' | translate"
+        triggerId="tr-module-filter-trigger"
+        [listMaxHeight]="'280px'"
+        [disabled]="loading()"
+      />
+    </div>
+    <div class="toolbar-sort-toggle" [attr.title]="'translationsPage.sortHint' | translate">
+      <button
+        type="button"
+        class="btn-sort"
+        [class.active]="sortGrouped()"
+        [disabled]="loading()"
+        (click)="setSortGrouped(true)"
+      >
+        {{ 'translationsPage.sortByModule' | translate }}
+      </button>
+      <button
+        type="button"
+        class="btn-sort"
+        [class.active]="!sortGrouped()"
+        [disabled]="loading()"
+        (click)="setSortGrouped(false)"
+      >
+        {{ 'translationsPage.sortAlphabetical' | translate }}
+      </button>
+    </div>
   </div>
   <div class="table-container table-container--with-overlay">
     @if (loading()) {
@@ -42,17 +80,41 @@
             </td>
           </tr>
         }
-        @for (row of items(); track row.key) {
-          <tr>
-            <td class="td-key"><code class="key-cell">{{ row.key }}</code></td>
-            <td class="td-value"><span class="value-preview" [title]="row.valueTr">{{ row.valueTr }}</span></td>
-            <td class="td-value"><span class="value-preview" [title]="row.valueEn">{{ row.valueEn }}</span></td>
-            <td class="td-actions-cell">
-              <button type="button" class="btn-action btn-action--edit" (click)="openEdit(row)" [disabled]="loading()">
-                {{ 'translationsPage.edit' | translate }}
-              </button>
-            </td>
-          </tr>
+        @if (sortGrouped()) {
+          @for (chunk of tableChunks(); track chunkTrackId($index, chunk)) {
+            @if (chunk.kind === 'header') {
+              <tr class="tr-group-header">
+                <td colspan="4">
+                  <span class="group-label">{{ groupLabel(chunk.prefix) }}</span>
+                  <code class="group-prefix">{{ groupPrefixCode(chunk.prefix) }}</code>
+                </td>
+              </tr>
+            } @else {
+              <tr>
+                <td class="td-key"><code class="key-cell">{{ chunk.row.key }}</code></td>
+                <td class="td-value"><span class="value-preview" [title]="chunk.row.valueTr">{{ chunk.row.valueTr }}</span></td>
+                <td class="td-value"><span class="value-preview" [title]="chunk.row.valueEn">{{ chunk.row.valueEn }}</span></td>
+                <td class="td-actions-cell">
+                  <button type="button" class="btn-action btn-action--edit" (click)="openEdit(chunk.row)" [disabled]="loading()">
+                    {{ 'translationsPage.edit' | translate }}
+                  </button>
+                </td>
+              </tr>
+            }
+          }
+        } @else {
+          @for (row of items(); track row.key) {
+            <tr>
+              <td class="td-key"><code class="key-cell">{{ row.key }}</code></td>
+              <td class="td-value"><span class="value-preview" [title]="row.valueTr">{{ row.valueTr }}</span></td>
+              <td class="td-value"><span class="value-preview" [title]="row.valueEn">{{ row.valueEn }}</span></td>
+              <td class="td-actions-cell">
+                <button type="button" class="btn-action btn-action--edit" (click)="openEdit(row)" [disabled]="loading()">
+                  {{ 'translationsPage.edit' | translate }}
+                </button>
+              </td>
+            </tr>
+          }
         }
       </tbody>
     </table>

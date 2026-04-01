@@ -1,29 +1,49 @@
-import { ApplicationRef, Component, OnInit, computed, effect, inject, signal, untracked } from '@angular/core';
+import { ApplicationRef, ChangeDetectorRef, Component, DestroyRef, OnInit, computed, effect, inject, signal, untracked } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { forkJoin } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
 import {
+  SearchableSelectComponent,
+  SearchableSelectOption
+} from '../../shared/searchable-select/searchable-select.component';
+import {
   UiTranslationPairAdminDto,
   UiTranslationAdminService
 } from '../../core/services/ui-translation-admin.service';
+import { translationKeyPrefix } from '../../core/i18n/translation-key-prefix';
+import { UI_TRANSLATION_MODULE_GROUP_IDS } from '../../core/i18n/ui-translation-module-groups';
+
+type TableChunk =
+  | { kind: 'header'; prefix: string }
+  | { kind: 'row'; row: UiTranslationPairAdminDto };
 
 @Component({
   selector: 'app-translations-admin',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslateModule],
+  imports: [CommonModule, FormsModule, TranslateModule, SearchableSelectComponent],
   templateUrl: './translations-admin.component.html',
   styleUrls: ['./translations-admin.component.scss']
 })
 export class TranslationsAdminComponent implements OnInit {
   private readonly pageSize = 40;
   private readonly appRef = inject(ApplicationRef);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly cdr = inject(ChangeDetectorRef);
+
+  /** Merkezi sıra — `translationGroups` ile aynı kimlikler */
+  readonly moduleGroupIds = UI_TRANSLATION_MODULE_GROUP_IDS;
 
   items = signal<UiTranslationPairAdminDto[]>([]);
   totalRows = signal(0);
   loading = signal(false);
   searchQuery = signal('');
+  /** Boş = tüm modüller; değer = `UI_TRANSLATION_MODULE_GROUP_IDS` öğesi */
+  groupFilter = signal('');
+  /** true: API önek grubuna göre sıralar; tabloda grup başlıkları gösterilir */
+  sortGrouped = signal(true);
   currentPage = signal(1);
   jumpPageInput = '1';
 
@@ -37,6 +57,21 @@ export class TranslationsAdminComponent implements OnInit {
     const n = this.totalRows();
     if (n === 0) return 1;
     return Math.ceil(n / this.pageSize);
+  });
+
+  readonly tableChunks = computed((): TableChunk[] => {
+    const items = this.items();
+    const chunks: TableChunk[] = [];
+    let last = '';
+    for (const row of items) {
+      const p = translationKeyPrefix(row.key);
+      if (p !== last) {
+        last = p;
+        chunks.push({ kind: 'header', prefix: p });
+      }
+      chunks.push({ kind: 'row', row });
+    }
+    return chunks;
   });
 
   constructor(
@@ -68,6 +103,41 @@ export class TranslationsAdminComponent implements OnInit {
     this.searchQuery.set(value);
     this.currentPage.set(1);
     this.load();
+  }
+
+  get moduleSelectOptions(): SearchableSelectOption[] {
+    return this.moduleGroupIds.map((id) => ({
+      id,
+      primary: this.translate.instant(`translationGroups.${id}`),
+      secondary: id
+    }));
+  }
+
+  onModuleSelect(value: string | null): void {
+    this.groupFilter.set(value ?? '');
+    this.currentPage.set(1);
+    this.load();
+  }
+
+  setSortGrouped(grouped: boolean): void {
+    if (this.sortGrouped() === grouped) return;
+    this.sortGrouped.set(grouped);
+    this.currentPage.set(1);
+    this.load();
+  }
+
+  chunkTrackId(index: number, c: TableChunk): string {
+    return c.kind === 'header' ? `h:${c.prefix}:${index}` : `r:${c.row.key}`;
+  }
+
+  groupLabel(prefix: string): string {
+    const k = `translationGroups.${prefix}`;
+    const t = this.translate.instant(k);
+    return t !== k ? t : prefix;
+  }
+
+  groupPrefixCode(prefix: string): string {
+    return prefix === '__flat' ? '—' : prefix;
   }
 
   goPrev(): void {
@@ -110,8 +180,10 @@ export class TranslationsAdminComponent implements OnInit {
     this.api
       .listPairs({
         q: this.searchQuery().trim() || undefined,
+        prefix: this.groupFilter().trim() || undefined,
         skip,
-        take: this.pageSize
+        take: this.pageSize,
+        order: this.sortGrouped() ? 'group' : 'key'
       })
       .subscribe({
         next: (res) => {

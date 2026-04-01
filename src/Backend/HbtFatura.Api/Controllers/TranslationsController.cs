@@ -39,12 +39,15 @@ public class TranslationsController : ControllerBase
     [Authorize(Roles = Roles.SuperAdmin)]
     public async Task<ActionResult<UiTranslationPairListResponse>> AdminListPairs(
         [FromQuery] string? q,
+        [FromQuery] string? prefix,
+        [FromQuery] string? order,
         [FromQuery] int skip = 0,
         [FromQuery] int take = 100,
         CancellationToken ct = default)
     {
         take = Math.Clamp(take, 1, 500);
         skip = Math.Max(0, skip);
+        var sortByKeyOnly = string.Equals(order, "key", StringComparison.OrdinalIgnoreCase);
 
         IQueryable<UiTranslation> filtered = _db.UiTranslations.AsNoTracking();
         if (!string.IsNullOrWhiteSpace(q))
@@ -53,9 +56,22 @@ public class TranslationsController : ControllerBase
             filtered = filtered.Where(x => x.Key.Contains(qq) || x.Value.Contains(qq));
         }
 
+        if (!string.IsNullOrWhiteSpace(prefix))
+        {
+            var p = prefix.Trim();
+            if (string.Equals(p, "__flat", StringComparison.Ordinal))
+                filtered = filtered.Where(x => !x.Key.Contains('.'));
+            else
+                filtered = filtered.Where(x => x.Key == p || x.Key.StartsWith(p + "."));
+        }
+
         var keysQuery = filtered.Select(x => x.Key).Distinct();
-        var total = await keysQuery.CountAsync(ct);
-        var pageKeys = await keysQuery.OrderBy(k => k).Skip(skip).Take(take).ToListAsync(ct);
+        var allKeys = await keysQuery.ToListAsync(ct);
+        var total = allKeys.Count;
+        var sortedKeys = sortByKeyOnly
+            ? allKeys.OrderBy(k => k).ToList()
+            : allKeys.OrderBy(TranslationKeyPrefix).ThenBy(k => k).ToList();
+        var pageKeys = sortedKeys.Skip(skip).Take(take).ToList();
 
         if (pageKeys.Count == 0)
             return Ok(new UiTranslationPairListResponse(Array.Empty<UiTranslationPairAdminDto>(), total));
@@ -128,5 +144,14 @@ public class TranslationsController : ControllerBase
         row.Value = body?.Value ?? string.Empty;
         await _db.SaveChangesAsync(ct);
         return NoContent();
+    }
+
+    /// <summary>İlk noktadan önceki segment; nokta yoksa tek grupta sıralamak için sabit önek.</summary>
+    private static string TranslationKeyPrefix(string key)
+    {
+        if (string.IsNullOrEmpty(key))
+            return "\u0001";
+        var i = key.IndexOf('.');
+        return i < 0 ? "\u0001" : key[..i];
     }
 }

@@ -19,11 +19,21 @@ export interface UiTranslationPairListResponse {
 export class UiTranslationAdminService {
   constructor(private readonly http: HttpClient) {}
 
-  listPairs(params: { q?: string; skip?: number; take?: number }): Observable<UiTranslationPairListResponse> {
+  listPairs(params: {
+    q?: string;
+    /** İlk segment: menu, invoices, __flat (noktasız), … */
+    prefix?: string;
+    skip?: number;
+    take?: number;
+    /** Varsayılan: group — anahtarın ilk segmentine göre; key = düz A–Z */
+    order?: 'group' | 'key';
+  }): Observable<UiTranslationPairListResponse> {
     let p = new HttpParams();
     if (params.q?.trim()) p = p.set('q', params.q.trim());
+    if (params.prefix?.trim()) p = p.set('prefix', params.prefix.trim());
     if (params.skip != null) p = p.set('skip', String(params.skip));
     if (params.take != null) p = p.set('take', String(params.take));
+    if (params.order === 'key') p = p.set('order', 'key');
     return this.http.get<UiTranslationPairListResponse>('/api/translations/admin', { params: p });
   }
 
