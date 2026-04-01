@@ -42,10 +42,18 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, 
     public DbSet<GibSimulationSubmission> GibSimulationSubmissions => Set<GibSimulationSubmission>();
     public DbSet<UserNotification> UserNotifications => Set<UserNotification>();
     public DbSet<MaterialIconOption> MaterialIconOptions => Set<MaterialIconOption>();
+    public DbSet<UiTranslation> UiTranslations => Set<UiTranslation>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<UiTranslation>(e =>
+        {
+            e.HasIndex(x => new { x.Key, x.Culture }).IsUnique();
+            e.Property(x => x.Key).HasMaxLength(512);
+            e.Property(x => x.Culture).HasMaxLength(16);
+        });
 
         modelBuilder.Entity<LookupGroup>(e =>
         {

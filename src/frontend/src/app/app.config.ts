@@ -7,18 +7,14 @@ import { HttpClient, provideHttpClient, withInterceptors } from '@angular/common
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideToastr } from 'ngx-toastr';
 import { TranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { routes } from './app.routes';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
 import { initAppShell } from './core/i18n/app-shell.init';
+import { createDbTranslateLoader } from './core/i18n/db-translate.loader';
 
 registerLocaleData(localeTr);
 registerLocaleData(localeEn);
-
-export function createTranslateLoader(http: HttpClient): TranslateHttpLoader {
-  return new TranslateHttpLoader(http, 'assets/i18n/', '.json');
-}
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -27,7 +23,7 @@ export const appConfig: ApplicationConfig = {
         defaultLanguage: 'tr',
         loader: {
           provide: TranslateLoader,
-          useFactory: createTranslateLoader,
+          useFactory: createDbTranslateLoader,
           deps: [HttpClient]
         }
       })

@@ -118,7 +118,11 @@ public class LookupsController : ControllerBase
 
             lookup.Code = lookup.Code.Trim();
             lookup.Name = VatRateDisplayNameFromCode(lookup.Code);
+            lookup.NameEn = lookup.Name;
         }
+
+        if (group.Name != VatRateGroupName)
+            lookup.NameEn = string.IsNullOrWhiteSpace(lookup.NameEn) ? null : lookup.NameEn.Trim();
 
         if (lookup.Id == Guid.Empty) lookup.Id = Guid.NewGuid();
         _db.Lookups.Add(lookup);
@@ -141,6 +145,7 @@ public class LookupsController : ControllerBase
 
             existing.Code = lookup.Code.Trim();
             existing.Name = VatRateDisplayNameFromCode(existing.Code);
+            existing.NameEn = existing.Name;
             existing.Color = lookup.Color;
             existing.IsActive = true;
             // Grup, sıra ve pasifleştirme değiştirilemez — tek sistem KDV satırı
@@ -152,6 +157,7 @@ public class LookupsController : ControllerBase
         existing.LookupGroupId = lookup.LookupGroupId;
         existing.Code = lookup.Code;
         existing.Name = lookup.Name;
+        existing.NameEn = string.IsNullOrWhiteSpace(lookup.NameEn) ? null : lookup.NameEn.Trim();
         existing.Color = lookup.Color;
         existing.SortOrder = lookup.SortOrder;
         existing.IsActive = lookup.IsActive;

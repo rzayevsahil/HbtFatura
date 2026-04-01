@@ -251,6 +251,12 @@ export const routes: Routes = [
     loadComponent: () => import('./auth/material-icons/material-icon-list.component').then(m => m.MaterialIconListComponent),
     canActivate: [authGuard, superAdminGuard]
   },
+  {
+    path: 'translations-admin',
+    loadComponent: () =>
+      import('./auth/translations-admin/translations-admin.component').then(m => m.TranslationsAdminComponent),
+    canActivate: [authGuard, superAdminGuard]
+  },
 
   { path: 'firms', loadComponent: () => import('./firms/firm-list/firm-list.component').then(m => m.FirmListComponent), canActivate: [authGuard, superAdminGuard] },
   { path: 'firms/new', loadComponent: () => import('./firms/firm-form/firm-form.component').then(m => m.FirmFormComponent), canActivate: [authGuard, superAdminGuard] },

@@ -8,7 +8,7 @@
       (input)="searchText = $any($event.target).value" />
     <div class="customer-options-list">
       @for (l of filteredUnits; track l.id) {
-      <button type="button" class="customer-option" (click)="pick(l)">{{ l.name }}</button>
+      <button type="button" class="customer-option" (click)="pick(l)">{{ unitLabel(l) }}</button>
       }
       @if (filteredUnits.length === 0 && searchText) {
       <div class="customer-option empty">Sonuç bulunamadı</div>

@@ -20,6 +20,7 @@ export const MENU_LINK_I18N_KEYS: Record<string, string> = {
   '/permissions': 'menu.permissions',
   '/menus': 'menu.menus',
   '/material-icons': 'menu.materialIcons',
+  '/translations-admin': 'menu.translationsAdmin',
   '/firms': 'menu.firms',
   '/employees': 'menu.employees',
   '/logs': 'menu.logs',

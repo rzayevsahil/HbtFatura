@@ -13,37 +13,37 @@ public static class LookupSeed
         
         var groupsToCreate = new List<LookupGroup>();
         if (!existingGroups.Any(x => x.Name == "OrderType"))
-            groupsToCreate.Add(new LookupGroup { Id = Guid.NewGuid(), Name = "OrderType", DisplayName = "Sipariş Tipi", IsSystemGroup = true });
+            groupsToCreate.Add(new LookupGroup { Id = Guid.NewGuid(), Name = "OrderType", DisplayName = "Sipariş Tipi", DisplayNameEn = "Order type", IsSystemGroup = true });
         
         if (!existingGroups.Any(x => x.Name == "OrderStatus"))
-            groupsToCreate.Add(new LookupGroup { Id = Guid.NewGuid(), Name = "OrderStatus", DisplayName = "Sipariş Durumu", IsSystemGroup = true });
+            groupsToCreate.Add(new LookupGroup { Id = Guid.NewGuid(), Name = "OrderStatus", DisplayName = "Sipariş Durumu", DisplayNameEn = "Order status", IsSystemGroup = true });
         
         if (!existingGroups.Any(x => x.Name == "InvoiceStatus"))
-            groupsToCreate.Add(new LookupGroup { Id = Guid.NewGuid(), Name = "InvoiceStatus", DisplayName = "Fatura Durumu", IsSystemGroup = true });
+            groupsToCreate.Add(new LookupGroup { Id = Guid.NewGuid(), Name = "InvoiceStatus", DisplayName = "Fatura Durumu", DisplayNameEn = "Invoice status", IsSystemGroup = true });
         
         if (!existingGroups.Any(x => x.Name == "DeliveryNoteStatus"))
-            groupsToCreate.Add(new LookupGroup { Id = Guid.NewGuid(), Name = "DeliveryNoteStatus", DisplayName = "İrsaliye Durumu", IsSystemGroup = true });
+            groupsToCreate.Add(new LookupGroup { Id = Guid.NewGuid(), Name = "DeliveryNoteStatus", DisplayName = "İrsaliye Durumu", DisplayNameEn = "Delivery note status", IsSystemGroup = true });
 
         if (!existingGroups.Any(x => x.Name == "InvoiceType"))
-            groupsToCreate.Add(new LookupGroup { Id = Guid.NewGuid(), Name = "InvoiceType", DisplayName = "Fatura Tipi", IsSystemGroup = true });
+            groupsToCreate.Add(new LookupGroup { Id = Guid.NewGuid(), Name = "InvoiceType", DisplayName = "Fatura Tipi", DisplayNameEn = "Invoice type", IsSystemGroup = true });
 
         if (!existingGroups.Any(x => x.Name == "DeliveryNoteType"))
-            groupsToCreate.Add(new LookupGroup { Id = Guid.NewGuid(), Name = "DeliveryNoteType", DisplayName = "İrsaliye Tipi", IsSystemGroup = true });
+            groupsToCreate.Add(new LookupGroup { Id = Guid.NewGuid(), Name = "DeliveryNoteType", DisplayName = "İrsaliye Tipi", DisplayNameEn = "Delivery note type", IsSystemGroup = true });
 
         if (!existingGroups.Any(x => x.Name == "ChequeStatus"))
-            groupsToCreate.Add(new LookupGroup { Id = Guid.NewGuid(), Name = "ChequeStatus", DisplayName = "Çek/Senet Durumu", IsSystemGroup = true });
+            groupsToCreate.Add(new LookupGroup { Id = Guid.NewGuid(), Name = "ChequeStatus", DisplayName = "Çek/Senet Durumu", DisplayNameEn = "Cheque / note status", IsSystemGroup = true });
 
         if (!existingGroups.Any(x => x.Name == "Currency"))
-            groupsToCreate.Add(new LookupGroup { Id = Guid.NewGuid(), Name = "Currency", DisplayName = "Para Birimi", IsSystemGroup = true });
+            groupsToCreate.Add(new LookupGroup { Id = Guid.NewGuid(), Name = "Currency", DisplayName = "Para Birimi", DisplayNameEn = "Currency", IsSystemGroup = true });
 
         if (!existingGroups.Any(x => x.Name == "VatRate"))
-            groupsToCreate.Add(new LookupGroup { Id = Guid.NewGuid(), Name = "VatRate", DisplayName = "KDV Oranı (%)", IsSystemGroup = true });
+            groupsToCreate.Add(new LookupGroup { Id = Guid.NewGuid(), Name = "VatRate", DisplayName = "KDV Oranı (%)", DisplayNameEn = "VAT rate", IsSystemGroup = true });
 
         if (!existingGroups.Any(x => x.Name == "ProductUnit"))
-            groupsToCreate.Add(new LookupGroup { Id = Guid.NewGuid(), Name = "ProductUnit", DisplayName = "Ürün birimi", IsSystemGroup = true });
+            groupsToCreate.Add(new LookupGroup { Id = Guid.NewGuid(), Name = "ProductUnit", DisplayName = "Ürün birimi", DisplayNameEn = "Product unit", IsSystemGroup = true });
 
         if (!existingGroups.Any(x => x.Name == "ProductStockType"))
-            groupsToCreate.Add(new LookupGroup { Id = Guid.NewGuid(), Name = "ProductStockType", DisplayName = "Stok türü", IsSystemGroup = true });
+            groupsToCreate.Add(new LookupGroup { Id = Guid.NewGuid(), Name = "ProductStockType", DisplayName = "Stok türü", DisplayNameEn = "Stock type", IsSystemGroup = true });
 
         if (groupsToCreate.Any())
         {
@@ -70,112 +70,112 @@ public static class LookupSeed
         // OrderType
         if (!await db.Lookups.AnyAsync(x => x.LookupGroupId == orderTypeId))
         {
-            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = orderTypeId, Code = "0", Name = "Alınan", Color = "#0d9488", SortOrder = 1 });
-            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = orderTypeId, Code = "1", Name = "Verilen", Color = "#3b82f6", SortOrder = 2 });
+            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = orderTypeId, Code = "0", Name = "Alınan", NameEn = "Received", Color = "#0d9488", SortOrder = 1 });
+            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = orderTypeId, Code = "1", Name = "Verilen", NameEn = "Issued", Color = "#3b82f6", SortOrder = 2 });
         }
 
         // OrderStatus
         if (!await db.Lookups.AnyAsync(x => x.LookupGroupId == orderStatusId))
         {
-            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = orderStatusId, Code = "0", Name = "Bekliyor", Color = "#ffc107", SortOrder = 1 });
-            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = orderStatusId, Code = "1", Name = "Tamamı Teslim", Color = "#28a745", SortOrder = 2 });
-            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = orderStatusId, Code = "2", Name = "İptal", Color = "#dc3545", SortOrder = 3 });
-            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = orderStatusId, Code = "3", Name = "Onaylandı", Color = "#007bff", SortOrder = 4 });
-            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = orderStatusId, Code = "4", Name = "Kısmi Teslim", Color = "#17a2b8", SortOrder = 5 });
+            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = orderStatusId, Code = "0", Name = "Bekliyor", NameEn = "Pending", Color = "#ffc107", SortOrder = 1 });
+            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = orderStatusId, Code = "1", Name = "Tamamı Teslim", NameEn = "Fully delivered", Color = "#28a745", SortOrder = 2 });
+            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = orderStatusId, Code = "2", Name = "İptal", NameEn = "Cancelled", Color = "#dc3545", SortOrder = 3 });
+            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = orderStatusId, Code = "3", Name = "Onaylandı", NameEn = "Approved", Color = "#007bff", SortOrder = 4 });
+            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = orderStatusId, Code = "4", Name = "Kısmi Teslim", NameEn = "Partially delivered", Color = "#17a2b8", SortOrder = 5 });
         }
 
         // InvoiceStatus
         if (!await db.Lookups.AnyAsync(x => x.LookupGroupId == invoiceStatusId))
         {
-            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = invoiceStatusId, Code = "0", Name = "Taslak", Color = "#6c757d", SortOrder = 1 });
-            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = invoiceStatusId, Code = "1", Name = "Onaylandı", Color = "#007bff", SortOrder = 2 });
-            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = invoiceStatusId, Code = "2", Name = "Ödendi", Color = "#28a745", SortOrder = 3 });
-            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = invoiceStatusId, Code = "3", Name = "İptal", Color = "#dc3545", SortOrder = 4 });
-            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = invoiceStatusId, Code = "4", Name = "GİB onayı bekliyor", Color = "#fd7e14", SortOrder = 5 });
+            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = invoiceStatusId, Code = "0", Name = "Taslak", NameEn = "Draft", Color = "#6c757d", SortOrder = 1 });
+            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = invoiceStatusId, Code = "1", Name = "Onaylandı", NameEn = "Approved", Color = "#007bff", SortOrder = 2 });
+            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = invoiceStatusId, Code = "2", Name = "Ödendi", NameEn = "Paid", Color = "#28a745", SortOrder = 3 });
+            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = invoiceStatusId, Code = "3", Name = "İptal", NameEn = "Cancelled", Color = "#dc3545", SortOrder = 4 });
+            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = invoiceStatusId, Code = "4", Name = "GİB onayı bekliyor", NameEn = "Pending GİB approval", Color = "#fd7e14", SortOrder = 5 });
         }
 
         // DeliveryNoteStatus
         if (!await db.Lookups.AnyAsync(x => x.LookupGroupId == deliveryNoteStatusId))
         {
-            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = deliveryNoteStatusId, Code = "0", Name = "Taslak", Color = "#6c757d", SortOrder = 1 });
-            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = deliveryNoteStatusId, Code = "1", Name = "Onaylandı", Color = "#007bff", SortOrder = 2 });
-            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = deliveryNoteStatusId, Code = "2", Name = "İptal", Color = "#dc3545", SortOrder = 3 });
-            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = deliveryNoteStatusId, Code = "3", Name = "Faturalandı", Color = "#28a745", SortOrder = 4 });
+            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = deliveryNoteStatusId, Code = "0", Name = "Taslak", NameEn = "Draft", Color = "#6c757d", SortOrder = 1 });
+            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = deliveryNoteStatusId, Code = "1", Name = "Onaylandı", NameEn = "Approved", Color = "#007bff", SortOrder = 2 });
+            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = deliveryNoteStatusId, Code = "2", Name = "İptal", NameEn = "Cancelled", Color = "#dc3545", SortOrder = 3 });
+            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = deliveryNoteStatusId, Code = "3", Name = "Faturalandı", NameEn = "Invoiced", Color = "#28a745", SortOrder = 4 });
         }
 
         // InvoiceType
         if (!await db.Lookups.AnyAsync(x => x.LookupGroupId == invoiceTypeId))
         {
-            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = invoiceTypeId, Code = "0", Name = "Satış", Color = "#28a745", SortOrder = 1 });
-            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = invoiceTypeId, Code = "1", Name = "Alış", Color = "#dc3545", SortOrder = 2 });
+            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = invoiceTypeId, Code = "0", Name = "Satış", NameEn = "Sales", Color = "#28a745", SortOrder = 1 });
+            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = invoiceTypeId, Code = "1", Name = "Alış", NameEn = "Purchase", Color = "#dc3545", SortOrder = 2 });
         }
 
         // DeliveryNoteType
         if (!await db.Lookups.AnyAsync(x => x.LookupGroupId == deliveryNoteTypeId))
         {
-            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = deliveryNoteTypeId, Code = "0", Name = "Satış", Color = "#28a745", SortOrder = 1 });
-            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = deliveryNoteTypeId, Code = "1", Name = "Alış", Color = "#dc3545", SortOrder = 2 });
+            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = deliveryNoteTypeId, Code = "0", Name = "Satış", NameEn = "Sales", Color = "#28a745", SortOrder = 1 });
+            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = deliveryNoteTypeId, Code = "1", Name = "Alış", NameEn = "Purchase", Color = "#dc3545", SortOrder = 2 });
         }
 
         // ChequeStatus (Çek/Senet durumu)
         if (!await db.Lookups.AnyAsync(x => x.LookupGroupId == chequeStatusId))
         {
-            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = chequeStatusId, Code = "0", Name = "Portföyde", Color = "#6c757d", SortOrder = 1 });
-            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = chequeStatusId, Code = "1", Name = "Tahsil edildi", Color = "#28a745", SortOrder = 2 });
-            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = chequeStatusId, Code = "2", Name = "Ödendi", Color = "#007bff", SortOrder = 3 });
-            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = chequeStatusId, Code = "3", Name = "Reddedildi", Color = "#dc3545", SortOrder = 4 });
+            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = chequeStatusId, Code = "0", Name = "Portföyde", NameEn = "In portfolio", Color = "#6c757d", SortOrder = 1 });
+            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = chequeStatusId, Code = "1", Name = "Tahsil edildi", NameEn = "Collected", Color = "#28a745", SortOrder = 2 });
+            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = chequeStatusId, Code = "2", Name = "Ödendi", NameEn = "Paid", Color = "#007bff", SortOrder = 3 });
+            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = chequeStatusId, Code = "3", Name = "Reddedildi", NameEn = "Rejected", Color = "#dc3545", SortOrder = 4 });
         }
 
         // Currency (Para birimi) - TRY, USD, EUR
         if (!await db.Lookups.AnyAsync(x => x.LookupGroupId == currencyGroupId))
         {
-            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = currencyGroupId, Code = "TRY", Name = "Türk Lirası", Color = "#0ca678", SortOrder = 1 });
-            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = currencyGroupId, Code = "USD", Name = "Amerikan Doları", Color = "#2563eb", SortOrder = 2 });
-            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = currencyGroupId, Code = "EUR", Name = "Euro", Color = "#f59e0b", SortOrder = 3 });
+            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = currencyGroupId, Code = "TRY", Name = "Türk Lirası", NameEn = "Turkish Lira", Color = "#0ca678", SortOrder = 1 });
+            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = currencyGroupId, Code = "USD", Name = "Amerikan Doları", NameEn = "US Dollar", Color = "#2563eb", SortOrder = 2 });
+            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = currencyGroupId, Code = "EUR", Name = "Euro", NameEn = "Euro", Color = "#f59e0b", SortOrder = 3 });
         }
 
         // KDV oranları (Code = yüzde değeri; varsayılan satır App:DefaultVatRate ile uyumlu olmalı)
         if (!await db.Lookups.AnyAsync(x => x.LookupGroupId == vatRateGroupId))
         {
-            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = vatRateGroupId, Code = "20", Name = "%20", Color = "#0d9488", SortOrder = 1 });
+            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = vatRateGroupId, Code = "20", Name = "%20", NameEn = "%20", Color = "#0d9488", SortOrder = 1 });
         }
 
         // Ürün / kalem birimi (Code ve Name, ürün kartı ile aynı metin; sipariş-irsaliye-fatura satırlarında kullanılır)
         if (!await db.Lookups.AnyAsync(x => x.LookupGroupId == productUnitGroupId))
         {
-            var productUnits = new (string Code, string Name, string Color)[]
+            var productUnits = new (string Code, string Name, string NameEn, string Color)[]
             {
-                ("Adet", "Adet", "#64748b"),
-                ("Kg", "Kg", "#0d9488"),
-                ("gr", "gr", "#14b8a6"),
-                ("lt", "lt", "#3b82f6"),
-                ("m", "m", "#8b5cf6"),
-                ("m²", "m²", "#a855f7"),
-                ("m³", "m³", "#c084fc"),
-                ("Paket", "Paket", "#ea580c"),
-                ("Kutu", "Kutu", "#f97316"),
-                ("Ton", "Ton", "#0f766e"),
-                ("Saat", "Saat", "#6366f1")
+                ("Adet", "Adet", "Piece", "#64748b"),
+                ("Kg", "Kg", "Kg", "#0d9488"),
+                ("gr", "gr", "g", "#14b8a6"),
+                ("lt", "lt", "L", "#3b82f6"),
+                ("m", "m", "m", "#8b5cf6"),
+                ("m²", "m²", "m²", "#a855f7"),
+                ("m³", "m³", "m³", "#c084fc"),
+                ("Paket", "Paket", "Package", "#ea580c"),
+                ("Kutu", "Kutu", "Box", "#f97316"),
+                ("Ton", "Ton", "Ton", "#0f766e"),
+                ("Saat", "Saat", "Hour", "#6366f1")
             };
             var sort = 1;
             foreach (var u in productUnits)
-                lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = productUnitGroupId, Code = u.Code, Name = u.Name, Color = u.Color, SortOrder = sort++ });
+                lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = productUnitGroupId, Code = u.Code, Name = u.Name, NameEn = u.NameEn, Color = u.Color, SortOrder = sort++ });
         }
 
         // Stok türü (ürün kartı)
         if (!await db.Lookups.AnyAsync(x => x.LookupGroupId == productStockTypeGroupId))
         {
-            var stockTypes = new (string Code, string Name, string Color)[]
+            var stockTypes = new (string Code, string Name, string NameEn, string Color)[]
             {
-                ("hammadde", "Hammadde", "#0ea5e9"),
-                ("yarı mamul", "Yarı mamul", "#8b5cf6"),
-                ("mamul", "Mamul", "#16a34a"),
-                ("ticari mal", "Ticari mal", "#f59e0b"),
-                ("demirbaş", "Demirbaş", "#64748b")
+                ("hammadde", "Hammadde", "Raw material", "#0ea5e9"),
+                ("yarı mamul", "Yarı mamul", "Semi-finished product", "#8b5cf6"),
+                ("mamul", "Mamul", "Finished product", "#16a34a"),
+                ("ticari mal", "Ticari mal", "Commercial good", "#f59e0b"),
+                ("demirbaş", "Demirbaş", "Fixed asset", "#64748b")
             };
             var sort = 1;
             foreach (var st in stockTypes)
-                lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = productStockTypeGroupId, Code = st.Code, Name = st.Name, Color = st.Color, SortOrder = sort++ });
+                lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = productStockTypeGroupId, Code = st.Code, Name = st.Name, NameEn = st.NameEn, Color = st.Color, SortOrder = sort++ });
         }
 
         if (lookups.Any())
@@ -193,6 +193,7 @@ public static class LookupSeed
                 LookupGroupId = invoiceStatusGroup.Id,
                 Code = "4",
                 Name = "GİB onayı bekliyor",
+                NameEn = "Pending GİB approval",
                 Color = "#fd7e14",
                 SortOrder = 5
             });

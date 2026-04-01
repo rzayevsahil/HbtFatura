@@ -41,8 +41,14 @@ export class UnitFieldSelectComponent {
     return list.filter(
       l =>
         (l.name?.toLowerCase().includes(t) ?? false) ||
+        (l.nameEn?.toLowerCase().includes(t) ?? false) ||
         (l.code?.toLowerCase().includes(t) ?? false)
     );
+  }
+
+  /** Ürün birimi satır etiketi (TR/EN veritabanı alanları). */
+  unitLabel(l: LookupDto): string {
+    return this.lookups.displayLookupLabel(l);
   }
 
   toggle(e: Event): void {

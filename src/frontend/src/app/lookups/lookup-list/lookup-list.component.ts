@@ -10,15 +10,6 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 const VAT_RATE_GROUP_NAME = 'VatRate';
 
-/** Lookup code → i18n key suffix (lookups.names.<Group>.<suffix>) for codes that are not plain alphanumeric. */
-const LOOKUP_CODE_KEY_SUFFIX: Record<string, string> = {
-  'yarı mamul': 'yari_mamul',
-  'ticari mal': 'ticari_mal',
-  'demirbaş': 'demirbas',
-  'm²': 'm2',
-  'm³': 'm3'
-};
-
 @Component({
   selector: 'app-lookup-list',
   standalone: true,
@@ -51,28 +42,13 @@ export class LookupListComponent implements OnInit {
     this.translate.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.cdr.markForCheck());
   }
 
-  /** i18n key segment for lookup code (matches JSON under lookups.names.<Group>.<segment>). */
-  static lookupCodeKeySuffix(code: string | undefined | null): string {
-    const c = (code ?? '').trim();
-    return LOOKUP_CODE_KEY_SUFFIX[c] ?? c;
-  }
-
-  /** Seed / sistem lookup adları: EN’de çeviri, bilinmeyen veya özel kayıtta veritabanı adı. */
+  /** Görünen tanım adı — metin veritabanında (Name / NameEn); JSON çevirisi yok. */
   displayLookupName(item: LookupDto): string {
-    const g = item.group?.name;
-    if (!g) return item.name;
-    const suffix = LookupListComponent.lookupCodeKeySuffix(item.code);
-    const key = `lookups.names.${g}.${suffix}`;
-    const t = this.translate.instant(key);
-    return t === key ? item.name : t;
+    return this.service.displayLookupLabel(item);
   }
 
-  /** Grup/kategori adı: lookups.groups.<GroupName>; yoksa displayName/name fallback. */
   displayLookupGroup(group: LookupGroupDto | undefined): string {
-    if (!group) return '';
-    const key = `lookups.groups.${group.name}`;
-    const t = this.translate.instant(key);
-    return t === key ? (group.displayName || group.name) : t;
+    return this.service.displayGroupLabel(group);
   }
 
   refresh(): void {
@@ -119,7 +95,9 @@ export class LookupListComponent implements OnInit {
   /** KDV için görünen ad: % + kod (sunucu ile aynı kural). */
   syncVatRateDisplayName(): void {
     const c = (this.model.code ?? '').toString().trim();
-    this.model.name = c.length > 0 ? `%${c}` : '';
+    const v = c.length > 0 ? `%${c}` : '';
+    this.model.name = v;
+    this.model.nameEn = v || undefined;
   }
 
   vatDisplayPreview(): string {

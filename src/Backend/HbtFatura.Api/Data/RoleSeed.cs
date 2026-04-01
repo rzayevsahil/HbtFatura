@@ -84,6 +84,9 @@ public static class RoleSeed
 
             new() { Id = Guid.NewGuid(), Group = "Sistem", Code = "MaterialIcons.View", Name = "Material ikon listesi" },
             new() { Id = Guid.NewGuid(), Group = "Sistem", Code = "MaterialIcons.Edit", Name = "Material ikonları düzenle" },
+
+            new() { Id = Guid.NewGuid(), Group = "Sistem", Code = "Translations.View", Name = "Arayüz çevirileri (liste)" },
+            new() { Id = Guid.NewGuid(), Group = "Sistem", Code = "Translations.Edit", Name = "Arayüz çevirileri (düzenle)" },
             
             new() { Id = Guid.NewGuid(), Group = "Firma Yönetimi", Code = "Firms.View", Name = "Görüntüle" },
             new() { Id = Guid.NewGuid(), Group = "Firma Yönetimi", Code = "Firms.Edit", Name = "Düzenle" },
@@ -138,7 +141,7 @@ public static class RoleSeed
         if (superAdminRole != null)
         {
             // SuperAdmin: sistem + firma yönetimi; Employees.* firma detayından çalışan düzenleme ve API (genel /employees listesi menü ve servis tarafında kısıtlı).
-            var adminPermCodes = new[] { "Dashboard.View", "Lookups.", "Roles.", "Menus.", "MaterialIcons.", "Logs.", "Firms.", "CompanyProfile.Edit", "Employees." };
+            var adminPermCodes = new[] { "Dashboard.View", "Lookups.", "Roles.", "Menus.", "MaterialIcons.", "Translations.", "Logs.", "Firms.", "CompanyProfile.Edit", "Employees." };
             var adminPerms = allPerms.Where(x => adminPermCodes.Any(code => x.Code.StartsWith(code))).ToList();
 
             // Add missing permissions
@@ -246,6 +249,7 @@ public static class RoleSeed
             new() { Label = "Firma Yönetimi", Icon = "business", RouterLink = "/firms", SortOrder = 105, RequiredPermissionCode = "Firms.View" },
             new() { Label = "Personel Yönetimi", Icon = "badge", RouterLink = "/employees", SortOrder = 106, RequiredPermissionCode = "Employees.View" },
             new() { Label = "Sistem Logları", Icon = "history", RouterLink = "/logs", SortOrder = 107, RequiredPermissionCode = "Logs.View" },
+            new() { Label = "Arayüz Çevirileri", Icon = "translate", RouterLink = "/translations-admin", SortOrder = 108, RequiredPermissionCode = "Translations.View" },
             new() { Label = "Şirket Profili", Icon = "business", RouterLink = "/company/profile", SortOrder = 11, RequiredPermissionCode = "CompanyProfile.View" }
         };
 

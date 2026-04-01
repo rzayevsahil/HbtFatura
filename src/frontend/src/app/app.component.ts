@@ -1,4 +1,4 @@
-import { Component, computed, effect, signal } from '@angular/core';
+import { ApplicationRef, Component, computed, effect, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs/operators';
@@ -59,7 +59,8 @@ export class AppComponent {
     private lookup: LookupService,
     public menu: MenuService,
     private notifApi: NotificationService,
-    private router: Router
+    private router: Router,
+    private appRef: ApplicationRef
   ) {
     this.urlPath.set(AppComponent.pathOnly(this.router.url));
     this.router.events
@@ -232,6 +233,7 @@ export class AppComponent {
       }
       document.documentElement.lang = lang === 'en' ? 'en' : 'tr';
       this.closeHeaderMenu();
+      this.appRef.tick();
     });
   }
 

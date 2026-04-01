@@ -1,6 +1,7 @@
 import { Injectable, signal, computed } from '@angular/core';
 import { ApiService } from './api.service';
 import { Observable, forkJoin, map, tap } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 
 import { LookupGroupDto, LookupDto } from '../models';
 import { FALLBACK_DEFAULT_VAT_RATE_PERCENT } from '../constants/vat-defaults';
@@ -10,10 +11,44 @@ export class LookupService {
     private lookups = signal<LookupDto[]>([]);
     private groups = signal<LookupGroupDto[]>([]);
 
+    /** Dil değişince abone olan görünümlerin güncellenmesi için (getName / display* ile okunur). */
+    private readonly langRev = signal(0);
+
     /** Sunucudaki sistem varsayılanı (VatRate lookup / App:DefaultVatRate). */
     readonly defaultVatRatePercent = signal(FALLBACK_DEFAULT_VAT_RATE_PERCENT);
 
-    constructor(private api: ApiService) { }
+    constructor(
+        private api: ApiService,
+        private translate: TranslateService
+    ) {
+        this.translate.onLangChange.subscribe(() => this.langRev.update((n) => n + 1));
+    }
+
+    private preferEnglish(): boolean {
+        this.langRev();
+        const l = (this.translate.currentLang ?? 'tr').toLowerCase();
+        return l === 'en' || l.startsWith('en-');
+    }
+
+    /** Grup başlığı: EN dilinde DisplayNameEn, yoksa Türkçe DisplayName. */
+    displayGroupLabel(group: LookupGroupDto | undefined | null): string {
+        if (!group) return '';
+        if (this.preferEnglish()) {
+            const en = group.displayNameEn?.trim();
+            if (en) return en;
+        }
+        return group.displayName || group.name;
+    }
+
+    /** Tanım satırı adı: EN dilinde NameEn, yoksa Name (TR). */
+    displayLookupLabel(item: LookupDto | undefined | null): string {
+        if (!item) return '';
+        if (this.preferEnglish()) {
+            const en = item.nameEn?.trim();
+            if (en) return en;
+        }
+        return item.name ?? '';
+    }
 
     load(): Observable<LookupDto[]> {
         return this.api.get<LookupDto[]>('/api/lookups').pipe(
@@ -54,10 +89,12 @@ export class LookupService {
     }
 
     getName(groupName: string, code: string | number | undefined): string {
+        this.langRev();
         if (code === undefined || code === null) return '';
         const c = String(code);
         const item = this.lookups().find(x => x.group?.name === groupName && x.code === c);
-        return item?.name ?? c;
+        if (!item) return c;
+        return this.displayLookupLabel(item);
     }
 
     getColor(groupName: string, code: string | number | undefined): string {

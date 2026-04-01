@@ -121,6 +121,11 @@
                 <label>{{ 'lookupsPage.labelDisplayName' | translate }}</label>
                 <input type="text" [(ngModel)]="model.name" name="name" required [placeholder]="'lookupsPage.displayNamePlaceholder' | translate" />
               </div>
+              <div class="form-group full">
+                <label>{{ 'lookupsPage.labelDisplayNameEn' | translate }}</label>
+                <input type="text" [(ngModel)]="model.nameEn" name="nameEn" [placeholder]="'lookupsPage.displayNameEnPlaceholder' | translate" />
+                <small>{{ 'lookupsPage.displayNameEnHelp' | translate }}</small>
+              </div>
             }
             <div class="form-group">
               <label>{{ 'lookupsPage.labelColor' | translate }}</label>

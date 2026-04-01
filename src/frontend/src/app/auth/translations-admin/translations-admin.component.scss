@@ -1,0 +1,125 @@
+@import '../material-icons/material-icon-list.component.scss';
+
+.table-toolbar--translations {
+  flex-wrap: wrap;
+}
+
+.toolbar-search-block {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1 1 14rem;
+  min-width: min(100%, 14rem);
+}
+
+.toolbar-search-block .search-input {
+  flex: 1 1 auto;
+  min-width: 10rem;
+}
+
+.table-container--with-overlay {
+  position: relative;
+  min-height: 6rem;
+}
+
+.table-loading-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: color-mix(in srgb, var(--color-surface, #fff) 82%, transparent);
+  pointer-events: none;
+
+  .loading-state {
+    margin: 0;
+    font-size: 0.95rem;
+    color: var(--color-text-muted);
+  }
+}
+
+html.dark .table-loading-overlay {
+  background: color-mix(in srgb, var(--color-surface, #1e293b) 88%, transparent);
+}
+
+.data-table.is-dimmed {
+  opacity: 0.45;
+}
+
+.data-table--translation-pairs {
+  .th-key {
+    width: 22%;
+    min-width: 8rem;
+  }
+
+  .th-lang {
+    width: 36%;
+    min-width: 6rem;
+  }
+
+  .td-key {
+    vertical-align: top;
+  }
+}
+
+.key-cell {
+  font-size: 0.8125rem;
+  word-break: break-all;
+}
+
+.td-value {
+  max-width: none;
+  vertical-align: top;
+}
+
+.value-preview {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.modal-card--pair {
+  max-width: 920px;
+}
+
+.modal-pair-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.readonly-line {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--color-text);
+}
+
+.modal-pair-fields .value-textarea {
+  min-height: 6rem;
+}
+
+.value-textarea {
+  width: 100%;
+  min-height: 8rem;
+  padding: 10px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  font-size: 0.95rem;
+  box-sizing: border-box;
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-family: inherit;
+  resize: vertical;
+
+  &:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 2px var(--color-primary-light);
+  }
+}

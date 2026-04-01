@@ -156,6 +156,8 @@ using (var scope = app.Services.CreateScope())
     await TaxOfficeSeed.SeedTaxOfficesIfEmptyAsync(db);
     await LookupSeed.SeedIfEmptyAsync(db);
     await MaterialIconSeed.SeedIfEmptyAsync(db);
+    await UiTranslationSeed.ImportIfEmptyAsync(db, app.Environment.ContentRootPath);
+    await UiTranslationSeed.MergeMissingFromSeedAsync(db, app.Environment.ContentRootPath);
 
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();

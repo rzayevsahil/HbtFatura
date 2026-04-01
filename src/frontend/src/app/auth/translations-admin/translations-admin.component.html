@@ -1,0 +1,137 @@
+<div class="page-header">
+  <div class="header-top-row">
+    <h1 class="page-title">{{ 'translationsPage.title' | translate }}</h1>
+  </div>
+  <p class="page-description">{{ 'translationsPage.description' | translate }}</p>
+</div>
+
+<div class="card table-card">
+  <div class="table-toolbar table-toolbar--translations">
+    <div class="toolbar-search-block">
+      <span class="material-icons toolbar-search-icon" aria-hidden="true">search</span>
+      <input
+        type="search"
+        class="search-input"
+        [ngModel]="searchQuery()"
+        (ngModelChange)="onSearchChange($event)"
+        [placeholder]="'translationsPage.searchPlaceholder' | translate"
+        autocomplete="off"
+      />
+    </div>
+  </div>
+  <div class="table-container table-container--with-overlay">
+    @if (loading()) {
+      <div class="table-loading-overlay" aria-live="polite">
+        <p class="loading-state">{{ 'common.loading' | translate }}</p>
+      </div>
+    }
+    <table class="data-table data-table--translation-pairs" [class.is-dimmed]="loading()">
+      <thead>
+        <tr>
+          <th class="th-key">{{ 'translationsPage.colKey' | translate }}</th>
+          <th class="th-lang">{{ 'translationsPage.colTr' | translate }}</th>
+          <th class="th-lang">{{ 'translationsPage.colEn' | translate }}</th>
+          <th class="th-actions">{{ 'translationsPage.colActions' | translate }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (!loading() && items().length === 0) {
+          <tr>
+            <td colspan="4" class="td-empty">
+              {{ (totalRows() === 0 ? 'translationsPage.emptyList' : 'translationsPage.noRows') | translate }}
+            </td>
+          </tr>
+        }
+        @for (row of items(); track row.key) {
+          <tr>
+            <td class="td-key"><code class="key-cell">{{ row.key }}</code></td>
+            <td class="td-value"><span class="value-preview" [title]="row.valueTr">{{ row.valueTr }}</span></td>
+            <td class="td-value"><span class="value-preview" [title]="row.valueEn">{{ row.valueEn }}</span></td>
+            <td class="td-actions-cell">
+              <button type="button" class="btn-action btn-action--edit" (click)="openEdit(row)" [disabled]="loading()">
+                {{ 'translationsPage.edit' | translate }}
+              </button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  <div class="pagination-bar">
+    <span class="pagination-info">
+      {{
+        'translationsPage.paginationInfo'
+          | translate
+            : {
+                current: currentPage(),
+                total: totalPages(),
+                count: items().length,
+                totalRows: totalRows()
+              }
+      }}
+    </span>
+    <div class="pagination-controls">
+      <div class="pagination-jump">
+        <label for="tr-page-jump" class="pagination-jump-label">{{ 'translationsPage.pageJumpLabel' | translate }}</label>
+        <input
+          id="tr-page-jump"
+          type="text"
+          name="pageJump"
+          class="pagination-jump-input"
+          inputmode="numeric"
+          autocomplete="off"
+          [attr.aria-label]="'translationsPage.pageJumpAria' | translate: { total: totalPages() }"
+          [(ngModel)]="jumpPageInput"
+          (keydown)="onJumpKeydown($event)"
+          (blur)="commitJumpPage()"
+          [disabled]="loading()"
+        />
+      </div>
+      <div class="pagination-actions">
+        <button type="button" class="btn btn-page" (click)="goPrev()" [disabled]="currentPage() <= 1 || loading()">
+          {{ 'common.previous' | translate }}
+        </button>
+        <button type="button" class="btn btn-page" (click)="goNext()" [disabled]="currentPage() >= totalPages() || loading()">
+          {{ 'common.next' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+@if (showModal) {
+  <div class="modal-overlay" (click)="closeModal()">
+    <div class="modal-card modal-card--pair" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>{{ 'translationsPage.modalEdit' | translate }}</h3>
+        <button type="button" class="modal-close" (click)="closeModal()" [attr.aria-label]="'translationsPage.cancel' | translate">
+          ×
+        </button>
+      </div>
+      <form (ngSubmit)="save()">
+        <div class="modal-body">
+          @if (editRow) {
+            <div class="form-group">
+              <label>{{ 'translationsPage.colKey' | translate }}</label>
+              <p class="readonly-line"><code>{{ editRow.key }}</code></p>
+            </div>
+            <div class="modal-pair-fields">
+              <div class="form-group">
+                <label for="tr-value-tr">{{ 'translationsPage.fieldValueTr' | translate }}</label>
+                <textarea id="tr-value-tr" name="valueTr" rows="5" [(ngModel)]="editValueTr" class="value-textarea"></textarea>
+              </div>
+              <div class="form-group">
+                <label for="tr-value-en">{{ 'translationsPage.fieldValueEn' | translate }}</label>
+                <textarea id="tr-value-en" name="valueEn" rows="5" [(ngModel)]="editValueEn" class="value-textarea"></textarea>
+              </div>
+            </div>
+          }
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeModal()">{{ 'translationsPage.cancel' | translate }}</button>
+          <button type="submit" class="btn btn-primary" [disabled]="saving">{{ 'translationsPage.save' | translate }}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+}
