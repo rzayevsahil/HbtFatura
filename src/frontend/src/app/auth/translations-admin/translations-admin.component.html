@@ -7,17 +7,15 @@
 
 <div class="card table-card">
   <div class="table-toolbar table-toolbar--translations">
-    <div class="toolbar-search-block">
-      <span class="material-icons toolbar-search-icon" aria-hidden="true">search</span>
-      <input
-        type="search"
-        class="search-input"
-        [ngModel]="searchQuery()"
-        (ngModelChange)="onSearchChange($event)"
-        [placeholder]="'translationsPage.searchPlaceholder' | translate"
-        autocomplete="off"
-      />
-    </div>
+    <span class="material-icons toolbar-search-icon" aria-hidden="true">search</span>
+    <input
+      type="search"
+      class="search-input"
+      [ngModel]="searchQuery()"
+      (ngModelChange)="onSearchChange($event)"
+      [placeholder]="'translationsPage.searchPlaceholder' | translate"
+      autocomplete="off"
+    />
     <div class="toolbar-module-filter toolbar-module-filter--searchable">
       <label for="tr-module-filter-trigger" class="module-filter-label">{{ 'translationsPage.filterModule' | translate }}</label>
       <app-searchable-select
@@ -95,9 +93,11 @@
                 <td class="td-value"><span class="value-preview" [title]="chunk.row.valueTr">{{ chunk.row.valueTr }}</span></td>
                 <td class="td-value"><span class="value-preview" [title]="chunk.row.valueEn">{{ chunk.row.valueEn }}</span></td>
                 <td class="td-actions-cell">
-                  <button type="button" class="btn-action btn-action--edit" (click)="openEdit(chunk.row)" [disabled]="loading()">
-                    {{ 'translationsPage.edit' | translate }}
-                  </button>
+                  <div class="row-actions">
+                    <button type="button" class="btn-action btn-action--edit" (click)="openEdit(chunk.row)" [disabled]="loading()">
+                      {{ 'translationsPage.edit' | translate }}
+                    </button>
+                  </div>
                 </td>
               </tr>
             }
@@ -109,9 +109,11 @@
               <td class="td-value"><span class="value-preview" [title]="row.valueTr">{{ row.valueTr }}</span></td>
               <td class="td-value"><span class="value-preview" [title]="row.valueEn">{{ row.valueEn }}</span></td>
               <td class="td-actions-cell">
-                <button type="button" class="btn-action btn-action--edit" (click)="openEdit(row)" [disabled]="loading()">
-                  {{ 'translationsPage.edit' | translate }}
-                </button>
+                <div class="row-actions">
+                  <button type="button" class="btn-action btn-action--edit" (click)="openEdit(row)" [disabled]="loading()">
+                    {{ 'translationsPage.edit' | translate }}
+                  </button>
+                </div>
               </td>
             </tr>
           }

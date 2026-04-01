@@ -1,22 +1,5 @@
 @import '../material-icons/material-icon-list.component.scss';
 
-.table-toolbar--translations {
-  flex-wrap: wrap;
-}
-
-.toolbar-search-block {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex: 1 1 14rem;
-  min-width: min(100%, 14rem);
-}
-
-.toolbar-search-block .search-input {
-  flex: 1 1 auto;
-  min-width: 10rem;
-}
-
 .toolbar-module-filter {
   display: flex;
   align-items: center;
@@ -107,36 +90,6 @@
   background: var(--color-primary-light);
   padding: 0.15rem 0.45rem;
   border-radius: 4px;
-}
-
-.table-container--with-overlay {
-  position: relative;
-  min-height: 6rem;
-}
-
-.table-loading-overlay {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: color-mix(in srgb, var(--color-surface, #fff) 82%, transparent);
-  pointer-events: none;
-
-  .loading-state {
-    margin: 0;
-    font-size: 0.95rem;
-    color: var(--color-text-muted);
-  }
-}
-
-html.dark .table-loading-overlay {
-  background: color-mix(in srgb, var(--color-surface, #1e293b) 88%, transparent);
-}
-
-.data-table.is-dimmed {
-  opacity: 0.45;
 }
 
 .data-table--translation-pairs {

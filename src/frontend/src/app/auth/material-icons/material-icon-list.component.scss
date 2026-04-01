@@ -164,6 +164,47 @@
   overflow-x: auto;
 }
 
+/** Çoklu filtre içeren araç çubuğu (ör. çeviriler: arama + modül + sıra) */
+.table-toolbar--translations {
+  flex-wrap: wrap;
+
+  .search-input {
+    flex: 1 1 14rem;
+    min-width: min(100%, 10rem);
+  }
+}
+
+/** Sunucu sayfalaması: tablo yerleşimi korunur, üstte yarı saydam yükleme */
+.table-container--with-overlay {
+  position: relative;
+  min-height: 6rem;
+}
+
+.table-loading-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: color-mix(in srgb, var(--color-surface, #fff) 82%, transparent);
+  pointer-events: none;
+
+  .loading-state {
+    margin: 0;
+    font-size: 0.95rem;
+    color: var(--color-text-muted);
+  }
+}
+
+html.dark .table-loading-overlay {
+  background: color-mix(in srgb, var(--color-surface, #1e293b) 88%, transparent);
+}
+
+.data-table.is-dimmed {
+  opacity: 0.45;
+}
+
 .data-table {
   width: 100%;
   border-collapse: collapse;
