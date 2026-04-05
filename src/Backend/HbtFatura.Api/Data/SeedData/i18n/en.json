@@ -168,6 +168,8 @@
     "dateTo": "End date",
     "dateFromShort": "Start date",
     "dateToShort": "End date",
+    "dateTimeFrom": "Start date and time",
+    "dateTimeTo": "End date and time",
     "status": "Status",
     "type": "Type",
     "customer": "Account / customer",

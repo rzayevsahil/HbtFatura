@@ -54,12 +54,20 @@ export class CashRegisterDetailComponent implements OnInit {
     }
   }
 
+  /** datetime-local çoğu tarayıcıda ss göndermez; API için tutarlı ISO parçası. */
+  private normalizeDateTimeLocalForApi(s: string | undefined): string | undefined {
+    const v = s?.trim();
+    if (!v) return undefined;
+    if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(v)) return `${v}:00`;
+    return v;
+  }
+
   loadTransactions(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (!id) return;
     this.loading = true;
-    const dateFrom = this.dateFrom || undefined;
-    const dateTo = this.dateTo || undefined;
+    const dateFrom = this.normalizeDateTimeLocalForApi(this.dateFrom);
+    const dateTo = this.normalizeDateTimeLocalForApi(this.dateTo);
     this.api.getTransactions(id, this.page, this.pageSize, dateFrom, dateTo).subscribe({
       next: (res: PagedResult<CashTransactionDto>) => {
         this.transactions = res.items;

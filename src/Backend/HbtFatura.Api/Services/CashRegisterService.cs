@@ -134,8 +134,8 @@ public class CashRegisterService : ICashRegisterService
             return new PagedResult<CashTransactionDto> { Items = new List<CashTransactionDto>(), TotalCount = 0, Page = page, PageSize = pageSize };
 
         var query = _db.CashTransactions.Where(t => t.CashRegisterId == cashRegisterId);
-        if (dateFrom.HasValue) query = query.Where(t => t.Date >= dateFrom.Value.Date);
-        if (dateTo.HasValue) query = query.Where(t => t.Date <= dateTo.Value.Date);
+        if (dateFrom.HasValue) query = query.Where(t => t.Date >= dateFrom.Value);
+        if (dateTo.HasValue) query = query.Where(t => t.Date <= dateTo.Value);
 
         var total = await query.CountAsync(ct);
         var items = await query

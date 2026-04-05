@@ -156,6 +156,8 @@
     "dateTo": "Bitiş Tarihi",
     "dateFromShort": "Başlangıç tarihi",
     "dateToShort": "Bitiş tarihi",
+    "dateTimeFrom": "Başlangıç tarihi ve saat",
+    "dateTimeTo": "Bitiş tarihi ve saat",
     "status": "Durum",
     "type": "Tip",
     "customer": "Cari",

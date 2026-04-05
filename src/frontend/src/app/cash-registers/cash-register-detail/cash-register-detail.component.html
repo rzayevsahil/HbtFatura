@@ -23,8 +23,8 @@
   }
   <h2 class="card-title">{{ 'cashRegisters.movements' | translate }}</h2>
   <div class="filter-bar">
-    <input type="date" [(ngModel)]="dateFrom" [attr.placeholder]="'common.dateFromShort' | translate" />
-    <input type="date" [(ngModel)]="dateTo" [attr.placeholder]="'common.dateToShort' | translate" />
+    <input type="datetime-local" [(ngModel)]="dateFrom" [attr.title]="'common.dateTimeFrom' | translate" />
+    <input type="datetime-local" [(ngModel)]="dateTo" [attr.title]="'common.dateTimeTo' | translate" />
     <button type="button" (click)="applyFilter()">{{ 'common.filter' | translate }}</button>
   </div>
   <table class="transactions-table">
@@ -43,8 +43,16 @@
         <td>{{ t.date | date:'dd.MM.yyyy HH:mm' }}</td>
         <td>{{ t.description }}</td>
         <td>{{ typeLabel(t.type) }}</td>
-        <td>{{ t.type === 1 ? (t.amount | number:'1.2-2') : '' }}</td>
-        <td>{{ t.type === 2 ? (t.amount | number:'1.2-2') : '' }}</td>
+        <td>
+          @if (t.type === 1) {
+            {{ t.amount | number:'1.2-2' }} {{ cashRegister.currency }}
+          }
+        </td>
+        <td>
+          @if (t.type === 2) {
+            {{ t.amount | number:'1.2-2' }} {{ cashRegister.currency }}
+          }
+        </td>
       </tr>
       }
     </tbody>

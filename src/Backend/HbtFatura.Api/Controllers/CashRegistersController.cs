@@ -1,9 +1,9 @@
+using System.Globalization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using HbtFatura.Api.Constants;
 using HbtFatura.Api.DTOs.Cash;
-using HbtFatura.Api.DTOs.Customers;
 using HbtFatura.Api.Services;
+using HbtFatura.Api.DTOs.Customers;
 
 namespace HbtFatura.Api.Controllers;
 
@@ -62,12 +62,32 @@ public class CashRegistersController : ControllerBase
     }
 
     [HttpGet("{id:guid}/transactions")]
-    public async Task<ActionResult<PagedResult<CashTransactionDto>>> GetTransactions(Guid id, [FromQuery] int page = 1, [FromQuery] int pageSize = 20, [FromQuery] DateTime? dateFrom = null, [FromQuery] DateTime? dateTo = null, CancellationToken ct = default)
+    public async Task<ActionResult<PagedResult<CashTransactionDto>>> GetTransactions(
+        Guid id,
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 20,
+        [FromQuery] string? dateFrom = null,
+        [FromQuery] string? dateTo = null,
+        CancellationToken ct = default)
     {
         if (page < 1) page = 1;
         if (pageSize < 1 || pageSize > 100) pageSize = 20;
-        var result = await _service.GetTransactionsAsync(id, page, pageSize, dateFrom, dateTo, ct);
+        var dtFrom = ParseCashTransactionFilterDate(dateFrom);
+        var dtTo = ParseCashTransactionFilterDate(dateTo);
+        var result = await _service.GetTransactionsAsync(id, page, pageSize, dtFrom, dtTo, ct);
         return Ok(result);
+    }
+
+    /// <summary>
+    /// datetime-local (yyyy-MM-ddTHH:mm) ISO değerleri; varsayılan model bağlayıcı tr-TR vb. kültürde saati düşürebiliyor.
+    /// </summary>
+    private static DateTime? ParseCashTransactionFilterDate(string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value)) return null;
+        var s = Uri.UnescapeDataString(value.Trim()).Replace(' ', 'T');
+        if (DateTime.TryParse(s, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dt))
+            return DateTime.SpecifyKind(dt, DateTimeKind.Unspecified);
+        return null;
     }
 
     [HttpPost("{id:guid}/transactions")]
