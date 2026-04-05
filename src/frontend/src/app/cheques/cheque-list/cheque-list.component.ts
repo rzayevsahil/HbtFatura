@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -42,7 +43,7 @@ export class ChequeListComponent implements OnInit {
   get chequeStatusFilterOptions(): SearchableSelectOption[] {
     return this.lookups.getGroup('ChequeStatus')().map((l) => ({
       id: String(l.code),
-      primary: l.name
+      primary: this.translate.instant('chequesPage.statusCodes.' + l.code)
     }));
   }
 
@@ -60,8 +61,13 @@ export class ChequeListComponent implements OnInit {
     private api: ChequeService,
     public lookups: LookupService,
     private toastr: ToastrService,
-    private translate: TranslateService
-  ) { }
+    private translate: TranslateService,
+    private cdr: ChangeDetectorRef
+  ) {
+    this.translate.onLangChange
+      .pipe(takeUntilDestroyed())
+      .subscribe(() => this.cdr.markForCheck());
+  }
 
   ngOnInit(): void {
     this.load();
@@ -111,7 +117,4 @@ export class ChequeListComponent implements OnInit {
     return '';
   }
 
-  statusLabel(status: number): string {
-    return this.lookups.getName('ChequeStatus', status);
-  }
 }

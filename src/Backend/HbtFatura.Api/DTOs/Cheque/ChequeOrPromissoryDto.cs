@@ -12,6 +12,8 @@ public class ChequeOrPromissoryDto
     public Guid CustomerId { get; set; }
     public string CustomerTitle { get; set; } = string.Empty;
     public decimal Amount { get; set; }
+    /// <summary>Para birimi (tercihen bağlı banka hesabı; yoksa TRY).</summary>
+    public string Currency { get; set; } = "TRY";
     public DateTime IssueDate { get; set; }
     public DateTime DueDate { get; set; }
     public int Status { get; set; }

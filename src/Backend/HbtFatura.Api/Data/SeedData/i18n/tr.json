@@ -557,6 +557,12 @@
     "dueFrom": "Vade başlangıç",
     "dueTo": "Vade bitiş",
     "allStatuses": "Tüm durumlar",
+    "statusCodes": {
+      "0": "Portföyde",
+      "1": "Tahsil edildi",
+      "2": "Ödendi",
+      "3": "Reddedildi"
+    },
     "typeCheque": "Çek",
     "typeNote": "Senet",
     "colPortfolio": "Portföy No",

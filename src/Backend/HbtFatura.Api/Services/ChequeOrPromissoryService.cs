@@ -65,6 +65,9 @@ public class ChequeOrPromissoryService : IChequeOrPromissoryService
                 CustomerId = x.CustomerId,
                 CustomerTitle = x.Customer.Title,
                 Amount = x.Amount,
+                Currency = x.BankAccount != null && !string.IsNullOrWhiteSpace(x.BankAccount.Currency)
+                    ? x.BankAccount.Currency.Trim().ToUpperInvariant()
+                    : "TRY",
                 IssueDate = x.IssueDate,
                 DueDate = x.DueDate,
                 Status = x.Status,
@@ -97,6 +100,9 @@ public class ChequeOrPromissoryService : IChequeOrPromissoryService
             CustomerId = entity.CustomerId,
             CustomerTitle = entity.Customer.Title,
             Amount = entity.Amount,
+            Currency = entity.BankAccount != null && !string.IsNullOrWhiteSpace(entity.BankAccount.Currency)
+                ? entity.BankAccount.Currency.Trim().ToUpperInvariant()
+                : "TRY",
             IssueDate = entity.IssueDate,
             DueDate = entity.DueDate,
             Status = entity.Status,

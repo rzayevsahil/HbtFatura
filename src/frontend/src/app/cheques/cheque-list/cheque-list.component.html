@@ -86,15 +86,21 @@
         @for (c of items; track c.id) {
           <tr>
             <td>
-              <a [routerLink]="['/cheques', c.id]">{{ c.portfolioNumber }}</a>
+              <a [routerLink]="['/cheques', c.id]" class="portfolio-link">{{ c.portfolioNumber }}</a>
             </td>
             <td>{{ c.serialNumber || ('chequesPage.noneDash' | translate) }}</td>
-            <td>{{ c.bordroNumber || ('chequesPage.noneDash' | translate) }}</td>
+            <td>
+              @if (c.bordroNumber) {
+                <span class="bordro-no">{{ c.bordroNumber }}</span>
+              } @else {
+                {{ 'chequesPage.noneDash' | translate }}
+              }
+            </td>
             <td>{{ typeLabel(c.type) }}</td>
             <td>{{ c.customerTitle }}</td>
-            <td class="amount">{{ c.amount | number: '1.2-2' }} ₺</td>
+            <td class="amount">{{ c.amount | number:'1.2-2' }} {{ c.currency || 'TRY' }}</td>
             <td>{{ c.dueDate | date: 'shortDate' }}</td>
-            <td>{{ statusLabel(c.status) }}</td>
+            <td>{{ ('chequesPage.statusCodes.' + c.status) | translate }}</td>
             <td>
               <div class="actions-cell">
                 <a [routerLink]="['/cheques', c.id]">{{ 'common.detail' | translate }}</a>

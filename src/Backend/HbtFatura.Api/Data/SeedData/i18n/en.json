@@ -565,6 +565,12 @@
     "dueFrom": "Due from",
     "dueTo": "Due to",
     "allStatuses": "All statuses",
+    "statusCodes": {
+      "0": "In portfolio",
+      "1": "Collected",
+      "2": "Paid",
+      "3": "Rejected"
+    },
     "typeCheque": "Cheque",
     "typeNote": "Note",
     "colPortfolio": "Portfolio no.",

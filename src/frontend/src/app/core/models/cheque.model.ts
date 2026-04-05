@@ -9,6 +9,7 @@ export interface ChequeOrPromissoryDto {
     customerId: string;
     customerTitle: string;
     amount: number;
+    currency?: string;
     issueDate: string;
     dueDate: string;
     status: number;

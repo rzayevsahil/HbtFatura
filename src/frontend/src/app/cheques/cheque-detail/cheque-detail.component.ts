@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -24,8 +25,7 @@ export class ChequeDetailComponent implements OnInit {
   get chequeStatusSearchableOptions(): SearchableSelectOption[] {
     return this.lookups.getGroup('ChequeStatus')().map(l => ({
       id: String(l.code),
-      primary: l.name,
-      secondary: String(l.code)
+      primary: this.translate.instant('chequesPage.statusCodes.' + l.code)
     }));
   }
 
@@ -34,8 +34,13 @@ export class ChequeDetailComponent implements OnInit {
     private api: ChequeService,
     public lookups: LookupService,
     private toastr: ToastrService,
-    private translate: TranslateService
-  ) { }
+    private translate: TranslateService,
+    private cdr: ChangeDetectorRef
+  ) {
+    this.translate.onLangChange
+      .pipe(takeUntilDestroyed())
+      .subscribe(() => this.cdr.markForCheck());
+  }
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
@@ -59,10 +64,10 @@ export class ChequeDetailComponent implements OnInit {
     if (!this.item) return;
     this.api.setStatus(this.item.id, this.newStatus).subscribe({
       next: () => {
-        this.toastr.success('Durum güncellendi.');
+        this.toastr.success(this.translate.instant('chequesPage.toastStatusSaved'));
         this.item = { ...this.item!, status: this.newStatus };
       },
-      error: e => this.toastr.error(e.error?.message ?? 'Güncellenemedi.')
+      error: e => this.toastr.error(e.error?.message ?? this.translate.instant('chequesPage.toastStatusError'))
     });
   }
 
@@ -72,7 +77,4 @@ export class ChequeDetailComponent implements OnInit {
     return '';
   }
 
-  statusLabel(status: number): string {
-    return this.lookups.getName('ChequeStatus', status);
-  }
 }
