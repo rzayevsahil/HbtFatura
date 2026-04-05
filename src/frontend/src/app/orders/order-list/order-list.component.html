@@ -95,7 +95,7 @@
                 {{ o.customerTitle || '—' }}
               }
             </td>
-            <td>{{ o.totalAmount != null ? (o.totalAmount | number: '1.2-2') + ' ₺' : '—' }}</td>
+            <td>{{ o.totalAmount != null ? ((o.totalAmount | number: '1.2-2') + ' ' + listRowCurrency(o)) : '—' }}</td>
             <td>
               <span
                 class="status-badge"

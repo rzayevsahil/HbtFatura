@@ -11,6 +11,7 @@ export interface OrderItemDto {
     unitPrice: number;
     vatRate: number;
     sortOrder: number;
+    currency?: string | null;
 }
 
 export interface OrderDto {
@@ -26,6 +27,7 @@ export interface OrderDto {
     createdByUserName?: string | null;
     deliveryNoteId?: string;
     deliveryNoteNumber?: string;
+    currency?: string;
     items: OrderItemDto[];
 }
 
@@ -38,6 +40,7 @@ export interface OrderListDto {
     customerId?: string;
     customerTitle?: string;
     totalAmount?: number;
+    currency?: string;
     createdByUserId: string;
     createdByUserName?: string | null;
 }

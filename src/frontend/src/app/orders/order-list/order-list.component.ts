@@ -93,6 +93,13 @@ export class OrderListComponent implements OnInit {
     return this.lookups.getName('OrderType', t);
   }
 
+  /** Toplam sütunu: API `currency` döndürür (OrderListDto); şablonda doğrudan alan erişimi NG9 tetikleyebiliyor. */
+  listRowCurrency(o: OrderListDto): string {
+    const raw = (o as OrderListDto & { currency?: string | null }).currency;
+    const v = raw?.trim();
+    return v ? v.toUpperCase() : 'TRY';
+  }
+
   /** Bekliyor (düzenlenebilir) durumu: backend bazen sayı 0 bazen string "Bekliyor" dönebilir. */
   isEditableStatus(o: OrderListDto): boolean {
     return o.status === 0 || o.status === 'Bekliyor';

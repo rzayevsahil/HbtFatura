@@ -2,7 +2,7 @@ import { Component, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { OrderService } from '../../services/order.service';
-import { OrderDto, OrderStatus } from '../../core/models';
+import { OrderDto, OrderItemDto, OrderStatus } from '../../core/models';
 import { DeliveryNoteService } from '../../services/delivery-note.service';
 import { ToastrService } from 'ngx-toastr';
 import { LookupService } from '../../core/services/lookup.service';
@@ -88,6 +88,20 @@ export class OrderDetailComponent implements OnInit {
 
   get totalGross(): number {
     return this.totalNet + this.totalVat;
+  }
+
+  /** strictTemplates: @for içinde order daraltması güvenilir olmadığı için şablonda doğrudan kullanılmaz. */
+  get orderCurrencyCode(): string {
+    const c = this.order?.currency?.trim();
+    return c ? c.toUpperCase() : 'TRY';
+  }
+
+  lineItemCurrency(it: OrderItemDto): string {
+    const line = it.currency?.trim();
+    if (line) return line.toUpperCase();
+    const doc = this.order?.currency?.trim();
+    if (doc) return doc.toUpperCase();
+    return 'TRY';
   }
 
   setStatusOnayla(): void {

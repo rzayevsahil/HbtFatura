@@ -65,6 +65,11 @@ public class OrderService : IOrderService
                 CustomerId = o.CustomerId,
                 CustomerTitle = o.Customer != null ? o.Customer.Title : null,
                 TotalAmount = o.Items.Sum(i => i.Quantity * i.UnitPrice * (1 + i.VatRate / 100m)),
+                Currency = o.Items
+                    .OrderBy(i => i.SortOrder)
+                    .Where(i => i.Product != null)
+                    .Select(i => i.Product!.Currency)
+                    .FirstOrDefault() ?? "TRY",
                 CreatedByUserId = o.UserId,
                 CreatedByUserName = o.User != null ? o.User.FullName : null
             }).ToListAsync(ct);
@@ -252,19 +257,9 @@ public class OrderService : IOrderService
         return $"{prefix}{yearStr}000000001";
     }
 
-    private static OrderDto MapToDto(Order o) => new()
+    private static OrderDto MapToDto(Order o)
     {
-        Id = o.Id,
-        OrderNumber = o.OrderNumber,
-        CustomerId = o.CustomerId,
-        CustomerTitle = o.Customer?.Title,
-        OrderDate = o.OrderDate,
-        Status = (int)o.Status,
-        OrderType = (int)o.OrderType,
-        CreatedAt = o.CreatedAt,
-        CreatedByUserId = o.CreatedBy ?? o.UserId,
-        CreatedByUserName = o.Creator?.FullName ?? o.User?.FullName,
-        Items = o.Items.OrderBy(x => x.SortOrder).Select(x => new OrderItemDto
+        var items = o.Items.OrderBy(x => x.SortOrder).Select(x => new OrderItemDto
         {
             Id = x.Id,
             ProductId = x.ProductId,
@@ -274,7 +269,28 @@ public class OrderService : IOrderService
             Quantity = x.Quantity,
             UnitPrice = x.UnitPrice,
             VatRate = x.VatRate,
-            SortOrder = x.SortOrder
-        }).ToList()
-    };
+            SortOrder = x.SortOrder,
+            Currency = x.Product != null && !string.IsNullOrWhiteSpace(x.Product.Currency)
+                ? x.Product.Currency.Trim().ToUpperInvariant()
+                : null
+        }).ToList();
+
+        var currency = items.FirstOrDefault(i => !string.IsNullOrWhiteSpace(i.Currency))?.Currency ?? "TRY";
+
+        return new OrderDto
+        {
+            Id = o.Id,
+            OrderNumber = o.OrderNumber,
+            CustomerId = o.CustomerId,
+            CustomerTitle = o.Customer?.Title,
+            OrderDate = o.OrderDate,
+            Status = (int)o.Status,
+            OrderType = (int)o.OrderType,
+            CreatedAt = o.CreatedAt,
+            CreatedByUserId = o.CreatedBy ?? o.UserId,
+            CreatedByUserName = o.Creator?.FullName ?? o.User?.FullName,
+            Currency = currency,
+            Items = items
+        };
+    }
 }

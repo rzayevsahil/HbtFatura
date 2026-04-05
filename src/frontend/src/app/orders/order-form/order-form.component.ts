@@ -25,6 +25,8 @@ export class OrderFormComponent implements OnInit {
   /** Düzenleme sayfasında sipariş API’den gelene kadar */
   editLoading = false;
   orderNumber: string | null = null;
+  /** Düzenlemede API’den gelen özet para birimi; yoksa satırlardaki ürünlerden türetilir. */
+  loadedOrderCurrency: string | null = null;
   customers: CustomerDto[] = [];
   products: ProductDto[] = [];
   productFilterText = '';
@@ -115,8 +117,21 @@ export class OrderFormComponent implements OnInit {
     return this.totalNet + this.totalVat;
   }
 
+  get orderCurrency(): string {
+    if (this.loadedOrderCurrency) return this.loadedOrderCurrency;
+    for (let i = 0; i < this.items.length; i++) {
+      const pid = this.items.at(i).get('productId')?.value as string | null | undefined;
+      if (pid) {
+        const p = this.products.find(x => x.id === pid);
+        if (p?.currency) return String(p.currency).toUpperCase();
+      }
+    }
+    return 'TRY';
+  }
+
   ngOnInit(): void {
     this.id = this.route.snapshot.paramMap.get('id');
+    if (!this.id) this.loadedOrderCurrency = null;
     this.lookups.loadLookupsAndDefaultVat().subscribe(({ defaultVat }) => {
       if (!this.id) {
         this.items.controls.forEach(c => c.get('vatRate')?.patchValue(defaultVat, { emitEvent: false }));
@@ -133,6 +148,8 @@ export class OrderFormComponent implements OnInit {
       this.orderApi.getById(this.id).subscribe({
         next: (o) => {
           this.orderNumber = o.orderNumber ?? null;
+          const c = o.currency?.trim();
+          this.loadedOrderCurrency = c ? c.toUpperCase() : null;
           const orderTypeNum = this.normalizeOrderType(o.orderType);
           this.form.patchValue({
             customerId: o.customerId ?? null,

@@ -13,6 +13,8 @@ public class OrderItemDto
     public decimal UnitPrice { get; set; }
     public decimal VatRate { get; set; }
     public int SortOrder { get; set; }
+    /// <summary>Bağlı ürünün para birimi; yoksa sipariş düzeyinde Currency kullanılır.</summary>
+    public string? Currency { get; set; }
 }
 
 public class OrderDto
@@ -29,6 +31,8 @@ public class OrderDto
     public string? CreatedByUserName { get; set; }
     public Guid? DeliveryNoteId { get; set; }
     public string? DeliveryNoteNumber { get; set; }
+    /// <summary>Özet para birimi (kalemlerdeki ürün para biriminden; yoksa TRY).</summary>
+    public string Currency { get; set; } = "TRY";
     public List<OrderItemDto> Items { get; set; } = new();
 }
 
@@ -42,6 +46,7 @@ public class OrderListDto
     public Guid? CustomerId { get; set; }
     public string? CustomerTitle { get; set; }
     public decimal? TotalAmount { get; set; }
+    public string Currency { get; set; } = "TRY";
     public Guid CreatedByUserId { get; set; }
     public string? CreatedByUserName { get; set; }
 }
