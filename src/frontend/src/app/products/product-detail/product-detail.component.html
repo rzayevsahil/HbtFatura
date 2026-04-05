@@ -1,44 +1,46 @@
 <div class="page-header">
-  <a routerLink="/products" class="back-link">← Geri</a>
-  <h1 class="page-title">{{ product?.name ?? 'Ürün' }}</h1>
+  <a routerLink="/products" class="back-link">{{ 'common.back' | translate }}</a>
+  <h1 class="page-title">{{ product?.name ?? ('products.detailDefaultTitle' | translate) }}</h1>
   <div class="actions">
     @if (product) {
-    <a [routerLink]="['/products', product.id, 'edit']" class="btn">Düzenle</a>
-    <button type="button" (click)="openAddModal()">Stok fişi ekle</button>
+    <a [routerLink]="['/products', product.id, 'edit']" class="btn">{{ 'products.edit' | translate }}</a>
+    <button type="button" (click)="openAddModal()">{{ 'products.addStockSlip' | translate }}</button>
     }
   </div>
 </div>
 @if (loading) {
 <div class="loading-container">
   <div class="spinner"></div>
-  <p>Veriler yükleniyor...</p>
+  <p>{{ 'common.loadingData' | translate }}</p>
 </div>
 } @else if (product) {
 <div class="card info-grid">
-  <p><strong>Kod:</strong> {{ product.code }}</p>
-  <p><strong>Stok türü:</strong> {{ ('products.stockTypes.' + product.stockType) | translate }}</p>
-  <p class="unit-price"><strong>Birim Fiyat:</strong> {{ product.unitPrice | number:'1.2-2' }} {{ product.currency || 'TRY' }}</p>
-  <p><strong>Stok miktarı:</strong> {{ product.stockQuantity | number:'1.2-2' }}</p>
-  <p><strong>Birim:</strong> {{ product.unit }}</p>
-  @if (product.barcode) { <p><strong>Barkod:</strong> {{ product.barcode }}</p> }
+  <p><strong>{{ 'products.labelCode' | translate }}:</strong> {{ product.code }}</p>
+  <p><strong>{{ 'products.labelStockType' | translate }}:</strong> {{ ('products.stockTypes.' + product.stockType) | translate }}</p>
+  <p class="unit-price"><strong>{{ 'products.labelUnitPrice' | translate }}:</strong> {{ product.unitPrice | number:'1.2-2' }} {{ product.currency || 'TRY' }}</p>
+  <p><strong>{{ 'products.labelStockQty' | translate }}:</strong> {{ product.stockQuantity | number:'1.2-2' }}</p>
+  <p><strong>{{ 'products.stockDiscountPercent' | translate }}:</strong> {{ (product.stockDiscountPercent ?? 0) | number:'1.2-2' }}%</p>
+  <p><strong>{{ 'products.stockDiscountAmountTl' | translate }}:</strong> {{ (product.stockDiscountAmount ?? 0) | number:'1.2-2' }} {{ product.currency || 'TRY' }}</p>
+  <p><strong>{{ 'products.labelUnit' | translate }}:</strong> {{ product.unit }}</p>
+  @if (product.barcode) { <p><strong>{{ 'products.labelBarcode' | translate }}:</strong> {{ product.barcode }}</p> }
 </div>
-<h2 class="section-title">Stok hareketleri</h2>
+<h2 class="section-title">{{ 'products.sectionStockMovements' | translate }}</h2>
 <div class="card filters">
-  <label>Tarih / Saat aralığı</label>
+  <label>{{ 'products.dateTimeRange' | translate }}</label>
   <input type="datetime-local" [(ngModel)]="dateFrom" />
   <input type="datetime-local" [(ngModel)]="dateTo" />
-  <button type="button" (click)="applyFilter()">Filtrele</button>
+  <button type="button" (click)="applyFilter()">{{ 'common.filter' | translate }}</button>
 </div>
 <div class="card table-wrap">
   <table class="sales-table">
     <thead>
       <tr>
-        <th>Tarih</th>
-        <th>Tip</th>
-        <th class="amount">Miktar</th>
-        <th>Sipariş No</th>
-        <th>İrsaliye No</th>
-        <th>Fatura No</th>
+        <th>{{ 'products.tableDate' | translate }}</th>
+        <th>{{ 'products.tableType' | translate }}</th>
+        <th class="amount">{{ 'products.tableQty' | translate }}</th>
+        <th>{{ 'products.tableOrderNo' | translate }}</th>
+        <th>{{ 'products.tableDnNo' | translate }}</th>
+        <th>{{ 'products.tableInvoiceNo' | translate }}</th>
       </tr>
     </thead>
     <tbody>
@@ -64,53 +66,53 @@
         </td>
       </tr>
       } @empty {
-      <tr><td colspan="6" class="text-muted">Bu ürün için stok hareketi yok.</td></tr>
+      <tr><td colspan="6" class="text-muted">{{ 'products.movementsEmpty' | translate }}</td></tr>
       }
     </tbody>
   </table>
   <div class="pagination">
-    <span>Toplam: {{ totalCount }} kayıt</span>
-    <button type="button" [disabled]="page <= 1" (click)="prevPage()">Önceki</button>
-    <button type="button" [disabled]="movements.length < pageSize" (click)="nextPage()">Sonraki</button>
+    <span>{{ 'products.paginationTotal' | translate: { count: totalCount } }}</span>
+    <button type="button" [disabled]="page <= 1" (click)="prevPage()">{{ 'products.paginationPrev' | translate }}</button>
+    <button type="button" [disabled]="movements.length < pageSize" (click)="nextPage()">{{ 'products.paginationNext' | translate }}</button>
   </div>
 </div>
 } @else {
 <div class="card">
-  <p class="text-muted">Ürün bulunamadı veya yüklenemedi.</p>
+  <p class="text-muted">{{ 'products.notFoundOrLoad' | translate }}</p>
 </div>
 }
 @if (showAddModal) {
 <div class="modal-overlay">
   <div class="modal" (click)="$event.stopPropagation()">
-    <h3>Stok fişi ekle</h3>
+    <h3>{{ 'products.modalStockTitle' | translate }}</h3>
     <div class="form-grid">
       <div class="row">
-        <label>Tarih</label>
+        <label>{{ 'products.fieldDate' | translate }}</label>
         <input type="datetime-local" [(ngModel)]="newMovement.date" />
       </div>
       <div class="row">
-        <label>Tip</label>
+        <label>{{ 'products.tableType' | translate }}</label>
         <app-searchable-select
           [(ngModel)]="newMovement.type"
           [options]="movementTypeSearchableOptions"
           [emitNumeric]="true"
-          placeholder="Seçin"
-          searchPlaceholder="Ara…"
-          noResultsLabel="Sonuç yok"
+          [placeholder]="'products.selectPlaceholder' | translate"
+          [searchPlaceholder]="'products.searchPlaceholderDots' | translate"
+          [noResultsLabel]="'products.noResultsShort' | translate"
         />
       </div>
       <div class="row">
-        <label>Miktar</label>
+        <label>{{ 'products.fieldQty' | translate }}</label>
         <input type="number" [(ngModel)]="newMovement.quantity" step="0.01" min="0.01" />
       </div>
       <div class="row">
-        <label>Açıklama</label>
+        <label>{{ 'products.fieldDescription' | translate }}</label>
         <input [(ngModel)]="newMovement.description" />
       </div>
     </div>
     <div class="modal-actions">
-      <button type="button" (click)="submitMovement()">Kaydet</button>
-      <button type="button" (click)="closeAddModal()">İptal</button>
+      <button type="button" (click)="submitMovement()">{{ 'common.save' | translate }}</button>
+      <button type="button" (click)="closeAddModal()">{{ 'common.cancel' | translate }}</button>
     </div>
   </div>
 </div>

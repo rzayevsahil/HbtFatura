@@ -13,6 +13,13 @@
   gap: 1rem;
   align-items: center;
 
+  .hint {
+    grid-column: 2;
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    margin-top: -0.35rem;
+  }
+
   label {
     font-size: 0.875rem;
     font-weight: 500;

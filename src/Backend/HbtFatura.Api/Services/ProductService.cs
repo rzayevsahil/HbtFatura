@@ -46,6 +46,14 @@ public class ProductService : IProductService
 
     private static string NormalizeProductCode(string code) => code.Trim().ToLowerInvariant();
 
+    private static void ValidateStockDiscounts(decimal percent, decimal amount)
+    {
+        if (percent is < 0 or > 100)
+            throw new ArgumentException("Stok indirim oranı 0 ile 100 arasında olmalıdır.");
+        if (amount < 0)
+            throw new ArgumentException("Stok indirim tutarı negatif olamaz.");
+    }
+
     private static string NormalizeStockType(string? stockType, string fallback = "ticari mal")
     {
         var raw = (stockType ?? string.Empty).Trim();
@@ -106,6 +114,8 @@ public class ProductService : IProductService
                 Unit = x.Unit,
                 StockQuantity = x.StockQuantity,
                 UnitPrice = x.UnitPrice,
+                StockDiscountPercent = x.StockDiscountPercent,
+                StockDiscountAmount = x.StockDiscountAmount,
                 Currency = x.Currency,
                 CreatedAt = x.CreatedAt
             })
@@ -128,6 +138,8 @@ public class ProductService : IProductService
             Unit = entity.Unit,
             StockQuantity = entity.StockQuantity,
             UnitPrice = entity.UnitPrice,
+            StockDiscountPercent = entity.StockDiscountPercent,
+            StockDiscountAmount = entity.StockDiscountAmount,
             Currency = entity.Currency,
             CreatedAt = entity.CreatedAt
         };
@@ -145,6 +157,8 @@ public class ProductService : IProductService
 
         if (request.StockQuantity < 0) throw new ArgumentException("Başlangıç stok miktarı sıfırdan küçük olamaz.");
 
+        ValidateStockDiscounts(request.StockDiscountPercent, request.StockDiscountAmount);
+
         if (await IsDuplicateProductCodeAsync(firmId, request.Code, null, ct))
             throw new ArgumentException("Bu ürün kodu bu firmada zaten kullanılıyor. Farklı bir kod girin.");
 
@@ -159,6 +173,8 @@ public class ProductService : IProductService
             Unit = request.Unit?.Trim() ?? "Adet",
             StockQuantity = request.StockQuantity,
             UnitPrice = request.UnitPrice,
+            StockDiscountPercent = request.StockDiscountPercent,
+            StockDiscountAmount = request.StockDiscountAmount,
             Currency = string.IsNullOrWhiteSpace(request.Currency) ? "TRY" : request.Currency.Trim(),
             CreatedAt = DateTime.UtcNow
         };
@@ -200,7 +216,10 @@ public class ProductService : IProductService
         entity.Unit = request.Unit?.Trim() ?? "Adet";
         entity.UnitPrice = request.UnitPrice;
         entity.Currency = string.IsNullOrWhiteSpace(request.Currency) ? entity.Currency : request.Currency.Trim();
-        
+        ValidateStockDiscounts(request.StockDiscountPercent, request.StockDiscountAmount);
+        entity.StockDiscountPercent = request.StockDiscountPercent;
+        entity.StockDiscountAmount = request.StockDiscountAmount;
+
         if (request.StockQuantity < 0) throw new ArgumentException("Stok miktarı sıfırdan küçük olamaz.");
 
         var difference = request.StockQuantity - entity.StockQuantity;
@@ -416,6 +435,8 @@ public class ProductService : IProductService
                 Unit = x.Unit,
                 StockQuantity = x.StockQuantity,
                 UnitPrice = x.UnitPrice,
+                StockDiscountPercent = x.StockDiscountPercent,
+                StockDiscountAmount = x.StockDiscountAmount,
                 Currency = x.Currency,
                 CreatedAt = x.CreatedAt
             })

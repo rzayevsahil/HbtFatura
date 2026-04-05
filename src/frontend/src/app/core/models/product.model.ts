@@ -10,6 +10,8 @@ export interface ProductDto {
     unit: string;
     stockQuantity: number;
     unitPrice: number;
+    stockDiscountPercent?: number;
+    stockDiscountAmount?: number;
     currency: CurrencyCode;
     createdAt: string;
 }
@@ -24,6 +26,8 @@ export interface CreateProductRequest {
     unit?: string;
     stockQuantity?: number;
     unitPrice?: number;
+    stockDiscountPercent?: number;
+    stockDiscountAmount?: number;
     currency?: CurrencyCode;
     firmId?: string;
 }
@@ -36,6 +40,8 @@ export interface UpdateProductRequest {
     unit?: string;
     stockQuantity?: number;
     unitPrice?: number;
+    stockDiscountPercent?: number;
+    stockDiscountAmount?: number;
     currency?: CurrencyCode;
 }
 

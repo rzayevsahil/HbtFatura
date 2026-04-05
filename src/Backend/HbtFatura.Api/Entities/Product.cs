@@ -11,6 +11,8 @@ public class Product
     public string Unit { get; set; } = "Adet";
     public decimal StockQuantity { get; set; }
     public decimal UnitPrice { get; set; }
+    public decimal StockDiscountPercent { get; set; }
+    public decimal StockDiscountAmount { get; set; }
     public string Currency { get; set; } = "TRY";
     public DateTime CreatedAt { get; set; }
 

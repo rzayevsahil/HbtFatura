@@ -32,6 +32,8 @@ export class ProductFormComponent implements OnInit {
     unit: ['Adet'],
     stockQuantity: [0],
     unitPrice: [0],
+    stockDiscountPercent: [0, [Validators.min(0), Validators.max(100)]],
+    stockDiscountAmount: [0, [Validators.min(0)]],
     currency: ['TRY'],
     firmId: [null as string | null]
   });
@@ -133,6 +135,8 @@ export class ProductFormComponent implements OnInit {
             unit: p.unit ?? 'Adet',
             stockQuantity: p.stockQuantity ?? 0,
             unitPrice: p.unitPrice ?? 0,
+            stockDiscountPercent: p.stockDiscountPercent ?? 0,
+            stockDiscountAmount: p.stockDiscountAmount ?? 0,
             currency: p.currency ?? 'TRY'
           });
           this.editLoading = false;
@@ -174,6 +178,8 @@ export class ProductFormComponent implements OnInit {
       unit: v.unit || 'Adet',
       stockQuantity: v.stockQuantity ?? 0,
       unitPrice: v.unitPrice ?? 0,
+      stockDiscountPercent: v.stockDiscountPercent ?? 0,
+      stockDiscountAmount: v.stockDiscountAmount ?? 0,
       currency: (v.currency as any) || 'TRY',
       firmId: (this.auth.user()?.role === 'SuperAdmin' && v.firmId) ? v.firmId : undefined
     };
@@ -193,13 +199,13 @@ export class ProductFormComponent implements OnInit {
     } else {
       this.api.create(payload).subscribe({
         next: () => {
-          this.toastr.success('Ürün eklendi.');
+          this.toastr.success(this.translate.instant('products.toastCreated'));
           this.router.navigate(['/products']);
         },
         error: e => {
           this.error = e.error?.message ?? 'Hata';
           this.saving = false;
-          this.toastr.error(e.error?.message ?? 'Kayıt sırasında hata oluştu.');
+          this.toastr.error(e.error?.message ?? this.translate.instant('products.toastSaveError'));
         },
         complete: () => { this.saving = false; }
       });

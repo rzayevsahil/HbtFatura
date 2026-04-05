@@ -1,10 +1,10 @@
 <div class="page-header">
-  <h1 class="page-title">{{ id ? 'Ürün Düzenle' : 'Yeni Ürün' }}</h1>
+  <h1 class="page-title">{{ id ? ('products.formEditTitle' | translate) : ('products.formNewTitle' | translate) }}</h1>
 </div>
 @if (id && editLoading) {
 <div class="loading-container">
   <div class="spinner"></div>
-  <p>Veriler yükleniyor...</p>
+  <p>{{ 'common.loadingData' | translate }}</p>
 </div>
 } @else {
 <div class="card">
@@ -12,77 +12,86 @@
     <div class="form-grid">
       @if (auth.user()?.role === 'SuperAdmin' && !id) {
       <div class="row">
-        <label>Firma</label>
+        <label>{{ 'products.fieldFirm' | translate }}</label>
         <app-searchable-select
           formControlName="firmId"
           [options]="firmSearchableOptions"
           [showNoneOption]="true"
-          noneOptionLabel="Firma seçin"
-          placeholder="Firma seçin"
-          searchPlaceholder="Firma ara…"
-          noResultsLabel="Sonuç yok"
+          [noneOptionLabel]="'products.selectFirmPlaceholder' | translate"
+          [placeholder]="'products.selectFirmPlaceholder' | translate"
+          [searchPlaceholder]="'products.firmSearchPh' | translate"
+          [noResultsLabel]="'products.noResultsShort' | translate"
         />
       </div>
       }
       <div class="row">
-        <label>Kod</label>
-        <input formControlName="code" placeholder="Ürün kodu" />
+        <label>{{ 'products.colCode' | translate }}</label>
+        <input formControlName="code" [placeholder]="'products.placeholderCode' | translate" />
         @if (form.controls.code.errors?.['duplicateCode']) {
-        <small class="error-msg">Bu kod zaten kullanılıyor.</small>
+        <small class="error-msg">{{ 'products.duplicateCodeError' | translate }}</small>
         }
       </div>
       <div class="row">
-        <label>Ad</label>
-        <input formControlName="name" placeholder="Ürün adı" />
+        <label>{{ 'products.colName' | translate }}</label>
+        <input formControlName="name" [placeholder]="'products.placeholderName' | translate" />
       </div>
       <div class="row">
-        <label>Barkod</label>
-        <input formControlName="barcode" placeholder="İsteğe bağlı" />
+        <label>{{ 'products.labelBarcode' | translate }}</label>
+        <input formControlName="barcode" [placeholder]="'products.placeholderBarcodeOptional' | translate" />
       </div>
       <div class="row">
-        <label>Stok Türü</label>
+        <label>{{ 'products.colStockType' | translate }}</label>
         <app-searchable-select
           formControlName="stockType"
           [options]="stockTypeSearchableOptions"
-          placeholder="Seçin"
-          searchPlaceholder="Ara…"
-          noResultsLabel="Sonuç yok"
+          [placeholder]="'products.selectPlaceholder' | translate"
+          [searchPlaceholder]="'products.searchPlaceholderDots' | translate"
+          [noResultsLabel]="'products.noResultsShort' | translate"
         />
       </div>
       <div class="row">
-        <label>Birim</label>
+        <label>{{ 'products.colUnit' | translate }}</label>
         <app-searchable-select
           formControlName="unit"
           [options]="unitSearchableOptions"
-          placeholder="Birim seçin"
-          searchPlaceholder="Ara…"
-          noResultsLabel="Sonuç yok"
+          [placeholder]="'products.selectPlaceholder' | translate"
+          [searchPlaceholder]="'products.searchPlaceholderDots' | translate"
+          [noResultsLabel]="'products.noResultsShort' | translate"
         />
       </div>
 
       <div class="row">
-        <label>Mevcut Stok</label>
+        <label>{{ 'products.labelCurrentStock' | translate }}</label>
         <input type="number" formControlName="stockQuantity" step="0.01" />
       </div>
       <div class="row">
-        <label>Birim Fiyat</label>
+        <label>{{ 'products.labelUnitPrice' | translate }}</label>
         <input type="number" formControlName="unitPrice" step="0.01" />
       </div>
       <div class="row">
-        <label>Para Birimi</label>
+        <label>{{ 'products.stockDiscountPercent' | translate }}</label>
+        <input type="number" formControlName="stockDiscountPercent" step="0.01" min="0" max="100" />
+      </div>
+      <div class="row">
+        <label>{{ 'products.stockDiscountAmountTl' | translate }}</label>
+        <input type="number" formControlName="stockDiscountAmount" step="0.01" min="0" />
+        <small class="hint">{{ 'products.stockDiscountAmountHint' | translate }}</small>
+      </div>
+      <div class="row">
+        <label>{{ 'products.labelCurrency' | translate }}</label>
         <app-searchable-select
           formControlName="currency"
           [options]="currencySearchableOptions"
-          placeholder="Seçin"
-          searchPlaceholder="Ara…"
-          noResultsLabel="Sonuç yok"
+          [placeholder]="'products.selectPlaceholder' | translate"
+          [searchPlaceholder]="'products.searchPlaceholderDots' | translate"
+          [noResultsLabel]="'products.noResultsShort' | translate"
         />
       </div>
       @if (error) { <p class="error-msg">{{ error }}</p> }
     </div>
     <div class="actions">
-      <button type="submit" [disabled]="form.invalid || saving">Kaydet</button>
-      <a routerLink="/products">İptal</a>
+      <button type="submit" [disabled]="form.invalid || saving">{{ 'common.save' | translate }}</button>
+      <a routerLink="/products">{{ 'common.cancel' | translate }}</a>
     </div>
   </form>
 </div>

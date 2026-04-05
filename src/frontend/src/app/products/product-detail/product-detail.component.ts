@@ -92,7 +92,12 @@ export class ProductDetailComponent implements OnInit {
     const pad = (n: number) => n.toString().padStart(2, '0');
     const d = new Date();
     const dateVal = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
-    this.newMovement = { date: dateVal, type: 1, quantity: 0, description: 'Manuel giriş/çıkış' };
+    this.newMovement = {
+      date: dateVal,
+      type: 1,
+      quantity: 0,
+      description: this.translate.instant('products.manualMovementDesc')
+    };
     this.showAddModal = true;
   }
 
@@ -105,7 +110,7 @@ export class ProductDetailComponent implements OnInit {
     if (!id || this.newMovement.quantity <= 0) return;
 
     if (this.newMovement.type === 2 && this.newMovement.quantity > (this.product?.stockQuantity ?? 0)) {
-      this.toastr.warning('Yetersiz stok! Mevcut stoktan fazla çıkış yapamazsınız.');
+      this.toastr.warning(this.translate.instant('products.toastInsufficientStock'));
       return;
     }
 
@@ -113,19 +118,21 @@ export class ProductDetailComponent implements OnInit {
       date: this.newMovement.date,
       type: this.newMovement.type,
       quantity: this.newMovement.quantity,
-      description: this.newMovement.description || 'Manuel'
+      description: this.newMovement.description || this.translate.instant('products.manualMovementDesc')
     }).subscribe({
       next: () => {
-        this.toastr.success('Stok hareketi eklendi.');
+        this.toastr.success(this.translate.instant('products.toastStockAdded'));
         this.closeAddModal();
         this.api.getById(id).subscribe(p => this.product = p);
         this.loadMovements();
       },
-      error: e => this.toastr.error(e.error?.message ?? 'Eklenemedi.')
+      error: e => this.toastr.error(e.error?.message ?? this.translate.instant('products.toastMovementError'))
     });
   }
 
   typeLabel(type: number): string {
-    return type === 1 ? 'Giriş' : type === 2 ? 'Çıkış' : 'Transfer';
+    if (type === 1) return this.translate.instant('common.txnIn');
+    if (type === 2) return this.translate.instant('common.txnOut');
+    return this.translate.instant('products.movementTypeTransfer');
   }
 }
