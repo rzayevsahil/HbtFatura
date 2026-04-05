@@ -406,7 +406,7 @@
     "notFound": "Delivery note not found.",
     "hintInvoice": "* After you approve the delivery note, you can convert it to an invoice.",
     "toInvoice": "Create invoice",
-    "creatingInvoice": "Creating...",
+    "creatingInvoice": "Transferring...",
     "goInvoice": "Open invoice",
     "orderNo": "Order no.:",
     "orderLink": "Link order",

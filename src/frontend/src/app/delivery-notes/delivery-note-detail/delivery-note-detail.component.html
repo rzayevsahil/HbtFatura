@@ -1,10 +1,12 @@
 <div class="page-header">
-  <h1 class="page-title">{{ deliveryNote?.deliveryNumber ?? ('deliveryNotes.defaultTitle' | translate) }}</h1>
+  <div class="page-header-main">
+    <h1 class="page-title">{{ deliveryNote?.deliveryNumber ?? ('deliveryNotes.defaultTitle' | translate) }}</h1>
+    @if (isTaslak(deliveryNote?.status) && !deliveryNote?.invoiceId) {
+    <p class="page-header-hint text-muted">{{ 'deliveryNotes.hintInvoice' | translate }}</p>
+    }
+  </div>
   <div class="actions">
     @if (isTaslak(deliveryNote?.status) && !deliveryNote?.invoiceId) {
-    <span class="text-muted" style="margin-right: 15px; font-size: 0.9em;">
-      {{ 'deliveryNotes.hintInvoice' | translate }}
-    </span>
     <a [routerLink]="['/delivery-notes', deliveryNote?.id, 'edit']" class="btn btn-secondary">{{ 'common.edit' | translate }}</a>
     <button type="button" class="btn btn-primary" (click)="confirmDeliveryNote()">{{ 'common.approve' | translate }}</button>
     }
@@ -22,6 +24,17 @@
     <a routerLink="/delivery-notes" class="btn btn-default">{{ 'common.back' | translate }}</a>
   </div>
 </div>
+@if (creatingInvoice) {
+<div class="transfer-in-progress" role="status" aria-live="polite" aria-busy="true">
+  <div class="transfer-in-progress__shell">
+    <div class="transfer-in-progress__strip" aria-hidden="true"></div>
+    <div class="transfer-in-progress__row">
+      <div class="transfer-in-progress__dots" aria-hidden="true"><span></span><span></span><span></span></div>
+      <p class="transfer-in-progress__label">{{ 'deliveryNotes.creatingInvoice' | translate }}</p>
+    </div>
+  </div>
+</div>
+}
 @if (loading) {
 <div class="loading-container">
   <div class="spinner"></div>

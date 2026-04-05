@@ -1,5 +1,36 @@
-.page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 0.75rem; }
-.actions { display: flex; gap: 0.5rem; align-items: center; }
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+}
+
+.page-header-main {
+  flex: 1;
+  min-width: min(100%, 12rem);
+}
+
+.page-title {
+  margin: 0;
+}
+
+.page-header-hint {
+  margin: 0.375rem 0 0;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  max-width: 40rem;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: flex-end;
+  flex-shrink: 0;
+}
 .btn {
   padding: 0.625rem 1.25rem;
   font-size: 0.9375rem;

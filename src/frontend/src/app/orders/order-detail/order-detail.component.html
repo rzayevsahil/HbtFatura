@@ -1,11 +1,11 @@
 <div class="page-header">
-  <h1 class="page-title">{{ order?.orderNumber ?? ('orders.defaultTitle' | translate) }}</h1>
-  <div class="actions">
+  <div class="page-header-main">
+    <h1 class="page-title">{{ order?.orderNumber ?? ('orders.defaultTitle' | translate) }}</h1>
     @if (order && order.status === 0 || order?.status === 'Bekliyor') {
-    <p class="text-muted help-text" style="margin-right: 1rem; font-size: 0.8125rem;">
-      {{ 'orders.helpDn' | translate }}
-    </p>
+    <p class="page-header-hint text-muted">{{ 'orders.helpDn' | translate }}</p>
     }
+  </div>
+  <div class="actions">
     @if (order && isEditableOrder()) {
     <a [routerLink]="['/orders', order.id, 'edit']" class="btn btn-default">{{ 'common.edit' | translate }}</a>
     <button type="button" class="btn btn-approve" (click)="setStatusOnayla()">{{ 'common.approve' | translate }}</button>
@@ -26,6 +26,17 @@
     <a routerLink="/orders" class="btn btn-default">{{ 'common.back' | translate }}</a>
   </div>
 </div>
+@if (creatingDeliveryNote) {
+<div class="transfer-in-progress" role="status" aria-live="polite" aria-busy="true">
+  <div class="transfer-in-progress__shell">
+    <div class="transfer-in-progress__strip" aria-hidden="true"></div>
+    <div class="transfer-in-progress__row">
+      <div class="transfer-in-progress__dots" aria-hidden="true"><span></span><span></span><span></span></div>
+      <p class="transfer-in-progress__label">{{ 'orders.transferring' | translate }}</p>
+    </div>
+  </div>
+</div>
+}
 @if (loading) {
 <div class="loading-container">
   <div class="spinner"></div>
