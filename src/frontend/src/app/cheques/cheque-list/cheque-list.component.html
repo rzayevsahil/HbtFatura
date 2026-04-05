@@ -3,7 +3,6 @@
 </div>
 <div class="card table-card">
   <div class="table-toolbar table-toolbar--multiline">
-    <span class="material-icons toolbar-search-icon" aria-hidden="true">search</span>
     <label class="toolbar-field">
       <span class="toolbar-label">{{ 'chequesPage.portfolioNo' | translate }}</span>
       <input type="text" [(ngModel)]="filterPortfolioNumber" (change)="applyFilter()" />
@@ -96,11 +95,29 @@
                 {{ 'chequesPage.noneDash' | translate }}
               }
             </td>
-            <td>{{ typeLabel(c.type) }}</td>
+            <td>
+              <span
+                class="status-badge"
+                [style.color]="lookups.getColor('ChequeType', c.type)"
+                [style.borderColor]="lookups.getColor('ChequeType', c.type) || 'rgba(148, 163, 184, 0.45)'"
+                [style.backgroundColor]="lookupBadgeBg(lookups.getColor('ChequeType', c.type))"
+              >
+                {{ typeLabel(c.type) }}
+              </span>
+            </td>
             <td>{{ c.customerTitle }}</td>
             <td class="amount">{{ c.amount | number:'1.2-2' }} {{ c.currency || 'TRY' }}</td>
             <td>{{ c.dueDate | date: 'shortDate' }}</td>
-            <td>{{ ('chequesPage.statusCodes.' + c.status) | translate }}</td>
+            <td>
+              <span
+                class="status-badge"
+                [style.color]="lookups.getColor('ChequeStatus', c.status)"
+                [style.borderColor]="lookups.getColor('ChequeStatus', c.status) || 'rgba(148, 163, 184, 0.45)'"
+                [style.backgroundColor]="lookupBadgeBg(lookups.getColor('ChequeStatus', c.status))"
+              >
+                {{ statusLabel(c.status) }}
+              </span>
+            </td>
             <td>
               <div class="actions-cell">
                 <a [routerLink]="['/cheques', c.id]">{{ 'common.detail' | translate }}</a>

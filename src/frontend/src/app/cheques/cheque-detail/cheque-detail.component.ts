@@ -23,9 +23,9 @@ export class ChequeDetailComponent implements OnInit {
   newStatus: number = 0;
 
   get chequeStatusSearchableOptions(): SearchableSelectOption[] {
-    return this.lookups.getGroup('ChequeStatus')().map(l => ({
+    return this.lookups.getGroup('ChequeStatus')().map((l) => ({
       id: String(l.code),
-      primary: this.translate.instant('chequesPage.statusCodes.' + l.code)
+      primary: this.lookups.displayLookupLabel(l)
     }));
   }
 
@@ -72,9 +72,26 @@ export class ChequeDetailComponent implements OnInit {
   }
 
   typeLabel(type: number): string {
+    const fromLookup = this.lookups.getName('ChequeType', type);
+    const code = String(type);
+    if (fromLookup && fromLookup !== code) return fromLookup;
     if (type === 1) return this.translate.instant('chequesPage.typeCheque');
     if (type === 2) return this.translate.instant('chequesPage.typeNote');
-    return '';
+    return code;
+  }
+
+  statusLabel(status: number): string {
+    const fromLookup = this.lookups.getName('ChequeStatus', status);
+    const code = String(status);
+    if (fromLookup && fromLookup !== code) return fromLookup;
+    const tr = this.translate.instant('chequesPage.statusCodes.' + status);
+    return tr !== 'chequesPage.statusCodes.' + status ? tr : code;
+  }
+
+  lookupBadgeBg(hex: string): string {
+    const c = hex?.trim();
+    if (c?.startsWith('#') && c.length >= 7) return c + '22';
+    return 'rgba(148, 163, 184, 0.15)';
   }
 
 }

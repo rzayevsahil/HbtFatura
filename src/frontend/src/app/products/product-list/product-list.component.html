@@ -3,7 +3,6 @@
 </div>
 <div class="card table-card">
   <div class="table-toolbar table-toolbar--multiline">
-    <span class="material-icons toolbar-search-icon" aria-hidden="true">search</span>
     <input
       type="search"
       class="search-input"
@@ -11,7 +10,7 @@
       [placeholder]="'products.searchPlaceholder' | translate"
       (keyup.enter)="applySearch()"
     />
-    <button type="button" class="btn-page" (click)="applySearch()">{{ 'products.search' | translate }}</button>
+    <button type="button" class="btn-toolbar" (click)="applySearch()">{{ 'products.search' | translate }}</button>
     @if (auth.hasPermission('Products.Edit')) {
       <a routerLink="/products/new" class="btn-primary">{{ 'products.newProduct' | translate }}</a>
     }

@@ -123,8 +123,8 @@
 
   input:not([type='checkbox']):not([type='radio']),
   select {
-    width: 160px;
-    max-width: min(160px, 100%);
+    /*width: 160px;
+    max-width: min(160px, 100%);*/
     padding: 10px 12px;
     font-size: 0.9375rem;
     border: 1px solid var(--color-border);
@@ -289,6 +289,47 @@
   &:disabled {
     opacity: 0.45;
     cursor: not-allowed;
+  }
+}
+
+/**
+ * Liste üst araç çubuğu (arama + Yeni … yanındaki butonlar).
+ * `.search-input` ile aynı dikey dolgu / font — `btn-page` sayfalama için küçük kalsın.
+ */
+.btn-toolbar {
+  padding: 10px 18px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  line-height: 1.25;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  cursor: pointer;
+  color: var(--color-text);
+  box-sizing: border-box;
+  flex-shrink: 0;
+  align-self: center;
+
+  &:hover:not(:disabled) {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+  }
+
+  &:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+}
+
+.btn-toolbar--primary {
+  background: var(--color-primary);
+  color: #fff;
+  border: 1px solid var(--color-primary);
+
+  &:hover:not(:disabled) {
+    background: var(--color-primary-hover);
+    border-color: var(--color-primary-hover);
+    color: #fff;
   }
 }
 

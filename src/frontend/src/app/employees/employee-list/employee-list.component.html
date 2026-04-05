@@ -4,7 +4,6 @@
 </div>
 <div class="card table-card">
   <div class="table-toolbar table-toolbar--multiline">
-    <span class="material-icons toolbar-search-icon" aria-hidden="true">search</span>
     <input
       type="search"
       class="search-input"
@@ -12,7 +11,7 @@
       [placeholder]="'employeesPage.searchPlaceholder' | translate"
       (keyup.enter)="load()"
     />
-    <button type="button" class="btn-page" (click)="load()">{{ 'common.search' | translate }}</button>
+    <button type="button" class="btn-toolbar" (click)="load()">{{ 'common.search' | translate }}</button>
     <a routerLink="/employees/new" class="btn-primary">{{ 'employeesPage.newEmployee' | translate }}</a>
   </div>
   <div class="table-container table-container--with-overlay">

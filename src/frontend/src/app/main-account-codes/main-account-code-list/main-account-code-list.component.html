@@ -3,14 +3,13 @@
 </div>
 <div class="card table-card">
   <div class="table-toolbar table-toolbar--multiline">
-    <span class="material-icons toolbar-search-icon" aria-hidden="true">search</span>
     <input
       type="search"
       class="search-input"
       [(ngModel)]="searchText"
       [placeholder]="'mainAccountCodes.searchPlaceholder' | translate"
     />
-    <button type="button" class="btn-page btn-page--primary" (click)="openNew()">{{ 'mainAccountCodes.newCode' | translate }}</button>
+    <button type="button" class="btn-toolbar btn-toolbar--primary" (click)="openNew()">{{ 'mainAccountCodes.newCode' | translate }}</button>
   </div>
   <div class="table-container table-container--with-overlay">
     @if (loading) {

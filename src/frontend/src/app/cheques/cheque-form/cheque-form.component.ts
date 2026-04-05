@@ -7,6 +7,7 @@ import { CustomerService } from '../../services/customer.service';
 import { BankAccountService } from '../../services/bank-account.service';
 import { ChequeOrPromissoryDto, CreateChequeOrPromissoryRequest, UpdateChequeOrPromissoryRequest, CustomerDto, BankAccountDto } from '../../core/models';
 import { AuthService } from '../../core/services/auth.service';
+import { LookupService } from '../../core/services/lookup.service';
 import { FirmService } from '../../services/firm.service';
 import { ToastrService } from 'ngx-toastr';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -43,6 +44,10 @@ export class ChequeFormComponent implements OnInit {
   }
 
   get chequeTypeSearchableOptions(): SearchableSelectOption[] {
+    const g = this.lookups.getGroup('ChequeType')();
+    if (g.length > 0) {
+      return g.map((l) => ({ id: String(l.code), primary: this.lookups.displayLookupLabel(l) }));
+    }
     return [
       { id: '1', primary: this.translate.instant('chequesPage.typeCheque') },
       { id: '2', primary: this.translate.instant('chequesPage.typeNote') }
@@ -71,6 +76,7 @@ export class ChequeFormComponent implements OnInit {
     private router: Router,
     private api: ChequeService,
     public auth: AuthService,
+    public lookups: LookupService,
     private customerApi: CustomerService,
     private bankApi: BankAccountService,
     private firmApi: FirmService,

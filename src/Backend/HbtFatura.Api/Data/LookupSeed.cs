@@ -8,7 +8,7 @@ public static class LookupSeed
     public static async Task SeedIfEmptyAsync(AppDbContext db)
     {
         // 1. Ensure Groups exist
-        var groupNames = new[] { "OrderType", "OrderStatus", "InvoiceStatus", "DeliveryNoteStatus", "InvoiceType", "DeliveryNoteType", "ChequeStatus", "Currency", "ProductUnit", "ProductStockType" };
+        var groupNames = new[] { "OrderType", "OrderStatus", "InvoiceStatus", "DeliveryNoteStatus", "InvoiceType", "DeliveryNoteType", "ChequeStatus", "ChequeType", "Currency", "ProductUnit", "ProductStockType" };
         var existingGroups = await db.LookupGroups.ToListAsync();
         
         var groupsToCreate = new List<LookupGroup>();
@@ -32,6 +32,9 @@ public static class LookupSeed
 
         if (!existingGroups.Any(x => x.Name == "ChequeStatus"))
             groupsToCreate.Add(new LookupGroup { Id = Guid.NewGuid(), Name = "ChequeStatus", DisplayName = "Çek/Senet Durumu", DisplayNameEn = "Cheque / note status", IsSystemGroup = true });
+
+        if (!existingGroups.Any(x => x.Name == "ChequeType"))
+            groupsToCreate.Add(new LookupGroup { Id = Guid.NewGuid(), Name = "ChequeType", DisplayName = "Çek/Senet Tipi", DisplayNameEn = "Cheque / note type", IsSystemGroup = true });
 
         if (!existingGroups.Any(x => x.Name == "Currency"))
             groupsToCreate.Add(new LookupGroup { Id = Guid.NewGuid(), Name = "Currency", DisplayName = "Para Birimi", DisplayNameEn = "Currency", IsSystemGroup = true });
@@ -60,6 +63,7 @@ public static class LookupSeed
         var invoiceTypeId = existingGroups.First(x => x.Name == "InvoiceType").Id;
         var deliveryNoteTypeId = existingGroups.First(x => x.Name == "DeliveryNoteType").Id;
         var chequeStatusId = existingGroups.First(x => x.Name == "ChequeStatus").Id;
+        var chequeTypeId = existingGroups.First(x => x.Name == "ChequeType").Id;
         var currencyGroupId = existingGroups.First(x => x.Name == "Currency").Id;
         var vatRateGroupId = existingGroups.First(x => x.Name == "VatRate").Id;
         var productUnitGroupId = existingGroups.First(x => x.Name == "ProductUnit").Id;
@@ -124,6 +128,13 @@ public static class LookupSeed
             lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = chequeStatusId, Code = "1", Name = "Tahsil edildi", NameEn = "Collected", Color = "#28a745", SortOrder = 2 });
             lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = chequeStatusId, Code = "2", Name = "Ödendi", NameEn = "Paid", Color = "#007bff", SortOrder = 3 });
             lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = chequeStatusId, Code = "3", Name = "Reddedildi", NameEn = "Rejected", Color = "#dc3545", SortOrder = 4 });
+        }
+
+        // ChequeType (ChequeType.Cek = 1, Senet = 2 — API ile aynı kodlar)
+        if (!await db.Lookups.AnyAsync(x => x.LookupGroupId == chequeTypeId))
+        {
+            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = chequeTypeId, Code = "1", Name = "Çek", NameEn = "Cheque", Color = "#0ea5e9", SortOrder = 1 });
+            lookups.Add(new Lookup { Id = Guid.NewGuid(), LookupGroupId = chequeTypeId, Code = "2", Name = "Senet", NameEn = "Promissory note", Color = "#a855f7", SortOrder = 2 });
         }
 
         // Currency (Para birimi) - TRY, USD, EUR
@@ -199,5 +210,51 @@ public static class LookupSeed
             });
             await db.SaveChangesAsync();
         }
+
+        // Mevcut veritabanları: ChequeType grubu + satırlar (çek/senet tipi renkleri)
+        var chequeTypeGroup = await db.LookupGroups.FirstOrDefaultAsync(g => g.Name == "ChequeType");
+        if (chequeTypeGroup == null)
+        {
+            chequeTypeGroup = new LookupGroup
+            {
+                Id = Guid.NewGuid(),
+                Name = "ChequeType",
+                DisplayName = "Çek/Senet Tipi",
+                DisplayNameEn = "Cheque / note type",
+                IsSystemGroup = true
+            };
+            await db.LookupGroups.AddAsync(chequeTypeGroup);
+            await db.SaveChangesAsync();
+        }
+
+        if (!await db.Lookups.AnyAsync(x => x.LookupGroupId == chequeTypeGroup.Id && x.Code == "1"))
+        {
+            await db.Lookups.AddAsync(new Lookup
+            {
+                Id = Guid.NewGuid(),
+                LookupGroupId = chequeTypeGroup.Id,
+                Code = "1",
+                Name = "Çek",
+                NameEn = "Cheque",
+                Color = "#0ea5e9",
+                SortOrder = 1
+            });
+        }
+
+        if (!await db.Lookups.AnyAsync(x => x.LookupGroupId == chequeTypeGroup.Id && x.Code == "2"))
+        {
+            await db.Lookups.AddAsync(new Lookup
+            {
+                Id = Guid.NewGuid(),
+                LookupGroupId = chequeTypeGroup.Id,
+                Code = "2",
+                Name = "Senet",
+                NameEn = "Promissory note",
+                Color = "#a855f7",
+                SortOrder = 2
+            });
+        }
+
+        await db.SaveChangesAsync();
     }
 }

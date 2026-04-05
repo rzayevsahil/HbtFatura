@@ -15,7 +15,6 @@
 } @else {
   <div class="card table-card">
     <div class="table-toolbar">
-      <span class="material-icons toolbar-search-icon" aria-hidden="true">search</span>
       <input type="search" class="search-input" [ngModel]="searchQuery()" (ngModelChange)="onSearchChange($event)"
         [placeholder]="'materialIconsPage.searchPlaceholder' | translate" autocomplete="off">
     </div>
