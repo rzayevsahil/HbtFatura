@@ -380,7 +380,7 @@
     "deleteError": "Could not delete.",
     "detailTitle": "Customer detail",
     "notFound": "Record not found or could not be loaded.",
-    "subtitle": "{{type}} · Balance: {{amount}} ₺",
+    "subtitle": "{{type}} · Balance: {{amount}} {{currency}}",
     "sectionInfo": "Customer information",
     "sectionLedger": "Account statement",
     "mainAccountCode": "Main account code",

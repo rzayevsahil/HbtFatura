@@ -40,9 +40,9 @@
             <td>{{ c.code || '—' }}</td>
             <td>{{ c.title }}</td>
             <td>{{ cardTypeLabel(c.cardType) }}</td>
-            <td class="amount">{{ c.totalDebit | number: '1.2-2' }} ₺</td>
-            <td class="amount">{{ c.totalCredit | number: '1.2-2' }} ₺</td>
-            <td class="amount">{{ c.balance | number: '1.2-2' }} ₺</td>
+            <td class="amount">{{ c.totalDebit | number: '1.2-2' }} {{ listRowCurrency(c) }}</td>
+            <td class="amount">{{ c.totalCredit | number: '1.2-2' }} {{ listRowCurrency(c) }}</td>
+            <td class="amount">{{ c.balance | number: '1.2-2' }} {{ listRowCurrency(c) }}</td>
             <td>
               <div class="actions-cell">
                 <a [routerLink]="['/customers', c.id]">{{ 'common.detail' | translate }}</a>

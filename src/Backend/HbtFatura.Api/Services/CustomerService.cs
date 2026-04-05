@@ -95,6 +95,22 @@ public class CustomerService : ICustomerService
                 })
                 .ToListAsync(ct);
             var aggDict = aggregates.ToDictionary(x => x.CustomerId);
+            var curRows = await _db.AccountTransactions
+                .AsNoTracking()
+                .Where(t => ids.Contains(t.CustomerId))
+                .Select(t => new { t.CustomerId, t.Date, t.CreatedAt, t.Currency })
+                .ToListAsync(ct);
+            var curDict = curRows
+                .GroupBy(t => t.CustomerId)
+                .ToDictionary(
+                    g => g.Key,
+                    g =>
+                    {
+                        var last = g.OrderByDescending(x => x.Date).ThenByDescending(x => x.CreatedAt).First();
+                        var s = last.Currency?.Trim();
+                        return string.IsNullOrEmpty(s) ? "TRY" : s.ToUpperInvariant();
+                    });
+
             foreach (var item in items)
             {
                 if (aggDict.TryGetValue(item.Id, out var agg))
@@ -103,6 +119,8 @@ public class CustomerService : ICustomerService
                     item.TotalCredit = agg.TotalCredit;
                     item.Balance = agg.Balance;
                 }
+
+                item.Currency = curDict.TryGetValue(item.Id, out var cur) ? cur : "TRY";
             }
         }
         return new PagedResult<CustomerListDto> { Items = items, TotalCount = total, Page = page, PageSize = pageSize };
@@ -148,6 +166,7 @@ public class CustomerService : ICustomerService
         if (entity == null) return null;
         var dto = MapToDto(entity);
         dto.Balance = await GetBalanceAsync(id, ct);
+        dto.Currency = await GetLedgerCurrencyAsync(id, ct);
         return dto;
     }
 
@@ -160,6 +179,21 @@ public class CustomerService : ICustomerService
             .SumAsync(t => t.Type == AccountTransactionType.Alacak ? t.Amount : -t.Amount, ct);
         return balance;
     }
+
+    private static async Task<string> LookupLedgerCurrencyAsync(Guid customerId, AppDbContext db, CancellationToken ct)
+    {
+        var c = await db.AccountTransactions.AsNoTracking()
+            .Where(t => t.CustomerId == customerId)
+            .OrderByDescending(t => t.Date)
+            .ThenByDescending(t => t.CreatedAt)
+            .Select(t => t.Currency)
+            .FirstOrDefaultAsync(ct);
+        var s = c?.Trim();
+        return string.IsNullOrEmpty(s) ? "TRY" : s.ToUpperInvariant();
+    }
+
+    private Task<string> GetLedgerCurrencyAsync(Guid customerId, CancellationToken ct) =>
+        LookupLedgerCurrencyAsync(customerId, _db, ct);
 
     public async Task<PagedResult<AccountTransactionDto>> GetTransactionsAsync(Guid customerId, int page, int pageSize, DateTime? dateFrom, DateTime? dateTo, CancellationToken ct = default)
     {
@@ -195,6 +229,7 @@ public class CustomerService : ICustomerService
         foreach (var t in list)
         {
             running += t.Type == AccountTransactionType.Alacak ? t.Amount : -t.Amount;
+            var cur = string.IsNullOrWhiteSpace(t.Currency) ? "TRY" : t.Currency.Trim().ToUpperInvariant();
             items.Add(new AccountTransactionDto
             {
                 Id = t.Id,
@@ -202,7 +237,7 @@ public class CustomerService : ICustomerService
                 Description = t.Description,
                 Type = t.Type,
                 Amount = t.Amount,
-                Currency = t.Currency,
+                Currency = cur,
                 ReferenceType = t.ReferenceType,
                 ReferenceId = t.ReferenceId,
                 RunningBalance = running

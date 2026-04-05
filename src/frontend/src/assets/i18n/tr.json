@@ -368,7 +368,7 @@
     "deleteError": "Silme sırasında hata oluştu.",
     "detailTitle": "Cari detay",
     "notFound": "Kayıt bulunamadı veya yüklenemedi.",
-    "subtitle": "{{type}} · Bakiye: {{amount}} ₺",
+    "subtitle": "{{type}} · Bakiye: {{amount}} {{currency}}",
     "sectionInfo": "Cari bilgileri",
     "sectionLedger": "Cari hareketler (ekstre)",
     "mainAccountCode": "Ana cari kodu",

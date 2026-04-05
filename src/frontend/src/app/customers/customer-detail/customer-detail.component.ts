@@ -79,6 +79,19 @@ export class CustomerDetailComponent implements OnInit {
     return [district ?? '', city ?? ''].filter(s => s.length > 0).join(' / ');
   }
 
+  get customerCurrencyCode(): string {
+    return this.currencyCode(this.customer?.currency);
+  }
+
+  txnCurrencyCode(t: AccountTransactionDto): string {
+    return this.currencyCode(t.currency);
+  }
+
+  private currencyCode(raw: string | null | undefined): string {
+    const v = raw?.trim();
+    return v ? v.toUpperCase() : 'TRY';
+  }
+
   prevPage(): void {
     if (this.page > 1) { this.page--; this.loadTransactions(); }
   }

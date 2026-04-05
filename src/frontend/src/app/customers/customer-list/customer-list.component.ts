@@ -84,4 +84,9 @@ export class CustomerListComponent implements OnInit {
       ? this.translate.instant('customers.cardSeller')
       : this.translate.instant('customers.cardBuyer');
   }
+
+  listRowCurrency(c: CustomerListDto): string {
+    const v = c.currency?.trim();
+    return v ? v.toUpperCase() : 'TRY';
+  }
 }

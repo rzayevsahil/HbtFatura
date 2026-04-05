@@ -22,6 +22,8 @@ public class CustomerDto
     public string? Email { get; set; }
     public string? Website { get; set; }
     public decimal Balance { get; set; }
+    /// <summary>Ekstre para birimi özeti: son hareketin dövizi; hareket yoksa TRY.</summary>
+    public string Currency { get; set; } = "TRY";
 }
 
 public class CustomerListDto : CustomerDto

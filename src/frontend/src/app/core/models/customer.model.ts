@@ -19,6 +19,8 @@ export interface CustomerDto {
     email?: string;
     website?: string;
     balance: number;
+    /** Son ekstre hareketine göre özet döviz (API); yoksa TRY. */
+    currency?: string;
 }
 
 export interface CustomerListDto extends CustomerDto {
