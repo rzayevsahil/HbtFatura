@@ -9,14 +9,13 @@ import { ReportService } from '../../services/report.service';
 import { CustomerDto, ProductDto, StockLevelsReportDto, CreateOrderRequest, UpdateOrderRequest, OrderStatus, OrderItemInputDto } from '../../core/models';
 import { ToastrService } from 'ngx-toastr';
 import { LookupService } from '../../core/services/lookup.service';
-import { UnitFieldSelectComponent } from '../../shared/unit-field-select/unit-field-select.component';
 import { SearchableSelectComponent, SearchableSelectOption } from '../../shared/searchable-select/searchable-select.component';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-order-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterLink, UnitFieldSelectComponent, SearchableSelectComponent, TranslateModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterLink, SearchableSelectComponent, TranslateModule],
   templateUrl: './order-form.component.html',
   styleUrls: ['./order-form.component.scss']
 })
@@ -45,6 +44,30 @@ export class OrderFormComponent implements OnInit {
       primary: c.title ?? '',
       secondary: [c.code, c.taxNumber].filter(Boolean).join(' · ')
     }));
+  }
+
+  get orderTypeSearchableOptions(): SearchableSelectOption[] {
+    return this.lookups.getGroup('OrderType')().map(l => ({
+      id: String(l.code),
+      primary: l.name,
+    }));
+  }
+
+  /** Kalem satırı `unit` değeri lookup’ta `name || code` ile tutulur (ürün formu / eski UnitFieldSelect ile uyumlu). */
+  unitSearchableOptionsForLine(currentUnit: unknown): SearchableSelectOption[] {
+    const list = this.lookups.getGroup('ProductUnit')();
+    const opts: SearchableSelectOption[] = list.map(l => {
+      const id = ((l.name || l.code || '').trim() || 'Adet');
+      return {
+        id,
+        primary: this.lookups.displayLookupLabel(l) || id,
+      };
+    });
+    const current = (currentUnit ?? '').toString().trim();
+    if (current && !opts.some(o => o.id === current)) {
+      opts.unshift({ id: current, primary: current });
+    }
+    return opts;
   }
 
   constructor(
@@ -217,7 +240,8 @@ export class OrderFormComponent implements OnInit {
 
   @HostListener('document:keydown', ['$event'])
   onKeyDown(e: KeyboardEvent): void {
-    if (e.key === 'F9' && !this.saving && !this.editLoading && this.form.valid && !['INPUT', 'TEXTAREA', 'SELECT'].includes((e.target as HTMLElement)?.tagName)) {
+    const t = e.target as HTMLElement;
+    if (e.key === 'F9' && !this.saving && !this.editLoading && this.form.valid && !['INPUT', 'TEXTAREA', 'SELECT'].includes(t?.tagName) && !t?.closest('app-searchable-select')) {
       e.preventDefault();
       this.onSubmit();
     }

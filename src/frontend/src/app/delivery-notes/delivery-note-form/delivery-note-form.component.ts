@@ -13,18 +13,17 @@ import {
 } from '../../core/models';
 import { ToastrService } from 'ngx-toastr';
 import { LookupService } from '../../core/services/lookup.service';
-import { UnitFieldSelectComponent } from '../../shared/unit-field-select/unit-field-select.component';
+import { SearchableSelectComponent, SearchableSelectOption } from '../../shared/searchable-select/searchable-select.component';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-delivery-note-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterLink, UnitFieldSelectComponent, TranslateModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterLink, SearchableSelectComponent, TranslateModule],
   templateUrl: './delivery-note-form.component.html',
   styleUrls: ['./delivery-note-form.component.scss']
 })
 export class DeliveryNoteFormComponent implements OnInit {
-  @ViewChild('customerDropdownWrap') customerDropdownWrap?: ElementRef<HTMLElement>;
   @ViewChild('orderDropdownWrap') orderDropdownWrap?: ElementRef<HTMLElement>;
 
   form: FormGroup;
@@ -35,8 +34,6 @@ export class DeliveryNoteFormComponent implements OnInit {
   customers: CustomerDto[] = [];
   products: ProductDto[] = [];
   productFilterText = '';
-  customerSearchText = '';
-  customerDropdownOpen = false;
   error = '';
   saving = false;
   activeItemIndex: number | null = null;
@@ -49,17 +46,12 @@ export class DeliveryNoteFormComponent implements OnInit {
     return this.form.get('items') as FormArray;
   }
 
-  get selectedCustomerTitle(): string {
-    const cid = this.form.get('customerId')?.value;
-    if (!cid) return this.translate.instant('common.selectPlease');
-    const c = this.customers.find(x => x.id === cid);
-    return c?.title ?? this.translate.instant('common.selectPlease');
-  }
-
-  get filteredCustomers(): CustomerDto[] {
-    const q = (this.customerSearchText || '').trim().toLowerCase();
-    if (!q) return this.customers;
-    return this.customers.filter(c => c.title.toLowerCase().includes(q));
+  get customerSearchableOptions(): SearchableSelectOption[] {
+    return this.customers.map(c => ({
+      id: c.id,
+      primary: c.title ?? '',
+      secondary: [c.code, c.taxNumber].filter(Boolean).join(' · ')
+    }));
   }
 
   get filteredProducts(): ProductDto[] {
@@ -84,6 +76,29 @@ export class DeliveryNoteFormComponent implements OnInit {
     if (!oid) return 'Seçiniz';
     const o = this.confirmedOrders.find(x => x.id === oid);
     return o ? `${o.orderNumber} (${o.customerTitle})` : 'Seçiniz';
+  }
+
+  get deliveryTypeSearchableOptions(): SearchableSelectOption[] {
+    return this.lookups.getGroup('DeliveryNoteType')().map(l => ({
+      id: String(l.code),
+      primary: l.name
+    }));
+  }
+
+  unitSearchableOptionsForLine(currentUnit: unknown): SearchableSelectOption[] {
+    const list = this.lookups.getGroup('ProductUnit')();
+    const opts: SearchableSelectOption[] = list.map(l => {
+      const id = ((l.name || l.code || '').trim() || 'Adet');
+      return {
+        id,
+        primary: this.lookups.displayLookupLabel(l) || id
+      };
+    });
+    const current = (currentUnit ?? '').toString().trim();
+    if (current && !opts.some(o => o.id === current)) {
+      opts.unshift({ id: current, primary: current });
+    }
+    return opts;
   }
 
   /** Düzenlemede salt okunur durum etiketi (API sayı veya string dönebilir). */
@@ -240,16 +255,6 @@ export class DeliveryNoteFormComponent implements OnInit {
     this.items.removeAt(i);
   }
 
-  toggleCustomerDropdown(): void {
-    this.customerDropdownOpen = !this.customerDropdownOpen;
-    if (this.customerDropdownOpen) this.customerSearchText = '';
-  }
-
-  selectCustomer(c: CustomerDto | null): void {
-    this.form.patchValue({ customerId: c?.id ?? null });
-    this.customerDropdownOpen = false;
-  }
-
   toggleOrderDropdown(): void {
     this.orderDropdownOpen = !this.orderDropdownOpen;
     if (this.orderDropdownOpen) this.orderSearchText = '';
@@ -313,9 +318,6 @@ export class DeliveryNoteFormComponent implements OnInit {
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(e: MouseEvent): void {
-    if (this.customerDropdownOpen && this.customerDropdownWrap?.nativeElement && !this.customerDropdownWrap.nativeElement.contains(e.target as Node)) {
-      this.customerDropdownOpen = false;
-    }
     if (this.orderDropdownOpen && this.orderDropdownWrap?.nativeElement && !this.orderDropdownWrap.nativeElement.contains(e.target as Node)) {
       this.orderDropdownOpen = false;
     }

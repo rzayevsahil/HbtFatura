@@ -8,11 +8,12 @@ import { MainAccountCodeDto, FirmDto, CreateMainAccountCodeRequest, UpdateMainAc
 import { AuthService } from '../../core/services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { SearchableSelectComponent, SearchableSelectOption } from '../../shared/searchable-select/searchable-select.component';
 
 @Component({
   selector: 'app-main-account-code-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, TranslateModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, TranslateModule, SearchableSelectComponent],
   templateUrl: './main-account-code-form.component.html',
   styleUrls: ['./main-account-code-form.component.scss']
 })
@@ -35,6 +36,10 @@ export class MainAccountCodeFormComponent implements OnInit {
   firms: FirmDto[] = [];
   error = '';
   saving = false;
+
+  get firmSearchableOptions(): SearchableSelectOption[] {
+    return this.firms.map(f => ({ id: f.id, primary: f.name }));
+  }
 
   constructor(
     private fb: FormBuilder,

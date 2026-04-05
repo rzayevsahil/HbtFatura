@@ -6,11 +6,12 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { InvoiceService } from '../../services/invoice.service';
 import { InvoiceDto, InvoiceScenario, InvoiceStatus } from '../../core/models';
 import { ToastrService } from 'ngx-toastr';
+import { SearchableSelectComponent, SearchableSelectOption } from '../../shared/searchable-select/searchable-select.component';
 
 @Component({
   selector: 'app-invoice-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule, TranslateModule],
+  imports: [CommonModule, RouterLink, FormsModule, TranslateModule, SearchableSelectComponent],
   templateUrl: './invoice-detail.component.html',
   styleUrls: ['./invoice-detail.component.scss']
 })
@@ -18,6 +19,13 @@ export class InvoiceDetailComponent implements OnInit {
   invoice: InvoiceDto | null = null;
   loading = true;
   selectedScenario: InvoiceScenario = 0;
+
+  get gibScenarioSearchableOptions(): SearchableSelectOption[] {
+    return [
+      { id: '0', primary: this.translate.instant('invoices.basicInvoice') },
+      { id: '1', primary: this.translate.instant('invoices.commercialInvoice') }
+    ];
+  }
 
   constructor(
     private route: ActivatedRoute,
@@ -29,7 +37,8 @@ export class InvoiceDetailComponent implements OnInit {
 
   @HostListener('document:keydown', ['$event'])
   onKeyDown(e: KeyboardEvent): void {
-    if (e.key === 'F2' && this.invoice?.status === 0 && !['INPUT', 'TEXTAREA', 'SELECT'].includes((e.target as HTMLElement)?.tagName)) {
+    const t = e.target as HTMLElement;
+    if (e.key === 'F2' && this.invoice?.status === 0 && !['INPUT', 'TEXTAREA', 'SELECT'].includes(t?.tagName) && !t?.closest('app-searchable-select')) {
       e.preventDefault();
       this.router.navigate(['/invoices', this.invoice.id, 'edit']);
     }

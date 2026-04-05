@@ -135,21 +135,29 @@
 
             <div class="form-group">
                 <label>{{ 'menuManagement.requiredPermission' | translate }}</label>
-                <select [(ngModel)]="editingMenu()!.requiredPermissionCode">
-                    <option value="">{{ 'menuManagement.noPermissionRequired' | translate }}</option>
-                    <option *ngFor="let p of permissions()" [value]="p.code">{{ p.group }} - {{ p.name }} ({{ p.code }})
-                    </option>
-                </select>
+                <app-searchable-select
+                    [(ngModel)]="editingMenu()!.requiredPermissionCode"
+                    [options]="permissionSearchableOptions()"
+                    [showNoneOption]="true"
+                    [noneEmitsEmptyString]="true"
+                    [noneOptionLabel]="'menuManagement.noPermissionRequired' | translate"
+                    [placeholder]="'menuManagement.noPermissionRequired' | translate"
+                    [searchPlaceholder]="'common.search' | translate"
+                    [noResultsLabel]="'common.noResults' | translate"
+                />
             </div>
 
             <div class="form-group">
                 <label>{{ 'menuManagement.parentMenu' | translate }}</label>
-                <select [(ngModel)]="editingMenu()!.parentId">
-                    <option [value]="undefined">{{ 'menuManagement.rootMenu' | translate }}</option>
-                    <ng-container *ngFor="let m of flatMenus()">
-                        <option *ngIf="m.id !== editingMenu()!.id" [value]="m.id">{{ displayMenuLabel(m) }}</option>
-                    </ng-container>
-                </select>
+                <app-searchable-select
+                    [(ngModel)]="editingMenu()!.parentId"
+                    [options]="parentMenuSearchableOptions()"
+                    [showNoneOption]="true"
+                    [noneOptionLabel]="'menuManagement.rootMenu' | translate"
+                    [placeholder]="'menuManagement.rootMenu' | translate"
+                    [searchPlaceholder]="'common.search' | translate"
+                    [noResultsLabel]="'common.noResults' | translate"
+                />
             </div>
 
             <div class="form-group checkbox-group">

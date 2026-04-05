@@ -10,11 +10,12 @@ import { InvoiceService } from '../../services/invoice.service';
 import { CustomerDto, CashRegisterDto, BankAccountDto, InvoiceListDto, AccountPaymentMethod, AccountPaymentType } from '../../core/models';
 import { ToastrService } from 'ngx-toastr';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { SearchableSelectComponent, SearchableSelectOption } from '../../shared/searchable-select/searchable-select.component';
 
 @Component({
   selector: 'app-account-payment-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterLink, TranslateModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterLink, TranslateModule, SearchableSelectComponent],
   templateUrl: './account-payment-form.component.html',
   styleUrls: ['./account-payment-form.component.scss']
 })
@@ -36,6 +37,60 @@ export class AccountPaymentFormComponent implements OnInit {
   customerInvoices: InvoiceListDto[] = [];
   error = '';
   saving = false;
+
+  get paymentTypeSearchableOptions(): SearchableSelectOption[] {
+    return [
+      { id: 'Tahsilat', primary: this.translate.instant('payments.typeCollection') },
+      { id: 'Odeme', primary: this.translate.instant('payments.typePayment') }
+    ];
+  }
+
+  get customerSearchableOptions(): SearchableSelectOption[] {
+    return this.customers.map(c => ({
+      id: c.id,
+      primary: c.title ?? '',
+      secondary: c.code ?? ''
+    }));
+  }
+
+  get paymentMethodSearchableOptions(): SearchableSelectOption[] {
+    return [
+      { id: 'Kasa', primary: this.translate.instant('payments.methodCash') },
+      { id: 'Banka', primary: this.translate.instant('payments.methodBank') }
+    ];
+  }
+
+  get cashRegisterSearchableOptions(): SearchableSelectOption[] {
+    return this.cashRegisters.map(r => ({
+      id: r.id,
+      primary: r.name,
+      secondary: `${this.formatAmount(r.balance)} ${r.currency ?? ''}`.trim()
+    }));
+  }
+
+  /** Liste satırı alt metni (para birimi + bakiye); fatura satırındaki tutar satırıyla aynı fikir. */
+  private formatAmount(value: number): string {
+    return new Intl.NumberFormat('tr-TR', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }).format(Number(value) || 0);
+  }
+
+  get bankAccountSearchableOptions(): SearchableSelectOption[] {
+    return this.bankAccounts.map(b => ({
+      id: b.id,
+      primary: `${b.name}`,
+      secondary: b.bankName ?? ''
+    }));
+  }
+
+  get invoiceLinkSearchableOptions(): SearchableSelectOption[] {
+    return this.customerInvoices.map(inv => ({
+      id: inv.id,
+      primary: `${inv.invoiceNumber}`,
+      secondary: `${inv.grandTotal} ${inv.currency}`
+    }));
+  }
 
   constructor(
     private fb: FormBuilder,

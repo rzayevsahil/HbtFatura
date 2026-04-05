@@ -62,12 +62,17 @@
     color: var(--color-text);
   }
 
-  select,
-  input[type="date"],
-  input[type="datetime-local"],
-  input[type="text"] {
-    max-width: 320px;
-    width: 100%;
+  /* Sipariş tarihi ile aynı görünen genişlik: grid sütununu doldurma, sola hizalı sabit üst sınır */
+  $row-control-max: 18rem;
+
+  > select,
+  > input[type="date"],
+  > input[type="datetime-local"],
+  > input[type="text"],
+  > app-searchable-select {
+    width: min(100%, $row-control-max);
+    max-width: $row-control-max;
+    justify-self: start;
     box-sizing: border-box;
   }
 }
@@ -75,10 +80,6 @@
 .form-readonly {
   font-size: 0.9375rem;
   color: var(--color-text-muted, #64748b);
-}
-
-.order-customer-select {
-  max-width: 320px;
 }
 
 .items-section {

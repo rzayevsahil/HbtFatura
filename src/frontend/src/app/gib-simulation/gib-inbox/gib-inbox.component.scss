@@ -1,9 +1,4 @@
-.page-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.5rem;
-}
+@import '../../shared/styles/list-page.shared.scss';
 
 .disclaimer-banner {
   margin-bottom: 1.25rem;
@@ -14,10 +9,8 @@
 }
 
 .gib-table-card {
-  position: relative;
   min-height: 200px;
   padding: 0;
-  overflow: hidden;
 }
 
 .empty-state {
@@ -27,31 +20,7 @@
   font-size: 0.9375rem;
 }
 
-.table-wrap {
-  overflow-x: auto;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.9375rem;
-
-  th {
-    text-align: left;
-    padding: 0.75rem 1rem;
-    background: var(--color-background);
-    font-weight: 600;
-    color: var(--color-text);
-    border-bottom: 1px solid var(--color-border);
-  }
-
-  td {
-    padding: 0.75rem 1rem;
-    border-bottom: 1px solid var(--color-border);
-    color: var(--color-text);
-    vertical-align: middle;
-  }
-
+.data-table.gib-inbox-table {
   th.col-amount,
   td.col-amount {
     white-space: nowrap;
@@ -61,10 +30,6 @@ table {
   td.col-actions {
     width: 1%;
     white-space: nowrap;
-  }
-
-  tbody tr:hover {
-    background: var(--color-row-hover);
   }
 }
 
@@ -96,7 +61,7 @@ td.col-pdf {
   }
 }
 
-.actions-cell {
+.gib-actions {
   display: flex;
   gap: 0.5rem;
   align-items: center;

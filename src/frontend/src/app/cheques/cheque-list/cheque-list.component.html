@@ -1,66 +1,113 @@
 <div class="page-header">
   <h1 class="page-title">{{ 'chequesPage.pageTitle' | translate }}</h1>
-  <a routerLink="/cheques/new" class="btn btn-primary">{{ 'chequesPage.newRecord' | translate }}</a>
 </div>
-<div class="card filters">
-  <input type="text" [(ngModel)]="filterPortfolioNumber" (change)="applyFilter()" [placeholder]="'chequesPage.portfolioNo' | translate" />
-  <input type="text" [(ngModel)]="filterSerialNumber" (change)="applyFilter()" [placeholder]="'chequesPage.serialNo' | translate" />
-  <select [(ngModel)]="filterType" (change)="applyFilter()">
-    <option value="">{{ 'common.all' | translate }}</option>
-    <option [value]="1">{{ 'chequesPage.typeCheque' | translate }}</option>
-    <option [value]="2">{{ 'chequesPage.typeNote' | translate }}</option>
-  </select>
-  <select [(ngModel)]="filterStatus" (change)="applyFilter()">
-    <option value="">{{ 'chequesPage.allStatuses' | translate }}</option>
-    @for (l of lookups.getGroup('ChequeStatus')(); track l.code) {
-    <option [value]="l.code">{{ l.name }}</option>
-    }
-  </select>
-  <input type="date" [(ngModel)]="filterDueFrom" (change)="applyFilter()" [attr.placeholder]="'chequesPage.dueFrom' | translate" />
-  <input type="date" [(ngModel)]="filterDueTo" (change)="applyFilter()" [attr.placeholder]="'chequesPage.dueTo' | translate" />
-  <button type="button" (click)="applyFilter()">{{ 'common.filter' | translate }}</button>
-</div>
-<div class="card table-wrap" style="position: relative; min-height: 200px;">
-  @if (loading) {
-  <div class="loading-overlay">
-    <div class="spinner"></div>
+<div class="card table-card">
+  <div class="table-toolbar table-toolbar--multiline">
+    <span class="material-icons toolbar-search-icon" aria-hidden="true">search</span>
+    <label class="toolbar-field">
+      <span class="toolbar-label">{{ 'chequesPage.portfolioNo' | translate }}</span>
+      <input type="text" [(ngModel)]="filterPortfolioNumber" (change)="applyFilter()" />
+    </label>
+    <label class="toolbar-field">
+      <span class="toolbar-label">{{ 'chequesPage.serialNo' | translate }}</span>
+      <input type="text" [(ngModel)]="filterSerialNumber" (change)="applyFilter()" />
+    </label>
+    <label class="toolbar-field toolbar-field--searchable">
+      <span class="toolbar-label">{{ 'common.type' | translate }}</span>
+      <app-searchable-select
+        class="toolbar-searchable-select"
+        name="chqFilterType"
+        [ngModel]="filterType === '' ? null : (filterType + '')"
+        (ngModelChange)="onChequeTypeFilterChange($event)"
+        [options]="chequeTypeFilterOptions"
+        layout="dropdown"
+        [placeholder]="'common.all' | translate"
+        [searchPlaceholder]="'common.search' | translate"
+        [showNoneOption]="true"
+        [noneOptionLabel]="'common.all' | translate"
+        [noResultsLabel]="'common.noResults' | translate"
+        [listMaxHeight]="'220px'"
+        [disabled]="loading"
+      />
+    </label>
+    <label class="toolbar-field toolbar-field--searchable">
+      <span class="toolbar-label">{{ 'chequesPage.colStatus' | translate }}</span>
+      <app-searchable-select
+        class="toolbar-searchable-select"
+        name="chqFilterStatus"
+        [ngModel]="filterStatus === '' ? null : (filterStatus + '')"
+        (ngModelChange)="onChequeStatusFilterChange($event)"
+        [options]="chequeStatusFilterOptions"
+        layout="dropdown"
+        [placeholder]="'chequesPage.allStatuses' | translate"
+        [searchPlaceholder]="'common.search' | translate"
+        [showNoneOption]="true"
+        [noneOptionLabel]="'chequesPage.allStatuses' | translate"
+        [noResultsLabel]="'common.noResults' | translate"
+        [listMaxHeight]="'260px'"
+        [disabled]="loading"
+      />
+    </label>
+    <label class="toolbar-field">
+      <span class="toolbar-label">{{ 'chequesPage.dueFrom' | translate }}</span>
+      <input type="date" [(ngModel)]="filterDueFrom" (change)="applyFilter()" />
+    </label>
+    <label class="toolbar-field">
+      <span class="toolbar-label">{{ 'chequesPage.dueTo' | translate }}</span>
+      <input type="date" [(ngModel)]="filterDueTo" (change)="applyFilter()" />
+    </label>
+    <div class="toolbar-field toolbar-field-btn">
+      <span class="toolbar-label">&nbsp;</span>
+      <button type="button" (click)="applyFilter()">{{ 'common.filter' | translate }}</button>
+    </div>
+    <a routerLink="/cheques/new" class="btn-primary">{{ 'chequesPage.newRecord' | translate }}</a>
   </div>
-  }
-  <table>
-    <thead>
-      <tr>
-        <th>{{ 'chequesPage.colPortfolio' | translate }}</th>
-        <th>{{ 'chequesPage.colSerial' | translate }}</th>
-        <th>{{ 'chequesPage.colBordro' | translate }}</th>
-        <th>{{ 'chequesPage.colType' | translate }}</th>
-        <th>{{ 'chequesPage.colCustomer' | translate }}</th>
-        <th class="amount">{{ 'chequesPage.colAmount' | translate }}</th>
-        <th>{{ 'chequesPage.colDue' | translate }}</th>
-        <th>{{ 'chequesPage.colStatus' | translate }}</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      @for (c of items; track c.id) {
+  <div class="table-container table-container--with-overlay">
+    @if (loading) {
+      <div class="loading-overlay">
+        <div class="spinner"></div>
+      </div>
+    }
+    <table class="data-table">
+      <thead>
         <tr>
-          <td><a [routerLink]="['/cheques', c.id]">{{ c.portfolioNumber }}</a></td>
-          <td>{{ c.serialNumber || ('chequesPage.noneDash' | translate) }}</td>
-          <td>{{ c.bordroNumber || ('chequesPage.noneDash' | translate) }}</td>
-          <td>{{ typeLabel(c.type) }}</td>
-          <td>{{ c.customerTitle }}</td>
-          <td class="amount">{{ c.amount | number:'1.2-2' }} ₺</td>
-          <td>{{ c.dueDate | date:'shortDate' }}</td>
-          <td>{{ statusLabel(c.status) }}</td>
-          <td>
-            <a [routerLink]="['/cheques', c.id]">{{ 'common.detail' | translate }}</a>
-            <a [routerLink]="['/cheques', c.id, 'edit']">{{ 'common.edit' | translate }}</a>
-            <button type="button" (click)="delete(c.id)">{{ 'common.delete' | translate }}</button>
-          </td>
+          <th>{{ 'chequesPage.colPortfolio' | translate }}</th>
+          <th>{{ 'chequesPage.colSerial' | translate }}</th>
+          <th>{{ 'chequesPage.colBordro' | translate }}</th>
+          <th>{{ 'chequesPage.colType' | translate }}</th>
+          <th>{{ 'chequesPage.colCustomer' | translate }}</th>
+          <th class="th-amount">{{ 'chequesPage.colAmount' | translate }}</th>
+          <th>{{ 'chequesPage.colDue' | translate }}</th>
+          <th>{{ 'chequesPage.colStatus' | translate }}</th>
+          <th></th>
         </tr>
-      }
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        @for (c of items; track c.id) {
+          <tr>
+            <td>
+              <a [routerLink]="['/cheques', c.id]">{{ c.portfolioNumber }}</a>
+            </td>
+            <td>{{ c.serialNumber || ('chequesPage.noneDash' | translate) }}</td>
+            <td>{{ c.bordroNumber || ('chequesPage.noneDash' | translate) }}</td>
+            <td>{{ typeLabel(c.type) }}</td>
+            <td>{{ c.customerTitle }}</td>
+            <td class="amount">{{ c.amount | number: '1.2-2' }} ₺</td>
+            <td>{{ c.dueDate | date: 'shortDate' }}</td>
+            <td>{{ statusLabel(c.status) }}</td>
+            <td>
+              <div class="actions-cell">
+                <a [routerLink]="['/cheques', c.id]">{{ 'common.detail' | translate }}</a>
+                <a [routerLink]="['/cheques', c.id, 'edit']">{{ 'common.edit' | translate }}</a>
+                <button type="button" class="btn-danger" (click)="delete(c.id)">{{ 'common.delete' | translate }}</button>
+              </div>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
 </div>
-@if (items.length === 0 && totalCount === 0) {
-  <p class="text-muted">{{ 'chequesPage.noRecords' | translate }}</p>
+@if (items.length === 0 && totalCount === 0 && !loading) {
+  <p class="list-page-text-muted">{{ 'chequesPage.noRecords' | translate }}</p>
 }

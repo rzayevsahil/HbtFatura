@@ -6,11 +6,12 @@ import { CashRegisterService } from '../../services/cash-register.service';
 import { CashRegisterDto, CashTransactionDto, PagedResult } from '../../core/models';
 import { ToastrService } from 'ngx-toastr';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { SearchableSelectComponent, SearchableSelectOption } from '../../shared/searchable-select/searchable-select.component';
 
 @Component({
   selector: 'app-cash-register-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule, TranslateModule],
+  imports: [CommonModule, RouterLink, FormsModule, TranslateModule, SearchableSelectComponent],
   templateUrl: './cash-register-detail.component.html',
   styleUrls: ['./cash-register-detail.component.scss']
 })
@@ -32,6 +33,13 @@ export class CashRegisterDetailComponent implements OnInit {
     private toastr: ToastrService,
     private translate: TranslateService
   ) { }
+
+  get txnTypeSearchableOptions(): SearchableSelectOption[] {
+    return [
+      { id: '1', primary: this.translate.instant('common.txnIn') },
+      { id: '2', primary: this.translate.instant('common.txnOut') }
+    ];
+  }
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');

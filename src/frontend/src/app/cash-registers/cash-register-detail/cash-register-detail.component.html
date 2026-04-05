@@ -43,8 +43,8 @@
         <td>{{ t.date | date:'dd.MM.yyyy HH:mm' }}</td>
         <td>{{ t.description }}</td>
         <td>{{ typeLabel(t.type) }}</td>
-        <td class="amount">{{ t.type === 1 ? (t.amount | number:'1.2-2') : '' }}</td>
-        <td class="amount">{{ t.type === 2 ? (t.amount | number:'1.2-2') : '' }}</td>
+        <td>{{ t.type === 1 ? (t.amount | number:'1.2-2') : '' }}</td>
+        <td>{{ t.type === 2 ? (t.amount | number:'1.2-2') : '' }}</td>
       </tr>
       }
     </tbody>
@@ -71,10 +71,14 @@
       </div>
       <div class="row">
         <label>{{ 'common.type' | translate }}</label>
-        <select [(ngModel)]="newTransaction.type">
-          <option [ngValue]="1">{{ 'common.txnIn' | translate }}</option>
-          <option [ngValue]="2">{{ 'common.txnOut' | translate }}</option>
-        </select>
+        <app-searchable-select
+          [(ngModel)]="newTransaction.type"
+          [options]="txnTypeSearchableOptions"
+          [emitNumeric]="true"
+          [placeholder]="'common.selectShort' | translate"
+          [searchPlaceholder]="'common.search' | translate"
+          [noResultsLabel]="'common.noResults' | translate"
+        />
       </div>
       <div class="row">
         <label>{{ 'cashRegisters.amount' | translate }}</label>

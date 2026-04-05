@@ -24,6 +24,7 @@ import {
 } from './menu-reorder';
 import { IconPickerModalComponent } from '../../shared/icon-picker/icon-picker-modal.component';
 import { MaterialIconLigaturePipe } from '../../shared/icon-picker/material-icon-ligature.pipe';
+import { SearchableSelectComponent, SearchableSelectOption } from '../../shared/searchable-select/searchable-select.component';
 
 @Component({
   selector: 'app-menu-management',
@@ -34,7 +35,8 @@ import { MaterialIconLigaturePipe } from '../../shared/icon-picker/material-icon
     TranslateModule,
     DragDropModule,
     IconPickerModalComponent,
-    MaterialIconLigaturePipe
+    MaterialIconLigaturePipe,
+    SearchableSelectComponent
   ],
   templateUrl: './menu-management.component.html',
   styleUrls: ['./menu-management.component.scss']
@@ -79,6 +81,25 @@ export class MenuManagementComponent implements OnInit {
   }
 
   /** Tablo / üst menü seçici: bilinen rotalar ve seed etiketleri `menu.*` ile çevrilir. */
+  permissionSearchableOptions(): SearchableSelectOption[] {
+    return this.permissions().map(p => ({
+      id: p.code,
+      primary: `${p.group} - ${p.name}`,
+      secondary: p.code
+    }));
+  }
+
+  parentMenuSearchableOptions(): SearchableSelectOption[] {
+    const cur = this.editingMenu();
+    return this.flatMenus()
+      .filter(m => !cur?.id || m.id !== cur.id)
+      .map(m => ({
+        id: m.id,
+        primary: this.displayMenuLabel(m),
+        secondary: m.routerLink ?? ''
+      }));
+  }
+
   displayMenuLabel(item: MenuItem): string {
     return getMenuDisplayLabel(this.translate, item);
   }

@@ -1,4 +1,5 @@
-import { Component, OnInit, HostListener, ViewChild, ElementRef } from '@angular/core';
+import { Component, DestroyRef, OnInit, HostListener, ViewChild, ElementRef, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -13,18 +14,19 @@ import { DeliveryNoteService } from '../../services/delivery-note.service';
 import { CreateInvoiceRequest, InvoiceItemInputDto, CustomerDto, ProductDto, DeliveryNoteListDto } from '../../core/models';
 import { ToastrService } from 'ngx-toastr';
 import { LookupService } from '../../core/services/lookup.service';
-import { UnitFieldSelectComponent } from '../../shared/unit-field-select/unit-field-select.component';
+import { SearchableSelectComponent, SearchableSelectOption } from '../../shared/searchable-select/searchable-select.component';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-invoice-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterLink, UnitFieldSelectComponent, TranslateModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterLink, SearchableSelectComponent, TranslateModule],
   templateUrl: './invoice-form.component.html',
   styleUrls: ['./invoice-form.component.scss']
 })
 export class InvoiceFormComponent implements OnInit {
-  @ViewChild('customerDropdownWrap') customerDropdownWrap?: ElementRef<HTMLElement>;
+  private readonly destroyRef = inject(DestroyRef);
+
   @ViewChild('dnDropdownWrap') dnDropdownWrap?: ElementRef<HTMLElement>;
 
   form: FormGroup;
@@ -35,8 +37,6 @@ export class InvoiceFormComponent implements OnInit {
   customers: CustomerDto[] = [];
   products: ProductDto[] = [];
   productFilterText = '';
-  customerSearchText = '';
-  customerDropdownOpen = false;
   error = '';
   saving = false;
   activeItemIndex: number | null = null;
@@ -49,17 +49,12 @@ export class InvoiceFormComponent implements OnInit {
     return this.form.get('items') as FormArray;
   }
 
-  get selectedCustomerTitle(): string {
-    const cid = this.form.get('customerId')?.value;
-    if (!cid) return this.translate.instant('common.manualEntry');
-    const c = this.customers.find(x => x.id === cid);
-    return c?.title ?? this.translate.instant('common.manualEntry');
-  }
-
-  get filteredCustomers(): CustomerDto[] {
-    const q = (this.customerSearchText || '').trim().toLowerCase();
-    if (!q) return this.customers;
-    return this.customers.filter(c => c.title.toLowerCase().includes(q));
+  get customerSearchableOptions(): SearchableSelectOption[] {
+    return this.customers.map(c => ({
+      id: c.id,
+      primary: c.title ?? '',
+      secondary: [c.code, c.taxNumber].filter(Boolean).join(' · ')
+    }));
   }
 
   get filteredProducts(): ProductDto[] {
@@ -77,6 +72,29 @@ export class InvoiceFormComponent implements OnInit {
       dn.deliveryNumber.toLowerCase().includes(q) ||
       (dn.customerTitle || '').toLowerCase().includes(q)
     );
+  }
+
+  get invoiceTypeSearchableOptions(): SearchableSelectOption[] {
+    return this.lookups.getGroup('InvoiceType')().map(l => ({
+      id: String(l.code),
+      primary: l.name
+    }));
+  }
+
+  unitSearchableOptionsForLine(currentUnit: unknown): SearchableSelectOption[] {
+    const list = this.lookups.getGroup('ProductUnit')();
+    const opts: SearchableSelectOption[] = list.map(l => {
+      const id = ((l.name || l.code || '').trim() || 'Adet');
+      return {
+        id,
+        primary: this.lookups.displayLookupLabel(l) || id
+      };
+    });
+    const current = (currentUnit ?? '').toString().trim();
+    if (current && !opts.some(o => o.id === current)) {
+      opts.unshift({ id: current, primary: current });
+    }
+    return opts;
   }
 
   get selectedDeliveryNoteNumber(): string {
@@ -154,6 +172,10 @@ export class InvoiceFormComponent implements OnInit {
 
     this.customerApi.getDropdown().subscribe(list => this.customers = list);
     this.productApi.getDropdown().subscribe(list => this.products = list);
+
+    this.form.get('customerId')?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(cid => {
+      if (cid) this.onCustomerSelect();
+    });
 
     // Onaylanan (faturaya hazır) irsaliyeleri getir
     this.deliveryNoteApi.getPaged({ page: 1, pageSize: 100, status: 1 }).subscribe(res => {
@@ -251,17 +273,6 @@ export class InvoiceFormComponent implements OnInit {
     this.items.removeAt(i);
   }
 
-  toggleCustomerDropdown(): void {
-    this.customerDropdownOpen = !this.customerDropdownOpen;
-    if (this.customerDropdownOpen) this.customerSearchText = '';
-  }
-
-  selectCustomer(c: CustomerDto | null): void {
-    this.form.patchValue({ customerId: c?.id ?? null });
-    if (c) this.onCustomerSelect();
-    this.customerDropdownOpen = false;
-  }
-
   toggleDnDropdown(): void {
     this.dnDropdownOpen = !this.dnDropdownOpen;
     if (this.dnDropdownOpen) this.dnSearchText = '';
@@ -323,7 +334,8 @@ export class InvoiceFormComponent implements OnInit {
 
   @HostListener('document:keydown', ['$event'])
   onKeyDown(e: KeyboardEvent): void {
-    if (e.key === 'F9' && !this.saving && !this.editLoading && !this.form.pending && this.form.valid && !['INPUT', 'TEXTAREA', 'SELECT'].includes((e.target as HTMLElement)?.tagName)) {
+    const t = e.target as HTMLElement;
+    if (e.key === 'F9' && !this.saving && !this.editLoading && !this.form.pending && this.form.valid && !['INPUT', 'TEXTAREA', 'SELECT'].includes(t?.tagName) && !t?.closest('app-searchable-select')) {
       e.preventDefault();
       this.onSubmit();
     }
@@ -331,9 +343,6 @@ export class InvoiceFormComponent implements OnInit {
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(e: MouseEvent): void {
-    if (this.customerDropdownOpen && this.customerDropdownWrap?.nativeElement && !this.customerDropdownWrap.nativeElement.contains(e.target as Node)) {
-      this.customerDropdownOpen = false;
-    }
     if (this.dnDropdownOpen && this.dnDropdownWrap?.nativeElement && !this.dnDropdownWrap.nativeElement.contains(e.target as Node)) {
       this.dnDropdownOpen = false;
     }

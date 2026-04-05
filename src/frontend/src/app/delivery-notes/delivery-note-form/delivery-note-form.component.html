@@ -47,29 +47,17 @@
           </div>
         </div>
         }
-        <div class="row" #customerDropdownWrap>
+        <div class="row">
           <label>{{ 'common.customer' | translate }}</label>
-          <div class="customer-select">
-            <button type="button" class="customer-select-trigger"
-              (click)="toggleCustomerDropdown(); $event.stopPropagation()">
-              {{ selectedCustomerTitle }}
-            </button>
-            @if (customerDropdownOpen) {
-            <div class="customer-select-panel">
-              <input type="text" class="customer-search" [placeholder]="'common.customerSearchPh' | translate" [value]="customerSearchText"
-                (input)="customerSearchText = $any($event.target).value" />
-              <div class="customer-options-list">
-                <button type="button" class="customer-option" (click)="selectCustomer(null)">{{ 'common.selectPlease' | translate }}</button>
-                @for (c of filteredCustomers; track c.id) {
-                <button type="button" class="customer-option" (click)="selectCustomer(c)">{{ c.title }}</button>
-                }
-                @if (filteredCustomers.length === 0 && customerSearchText) {
-                <div class="customer-option empty">{{ 'common.noResults' | translate }}</div>
-                }
-              </div>
-            </div>
-            }
-          </div>
+          <app-searchable-select
+            formControlName="customerId"
+            [options]="customerSearchableOptions"
+            [placeholder]="'common.selectPlease' | translate"
+            [searchPlaceholder]="'common.customerSearchPh' | translate"
+            [showNoneOption]="true"
+            [noneOptionLabel]="'common.selectPlease' | translate"
+            [noResultsLabel]="'common.noResults' | translate"
+          />
         </div>
         <div class="row">
           <label>{{ 'deliveryNotes.dnDate' | translate }}</label>
@@ -81,11 +69,14 @@
           <span class="form-readonly">{{ lookups.getName('DeliveryNoteType', form.get('deliveryType')?.value) }}</span>
           <span class="form-hint">{{ 'deliveryNotes.lockedFromOrder' | translate }}</span>
           } @else {
-          <select formControlName="deliveryType">
-            @for (l of lookups.getGroup('DeliveryNoteType')(); track l.code) {
-            <option [ngValue]="+l.code">{{ l.name }}</option>
-            }
-          </select>
+          <app-searchable-select
+            formControlName="deliveryType"
+            [options]="deliveryTypeSearchableOptions"
+            [emitNumeric]="true"
+            [placeholder]="'common.selectShort' | translate"
+            [searchPlaceholder]="'common.search' | translate"
+            [noResultsLabel]="'common.noResults' | translate"
+          />
           }
         </div>
         @if (id) {
@@ -136,7 +127,14 @@
           </div>
           <input type="number" formControlName="quantity" placeholder="0" min="0" step="1" />
           <div class="item-cell-unit">
-            <app-unit-field-select [itemGroup]="$any(item)" [emptyLabel]="'common.colUnit' | translate" />
+            <app-searchable-select
+              formControlName="unit"
+              [options]="unitSearchableOptionsForLine(item.get('unit')?.value)"
+              [placeholder]="'common.colUnit' | translate"
+              [searchPlaceholder]="'common.unitSearchPh' | translate"
+              [noResultsLabel]="'common.noResults' | translate"
+              [listMaxHeight]="'220px'"
+            />
           </div>
           <input type="number" formControlName="unitPrice" placeholder="0" min="0" step="0.01" />
           <input type="number" formControlName="vatRate" [attr.placeholder]="'' + lookups.defaultVatRatePercent()" min="0"

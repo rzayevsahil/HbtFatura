@@ -12,10 +12,12 @@ import { MainAccountCodeDto, CityResponse, DistrictResponse, TaxOfficeDto, Custo
 import { ToastrService } from 'ngx-toastr';
 import { PhoneFormatter } from '../../core/utils/phone-formatter';
 
+import { SearchableSelectComponent, SearchableSelectOption } from '../../shared/searchable-select/searchable-select.component';
+
 @Component({
   selector: 'app-customer-form',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink, SearchableSelectComponent],
   templateUrl: './customer-form.component.html',
   styleUrls: ['./customer-form.component.scss']
 })
@@ -68,6 +70,20 @@ export class CustomerFormComponent implements OnInit {
         (x.code ?? '').toLowerCase().includes(q) ||
         (x.name ?? '').toLowerCase().includes(q)
     );
+  }
+
+  get taxPayerTypeSearchableOptions(): SearchableSelectOption[] {
+    return [
+      { id: '1', primary: 'Gerçek kişi' },
+      { id: '2', primary: 'Tüzel kişi' }
+    ];
+  }
+
+  get cardTypeSearchableOptions(): SearchableSelectOption[] {
+    return [
+      { id: '1', primary: 'Alıcı' },
+      { id: '2', primary: 'Satıcı' }
+    ];
   }
 
   form = this.fb.nonNullable.group({

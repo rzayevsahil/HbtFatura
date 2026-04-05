@@ -62,10 +62,15 @@
     <h3>{{ 'bankAccountsPage.receiptModalTitle' | translate }}</h3>
     <div class="form-grid">
       <div class="row"><label>{{ 'payments.colDate' | translate }}</label><input type="date" [(ngModel)]="newTransaction.date" /></div>
-      <div class="row"><label>{{ 'common.type' | translate }}</label><select [(ngModel)]="newTransaction.type">
-          <option [ngValue]="1">{{ 'common.txnIn' | translate }}</option>
-          <option [ngValue]="2">{{ 'common.txnOut' | translate }}</option>
-        </select></div>
+      <div class="row"><label>{{ 'common.type' | translate }}</label>
+        <app-searchable-select
+          [(ngModel)]="newTransaction.type"
+          [options]="txnTypeSearchableOptions"
+          [emitNumeric]="true"
+          [placeholder]="'common.selectShort' | translate"
+          [searchPlaceholder]="'common.search' | translate"
+          [noResultsLabel]="'common.noResults' | translate"
+        /></div>
       <div class="row"><label>{{ 'cashRegisters.amount' | translate }}</label><input type="number" [(ngModel)]="newTransaction.amount" min="0"
           step="0.01" /></div>
       <div class="row"><label>{{ 'common.description' | translate }}</label><input [(ngModel)]="newTransaction.description" [placeholder]="'common.description' | translate" />

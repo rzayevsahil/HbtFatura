@@ -105,10 +105,15 @@
   </p>
   <button type="button" class="btn btn-primary" (click)="downloadPdf()">{{ 'invoices.pdfPreviewBtn' | translate }}</button>
   } @else if (!invoice.isGibSent) {
-  <select [(ngModel)]="selectedScenario" class="btn btn-default" style="width: auto; margin-right: 10px; height: 38px;">
-    <option [ngValue]="0">{{ 'invoices.basicInvoice' | translate }}</option>
-    <option [ngValue]="1">{{ 'invoices.commercialInvoice' | translate }}</option>
-  </select>
+  <app-searchable-select
+    [(ngModel)]="selectedScenario"
+    [options]="gibScenarioSearchableOptions"
+    [emitNumeric]="true"
+    class="btn btn-default gib-scenario-select"
+    [placeholder]="'common.selectShort' | translate"
+    [searchPlaceholder]="'common.search' | translate"
+    [noResultsLabel]="'common.noResults' | translate"
+  />
   <button type="button" class="btn btn-primary" (click)="sendToGib()" [disabled]="sendingGib">
     {{ sendingGib ? ('invoices.sendingGib' | translate) : ('invoices.sendGib' | translate) }}
   </button>

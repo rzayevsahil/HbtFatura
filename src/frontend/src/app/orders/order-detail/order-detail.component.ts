@@ -32,7 +32,8 @@ export class OrderDetailComponent implements OnInit {
 
   @HostListener('document:keydown', ['$event'])
   onKeyDown(e: KeyboardEvent): void {
-    if (e.key === 'F2' && this.order && this.isEditableOrder() && !['INPUT', 'TEXTAREA', 'SELECT'].includes((e.target as HTMLElement)?.tagName)) {
+    const t = e.target as HTMLElement;
+    if (e.key === 'F2' && this.order && this.isEditableOrder() && !['INPUT', 'TEXTAREA', 'SELECT'].includes(t?.tagName) && !t?.closest('app-searchable-select')) {
       e.preventDefault();
       this.router.navigate(['/orders', this.order.id, 'edit']);
     }

@@ -5,12 +5,13 @@ import { FormsModule } from '@angular/forms';
 import { ProductService } from '../../services/product.service';
 import { ProductDto, StockMovementDto, PagedResult, StockMovementType } from '../../core/models';
 import { ToastrService } from 'ngx-toastr';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { SearchableSelectComponent, SearchableSelectOption } from '../../shared/searchable-select/searchable-select.component';
 
 @Component({
   selector: 'app-product-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule, TranslateModule],
+  imports: [CommonModule, RouterLink, FormsModule, TranslateModule, SearchableSelectComponent],
   templateUrl: './product-detail.component.html',
   styleUrls: ['./product-detail.component.scss']
 })
@@ -34,8 +35,16 @@ export class ProductDetailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private api: ProductService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private translate: TranslateService
   ) { }
+
+  get movementTypeSearchableOptions(): SearchableSelectOption[] {
+    return [
+      { id: '1', primary: this.translate.instant('common.txnIn') },
+      { id: '2', primary: this.translate.instant('common.txnOut') }
+    ];
+  }
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');

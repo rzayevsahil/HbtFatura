@@ -1,65 +1,79 @@
 <div class="page-header">
   <h1 class="page-title">{{ 'products.pageTitle' | translate }}</h1>
 </div>
-<div class="toolbar">
-  <input type="text" [(ngModel)]="search" [placeholder]="'products.searchPlaceholder' | translate" (keyup.enter)="applySearch()" />
-  <button type="button" (click)="applySearch()">{{ 'products.search' | translate }}</button>
-  @if (auth.hasPermission('Products.Edit')) {
-  <a routerLink="/products/new" class="btn btn-primary">{{ 'products.newProduct' | translate }}</a>
-  }
-</div>
-<div class="card table-wrap" style="position: relative; min-height: 200px;">
-  @if (loading) {
-  <div class="loading-overlay">
-    <div class="spinner"></div>
+<div class="card table-card">
+  <div class="table-toolbar table-toolbar--multiline">
+    <span class="material-icons toolbar-search-icon" aria-hidden="true">search</span>
+    <input
+      type="search"
+      class="search-input"
+      [(ngModel)]="search"
+      [placeholder]="'products.searchPlaceholder' | translate"
+      (keyup.enter)="applySearch()"
+    />
+    <button type="button" class="btn-page" (click)="applySearch()">{{ 'products.search' | translate }}</button>
+    @if (auth.hasPermission('Products.Edit')) {
+      <a routerLink="/products/new" class="btn-primary">{{ 'products.newProduct' | translate }}</a>
+    }
   </div>
+  <div class="table-container table-container--with-overlay">
+    @if (loading) {
+      <div class="loading-overlay">
+        <div class="spinner"></div>
+      </div>
+    }
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>{{ 'products.colCode' | translate }}</th>
+          <th>{{ 'products.colName' | translate }}</th>
+          <th>{{ 'products.colStockType' | translate }}</th>
+          <th>{{ 'products.colPrice' | translate }}</th>
+          <th>{{ 'products.colStock' | translate }}</th>
+          <th>{{ 'products.colUnit' | translate }}</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (p of items; track p.id) {
+          <tr>
+            <td>{{ p.code }}</td>
+            <td>{{ p.name }}</td>
+            <td>{{ ('products.stockTypes.' + p.stockType) | translate }}</td>
+            <td class="amount">{{ p.unitPrice | number: '1.2-2' }} {{ formatCurrencyLabel(p.currency) }}</td>
+            <td class="amount">{{ p.stockQuantity | number: '1.2-2' }}</td>
+            <td>{{ p.unit }}</td>
+            <td>
+              <div class="actions-cell">
+                <a [routerLink]="['/products', p.id]">{{ 'products.detail' | translate }}</a>
+                @if (auth.hasPermission('Products.Edit')) {
+                  <a [routerLink]="['/products', p.id, 'edit']">{{ 'products.edit' | translate }}</a>
+                  <button type="button" class="btn-danger" (click)="onDeleteClick(p.id, p.name)">{{ 'products.delete' | translate }}</button>
+                }
+              </div>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  @if (totalCount > pageSize) {
+    <div class="pagination-bar">
+      <span class="pagination-info">{{ 'products.pageInfo' | translate: { total: totalCount, page: page } }}</span>
+    </div>
   }
-  <table>
-    <thead>
-      <tr>
-        <th>{{ 'products.colCode' | translate }}</th>
-        <th>{{ 'products.colName' | translate }}</th>
-        <th>{{ 'products.colStockType' | translate }}</th>
-        <th>{{ 'products.colPrice' | translate }}</th>
-        <th>{{ 'products.colStock' | translate }}</th>
-        <th>{{ 'products.colUnit' | translate }}</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      @for (p of items; track p.id) {
-      <tr>
-        <td>{{ p.code }}</td>
-        <td>{{ p.name }}</td>
-        <td>{{ ('products.stockTypes.' + p.stockType) | translate }}</td>
-        <td class="amount">{{ p.unitPrice | number:'1.2-2' }} {{ formatCurrencyLabel(p.currency) }}</td>
-        <td class="amount">{{ p.stockQuantity | number:'1.2-2' }}</td>
-        <td>{{ p.unit }}</td>
-        <td>
-          <div class="actions-cell">
-            <a [routerLink]="['/products', p.id]">{{ 'products.detail' | translate }}</a>
-            @if (auth.hasPermission('Products.Edit')) {
-            <a [routerLink]="['/products', p.id, 'edit']">{{ 'products.edit' | translate }}</a>
-            <button type="button" (click)="onDeleteClick(p.id, p.name)">{{ 'products.delete' | translate }}</button>
-            }
-          </div>
-        </td>
-      </tr>
-      }
-    </tbody>
-  </table>
 </div>
-@if (totalCount > pageSize) {
-<p class="text-muted">{{ 'products.pageInfo' | translate: { total: totalCount, page: page } }}</p>
-}
-@if (items.length === 0) {
-<p class="text-muted">{{ 'products.noResults' | translate }}</p>
+@if (items.length === 0 && !loading) {
+  <p class="list-page-text-muted">{{ 'products.noResults' | translate }}</p>
 }
 
 @if (showDeleteModal && deletingProduct) {
-<app-confirm-modal [title]="'products.deleteTitle' | translate"
-  [message]="'products.deleteMessage' | translate: { name: deletingProduct.name }"
-  [confirmText]="'products.delete' | translate"
-  [cancelText]="'common.cancel' | translate"
-  (confirm)="confirmDelete()" (cancel)="showDeleteModal = false"></app-confirm-modal>
+  <app-confirm-modal
+    [title]="'products.deleteTitle' | translate"
+    [message]="'products.deleteMessage' | translate: { name: deletingProduct.name }"
+    [confirmText]="'products.delete' | translate"
+    [cancelText]="'common.cancel' | translate"
+    (confirm)="confirmDelete()"
+    (cancel)="showDeleteModal = false"
+  ></app-confirm-modal>
 }

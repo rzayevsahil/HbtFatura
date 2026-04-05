@@ -1,111 +1,151 @@
 <div class="page-header">
   <h1 class="page-title">{{ 'invoices.pageTitle' | translate }}</h1>
 </div>
-<div class="toolbar">
-  <label class="toolbar-field">
-    <span class="toolbar-label">{{ 'invoices.searchLabel' | translate }}</span>
-    <input [(ngModel)]="searchText" type="text" [placeholder]="'invoices.searchPlaceholder' | translate" (keyup.enter)="load()" />
-  </label>
-  <label class="toolbar-field">
-    <span class="toolbar-label">{{ 'common.dateFrom' | translate }}</span>
-    <input [(ngModel)]="searchDateFrom" type="date" />
-  </label>
-  <label class="toolbar-field">
-    <span class="toolbar-label">{{ 'common.dateTo' | translate }}</span>
-    <input [(ngModel)]="searchDateTo" type="date" />
-  </label>
-  <label class="toolbar-field">
-    <span class="toolbar-label">{{ 'common.status' | translate }}</span>
-    <select [(ngModel)]="searchStatus">
-      <option [ngValue]="null">{{ 'common.all' | translate }}</option>
-      @for (l of lookups.getGroup('InvoiceStatus')(); track l.code) {
-      <option [ngValue]="+l.code">{{ l.name }}</option>
-      }
-    </select>
-  </label>
-  <label class="toolbar-field">
-    <span class="toolbar-label">{{ 'invoices.invoiceType' | translate }}</span>
-    <select [(ngModel)]="searchInvoiceType">
-      <option [ngValue]="null">{{ 'invoices.filterTypeAll' | translate }}</option>
-      @for (l of lookups.getGroup('InvoiceType')(); track l.code) {
-      <option [ngValue]="+l.code">{{ l.name }}</option>
-      }
-    </select>
-  </label>
-  <div class="toolbar-field toolbar-field-btn">
-    <span class="toolbar-label">&nbsp;</span>
-    <button type="button" (click)="load()">{{ 'common.filter' | translate }}</button>
+<div class="card table-card">
+  <div class="table-toolbar table-toolbar--multiline">
+    <span class="material-icons toolbar-search-icon" aria-hidden="true">search</span>
+    <label class="toolbar-field toolbar-field--grow">
+      <span class="toolbar-label">{{ 'invoices.searchLabel' | translate }}</span>
+      <input
+        [(ngModel)]="searchText"
+        type="search"
+        class="search-input"
+        [placeholder]="'invoices.searchPlaceholder' | translate"
+        (keyup.enter)="load()"
+      />
+    </label>
+    <label class="toolbar-field">
+      <span class="toolbar-label">{{ 'common.dateFrom' | translate }}</span>
+      <input [(ngModel)]="searchDateFrom" type="date" />
+    </label>
+    <label class="toolbar-field">
+      <span class="toolbar-label">{{ 'common.dateTo' | translate }}</span>
+      <input [(ngModel)]="searchDateTo" type="date" />
+    </label>
+    <label class="toolbar-field toolbar-field--searchable">
+      <span class="toolbar-label">{{ 'common.status' | translate }}</span>
+      <app-searchable-select
+        class="toolbar-searchable-select"
+        name="invFilterStatus"
+        [ngModel]="searchStatus === null || searchStatus === undefined ? null : (searchStatus + '')"
+        (ngModelChange)="onInvoiceStatusFilterChange($event)"
+        [options]="invoiceStatusFilterOptions"
+        layout="dropdown"
+        [placeholder]="'common.all' | translate"
+        [searchPlaceholder]="'common.search' | translate"
+        [showNoneOption]="true"
+        [noneOptionLabel]="'common.all' | translate"
+        [noResultsLabel]="'common.noResults' | translate"
+        [listMaxHeight]="'260px'"
+        [disabled]="loading"
+      />
+    </label>
+    <label class="toolbar-field toolbar-field--searchable">
+      <span class="toolbar-label">{{ 'invoices.invoiceType' | translate }}</span>
+      <app-searchable-select
+        class="toolbar-searchable-select"
+        name="invFilterType"
+        [ngModel]="searchInvoiceType === null || searchInvoiceType === undefined ? null : (searchInvoiceType + '')"
+        (ngModelChange)="onInvoiceTypeFilterChange($event)"
+        [options]="invoiceTypeFilterOptions"
+        layout="dropdown"
+        [placeholder]="'invoices.filterTypeAll' | translate"
+        [searchPlaceholder]="'common.search' | translate"
+        [showNoneOption]="true"
+        [noneOptionLabel]="'invoices.filterTypeAll' | translate"
+        [noResultsLabel]="'common.noResults' | translate"
+        [listMaxHeight]="'260px'"
+        [disabled]="loading"
+      />
+    </label>
+    <div class="toolbar-field toolbar-field-btn">
+      <span class="toolbar-label">&nbsp;</span>
+      <button type="button" (click)="load()">{{ 'common.filter' | translate }}</button>
+    </div>
+    <div class="toolbar-field toolbar-field-btn">
+      <span class="toolbar-label">&nbsp;</span>
+      <button type="button" class="btn-default" (click)="downloadReportPdf()">{{ 'common.pdfDownload' | translate }}</button>
+    </div>
+    <div class="toolbar-field toolbar-field-btn">
+      <span class="toolbar-label">&nbsp;</span>
+      <button type="button" class="btn-default" (click)="downloadReportExcel()">{{ 'common.excelDownload' | translate }}</button>
+    </div>
+    @if (auth.hasPermission('Invoices.Create')) {
+      <div class="toolbar-field toolbar-field-btn">
+        <span class="toolbar-label">&nbsp;</span>
+        <a routerLink="/invoices/new" class="btn-primary">{{ 'invoices.newInvoice' | translate }}</a>
+      </div>
+    }
   </div>
-  <div class="toolbar-field toolbar-field-btn">
-    <span class="toolbar-label">&nbsp;</span>
-    <button type="button" class="btn btn-default" (click)="downloadReportPdf()">{{ 'common.pdfDownload' | translate }}</button>
+  <div class="table-container table-container--with-overlay">
+    @if (loading) {
+      <div class="loading-overlay">
+        <div class="spinner"></div>
+      </div>
+    }
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>{{ 'invoices.colNo' | translate }}</th>
+          <th>{{ 'dashboard.colDate' | translate }}</th>
+          <th>{{ 'common.type' | translate }}</th>
+          <th>{{ 'common.customer' | translate }}</th>
+          <th>{{ 'common.total' | translate }}</th>
+          <th>{{ 'common.status' | translate }}</th>
+          <th>{{ 'common.createdBy' | translate }}</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (inv of items; track inv.id) {
+          <tr>
+            <td>
+              <strong>{{ inv.invoiceNumber }}</strong>
+            </td>
+            <td>{{ inv.invoiceDate | date: 'dd.MM.yyyy HH:mm' }}</td>
+            <td [style.color]="lookups.getColor('InvoiceType', inv.invoiceType)" style="font-weight: 500">
+              {{ typeLabel(inv.invoiceType) }}
+            </td>
+            <td>
+              @if (inv.customerId) {
+                <a [routerLink]="['/customers', inv.customerId]" class="customer-link">{{ inv.customerTitle }}</a>
+              } @else {
+                {{ inv.customerTitle }}
+              }
+            </td>
+            <td>{{ inv.grandTotal | number: '1.2-2' }} {{ inv.currency }}</td>
+            <td>
+              <span
+                class="status-badge"
+                [style.color]="lookups.getColor('InvoiceStatus', inv.status)"
+                [style.borderColor]="lookups.getColor('InvoiceStatus', inv.status)"
+                [style.backgroundColor]="lookups.getColor('InvoiceStatus', inv.status) + '15'"
+              >
+                {{ statusLabel(inv.status) }}
+              </span>
+            </td>
+            <td>{{ inv.createdByUserName ?? '—' }}</td>
+            <td>
+              <div class="actions-cell">
+                <a [routerLink]="['/invoices', inv.id]">{{ 'common.detail' | translate }}</a>
+                @if (inv.status === 0 && auth.hasPermission('Invoices.Edit')) {
+                  <a [routerLink]="['/invoices', inv.id, 'edit']">{{ 'common.edit' | translate }}</a>
+                }
+                @if (inv.isGibSent || (inv.invoiceType === 1 && inv.status >= 1)) {
+                  <a href="#" (click)="downloadPdf(inv.id, inv.invoiceNumber); $event.preventDefault()">{{ 'common.pdf' | translate }}</a>
+                }
+              </div>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
   </div>
-  <div class="toolbar-field toolbar-field-btn">
-    <span class="toolbar-label">&nbsp;</span>
-    <button type="button" class="btn btn-default" (click)="downloadReportExcel()">{{ 'common.excelDownload' | translate }}</button>
+  <div class="pagination-bar">
+    <span class="pagination-info">{{ 'common.paginationTotalPage' | translate: { total: totalCount, page: page } }}</span>
+    <div class="pagination-actions">
+      <button type="button" class="btn-page" [disabled]="page <= 1" (click)="prevPage()">{{ 'common.previous' | translate }}</button>
+      <button type="button" class="btn-page" [disabled]="items.length < pageSize" (click)="nextPage()">{{ 'common.next' | translate }}</button>
+    </div>
   </div>
-  @if (auth.hasPermission('Invoices.Create')) {
-  <div class="toolbar-field toolbar-field-btn">
-    <span class="toolbar-label">&nbsp;</span>
-    <a routerLink="/invoices/new" class="btn-primary">{{ 'invoices.newInvoice' | translate }}</a>
-  </div>
-  }
-</div>
-<div class="card table-wrap" style="position: relative; min-height: 200px;">
-  @if (loading) {
-  <div class="loading-overlay">
-    <div class="spinner"></div>
-  </div>
-  }
-  <table>
-    <thead>
-      <tr>
-        <th>{{ 'invoices.colNo' | translate }}</th>
-        <th>{{ 'dashboard.colDate' | translate }}</th>
-        <th>{{ 'common.type' | translate }}</th>
-        <th>{{ 'common.customer' | translate }}</th>
-        <th>{{ 'common.total' | translate }}</th>
-        <th>{{ 'common.status' | translate }}</th>
-        <th>{{ 'common.createdBy' | translate }}</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      @for (inv of items; track inv.id) {
-      <tr>
-        <td><strong>{{ inv.invoiceNumber }}</strong></td>
-        <td>{{ inv.invoiceDate | date:'dd.MM.yyyy HH:mm' }}</td>
-        <td [style.color]="lookups.getColor('InvoiceType', inv.invoiceType)" style="font-weight: 500;">
-          {{ typeLabel(inv.invoiceType) }}
-        </td>
-        <td>@if (inv.customerId) { <a [routerLink]="['/customers', inv.customerId]" class="customer-link">{{ inv.customerTitle }}</a> } @else { {{ inv.customerTitle }} }</td>
-        <td>{{ inv.grandTotal | number:'1.2-2' }} {{ inv.currency }}</td>
-        <td>
-          <span class="status-badge" [style.color]="lookups.getColor('InvoiceStatus', inv.status)"
-            [style.borderColor]="lookups.getColor('InvoiceStatus', inv.status)"
-            [style.backgroundColor]="lookups.getColor('InvoiceStatus', inv.status) + '15'">
-            {{ statusLabel(inv.status) }}
-          </span>
-        </td>
-        <td>{{ inv.createdByUserName ?? '—' }}</td>
-        <td>
-          <div class="actions-cell">
-            <a [routerLink]="['/invoices', inv.id]">{{ 'common.detail' | translate }}</a>
-            @if (inv.status === 0 && auth.hasPermission('Invoices.Edit')) {
-            <a [routerLink]="['/invoices', inv.id, 'edit']">{{ 'common.edit' | translate }}</a>
-            }
-            @if (inv.isGibSent || (inv.invoiceType === 1 && inv.status >= 1)) {
-            <a href="#" (click)="downloadPdf(inv.id, inv.invoiceNumber); $event.preventDefault()">{{ 'common.pdf' | translate }}</a>
-            }
-          </div>
-        </td>
-      </tr>
-      }
-    </tbody>
-  </table>
-</div>
-<div class="pagination">
-  <span>{{ 'common.paginationTotalPage' | translate: { total: totalCount, page: page } }}</span>
-  <button type="button" [disabled]="page <= 1" (click)="prevPage()">{{ 'common.previous' | translate }}</button>
-  <button type="button" [disabled]="items.length < pageSize" (click)="nextPage()">{{ 'common.next' | translate }}</button>
 </div>

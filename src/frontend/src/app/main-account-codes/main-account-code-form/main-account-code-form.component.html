@@ -15,12 +15,15 @@
       @if (auth.user()?.role === 'SuperAdmin' && !id) {
         <div class="row">
           <label>{{ 'mainAccountCodes.firm' | translate }}</label>
-          <select formControlName="firmId" required>
-            <option [ngValue]="null">{{ 'mainAccountCodes.selectFirm' | translate }}</option>
-            @for (f of firms; track f.id) {
-              <option [ngValue]="f.id">{{ f.name }}</option>
-            }
-          </select>
+          <app-searchable-select
+            formControlName="firmId"
+            [options]="firmSearchableOptions"
+            [showNoneOption]="true"
+            [noneOptionLabel]="'mainAccountCodes.selectFirm' | translate"
+            [placeholder]="'mainAccountCodes.selectFirm' | translate"
+            [searchPlaceholder]="'common.search' | translate"
+            [noResultsLabel]="'common.noResults' | translate"
+          />
         </div>
       }
       <div class="row">

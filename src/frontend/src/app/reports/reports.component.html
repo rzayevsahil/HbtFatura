@@ -2,17 +2,26 @@
   <h1 class="page-title">{{ 'reportsPage.pageTitle' | translate }}</h1>
 </div>
 
-<section class="report-section card">
+<section class="report-section card table-card">
   <h2>{{ 'reportsPage.invoiceReport' | translate }}</h2>
-  <div class="filters">
+  <div class="table-toolbar table-toolbar--multiline">
     <input type="date" [(ngModel)]="invoiceDateFrom" [attr.placeholder]="'common.dateFromShort' | translate" />
     <input type="date" [(ngModel)]="invoiceDateTo" [attr.placeholder]="'common.dateToShort' | translate" />
-    <select [(ngModel)]="invoiceCustomerId">
-      <option value="">{{ 'reportsPage.allCustomers' | translate }}</option>
-      @for (c of customers; track c.id) {
-      <option [value]="c.id">{{ c.title }}</option>
-      }
-    </select>
+    <app-searchable-select
+      class="toolbar-searchable-select"
+      name="rptInvoiceCustomer"
+      [ngModel]="invoiceCustomerId || null"
+      (ngModelChange)="invoiceCustomerId = $event ?? ''"
+      [options]="reportCustomerOptions"
+      layout="dropdown"
+      [placeholder]="'reportsPage.allCustomers' | translate"
+      [searchPlaceholder]="'common.customerSearchPh' | translate"
+      [showNoneOption]="true"
+      [noneOptionLabel]="'reportsPage.allCustomers' | translate"
+      [noResultsLabel]="'common.noResults' | translate"
+      [listMaxHeight]="'300px'"
+      [disabled]="invoiceLoading"
+    />
     <button type="button" (click)="loadInvoiceReport()" [disabled]="invoiceLoading">{{ 'reportsPage.load' | translate }}</button>
     @if (invoiceData) {
     <button type="button" (click)="downloadInvoiceReportPdf()">{{ 'common.pdfDownload' | translate }}</button>
@@ -31,8 +40,8 @@
   } @else {
   <p>{{ 'reportsPage.invoiceLine' | translate: { count: invoiceData.items.length } }}</p>
   }
-  <div class="table-wrap">
-    <table>
+  <div class="table-container">
+    <table class="data-table">
       <thead>
         <tr>
           <th>{{ 'reportsPage.colInvoiceNo' | translate }}</th>
@@ -60,15 +69,24 @@
   }
 </section>
 
-<section class="report-section card">
+<section class="report-section card table-card">
   <h2>{{ 'reportsPage.cariStatement' | translate }}</h2>
-  <div class="filters">
-    <select [(ngModel)]="cariCustomerId" required>
-      <option value="">{{ 'reportsPage.selectCustomer' | translate }}</option>
-      @for (c of customers; track c.id) {
-      <option [value]="c.id">{{ c.title }}</option>
-      }
-    </select>
+  <div class="table-toolbar table-toolbar--multiline">
+    <app-searchable-select
+      class="toolbar-searchable-select"
+      name="rptCariCustomer"
+      [ngModel]="cariCustomerId || null"
+      (ngModelChange)="cariCustomerId = $event ?? ''"
+      [options]="reportCustomerOptions"
+      layout="dropdown"
+      [placeholder]="'reportsPage.selectCustomer' | translate"
+      [searchPlaceholder]="'common.customerSearchPh' | translate"
+      [showNoneOption]="true"
+      [noneOptionLabel]="'reportsPage.selectCustomer' | translate"
+      [noResultsLabel]="'common.noResults' | translate"
+      [listMaxHeight]="'300px'"
+      [disabled]="cariLoading"
+    />
     <input type="date" [(ngModel)]="cariDateFrom" [attr.placeholder]="'common.dateFromShort' | translate" />
     <input type="date" [(ngModel)]="cariDateTo" [attr.placeholder]="'common.dateToShort' | translate" />
     <button type="button" (click)="loadCari()" [disabled]="cariLoading">{{ 'reportsPage.load' | translate }}</button>
@@ -89,8 +107,8 @@
     open: (cariData.openingBalance | number:'1.2-2'),
     close: (cariData.closingBalance | number:'1.2-2')
   } }}</p>
-  <div class="table-wrap">
-    <table>
+  <div class="table-container">
+    <table class="data-table">
       <thead>
         <tr>
           <th>{{ 'payments.colDate' | translate }}</th>
@@ -116,15 +134,24 @@
   }
 </section>
 
-<section class="report-section card">
+<section class="report-section card table-card">
   <h2>{{ 'reportsPage.cashReport' | translate }}</h2>
-  <div class="filters">
-    <select [(ngModel)]="cashRegisterId">
-      <option value="">{{ 'reportsPage.allCash' | translate }}</option>
-      @for (c of cashRegisters; track c.id) {
-      <option [value]="c.id">{{ c.name }}</option>
-      }
-    </select>
+  <div class="table-toolbar table-toolbar--multiline">
+    <app-searchable-select
+      class="toolbar-searchable-select"
+      name="rptCash"
+      [ngModel]="cashRegisterId || null"
+      (ngModelChange)="cashRegisterId = $event ?? ''"
+      [options]="reportCashRegisterOptions"
+      layout="dropdown"
+      [placeholder]="'reportsPage.allCash' | translate"
+      [searchPlaceholder]="'common.search' | translate"
+      [showNoneOption]="true"
+      [noneOptionLabel]="'reportsPage.allCash' | translate"
+      [noResultsLabel]="'common.noResults' | translate"
+      [listMaxHeight]="'280px'"
+      [disabled]="cashLoading"
+    />
     <input type="date" [(ngModel)]="cashDateFrom" />
     <input type="date" [(ngModel)]="cashDateTo" />
     <button type="button" (click)="loadCash()" [disabled]="cashLoading">{{ 'reportsPage.load' | translate }}</button>
@@ -142,8 +169,8 @@
     out: (cashData.totalCikis | number:'1.2-2'),
     close: (cashData.closingBalance | number:'1.2-2')
   } }}</p>
-  <div class="table-wrap">
-    <table>
+  <div class="table-container">
+    <table class="data-table">
       <thead>
         <tr>
           <th>{{ 'payments.colDate' | translate }}</th>
@@ -165,15 +192,24 @@
   }
 </section>
 
-<section class="report-section card">
+<section class="report-section card table-card">
   <h2>{{ 'reportsPage.bankReport' | translate }}</h2>
-  <div class="filters">
-    <select [(ngModel)]="bankAccountId">
-      <option value="">{{ 'reportsPage.allBankAccounts' | translate }}</option>
-      @for (b of bankAccounts; track b.id) {
-      <option [value]="b.id">{{ b.name }}</option>
-      }
-    </select>
+  <div class="table-toolbar table-toolbar--multiline">
+    <app-searchable-select
+      class="toolbar-searchable-select"
+      name="rptBank"
+      [ngModel]="bankAccountId || null"
+      (ngModelChange)="bankAccountId = $event ?? ''"
+      [options]="reportBankAccountOptions"
+      layout="dropdown"
+      [placeholder]="'reportsPage.allBankAccounts' | translate"
+      [searchPlaceholder]="'common.search' | translate"
+      [showNoneOption]="true"
+      [noneOptionLabel]="'reportsPage.allBankAccounts' | translate"
+      [noResultsLabel]="'common.noResults' | translate"
+      [listMaxHeight]="'280px'"
+      [disabled]="bankLoading"
+    />
     <input type="date" [(ngModel)]="bankDateFrom" />
     <input type="date" [(ngModel)]="bankDateTo" />
     <button type="button" (click)="loadBank()" [disabled]="bankLoading">{{ 'reportsPage.load' | translate }}</button>
@@ -191,8 +227,8 @@
     out: (bankData.totalCikis | number:'1.2-2'),
     close: (bankData.closingBalance | number:'1.2-2')
   } }}</p>
-  <div class="table-wrap">
-    <table>
+  <div class="table-container">
+    <table class="data-table">
       <thead>
         <tr>
           <th>{{ 'payments.colDate' | translate }}</th>
@@ -214,9 +250,9 @@
   }
 </section>
 
-<section class="report-section card">
+<section class="report-section card table-card">
   <h2>{{ 'reportsPage.stockReport' | translate }}</h2>
-  <div class="filters">
+  <div class="table-toolbar table-toolbar--multiline">
     <button type="button" (click)="loadStock()" [disabled]="stockLoading">{{ 'reportsPage.load' | translate }}</button>
     <button type="button" (click)="downloadStockPdf()">{{ 'common.pdfDownload' | translate }}</button>
   </div>
@@ -227,8 +263,8 @@
   </div>
   }
   @if (stockData && !stockLoading) {
-  <div class="table-wrap">
-    <table>
+  <div class="table-container">
+    <table class="data-table">
       <thead>
         <tr>
           <th>{{ 'products.colCode' | translate }}</th>
@@ -252,18 +288,27 @@
   }
 </section>
 
-<section class="report-section card">
+<section class="report-section card table-card">
   <h2>{{ 'reportsPage.monthlySales' | translate }}</h2>
   <p class="text-muted">{{ 'reportsPage.monthlyHint' | translate }}</p>
-  <div class="filters">
+  <div class="table-toolbar table-toolbar--multiline">
     <input type="date" [(ngModel)]="monthlyDateFrom" [attr.placeholder]="'common.dateFromShort' | translate" />
     <input type="date" [(ngModel)]="monthlyDateTo" [attr.placeholder]="'common.dateToShort' | translate" />
-    <select [(ngModel)]="monthlyProductId">
-      <option value="">{{ 'reportsPage.allProducts' | translate }}</option>
-      @for (p of products; track p.id) {
-      <option [value]="p.id">{{ p.code }} — {{ p.name }}</option>
-      }
-    </select>
+    <app-searchable-select
+      class="toolbar-searchable-select"
+      name="rptMonthlyProduct"
+      [ngModel]="monthlyProductId || null"
+      (ngModelChange)="monthlyProductId = $event ?? ''"
+      [options]="reportProductOptions"
+      layout="dropdown"
+      [placeholder]="'reportsPage.allProducts' | translate"
+      [searchPlaceholder]="'products.searchPlaceholder' | translate"
+      [showNoneOption]="true"
+      [noneOptionLabel]="'reportsPage.allProducts' | translate"
+      [noResultsLabel]="'common.noResults' | translate"
+      [listMaxHeight]="'300px'"
+      [disabled]="monthlyLoading"
+    />
     <button type="button" (click)="loadMonthlyProductSales()" [disabled]="monthlyLoading">{{ 'reportsPage.load' | translate }}</button>
   </div>
   @if (monthlyLoading) {
@@ -274,8 +319,8 @@
   }
   @if (monthlyData && !monthlyLoading) {
   <p>{{ 'reportsPage.totalRows' | translate: { count: monthlyData.items.length } }}</p>
-  <div class="table-wrap">
-    <table>
+  <div class="table-container">
+    <table class="data-table">
       <thead>
         <tr>
           <th>{{ 'products.colCode' | translate }}</th>

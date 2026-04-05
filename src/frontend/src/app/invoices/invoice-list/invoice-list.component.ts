@@ -9,11 +9,15 @@ import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../../core/services/auth.service';
 import { LookupService } from '../../core/services/lookup.service';
 import { InvoiceListDto, InvoiceStatus } from '../../core/models';
+import {
+  SearchableSelectComponent,
+  SearchableSelectOption
+} from '../../shared/searchable-select/searchable-select.component';
 
 @Component({
   selector: 'app-invoice-list',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule, TranslateModule],
+  imports: [CommonModule, RouterLink, FormsModule, TranslateModule, SearchableSelectComponent],
   templateUrl: './invoice-list.component.html',
   styleUrls: ['./invoice-list.component.scss']
 })
@@ -39,9 +43,36 @@ export class InvoiceListComponent implements OnInit {
     private translate: TranslateService
   ) { }
 
+  get invoiceStatusFilterOptions(): SearchableSelectOption[] {
+    return this.lookups.getGroup('InvoiceStatus')().map((l) => ({
+      id: String(l.code),
+      primary: l.name
+    }));
+  }
+
+  get invoiceTypeFilterOptions(): SearchableSelectOption[] {
+    return this.lookups.getGroup('InvoiceType')().map((l) => ({
+      id: String(l.code),
+      primary: l.name
+    }));
+  }
+
+  onInvoiceStatusFilterChange(v: string | null): void {
+    this.searchStatus = v === null ? null : (+v as InvoiceStatus);
+    this.page = 1;
+    this.load();
+  }
+
+  onInvoiceTypeFilterChange(v: string | null): void {
+    this.searchInvoiceType = v === null ? null : +v;
+    this.page = 1;
+    this.load();
+  }
+
   @HostListener('document:keydown', ['$event'])
   onKeyDown(e: KeyboardEvent): void {
-    if (e.key === 'F3' && !['INPUT', 'TEXTAREA', 'SELECT'].includes((e.target as HTMLElement)?.tagName)) {
+    const t = e.target as HTMLElement;
+    if (e.key === 'F3' && !['INPUT', 'TEXTAREA', 'SELECT'].includes(t?.tagName) && !t?.closest('app-searchable-select')) {
       e.preventDefault();
       this.router.navigate(['/invoices/new']);
     }

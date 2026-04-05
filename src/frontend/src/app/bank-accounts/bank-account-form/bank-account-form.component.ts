@@ -11,11 +11,12 @@ import { IbanFormatter } from '../../core/utils/iban-formatter';
 import { LookupService } from '../../core/services/lookup.service';
 import { LookupDto } from '../../core/models';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { SearchableSelectComponent, SearchableSelectOption } from '../../shared/searchable-select/searchable-select.component';
 
 @Component({
   selector: 'app-bank-account-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, TranslateModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, TranslateModule, SearchableSelectComponent],
   templateUrl: './bank-account-form.component.html',
   styleUrls: ['./bank-account-form.component.scss']
 })
@@ -34,6 +35,18 @@ export class BankAccountFormComponent implements OnInit {
   currencies: LookupDto[] = [];
   error = '';
   saving = false;
+
+  get firmSearchableOptions(): SearchableSelectOption[] {
+    return this.firms.map(f => ({ id: f.id, primary: f.name }));
+  }
+
+  get currencySearchableOptions(): SearchableSelectOption[] {
+    return this.currencies.map(c => ({
+      id: c.code,
+      primary: `${c.name}`,
+      secondary: c.code
+    }));
+  }
 
   constructor(
     private fb: FormBuilder,

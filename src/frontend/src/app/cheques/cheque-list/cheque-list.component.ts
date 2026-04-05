@@ -7,11 +7,15 @@ import { LookupService } from '../../core/services/lookup.service';
 import { ToastrService } from 'ngx-toastr';
 import { ChequeOrPromissoryDto, PagedResult } from '../../core/models';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import {
+  SearchableSelectComponent,
+  SearchableSelectOption
+} from '../../shared/searchable-select/searchable-select.component';
 
 @Component({
   selector: 'app-cheque-list',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule, TranslateModule],
+  imports: [CommonModule, RouterLink, FormsModule, TranslateModule, SearchableSelectComponent],
   templateUrl: './cheque-list.component.html',
   styleUrls: ['./cheque-list.component.scss']
 })
@@ -27,6 +31,30 @@ export class ChequeListComponent implements OnInit {
   filterStatus: number | string | '' = '';
   filterDueFrom = '';
   filterDueTo = '';
+
+  get chequeTypeFilterOptions(): SearchableSelectOption[] {
+    return [
+      { id: '1', primary: this.translate.instant('chequesPage.typeCheque') },
+      { id: '2', primary: this.translate.instant('chequesPage.typeNote') }
+    ];
+  }
+
+  get chequeStatusFilterOptions(): SearchableSelectOption[] {
+    return this.lookups.getGroup('ChequeStatus')().map((l) => ({
+      id: String(l.code),
+      primary: l.name
+    }));
+  }
+
+  onChequeTypeFilterChange(v: string | null): void {
+    this.filterType = v === null || v === '' ? '' : (+v as 1 | 2);
+    this.applyFilter();
+  }
+
+  onChequeStatusFilterChange(v: string | null): void {
+    this.filterStatus = v === null || v === '' ? '' : v;
+    this.applyFilter();
+  }
 
   constructor(
     private api: ChequeService,

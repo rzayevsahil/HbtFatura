@@ -7,11 +7,12 @@ import { LookupService } from '../../core/services/lookup.service';
 import { ChequeOrPromissoryDto } from '../../core/models';
 import { ToastrService } from 'ngx-toastr';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { SearchableSelectComponent, SearchableSelectOption } from '../../shared/searchable-select/searchable-select.component';
 
 @Component({
   selector: 'app-cheque-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule, TranslateModule],
+  imports: [CommonModule, RouterLink, FormsModule, TranslateModule, SearchableSelectComponent],
   templateUrl: './cheque-detail.component.html',
   styleUrls: ['./cheque-detail.component.scss']
 })
@@ -19,6 +20,14 @@ export class ChequeDetailComponent implements OnInit {
   item: ChequeOrPromissoryDto | null = null;
   loading = true;
   newStatus: number = 0;
+
+  get chequeStatusSearchableOptions(): SearchableSelectOption[] {
+    return this.lookups.getGroup('ChequeStatus')().map(l => ({
+      id: String(l.code),
+      primary: l.name,
+      secondary: String(l.code)
+    }));
+  }
 
   constructor(
     private route: ActivatedRoute,

@@ -190,6 +190,7 @@
     "selectShort": "Select",
     "selectNoneLink": "None (no link)",
     "customerSearchPh": "Search customer...",
+    "unitSearchPh": "Search unit...",
     "placeholderOrderSearch": "Order no or customer...",
     "placeholderDeliveryNoteSearch": "Delivery note no or customer...",
     "lines": "Line items",
@@ -606,6 +607,7 @@
   },
   "gibInbox": {
     "pageTitle": "GİB inbox",
+    "searchPlaceholder": "Search invoice no., customer, or sender…",
     "disclaimer": "This screen is not real Revenue Administration (GİB) integration; it only demonstrates in-app approval and notification flow.",
     "empty": "No pending invoices.",
     "colInvoiceNo": "Invoice no.",
@@ -945,6 +947,9 @@
     "title": "Companies",
     "subtitle": "Manage all companies.",
     "newFirm": "New company",
+    "searchPlaceholder": "Search by company name…",
+    "empty": "No companies yet.",
+    "noResults": "No companies match your search.",
     "colName": "Company name",
     "colCreatedAt": "Created at"
   },

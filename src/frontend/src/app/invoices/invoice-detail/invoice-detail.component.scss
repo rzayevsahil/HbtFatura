@@ -254,3 +254,9 @@ th, td {
   background: var(--color-background, #f1f5f9);
   color: var(--color-text, #1e293b);
 }
+
+.page-header app-searchable-select.gib-scenario-select {
+  display: inline-block;
+  margin-right: 10px;
+  vertical-align: middle;
+}

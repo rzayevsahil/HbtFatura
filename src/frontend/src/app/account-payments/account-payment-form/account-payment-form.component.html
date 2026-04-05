@@ -9,19 +9,25 @@
     <div class="form-grid">
       <div class="row">
         <label>{{ 'payments.operationType' | translate }}</label>
-        <select formControlName="type">
-          <option value="Tahsilat">{{ 'payments.typeCollection' | translate }}</option>
-          <option value="Odeme">{{ 'payments.typePayment' | translate }}</option>
-        </select>
+        <app-searchable-select
+          formControlName="type"
+          [options]="paymentTypeSearchableOptions"
+          [placeholder]="'common.selectShort' | translate"
+          [searchPlaceholder]="'common.search' | translate"
+          [noResultsLabel]="'common.noResults' | translate"
+        />
       </div>
       <div class="row">
         <label>{{ 'common.customer' | translate }}</label>
-        <select formControlName="customerId" required>
-          <option value="">{{ 'payments.selectCustomer' | translate }}</option>
-          @for (c of customers; track c.id) {
-            <option [ngValue]="c.id">{{ c.title }}</option>
-          }
-        </select>
+        <app-searchable-select
+          formControlName="customerId"
+          [options]="customerSearchableOptions"
+          [showNoneOption]="true"
+          [noneOptionLabel]="'payments.selectCustomer' | translate"
+          [placeholder]="'payments.selectCustomer' | translate"
+          [searchPlaceholder]="'common.customerSearchPh' | translate"
+          [noResultsLabel]="'common.noResults' | translate"
+        />
       </div>
       <div class="row">
         <label>{{ 'payments.amount' | translate }}</label>
@@ -33,42 +39,55 @@
       </div>
       <div class="row">
         <label>{{ 'payments.paymentMethod' | translate }}</label>
-        <select formControlName="paymentMethod">
-          <option value="Kasa">{{ 'payments.methodCash' | translate }}</option>
-          <option value="Banka">{{ 'payments.methodBank' | translate }}</option>
-        </select>
+        <app-searchable-select
+          formControlName="paymentMethod"
+          [options]="paymentMethodSearchableOptions"
+          [placeholder]="'common.selectShort' | translate"
+          [searchPlaceholder]="'common.search' | translate"
+          [noResultsLabel]="'common.noResults' | translate"
+        />
       </div>
       @if (paymentMethod === 'Kasa') {
         <div class="row">
           <label>{{ 'payments.cashRegister' | translate }}</label>
-          <select formControlName="cashRegisterId" required>
-            <option value="">{{ 'payments.selectCash' | translate }}</option>
-            @for (r of cashRegisters; track r.id) {
-              <option [ngValue]="r.id">{{ r.name }}</option>
-            }
-          </select>
+          <app-searchable-select
+            formControlName="cashRegisterId"
+            [options]="cashRegisterSearchableOptions"
+            [showNoneOption]="true"
+            [noneOptionLabel]="'payments.selectCash' | translate"
+            [placeholder]="'payments.selectCash' | translate"
+            [searchPlaceholder]="'common.search' | translate"
+            [noResultsLabel]="'common.noResults' | translate"
+          />
         </div>
       }
       @if (paymentMethod === 'Banka') {
         <div class="row">
           <label>{{ 'payments.bankAccount' | translate }}</label>
-          <select formControlName="bankAccountId" required>
-            <option value="">{{ 'payments.selectBank' | translate }}</option>
-            @for (b of bankAccounts; track b.id) {
-              <option [ngValue]="b.id">{{ b.name }} ({{ b.bankName ?? '' }})</option>
-            }
-          </select>
+          <app-searchable-select
+            formControlName="bankAccountId"
+            [options]="bankAccountSearchableOptions"
+            [showNoneOption]="true"
+            [noneOptionLabel]="'payments.selectBank' | translate"
+            [placeholder]="'payments.selectBank' | translate"
+            [searchPlaceholder]="'common.search' | translate"
+            [noResultsLabel]="'common.noResults' | translate"
+          />
         </div>
       }
       @if (form.get('type')?.value === 'Tahsilat' && form.get('customerId')?.value) {
         <div class="row">
           <label>{{ 'payments.linkInvoice' | translate }}</label>
-          <select formControlName="invoiceId">
-            <option value="">{{ 'payments.invoiceOptional' | translate }}</option>
-            @for (inv of customerInvoices; track inv.id) {
-              <option [ngValue]="inv.id">{{ inv.invoiceNumber }} — {{ inv.grandTotal | number:'1.2-2' }} {{ inv.currency }}</option>
-            }
-          </select>
+          <app-searchable-select
+            formControlName="invoiceId"
+            [options]="invoiceLinkSearchableOptions"
+            [showNoneOption]="true"
+            [noneEmitsEmptyString]="true"
+            [noneOptionLabel]="'payments.invoiceOptional' | translate"
+            [placeholder]="'payments.invoiceOptional' | translate"
+            [searchPlaceholder]="'common.search' | translate"
+            [noResultsLabel]="'common.noResults' | translate"
+          />
         </div>
       }
       <div class="row">

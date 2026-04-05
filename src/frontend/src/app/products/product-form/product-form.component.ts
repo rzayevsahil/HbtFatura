@@ -11,13 +11,13 @@ import { FirmService } from '../../services/firm.service';
 import { ToastrService } from 'ngx-toastr';
 import { LookupService } from '../../core/services/lookup.service';
 import { LookupDto } from '../../core/models';
-import { UnitFieldSelectComponent } from '../../shared/unit-field-select/unit-field-select.component';
-import { TranslateModule } from '@ngx-translate/core';
+import { SearchableSelectComponent, SearchableSelectOption } from '../../shared/searchable-select/searchable-select.component';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-product-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, UnitFieldSelectComponent, TranslateModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, SearchableSelectComponent, TranslateModule],
   templateUrl: './product-form.component.html',
   styleUrls: ['./product-form.component.scss']
 })
@@ -53,8 +53,45 @@ export class ProductFormComponent implements OnInit {
     public auth: AuthService,
     private firmApi: FirmService,
     private toastr: ToastrService,
-    public lookups: LookupService
+    public lookups: LookupService,
+    private translate: TranslateService
   ) { }
+
+  get firmSearchableOptions(): SearchableSelectOption[] {
+    return this.firms.map(f => ({ id: f.id, primary: f.name }));
+  }
+
+  get stockTypeSearchableOptions(): SearchableSelectOption[] {
+    return this.stockTypes.map(t => ({
+      id: t.code,
+      primary: this.translate.instant('products.stockTypes.' + t.code) || t.name,
+    }));
+  }
+
+  get currencySearchableOptions(): SearchableSelectOption[] {
+    return this.currencies.map(c => ({
+      id: c.code,
+      primary: `${c.name}`,
+      secondary: c.code
+    }));
+  }
+
+  /** Formdaki `unit` değeri lookup’ta `name || code` ile tutulur (eski UnitFieldSelect ile aynı). */
+  get unitSearchableOptions(): SearchableSelectOption[] {
+    const list = this.lookups.getGroup('ProductUnit')();
+    const opts: SearchableSelectOption[] = list.map(l => {
+      const id = ((l.name || l.code || '').trim() || 'Adet');
+      return {
+        id,
+        primary: this.lookups.displayLookupLabel(l) || id,
+      };
+    });
+    const current = (this.form.get('unit')?.value ?? '').toString().trim();
+    if (current && !opts.some(o => o.id === current)) {
+      opts.unshift({ id: current, primary: current });
+    }
+    return opts;
+  }
 
   ngOnInit(): void {
     if (this.auth.user()?.role === 'SuperAdmin') {

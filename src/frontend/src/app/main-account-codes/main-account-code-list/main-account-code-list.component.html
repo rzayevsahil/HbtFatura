@@ -1,69 +1,84 @@
 <div class="page-header">
   <h1 class="page-title">{{ 'mainAccountCodes.pageTitle' | translate }}</h1>
-  <div class="actions">
-    <button type="button" class="btn btn-primary" (click)="openNew()">{{ 'mainAccountCodes.newCode' | translate }}</button>
+</div>
+<div class="card table-card">
+  <div class="table-toolbar table-toolbar--multiline">
+    <span class="material-icons toolbar-search-icon" aria-hidden="true">search</span>
+    <input
+      type="search"
+      class="search-input"
+      [(ngModel)]="searchText"
+      [placeholder]="'mainAccountCodes.searchPlaceholder' | translate"
+    />
+    <button type="button" class="btn-page btn-page--primary" (click)="openNew()">{{ 'mainAccountCodes.newCode' | translate }}</button>
+  </div>
+  <div class="table-container table-container--with-overlay">
+    @if (loading) {
+      <div class="loading-overlay">
+        <div class="spinner"></div>
+      </div>
+    }
+    <table class="data-table main-table">
+      <colgroup>
+        <col class="col-code" />
+        <col class="col-name" />
+        <col class="col-actions" />
+      </colgroup>
+      <thead>
+        <tr>
+          <th>{{ 'mainAccountCodes.colCode' | translate }}</th>
+          <th>{{ 'mainAccountCodes.colName' | translate }}</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of filteredItems; track item.id) {
+          <tr>
+            <td>{{ item.code }}</td>
+            <td>{{ item.name }}</td>
+            <td>
+              @if (!item.isSystem) {
+                <div class="actions-cell">
+                  <button type="button" class="btn-page" (click)="openEdit(item.id)">{{ 'common.edit' | translate }}</button>
+                  <button type="button" class="btn-danger" (click)="onDeleteClick(item.id, item.code)">{{ 'common.delete' | translate }}</button>
+                </div>
+              } @else {
+                <span class="system-code-note">{{ 'mainAccountCodes.systemCode' | translate }}</span>
+              }
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
   </div>
 </div>
-<div class="card list-toolbar">
-  <input type="text" class="search-input" [(ngModel)]="searchText" [placeholder]="'mainAccountCodes.searchPlaceholder' | translate" />
-</div>
-<div class="card table-wrap" style="position: relative; min-height: 200px;">
-  @if (loading) {
-  <div class="loading-overlay">
-    <div class="spinner"></div>
-  </div>
-  }
-  <table class="main-table">
-    <colgroup>
-      <col class="col-code" />
-      <col class="col-name" />
-      <col class="col-actions" />
-    </colgroup>
-    <thead>
-      <tr>
-        <th>{{ 'mainAccountCodes.colCode' | translate }}</th>
-        <th>{{ 'mainAccountCodes.colName' | translate }}</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      @for (item of filteredItems; track item.id) {
-      <tr>
-        <td>{{ item.code }}</td>
-        <td>{{ item.name }}</td>
-        <td>
-          @if (!item.isSystem) {
-          <div class="actions-cell">
-            <button type="button" class="btn btn-outline" (click)="openEdit(item.id)">{{ 'common.edit' | translate }}</button>
-            <button type="button" class="btn btn-outline btn-danger"
-              (click)="onDeleteClick(item.id, item.code)">{{ 'common.delete' | translate }}</button>
-          </div>
-          } @else {
-          <span class="text-muted">{{ 'mainAccountCodes.systemCode' | translate }}</span>
-          }
-        </td>
-      </tr>
-      }
-    </tbody>
-  </table>
-</div>
-@if (items.length === 0) {
-<p class="text-muted">{{ 'mainAccountCodes.emptyHint' | translate }}</p>
-} @else if (filteredItems.length === 0) {
-<p class="text-muted">{{ 'mainAccountCodes.noMatch' | translate }}</p>
+@if (items.length === 0 && !loading) {
+  <p class="list-page-text-muted">{{ 'mainAccountCodes.emptyHint' | translate }}</p>
+} @else if (filteredItems.length === 0 && items.length > 0) {
+  <p class="list-page-text-muted">{{ 'mainAccountCodes.noMatch' | translate }}</p>
 }
 
 @if (modalOpen) {
-<div class="modal-overlay">
-  <div class="modal-content">
-    <app-main-account-code-form [isModal]="true" [editId]="editingId" [existingCodes]="items" (saved)="onFormSaved()"
-      (cancel)="closeModal()" />
+  <div class="modal-overlay">
+    <div class="modal-content">
+      <app-main-account-code-form
+        [isModal]="true"
+        [editId]="editingId"
+        [existingCodes]="items"
+        (saved)="onFormSaved()"
+        (cancel)="closeModal()"
+      />
+    </div>
   </div>
-</div>
 }
 
 @if (showDeleteModal) {
-<app-confirm-modal [title]="'mainAccountCodes.deleteTitle' | translate"
-  [message]="'mainAccountCodes.deleteMessage' | translate: { code: deletingItem?.code ?? '' }"
-  [confirmText]="'common.delete' | translate" [cancelText]="'common.discard' | translate" (confirm)="confirmDelete()" (cancel)="showDeleteModal = false"></app-confirm-modal>
+  <app-confirm-modal
+    [title]="'mainAccountCodes.deleteTitle' | translate"
+    [message]="'mainAccountCodes.deleteMessage' | translate: { code: deletingItem?.code ?? '' }"
+    [confirmText]="'common.delete' | translate"
+    [cancelText]="'common.discard' | translate"
+    (confirm)="confirmDelete()"
+    (cancel)="showDeleteModal = false"
+  ></app-confirm-modal>
 }

@@ -108,9 +108,9 @@
           {{ t.description }}
           }
         </td>
-        <td class="amount">{{ t.type === 1 ? (t.amount | number:'1.2-2') : '' }}</td>
-        <td class="amount">{{ t.type === 2 ? (t.amount | number:'1.2-2') : '' }}</td>
-        <td class="amount">{{ t.runningBalance | number:'1.2-2' }} ₺</td>
+        <td>{{ t.type === 1 ? (t.amount | number:'1.2-2') : '' }}</td>
+        <td>{{ t.type === 2 ? (t.amount | number:'1.2-2') : '' }}</td>
+        <td>{{ t.runningBalance | number:'1.2-2' }} ₺</td>
       </tr>
       }
     </tbody>

@@ -10,11 +10,12 @@ import { AuthService } from '../../core/services/auth.service';
 import { FirmService } from '../../services/firm.service';
 import { ToastrService } from 'ngx-toastr';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { SearchableSelectComponent, SearchableSelectOption } from '../../shared/searchable-select/searchable-select.component';
 
 @Component({
   selector: 'app-cheque-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, TranslateModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, TranslateModule, SearchableSelectComponent],
   templateUrl: './cheque-form.component.html',
   styleUrls: ['./cheque-form.component.scss']
 })
@@ -36,6 +37,33 @@ export class ChequeFormComponent implements OnInit {
   firms: { id: string; name: string }[] = [];
   error = '';
   saving = false;
+
+  get firmSearchableOptions(): SearchableSelectOption[] {
+    return this.firms.map(f => ({ id: f.id, primary: f.name }));
+  }
+
+  get chequeTypeSearchableOptions(): SearchableSelectOption[] {
+    return [
+      { id: '1', primary: this.translate.instant('chequesPage.typeCheque') },
+      { id: '2', primary: this.translate.instant('chequesPage.typeNote') }
+    ];
+  }
+
+  get customerSearchableOptions(): SearchableSelectOption[] {
+    return this.customers.map(c => ({
+      id: c.id,
+      primary: c.title ?? '',
+      secondary: [c.code, c.taxNumber].filter(Boolean).join(' · ')
+    }));
+  }
+
+  get bankAccountSearchableOptions(): SearchableSelectOption[] {
+    return this.bankAccounts.map(b => ({
+      id: b.id,
+      primary: b.name,
+      secondary: b.bankName ?? ''
+    }));
+  }
 
   constructor(
     private fb: FormBuilder,

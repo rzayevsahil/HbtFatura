@@ -1,100 +1,130 @@
 <div class="page-header">
   <h1 class="page-title">{{ 'deliveryNotes.pageTitle' | translate }}</h1>
 </div>
-<div class="toolbar">
-  <label class="toolbar-field">
-    <span class="toolbar-label">{{ 'deliveryNotes.searchLabel' | translate }}</span>
-    <input [(ngModel)]="searchText" type="text" [placeholder]="'deliveryNotes.searchPlaceholder' | translate" (keyup.enter)="load()"
-      class="toolbar-input" />
-  </label>
-  <label class="toolbar-field">
-    <span class="toolbar-label">{{ 'common.dateFromShort' | translate }}</span>
-    <input [(ngModel)]="searchDateFrom" type="date" class="toolbar-input" />
-  </label>
-  <label class="toolbar-field">
-    <span class="toolbar-label">{{ 'common.dateToShort' | translate }}</span>
-    <input [(ngModel)]="searchDateTo" type="date" class="toolbar-input" />
-  </label>
-  <label class="toolbar-field">
-    <span class="toolbar-label">{{ 'common.status' | translate }}</span>
-    <select [(ngModel)]="searchStatus" class="toolbar-select">
-      <option [ngValue]="null">{{ 'common.all' | translate }}</option>
-      @for (l of lookups.getGroup('DeliveryNoteStatus')(); track l.code) {
-      <option [ngValue]="+l.code">{{ l.name }}</option>
-      }
-    </select>
-  </label>
-  <div class="toolbar-field toolbar-field-btn">
-    <span class="toolbar-label">&nbsp;</span>
-    <button type="button" (click)="load()">{{ 'common.filter' | translate }}</button>
+<div class="card table-card">
+  <div class="table-toolbar table-toolbar--multiline">
+    <span class="material-icons toolbar-search-icon" aria-hidden="true">search</span>
+    <label class="toolbar-field toolbar-field--grow">
+      <span class="toolbar-label">{{ 'deliveryNotes.searchLabel' | translate }}</span>
+      <input
+        [(ngModel)]="searchText"
+        type="search"
+        class="search-input"
+        [placeholder]="'deliveryNotes.searchPlaceholder' | translate"
+        (keyup.enter)="load()"
+      />
+    </label>
+    <label class="toolbar-field">
+      <span class="toolbar-label">{{ 'common.dateFromShort' | translate }}</span>
+      <input [(ngModel)]="searchDateFrom" type="date" />
+    </label>
+    <label class="toolbar-field">
+      <span class="toolbar-label">{{ 'common.dateToShort' | translate }}</span>
+      <input [(ngModel)]="searchDateTo" type="date" />
+    </label>
+    <label class="toolbar-field toolbar-field--searchable">
+      <span class="toolbar-label">{{ 'common.status' | translate }}</span>
+      <app-searchable-select
+        class="toolbar-searchable-select"
+        name="dnFilterStatus"
+        [ngModel]="searchStatus === null || searchStatus === undefined ? null : (searchStatus + '')"
+        (ngModelChange)="onDeliveryStatusFilterChange($event)"
+        [options]="deliveryNoteStatusFilterOptions"
+        layout="dropdown"
+        [placeholder]="'common.all' | translate"
+        [searchPlaceholder]="'common.search' | translate"
+        [showNoneOption]="true"
+        [noneOptionLabel]="'common.all' | translate"
+        [noResultsLabel]="'common.noResults' | translate"
+        [listMaxHeight]="'260px'"
+        [disabled]="loading"
+      />
+    </label>
+    <div class="toolbar-field toolbar-field-btn">
+      <span class="toolbar-label">&nbsp;</span>
+      <button type="button" (click)="load()">{{ 'common.filter' | translate }}</button>
+    </div>
+    <div class="toolbar-field toolbar-field-btn">
+      <span class="toolbar-label">&nbsp;</span>
+      <button type="button" class="btn-default" (click)="downloadPdf()">{{ 'common.pdfDownload' | translate }}</button>
+    </div>
+    <div class="toolbar-field toolbar-field-btn">
+      <span class="toolbar-label">&nbsp;</span>
+      <button type="button" class="btn-default" (click)="downloadExcel()">{{ 'common.excelDownload' | translate }}</button>
+    </div>
+    @if (auth.hasPermission('DeliveryNotes.Create')) {
+      <div class="toolbar-field toolbar-field-btn">
+        <span class="toolbar-label">&nbsp;</span>
+        <a routerLink="/delivery-notes/new" class="btn-primary">{{ 'deliveryNotes.newDn' | translate }}</a>
+      </div>
+    }
   </div>
-  <div class="toolbar-field toolbar-field-btn">
-    <span class="toolbar-label">&nbsp;</span>
-    <button type="button" class="btn btn-default" (click)="downloadPdf()">{{ 'common.pdfDownload' | translate }}</button>
+  <div class="table-container table-container--with-overlay">
+    @if (loading) {
+      <div class="loading-overlay">
+        <div class="spinner"></div>
+      </div>
+    }
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>{{ 'deliveryNotes.colDnNo' | translate }}</th>
+          <th>{{ 'dashboard.colDate' | translate }}</th>
+          <th>{{ 'common.type' | translate }}</th>
+          <th>{{ 'common.customer' | translate }}</th>
+          <th>{{ 'deliveryNotes.colOrder' | translate }}</th>
+          <th>{{ 'common.status' | translate }}</th>
+          <th>{{ 'common.createdBy' | translate }}</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (d of items; track d.id) {
+          <tr>
+            <td>
+              <strong>{{ d.deliveryNumber }}</strong>
+            </td>
+            <td>{{ d.deliveryDate | date: 'dd.MM.yyyy HH:mm' }}</td>
+            <td [style.color]="lookups.getColor('DeliveryNoteType', d.deliveryType)" style="font-weight: 500">
+              {{ typeLabel(d.deliveryType) }}
+            </td>
+            <td>
+              @if (d.customerId) {
+                <a [routerLink]="['/customers', d.customerId]" class="customer-link">{{ d.customerTitle || '—' }}</a>
+              } @else {
+                {{ d.customerTitle || '—' }}
+              }
+            </td>
+            <td>{{ d.orderNumber || '—' }}</td>
+            <td>
+              <span
+                class="status-badge"
+                [style.color]="lookups.getColor('DeliveryNoteStatus', d.status)"
+                [style.borderColor]="lookups.getColor('DeliveryNoteStatus', d.status)"
+                [style.backgroundColor]="lookups.getColor('DeliveryNoteStatus', d.status) + '15'"
+              >
+                {{ statusLabel(d.status) }}
+              </span>
+            </td>
+            <td>{{ d.createdByUserName ?? '—' }}</td>
+            <td>
+              <div class="actions-cell">
+                <a [routerLink]="['/delivery-notes', d.id]">{{ 'common.detail' | translate }}</a>
+                @if (isEditable(d) && auth.hasPermission('DeliveryNotes.Edit')) {
+                  <a [routerLink]="['/delivery-notes', d.id, 'edit']">{{ 'common.edit' | translate }}</a>
+                }
+              </div>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
   </div>
-  <div class="toolbar-field toolbar-field-btn">
-    <span class="toolbar-label">&nbsp;</span>
-    <button type="button" class="btn btn-default" (click)="downloadExcel()">{{ 'common.excelDownload' | translate }}</button>
+  <div class="pagination-bar">
+    <span class="pagination-info">{{ 'common.paginationTotalPage' | translate: { total: totalCount, page: page } }}</span>
+    <div class="pagination-actions">
+      <button type="button" class="btn-page" [disabled]="page <= 1" (click)="prevPage()">{{ 'common.previous' | translate }}</button>
+      <button type="button" class="btn-page" [disabled]="items.length < pageSize" (click)="nextPage()">{{ 'common.next' | translate }}</button>
+    </div>
   </div>
-  @if (auth.hasPermission('DeliveryNotes.Create')) {
-  <div class="toolbar-field toolbar-field-btn">
-    <span class="toolbar-label">&nbsp;</span>
-    <a routerLink="/delivery-notes/new" class="btn btn-primary">{{ 'deliveryNotes.newDn' | translate }}</a>
-  </div>
-  }
-</div>
-<div class="card table-wrap" style="position: relative; min-height: 200px;">
-  @if (loading) {
-  <div class="loading-overlay">
-    <div class="spinner"></div>
-  </div>
-  }
-  <table>
-    <thead>
-      <tr>
-        <th>{{ 'deliveryNotes.colDnNo' | translate }}</th>
-        <th>{{ 'dashboard.colDate' | translate }}</th>
-        <th>{{ 'common.type' | translate }}</th>
-        <th>{{ 'common.customer' | translate }}</th>
-        <th>{{ 'deliveryNotes.colOrder' | translate }}</th>
-        <th>{{ 'common.status' | translate }}</th>
-        <th>{{ 'common.createdBy' | translate }}</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      @for (d of items; track d.id) {
-      <tr>
-        <td><strong>{{ d.deliveryNumber }}</strong></td>
-        <td>{{ d.deliveryDate | date:'dd.MM.yyyy' }}</td>
-        <td [style.color]="lookups.getColor('DeliveryNoteType', d.deliveryType)" style="font-weight: 500;">
-          {{ typeLabel(d.deliveryType) }}
-        </td>
-        <td>@if (d.customerId) { <a [routerLink]="['/customers', d.customerId]" class="customer-link">{{ d.customerTitle || '—' }}</a> } @else { {{ d.customerTitle || '—' }} }</td>
-        <td>{{ d.orderNumber || '—' }}</td>
-        <td>
-          <span class="status-badge" [style.color]="lookups.getColor('DeliveryNoteStatus', d.status)"
-            [style.borderColor]="lookups.getColor('DeliveryNoteStatus', d.status)"
-            [style.backgroundColor]="lookups.getColor('DeliveryNoteStatus', d.status) + '15'">
-            {{ statusLabel(d.status) }}
-          </span>
-        </td>
-        <td>{{ d.createdByUserName ?? '—' }}</td>
-        <td>
-          <div class="actions-cell">
-            <a [routerLink]="['/delivery-notes', d.id]">{{ 'common.detail' | translate }}</a>
-            @if (isEditable(d) && auth.hasPermission('DeliveryNotes.Edit')) {
-            <a [routerLink]="['/delivery-notes', d.id, 'edit']">{{ 'common.edit' | translate }}</a>
-            }
-          </div>
-        </td>
-      </tr>
-      }
-    </tbody>
-  </table>
-</div>
-<div class="pagination">
-  <span>{{ 'common.paginationTotalPage' | translate: { total: totalCount, page: page } }}</span>
-  <button type="button" [disabled]="page <= 1" (click)="prevPage()">{{ 'common.previous' | translate }}</button>
-  <button type="button" [disabled]="items.length < pageSize" (click)="nextPage()">{{ 'common.next' | translate }}</button>
 </div>

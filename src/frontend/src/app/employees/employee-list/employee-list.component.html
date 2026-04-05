@@ -1,44 +1,54 @@
 <div class="page-header">
   <h1 class="page-title">{{ 'employeesPage.pageTitle' | translate }}</h1>
-  <p class="page-subtitle">{{ 'employeesPage.subtitle' | translate }}</p>
+  <p class="page-description">{{ 'employeesPage.subtitle' | translate }}</p>
 </div>
-<div class="toolbar">
-  <input [(ngModel)]="search" [placeholder]="'employeesPage.searchPlaceholder' | translate" (keyup.enter)="search = search" />
-  <button type="button">{{ 'common.search' | translate }}</button>
-  <a routerLink="/employees/new" class="btn btn-primary">{{ 'employeesPage.newEmployee' | translate }}</a>
-</div>
-<div class="card table-wrap" style="position: relative; min-height: 200px;">
-  @if (loading) {
-  <div class="loading-overlay">
-    <div class="spinner"></div>
+<div class="card table-card">
+  <div class="table-toolbar table-toolbar--multiline">
+    <span class="material-icons toolbar-search-icon" aria-hidden="true">search</span>
+    <input
+      type="search"
+      class="search-input"
+      [(ngModel)]="search"
+      [placeholder]="'employeesPage.searchPlaceholder' | translate"
+      (keyup.enter)="load()"
+    />
+    <button type="button" class="btn-page" (click)="load()">{{ 'common.search' | translate }}</button>
+    <a routerLink="/employees/new" class="btn-primary">{{ 'employeesPage.newEmployee' | translate }}</a>
   </div>
-  }
-  <table>
-    <thead>
-      <tr>
-        <th>{{ 'employeesPage.colName' | translate }}</th>
-        <th>{{ 'employeesPage.colEmail' | translate }}</th>
-        <th>{{ 'employeesPage.colCreated' | translate }}</th>
-        <th style="width: 100px;">{{ 'employeesPage.colActions' | translate }}</th>
-      </tr>
-    </thead>
-    <tbody>
-      @for (e of filteredItems; track e.id) {
-      <tr>
-        <td>{{ e.fullName }}</td>
-        <td>{{ e.email }}</td>
-        <td>{{ e.createdAt | date:'dd.MM.yyyy' }}</td>
-        <td>
-          <a [routerLink]="['/employees', e.id, 'edit']" class="btn-icon" [attr.title]="'common.edit' | translate">
-            <i class="fas fa-edit"></i> {{ 'common.edit' | translate }}
-          </a>
-        </td>
-      </tr>
-      }
-    </tbody>
-  </table>
+  <div class="table-container table-container--with-overlay">
+    @if (loading) {
+      <div class="loading-overlay">
+        <div class="spinner"></div>
+      </div>
+    }
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>{{ 'employeesPage.colName' | translate }}</th>
+          <th>{{ 'employeesPage.colEmail' | translate }}</th>
+          <th>{{ 'employeesPage.colCreated' | translate }}</th>
+          <th class="th-actions-narrow">{{ 'employeesPage.colActions' | translate }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (e of filteredItems; track e.id) {
+          <tr>
+            <td>{{ e.fullName }}</td>
+            <td>{{ e.email }}</td>
+            <td>{{ e.createdAt | date: 'dd.MM.yyyy' }}</td>
+            <td>
+              <div class="actions-cell">
+                <a [routerLink]="['/employees', e.id, 'edit']">{{ 'common.edit' | translate }}</a>
+              </div>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
 </div>
-@if (filteredItems.length === 0) {
-<p class="text-muted">{{ search.trim() ? ('employeesPage.noSearch' | translate) : ('employeesPage.empty' | translate) }}
-</p>
+@if (filteredItems.length === 0 && !loading) {
+  <p class="list-page-text-muted">
+    {{ search.trim() ? ('employeesPage.noSearch' | translate) : ('employeesPage.empty' | translate) }}
+  </p>
 }

@@ -9,11 +9,15 @@ import { DeliveryNoteListDto, DeliveryNoteStatus } from '../../core/models';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../../core/services/auth.service';
 import { LookupService } from '../../core/services/lookup.service';
+import {
+  SearchableSelectComponent,
+  SearchableSelectOption
+} from '../../shared/searchable-select/searchable-select.component';
 
 @Component({
   selector: 'app-delivery-note-list',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule, TranslateModule],
+  imports: [CommonModule, RouterLink, FormsModule, TranslateModule, SearchableSelectComponent],
   templateUrl: './delivery-note-list.component.html',
   styleUrls: ['./delivery-note-list.component.scss']
 })
@@ -27,6 +31,19 @@ export class DeliveryNoteListComponent implements OnInit {
   searchStatus: DeliveryNoteStatus | null = null;
   searchText = '';
   loading = false;
+
+  get deliveryNoteStatusFilterOptions(): SearchableSelectOption[] {
+    return this.lookups.getGroup('DeliveryNoteStatus')().map((l) => ({
+      id: String(l.code),
+      primary: l.name
+    }));
+  }
+
+  onDeliveryStatusFilterChange(v: string | null): void {
+    this.searchStatus = v === null ? null : (+v as DeliveryNoteStatus);
+    this.page = 1;
+    this.load();
+  }
 
   constructor(
     private api: DeliveryNoteService,

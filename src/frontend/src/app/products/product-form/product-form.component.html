@@ -13,12 +13,15 @@
       @if (auth.user()?.role === 'SuperAdmin' && !id) {
       <div class="row">
         <label>Firma</label>
-        <select formControlName="firmId" required>
-          <option [ngValue]="null">Firma seçin</option>
-          @for (f of firms; track f.id) {
-          <option [ngValue]="f.id">{{ f.name }}</option>
-          }
-        </select>
+        <app-searchable-select
+          formControlName="firmId"
+          [options]="firmSearchableOptions"
+          [showNoneOption]="true"
+          noneOptionLabel="Firma seçin"
+          placeholder="Firma seçin"
+          searchPlaceholder="Firma ara…"
+          noResultsLabel="Sonuç yok"
+        />
       </div>
       }
       <div class="row">
@@ -38,15 +41,23 @@
       </div>
       <div class="row">
         <label>Stok Türü</label>
-        <select formControlName="stockType">
-          @for (t of stockTypes; track t.id) {
-          <option [value]="t.code">{{ ('products.stockTypes.' + t.code) | translate }}</option>
-          }
-        </select>
+        <app-searchable-select
+          formControlName="stockType"
+          [options]="stockTypeSearchableOptions"
+          placeholder="Seçin"
+          searchPlaceholder="Ara…"
+          noResultsLabel="Sonuç yok"
+        />
       </div>
       <div class="row">
         <label>Birim</label>
-        <app-unit-field-select [itemGroup]="form" emptyLabel="Birim seçin" />
+        <app-searchable-select
+          formControlName="unit"
+          [options]="unitSearchableOptions"
+          placeholder="Birim seçin"
+          searchPlaceholder="Ara…"
+          noResultsLabel="Sonuç yok"
+        />
       </div>
 
       <div class="row">
@@ -59,11 +70,13 @@
       </div>
       <div class="row">
         <label>Para Birimi</label>
-        <select formControlName="currency">
-          @for (c of currencies; track c.id) {
-          <option [value]="c.code">{{ c.name }} ({{ c.code }})</option>
-          }
-        </select>
+        <app-searchable-select
+          formControlName="currency"
+          [options]="currencySearchableOptions"
+          placeholder="Seçin"
+          searchPlaceholder="Ara…"
+          noResultsLabel="Sonuç yok"
+        />
       </div>
       @if (error) { <p class="error-msg">{{ error }}</p> }
     </div>

@@ -54,6 +54,9 @@ export class SearchableSelectComponent implements ControlValueAccessor {
 
   @Input() noneOptionLabel = '';
 
+  /** true ise temizlemede forma `''` yazar (örn. izin kodu alanı). */
+  @Input() noneEmitsEmptyString = false;
+
   /** Filtre sonucu boş */
   @Input() noResultsLabel = '';
 
@@ -63,12 +66,18 @@ export class SearchableSelectComponent implements ControlValueAccessor {
   /** Dropdown tetikleyici id — kapalıyken dış `<label for="...">` buraya bağlansın */
   @Input() triggerId = '';
 
+  /**
+   * true ise `pick` ile forma `number` (veya null) yazar; `formControl` sayısal enum için kullanılır.
+   * Seçenek `id` değerleri sayıya çevrilebilir olmalıdır.
+   */
+  @Input() emitNumeric = false;
+
   value: string | null = null;
   searchText = '';
   panelOpen = false;
   private cvaDisabled = false;
 
-  private onChange: (v: string | null) => void = () => {};
+  private onChange: (v: string | number | null) => void = () => {};
   private onTouched: () => void = () => {};
 
   get isDisabled(): boolean {
@@ -91,7 +100,7 @@ export class SearchableSelectComponent implements ControlValueAccessor {
     );
   }
 
-  writeValue(v: string | null | undefined): void {
+  writeValue(v: string | number | null | undefined): void {
     if (v === null || v === undefined || v === '') {
       this.value = null;
     } else {
@@ -99,7 +108,7 @@ export class SearchableSelectComponent implements ControlValueAccessor {
     }
   }
 
-  registerOnChange(fn: (v: string | null) => void): void {
+  registerOnChange(fn: (v: string | number | null) => void): void {
     this.onChange = fn;
   }
 
@@ -122,8 +131,21 @@ export class SearchableSelectComponent implements ControlValueAccessor {
 
   pick(id: string | null): void {
     if (this.isDisabled) return;
+    if (id === null || id === undefined) {
+      this.value = null;
+      this.onChange(this.noneEmitsEmptyString ? '' : null);
+      this.onTouched();
+      this.panelOpen = false;
+      this.searchText = '';
+      return;
+    }
     this.value = id;
-    this.onChange(this.value);
+    let emitted: string | number | null = id;
+    if (this.emitNumeric) {
+      const n = Number(id);
+      emitted = id === '' || !Number.isFinite(n) ? null : n;
+    }
+    this.onChange(emitted);
     this.onTouched();
     this.panelOpen = false;
     this.searchText = '';

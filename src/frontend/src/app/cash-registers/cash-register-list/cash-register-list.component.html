@@ -1,57 +1,72 @@
 <div class="page-header">
   <h1 class="page-title">{{ 'cashRegisters.pageTitle' | translate }}</h1>
 </div>
-<div class="toolbar">
-  <input [(ngModel)]="search" [placeholder]="'cashRegisters.searchPlaceholder' | translate" (keyup.enter)="search = search" />
-  <button type="button">{{ 'common.search' | translate }}</button>
-  @if (auth.hasPermission('Cash.Edit')) {
-  <a routerLink="/cash-registers/new" class="btn btn-primary">{{ 'cashRegisters.newRegister' | translate }}</a>
-  }
-</div>
-<div class="card table-wrap" style="position: relative; min-height: 200px;">
-  @if (loading) {
-  <div class="loading-overlay">
-    <div class="spinner"></div>
+<div class="card table-card">
+  <div class="table-toolbar table-toolbar--multiline">
+    <span class="material-icons toolbar-search-icon" aria-hidden="true">search</span>
+    <input
+      type="search"
+      class="search-input"
+      [(ngModel)]="search"
+      [placeholder]="'cashRegisters.searchPlaceholder' | translate"
+      (keyup.enter)="search = search"
+    />
+    <button type="button" class="btn-page">{{ 'common.search' | translate }}</button>
+    @if (auth.hasPermission('Cash.Edit')) {
+      <a routerLink="/cash-registers/new" class="btn-primary">{{ 'cashRegisters.newRegister' | translate }}</a>
+    }
   </div>
-  }
-  <table>
-    <thead>
-      <tr>
-        <th>{{ 'cashRegisters.colName' | translate }}</th>
-        <th>{{ 'cashRegisters.colCurrency' | translate }}</th>
-        <th>{{ 'cashRegisters.colBalance' | translate }}</th>
-        <th>{{ 'common.status' | translate }}</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      @for (c of filteredItems; track c.id) {
-      <tr>
-        <td><a [routerLink]="['/cash-registers', c.id]">{{ c.name }}</a></td>
-        <td>{{ c.currency }}</td>
-        <td class="amount">{{ c.balance | number:'1.2-2' }} {{ formatCurrencyLabel(c.currency) }}</td>
-        <td>{{ c.isActive ? ('cashRegisters.statusActive' | translate) : ('cashRegisters.statusPassive' | translate) }}</td>
-        <td>
-          <div class="actions-cell">
-            <a [routerLink]="['/cash-registers', c.id]">{{ 'common.detail' | translate }}</a>
-            @if (auth.hasPermission('Cash.Edit')) {
-            <a [routerLink]="['/cash-registers', c.id, 'edit']">{{ 'common.edit' | translate }}</a>
-            <button type="button" (click)="onDeleteClick(c.id, c.name)">{{ 'common.delete' | translate }}</button>
-            }
-          </div>
-        </td>
-      </tr>
-      }
-    </tbody>
-  </table>
+  <div class="table-container table-container--with-overlay">
+    @if (loading) {
+      <div class="loading-overlay">
+        <div class="spinner"></div>
+      </div>
+    }
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>{{ 'cashRegisters.colName' | translate }}</th>
+          <th>{{ 'cashRegisters.colBalance' | translate }}</th>
+          <th>{{ 'common.status' | translate }}</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (c of filteredItems; track c.id) {
+          <tr>
+            <td>
+              <a [routerLink]="['/cash-registers', c.id]">{{ c.name }}</a>
+            </td>
+            <td class="amount">{{ c.balance | number: '1.2-2' }} {{ formatCurrencyLabel(c.currency) }}</td>
+            <td>{{ c.isActive ? ('cashRegisters.statusActive' | translate) : ('cashRegisters.statusPassive' | translate) }}</td>
+            <td>
+              <div class="actions-cell">
+                <a [routerLink]="['/cash-registers', c.id]">{{ 'common.detail' | translate }}</a>
+                @if (auth.hasPermission('Cash.Edit')) {
+                  <a [routerLink]="['/cash-registers', c.id, 'edit']">{{ 'common.edit' | translate }}</a>
+                  <button type="button" class="btn-danger" (click)="onDeleteClick(c.id, c.name)">{{ 'common.delete' | translate }}</button>
+                }
+              </div>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
 </div>
-@if (filteredItems.length === 0) {
-<p class="text-muted">{{ search.trim() ? ('cashRegisters.noSearch' | translate) : ('cashRegisters.empty' | translate) }}</p>
+@if (filteredItems.length === 0 && !loading) {
+  <p class="list-page-text-muted">
+    {{ search.trim() ? ('cashRegisters.noSearch' | translate) : ('cashRegisters.empty' | translate) }}
+  </p>
 }
 
 @if (showDeleteModal) {
-<app-confirm-modal [title]="'cashRegisters.deleteTitle' | translate"
-  [message]="'cashRegisters.deleteMessage' | translate:{ name: deletingRegister?.name ?? '' }"
-  [confirmText]="'common.delete' | translate" [cancelText]="'common.discard' | translate" (confirm)="confirmDelete()"
-  (cancel)="showDeleteModal = false"></app-confirm-modal>
+  <app-confirm-modal
+    [title]="'cashRegisters.deleteTitle' | translate"
+    [message]="'cashRegisters.deleteMessage' | translate: { name: deletingRegister?.name ?? '' }"
+    [confirmText]="'common.delete' | translate"
+    [cancelText]="'common.discard' | translate"
+    (confirm)="confirmDelete()"
+    (cancel)="showDeleteModal = false"
+  ></app-confirm-modal>
 }

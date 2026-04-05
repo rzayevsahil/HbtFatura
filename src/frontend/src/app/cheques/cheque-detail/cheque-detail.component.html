@@ -26,11 +26,14 @@
   <div class="card">
     <h3>{{ 'chequesPage.statusUpdate' | translate }}</h3>
     <div class="status-update">
-      <select [(ngModel)]="newStatus">
-        @for (l of lookups.getGroup('ChequeStatus')(); track l.code) {
-        <option [ngValue]="+l.code">{{ l.name }}</option>
-        }
-      </select>
+      <app-searchable-select
+        [(ngModel)]="newStatus"
+        [options]="chequeStatusSearchableOptions"
+        [emitNumeric]="true"
+        [placeholder]="'common.selectShort' | translate"
+        [searchPlaceholder]="'common.search' | translate"
+        [noResultsLabel]="'common.noResults' | translate"
+      />
       <button type="button" (click)="updateStatus()">{{ 'common.save' | translate }}</button>
     </div>
   </div>

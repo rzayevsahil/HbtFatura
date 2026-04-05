@@ -13,12 +13,15 @@
       @if (auth.user()?.role === 'SuperAdmin' && !id) {
         <div class="row">
           <label>{{ 'common.firm' | translate }}</label>
-          <select formControlName="firmId" required>
-            <option [ngValue]="null">{{ 'common.selectFirm' | translate }}</option>
-            @for (f of firms; track f.id) {
-              <option [ngValue]="f.id">{{ f.name }}</option>
-            }
-          </select>
+          <app-searchable-select
+            formControlName="firmId"
+            [options]="firmSearchableOptions"
+            [showNoneOption]="true"
+            [noneOptionLabel]="'common.selectFirm' | translate"
+            [placeholder]="'common.selectFirm' | translate"
+            [searchPlaceholder]="'common.search' | translate"
+            [noResultsLabel]="'common.noResults' | translate"
+          />
         </div>
       }
       <div class="row">
@@ -27,11 +30,13 @@
       </div>
       <div class="row">
         <label>{{ 'cashRegisters.currency' | translate }}</label>
-        <select formControlName="currency">
-          @for (c of currencies; track c.id) {
-          <option [value]="c.code">{{ c.name }} ({{ c.code }})</option>
-          }
-        </select>
+        <app-searchable-select
+          formControlName="currency"
+          [options]="currencySearchableOptions"
+          [placeholder]="'common.selectShort' | translate"
+          [searchPlaceholder]="'common.search' | translate"
+          [noResultsLabel]="'common.noResults' | translate"
+        />
       </div>
       @if (id) {
         <div class="row">

@@ -7,11 +7,15 @@ import { CustomerService } from '../../services/customer.service';
 import { CustomerDto, AccountPaymentListDto } from '../../core/models';
 import { AuthService } from '../../core/services/auth.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import {
+  SearchableSelectComponent,
+  SearchableSelectOption
+} from '../../shared/searchable-select/searchable-select.component';
 
 @Component({
   selector: 'app-account-payment-list',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule, TranslateModule],
+  imports: [CommonModule, RouterLink, FormsModule, TranslateModule, SearchableSelectComponent],
   templateUrl: './account-payment-list.component.html',
   styleUrls: ['./account-payment-list.component.scss']
 })
@@ -26,6 +30,31 @@ export class AccountPaymentListComponent implements OnInit {
   listCustomerId = '';
   listType = '';
   customers: CustomerDto[] = [];
+
+  get paymentCustomerFilterOptions(): SearchableSelectOption[] {
+    return this.customers.map((c) => ({
+      id: c.id,
+      primary: c.title,
+      secondary: c.code || undefined
+    }));
+  }
+
+  get paymentTypeFilterOptions(): SearchableSelectOption[] {
+    return [
+      { id: 'Tahsilat', primary: this.translate.instant('payments.typeCollection') },
+      { id: 'Odeme', primary: this.translate.instant('payments.typePayment') }
+    ];
+  }
+
+  onListCustomerFilterChange(v: string | null): void {
+    this.listCustomerId = v ?? '';
+    this.applyListFilter();
+  }
+
+  onListTypeFilterChange(v: string | null): void {
+    this.listType = v ?? '';
+    this.applyListFilter();
+  }
 
   constructor(
     private paymentApi: AccountPaymentService,

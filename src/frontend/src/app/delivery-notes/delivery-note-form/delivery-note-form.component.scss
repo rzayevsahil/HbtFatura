@@ -61,18 +61,23 @@
     color: var(--color-text);
   }
 
-  select,
-  input[type="date"],
-  input[type="datetime-local"] {
-    max-width: 320px;
-    width: 100%;
+  $row-control-max: 18rem;
+
+  > select,
+  > input[type="date"],
+  > input[type="datetime-local"],
+  > input[type="text"],
+  > app-searchable-select,
+  > .customer-select {
+    width: min(100%, $row-control-max);
+    max-width: $row-control-max;
+    justify-self: start;
     box-sizing: border-box;
   }
 }
 
 .customer-select {
   position: relative;
-  max-width: 320px;
 
   .customer-select-trigger {
     width: 100%;
@@ -193,6 +198,18 @@
   input,
   .item-cell-unit {
     min-width: 0;
+  }
+
+  .item-cell-unit {
+    app-searchable-select {
+      display: block;
+      width: 100%;
+    }
+
+    ::ng-deep .searchable-select__panel {
+      min-width: max(100%, 11rem);
+      z-index: 4000;
+    }
   }
 
   .item-remove-btn {

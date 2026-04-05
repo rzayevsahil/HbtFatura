@@ -15,11 +15,15 @@ import {
 import { ToastrService } from 'ngx-toastr';
 import { LookupService } from '../core/services/lookup.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import {
+  SearchableSelectComponent,
+  SearchableSelectOption
+} from '../shared/searchable-select/searchable-select.component';
 
 @Component({
   selector: 'app-reports',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, TranslateModule],
+  imports: [CommonModule, FormsModule, RouterLink, TranslateModule, SearchableSelectComponent],
   templateUrl: './reports.component.html',
   styleUrls: ['./reports.component.scss']
 })
@@ -61,6 +65,38 @@ export class ReportsComponent implements OnInit {
   monthlyProductId = '';
   monthlyData: MonthlyProductSalesReportDto | null = null;
   monthlyLoading = false;
+
+  get reportCustomerOptions(): SearchableSelectOption[] {
+    return this.customers.map((c) => ({
+      id: c.id,
+      primary: c.title,
+      secondary: c.code || undefined
+    }));
+  }
+
+  get reportCashRegisterOptions(): SearchableSelectOption[] {
+    return this.cashRegisters.map((c) => ({
+      id: c.id,
+      primary: c.name,
+      secondary: c.currency
+    }));
+  }
+
+  get reportBankAccountOptions(): SearchableSelectOption[] {
+    return this.bankAccounts.map((b) => ({
+      id: b.id,
+      primary: b.name,
+      secondary: b.bankName
+    }));
+  }
+
+  get reportProductOptions(): SearchableSelectOption[] {
+    return this.products.map((p) => ({
+      id: p.id,
+      primary: p.name,
+      secondary: p.code
+    }));
+  }
 
   constructor(
     private reportApi: ReportService,

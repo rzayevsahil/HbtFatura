@@ -178,6 +178,7 @@
     "selectShort": "Seçin",
     "selectNoneLink": "Seçiniz (Bağlama)",
     "customerSearchPh": "Cari ara...",
+    "unitSearchPh": "Birim ara...",
     "placeholderOrderSearch": "Sipariş no veya cari ara...",
     "placeholderDeliveryNoteSearch": "İrsaliye no veya cari ara...",
     "lines": "Kalemler",
@@ -598,6 +599,7 @@
   },
   "gibInbox": {
     "pageTitle": "GİB Kutusu",
+    "searchPlaceholder": "Fatura no, cari veya gönderen ara…",
     "disclaimer": "Bu ekran gerçek Gelir İdaresi Bağlantısı (GİB) değildir; yalnızca uygulama içi onay ve bildirim akışını gösterir.",
     "empty": "Bekleyen fatura yok.",
     "colInvoiceNo": "Fatura no",
@@ -949,6 +951,9 @@
     "title": "Firmalar",
     "subtitle": "Tüm firmaları yönetin.",
     "newFirm": "Yeni Firma",
+    "searchPlaceholder": "Firma adına göre ara…",
+    "empty": "Henüz firma yok.",
+    "noResults": "Aramanıza uygun firma yok.",
     "colName": "Firma Adı",
     "colCreatedAt": "Oluşturulma"
   },

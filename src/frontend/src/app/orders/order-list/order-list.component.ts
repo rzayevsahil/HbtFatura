@@ -9,11 +9,15 @@ import { OrderListDto, OrderStatus } from '../../core/models';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../../core/services/auth.service';
 import { LookupService } from '../../core/services/lookup.service';
+import {
+  SearchableSelectComponent,
+  SearchableSelectOption
+} from '../../shared/searchable-select/searchable-select.component';
 
 @Component({
   selector: 'app-order-list',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule, TranslateModule],
+  imports: [CommonModule, RouterLink, FormsModule, TranslateModule, SearchableSelectComponent],
   templateUrl: './order-list.component.html',
   styleUrls: ['./order-list.component.scss']
 })
@@ -38,9 +42,23 @@ export class OrderListComponent implements OnInit {
     private translate: TranslateService
   ) { }
 
+  get orderStatusFilterOptions(): SearchableSelectOption[] {
+    return this.lookups.getGroup('OrderStatus')().map((l) => ({
+      id: String(l.code),
+      primary: l.name,
+    }));
+  }
+
+  onOrderStatusFilterChange(v: string | null): void {
+    this.searchStatus = v === null ? null : (+v as OrderStatus);
+    this.page = 1;
+    this.load();
+  }
+
   @HostListener('document:keydown', ['$event'])
   onKeyDown(e: KeyboardEvent): void {
-    if (e.key === 'F3' && !['INPUT', 'TEXTAREA', 'SELECT'].includes((e.target as HTMLElement)?.tagName)) {
+    const t = e.target as HTMLElement;
+    if (e.key === 'F3' && !['INPUT', 'TEXTAREA', 'SELECT'].includes(t?.tagName) && !t?.closest('app-searchable-select')) {
       e.preventDefault();
       this.router.navigate(['/orders/new']);
     }

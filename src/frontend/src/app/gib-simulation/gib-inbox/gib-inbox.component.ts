@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { GibSimulationService, GibInboxItemDto } from '../../services/gib-simulation.service';
 import { InvoiceService } from '../../services/invoice.service';
 import { ToastrService } from 'ngx-toastr';
@@ -8,12 +9,13 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 @Component({
   selector: 'app-gib-inbox',
   standalone: true,
-  imports: [CommonModule, TranslateModule],
+  imports: [CommonModule, FormsModule, TranslateModule],
   templateUrl: './gib-inbox.component.html',
   styleUrls: ['./gib-inbox.component.scss']
 })
 export class GibInboxComponent implements OnInit {
   items: GibInboxItemDto[] = [];
+  search = '';
   loading = true;
   busyId: string | null = null;
   pdfBusyId: string | null = null;
@@ -91,5 +93,17 @@ export class GibInboxComponent implements OnInit {
         this.toastr.error(e.error?.message ?? this.translate.instant('gibInbox.toastRejectFailed'));
       }
     });
+  }
+
+  get filteredItems(): GibInboxItemDto[] {
+    const q = this.search?.trim().toLowerCase() || '';
+    if (!q) return this.items;
+    return this.items.filter(
+      (r) =>
+        r.invoiceNumber?.toLowerCase().includes(q) ||
+        r.senderFirmName?.toLowerCase().includes(q) ||
+        r.customerTitle?.toLowerCase().includes(q) ||
+        r.recipientTaxNumber?.toLowerCase().includes(q)
+    );
   }
 }

@@ -1,32 +1,24 @@
-.page-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.5rem;
-}
+@import '../../shared/styles/list-page.shared.scss';
 
-.list-toolbar {
-  margin-bottom: 1rem;
+.btn-page--primary {
+  background: var(--color-primary);
+  color: #fff;
+  border: 1px solid var(--color-primary);
 
-  .search-input {
-    width: 100%;
-    max-width: 320px;
-    padding: 0.5rem 0.75rem;
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-sm);
-    font-size: 0.9375rem;
+  &:hover:not(:disabled) {
+    background: var(--color-primary-hover);
+    border-color: var(--color-primary-hover);
+    color: #fff;
   }
 }
 
-.table-wrap {
-  overflow-x: auto;
+.table-card .table-container {
   max-height: 70vh;
   overflow-y: auto;
 }
 
-.main-table {
+.data-table.main-table {
   table-layout: fixed;
-  width: 100%;
   min-width: 400px;
 
   .col-code {
@@ -34,7 +26,7 @@
   }
 
   .col-name {
-    width: auto; /* kalan alan */
+    width: auto;
   }
 
   .col-actions {
@@ -45,12 +37,6 @@
   td {
     padding: 0.5rem 0.75rem;
     vertical-align: middle;
-    text-align: left;
-  }
-
-  th:first-child,
-  td:first-child {
-    text-align: left;
   }
 
   td:first-child {
@@ -70,49 +56,10 @@
   }
 }
 
-.actions-cell {
-  display: flex;
-  gap: 0.5rem;
-  align-items: center;
-
-  .btn {
-    padding: 0.375rem 0.75rem;
-    font-size: 0.875rem;
-    border-radius: var(--radius-sm, 4px);
-    text-decoration: none;
-    cursor: pointer;
-    border: 1px solid transparent;
-    white-space: nowrap;
-
-    &.btn-outline {
-      color: var(--color-text, #333);
-      background: transparent;
-      border-color: var(--color-border, #ddd);
-
-      &:hover {
-        background: var(--color-background, #f5f5f5);
-        border-color: var(--color-border, #ccc);
-      }
-    }
-
-    &.btn-danger {
-      color: var(--color-danger, #c53030);
-
-      &:hover {
-        background: rgba(197, 48, 48, 0.08);
-        border-color: var(--color-danger, #c53030);
-      }
-    }
-  }
-
-  button.btn {
-    font-family: inherit;
-  }
-}
-
-.text-muted {
-  margin-top: 1rem;
-  color: var(--color-text-muted, #666);
+.system-code-note {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
 }
 
 .modal-overlay {

@@ -1,61 +1,76 @@
 <div class="page-header">
   <h1 class="page-title">{{ 'bankAccountsPage.pageTitle' | translate }}</h1>
 </div>
-<div class="toolbar">
-  <input [(ngModel)]="search" [placeholder]="'bankAccountsPage.searchPlaceholder' | translate" (keyup.enter)="search = search" />
-  <button type="button">{{ 'common.search' | translate }}</button>
-  @if (auth.hasPermission('Banking.Edit')) {
-  <a routerLink="/bank-accounts/new" class="btn btn-primary">{{ 'bankAccountsPage.newAccount' | translate }}</a>
-  }
-</div>
-<div class="card table-wrap" style="position: relative; min-height: 200px;">
-  @if (loading) {
-  <div class="loading-overlay">
-    <div class="spinner"></div>
+<div class="card table-card">
+  <div class="table-toolbar table-toolbar--multiline">
+    <span class="material-icons toolbar-search-icon" aria-hidden="true">search</span>
+    <input
+      type="search"
+      class="search-input"
+      [(ngModel)]="search"
+      [placeholder]="'bankAccountsPage.searchPlaceholder' | translate"
+      (keyup.enter)="search = search"
+    />
+    <button type="button" class="btn-page">{{ 'common.search' | translate }}</button>
+    @if (auth.hasPermission('Banking.Edit')) {
+      <a routerLink="/bank-accounts/new" class="btn-primary">{{ 'bankAccountsPage.newAccount' | translate }}</a>
+    }
   </div>
-  }
-  <table>
-    <thead>
-      <tr>
-        <th>{{ 'bankAccountsPage.colAccountName' | translate }}</th>
-        <th>{{ 'bankAccountsPage.colBank' | translate }}</th>
-        <th>{{ 'bankAccountsPage.colIban' | translate }}</th>
-        <th>{{ 'bankAccountsPage.colCurrency' | translate }}</th>
-        <th>{{ 'bankAccountsPage.colBalance' | translate }}</th>
-        <th>{{ 'common.status' | translate }}</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      @for (b of filteredItems; track b.id) {
-      <tr>
-        <td><a [routerLink]="['/bank-accounts', b.id]">{{ b.name }}</a></td>
-        <td>{{ b.bankName }}</td>
-        <td>{{ b.iban }}</td>
-        <td>{{ b.currency }}</td>
-        <td class="amount">{{ b.balance | number:'1.2-2' }} {{ formatCurrencyLabel(b.currency) }}</td>
-        <td>{{ b.isActive ? ('bankAccountsPage.statusActive' | translate) : ('bankAccountsPage.statusPassive' | translate) }}</td>
-        <td>
-          <div class="actions-cell">
-            <a [routerLink]="['/bank-accounts', b.id]">{{ 'common.detail' | translate }}</a>
-            @if (auth.hasPermission('Banking.Edit')) {
-            <a [routerLink]="['/bank-accounts', b.id, 'edit']">{{ 'common.edit' | translate }}</a>
-            <button type="button" (click)="onDeleteClick(b.id, b.name)">{{ 'common.delete' | translate }}</button>
-            }
-          </div>
-        </td>
-      </tr>
-      }
-    </tbody>
-  </table>
+  <div class="table-container table-container--with-overlay">
+    @if (loading) {
+      <div class="loading-overlay">
+        <div class="spinner"></div>
+      </div>
+    }
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>{{ 'bankAccountsPage.colAccountName' | translate }}</th>
+          <th>{{ 'bankAccountsPage.colBank' | translate }}</th>
+          <th>{{ 'bankAccountsPage.colIban' | translate }}</th>
+          <th>{{ 'bankAccountsPage.colBalance' | translate }}</th>
+          <th>{{ 'common.status' | translate }}</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (b of filteredItems; track b.id) {
+          <tr>
+            <td>
+              <a [routerLink]="['/bank-accounts', b.id]">{{ b.name }}</a>
+            </td>
+            <td>{{ b.bankName }}</td>
+            <td>{{ b.iban }}</td>
+            <td class="amount">{{ b.balance | number: '1.2-2' }} {{ formatCurrencyLabel(b.currency) }}</td>
+            <td>{{ b.isActive ? ('bankAccountsPage.statusActive' | translate) : ('bankAccountsPage.statusPassive' | translate) }}</td>
+            <td>
+              <div class="actions-cell">
+                <a [routerLink]="['/bank-accounts', b.id]">{{ 'common.detail' | translate }}</a>
+                @if (auth.hasPermission('Banking.Edit')) {
+                  <a [routerLink]="['/bank-accounts', b.id, 'edit']">{{ 'common.edit' | translate }}</a>
+                  <button type="button" class="btn-danger" (click)="onDeleteClick(b.id, b.name)">{{ 'common.delete' | translate }}</button>
+                }
+              </div>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
 </div>
-@if (filteredItems.length === 0) {
-<p class="text-muted">{{ search.trim() ? ('bankAccountsPage.noSearch' | translate) : ('bankAccountsPage.empty' | translate) }}</p>
+@if (filteredItems.length === 0 && !loading) {
+  <p class="list-page-text-muted">
+    {{ search.trim() ? ('bankAccountsPage.noSearch' | translate) : ('bankAccountsPage.empty' | translate) }}
+  </p>
 }
 
 @if (showDeleteModal) {
-<app-confirm-modal [title]="'bankAccountsPage.deleteTitle' | translate"
-  [message]="'bankAccountsPage.deleteMessage' | translate:{ name: deletingAccount?.name ?? '' }"
-  [confirmText]="'common.delete' | translate" [cancelText]="'common.discard' | translate" (confirm)="confirmDelete()"
-  (cancel)="showDeleteModal = false"></app-confirm-modal>
+  <app-confirm-modal
+    [title]="'bankAccountsPage.deleteTitle' | translate"
+    [message]="'bankAccountsPage.deleteMessage' | translate: { name: deletingAccount?.name ?? '' }"
+    [confirmText]="'common.delete' | translate"
+    [cancelText]="'common.discard' | translate"
+    (confirm)="confirmDelete()"
+    (cancel)="showDeleteModal = false"
+  ></app-confirm-modal>
 }

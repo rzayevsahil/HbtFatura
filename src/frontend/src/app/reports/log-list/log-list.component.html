@@ -1,89 +1,104 @@
 <div class="page-header">
-    <h1 class="page-title">{{ 'logsPage.title' | translate }}</h1>
+  <h1 class="page-title">{{ 'logsPage.title' | translate }}</h1>
 </div>
-
-<div class="toolbar">
-    <div class="filter-group">
-        <select [(ngModel)]="level" (change)="page=1; load()">
-            <option value="">{{ 'logsPage.levelAll' | translate }}</option>
-            <option value="Info">{{ 'logsPage.levelInfo' | translate }}</option>
-            <option value="Warning">{{ 'logsPage.levelWarning' | translate }}</option>
-            <option value="Error">{{ 'logsPage.levelError' | translate }}</option>
-        </select>
+<div class="card table-card">
+  <div class="table-toolbar table-toolbar--multiline">
+    <span class="material-icons toolbar-search-icon" aria-hidden="true">tune</span>
+    <label class="toolbar-field toolbar-field--searchable">
+      <span class="toolbar-label">{{ 'logsPage.colLevel' | translate }}</span>
+      <app-searchable-select
+        class="toolbar-searchable-select"
+        name="logLevel"
+        [ngModel]="level || null"
+        (ngModelChange)="onLogLevelFilterChange($event)"
+        [options]="logLevelFilterOptions"
+        layout="dropdown"
+        [placeholder]="'logsPage.levelAll' | translate"
+        [searchPlaceholder]="'common.search' | translate"
+        [showNoneOption]="true"
+        [noneOptionLabel]="'logsPage.levelAll' | translate"
+        [noResultsLabel]="'common.noResults' | translate"
+        [listMaxHeight]="'240px'"
+        [disabled]="loading"
+      />
+    </label>
+    <label class="toolbar-field toolbar-field--grow">
+      <span class="toolbar-label">{{ 'logsPage.modulePlaceholder' | translate }}</span>
+      <input type="search" class="search-input" [(ngModel)]="module" (keyup.enter)="page = 1; load()" />
+    </label>
+    <label class="toolbar-field">
+      <span class="toolbar-label">{{ 'common.dateFromShort' | translate }}</span>
+      <input type="date" [(ngModel)]="dateFrom" (change)="page = 1; load()" />
+    </label>
+    <label class="toolbar-field">
+      <span class="toolbar-label">{{ 'common.dateToShort' | translate }}</span>
+      <input type="date" [(ngModel)]="dateTo" (change)="page = 1; load()" />
+    </label>
+    <div class="toolbar-field toolbar-field-btn">
+      <span class="toolbar-label">&nbsp;</span>
+      <button type="button" (click)="page = 1; load()">{{ 'logsPage.refresh' | translate }}</button>
     </div>
-    <div class="filter-group">
-        <input type="text" [(ngModel)]="module" [placeholder]="'logsPage.modulePlaceholder' | translate" (keyup.enter)="page=1; load()">
-    </div>
-    <div class="filter-group">
-        <input type="date" [(ngModel)]="dateFrom" (change)="page=1; load()">
-    </div>
-    <div class="filter-group">
-        <input type="date" [(ngModel)]="dateTo" (change)="page=1; load()">
-    </div>
-    <button (click)="page=1; load()" class="btn-refresh">{{ 'logsPage.refresh' | translate }}</button>
-</div>
-
-<div class="card table-wrap log-table-card">
+  </div>
+  <div class="table-container table-container--with-overlay log-table-card">
     @if (loading) {
-    <div class="loading-overlay">
+      <div class="loading-overlay">
         <div class="spinner"></div>
-    </div>
+      </div>
     }
-
     <div class="log-table-scroll">
-        <table class="log-table">
-            <thead>
-                <tr>
-                    <th class="col-date">{{ 'logsPage.colDate' | translate }}</th>
-                    <th class="col-level">{{ 'logsPage.colLevel' | translate }}</th>
-                    <th class="col-module">{{ 'logsPage.colModuleAction' | translate }}</th>
-                    <th class="col-user">{{ 'logsPage.colUser' | translate }}</th>
-                    <th class="col-message">{{ 'logsPage.colMessage' | translate }}</th>
-                    <th class="col-ip">{{ 'logsPage.colIp' | translate }}</th>
-                </tr>
-            </thead>
-            <tbody>
-                @for (log of items; track log.id) {
-                <tr class="log-row" [ngClass]="getLevelClass(log.level)">
-                    <td class="col-date cell-date">{{ log.timestamp | date:'dd.MM.yyyy HH:mm:ss' }}</td>
-                    <td class="col-level">
-                        <span class="level-badge" [ngClass]="'is-' + (log.level | lowercase)">{{ log.level }}</span>
-                    </td>
-                    <td class="col-module">
-                        <div class="log-stack">
-                            <span class="log-stack-primary">{{ log.module || '—' }}</span>
-                            @if (log.action) {
-                            <span class="log-stack-secondary">{{ log.action }}</span>
-                            }
-                        </div>
-                    </td>
-                    <td class="col-user">
-                        <div class="log-stack">
-                            <span class="log-stack-primary">{{ log.userFullName || '—' }}</span>
-                            @if (log.userId) {
-                            <span class="log-stack-secondary">{{ log.userId }}</span>
-                            }
-                        </div>
-                    </td>
-                    <td class="col-message">
-                        <span class="message-text" [title]="log.details || log.message || ''">{{ log.message }}</span>
-                    </td>
-                    <td class="col-ip cell-ip">{{ log.ipAddress || '—' }}</td>
-                </tr>
-                } @empty {
-                <tr>
-                    <td colspan="6" class="empty-state">{{ 'logsPage.empty' | translate }}</td>
-                </tr>
-                }
-            </tbody>
-        </table>
+      <table class="data-table log-table">
+        <thead>
+          <tr>
+            <th class="col-date">{{ 'logsPage.colDate' | translate }}</th>
+            <th class="col-level">{{ 'logsPage.colLevel' | translate }}</th>
+            <th class="col-module">{{ 'logsPage.colModuleAction' | translate }}</th>
+            <th class="col-user">{{ 'logsPage.colUser' | translate }}</th>
+            <th class="col-message">{{ 'logsPage.colMessage' | translate }}</th>
+            <th class="col-ip">{{ 'logsPage.colIp' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (log of items; track log.id) {
+            <tr class="log-row" [ngClass]="getLevelClass(log.level)">
+              <td class="col-date cell-date">{{ log.timestamp | date: 'dd.MM.yyyy HH:mm:ss' }}</td>
+              <td class="col-level">
+                <span class="level-badge" [ngClass]="'is-' + (log.level | lowercase)">{{ log.level }}</span>
+              </td>
+              <td class="col-module">
+                <div class="log-stack">
+                  <span class="log-stack-primary">{{ log.module || '—' }}</span>
+                  @if (log.action) {
+                    <span class="log-stack-secondary">{{ log.action }}</span>
+                  }
+                </div>
+              </td>
+              <td class="col-user">
+                <div class="log-stack">
+                  <span class="log-stack-primary">{{ log.userFullName || '—' }}</span>
+                  @if (log.userId) {
+                    <span class="log-stack-secondary">{{ log.userId }}</span>
+                  }
+                </div>
+              </td>
+              <td class="col-message">
+                <span class="message-text" [title]="log.details || log.message || ''">{{ log.message }}</span>
+              </td>
+              <td class="col-ip cell-ip">{{ log.ipAddress || '—' }}</td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="6" class="empty-state">{{ 'logsPage.empty' | translate }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
     </div>
-</div>
-
-<div class="pagination">
-    <span>{{ 'logsPage.pagination' | translate: { total: totalCount, page: page } }}</span>
+  </div>
+  <div class="pagination-bar">
+    <span class="pagination-info">{{ 'logsPage.pagination' | translate: { total: totalCount, page: page } }}</span>
     <div class="pagination-actions">
-        <button [disabled]="page === 1" (click)="prevPage()">{{ 'common.previous' | translate }}</button>
-        <button [disabled]="items.length < pageSize" (click)="nextPage()">{{ 'common.next' | translate }}</button>
+      <button type="button" class="btn-page" [disabled]="page === 1" (click)="prevPage()">{{ 'common.previous' | translate }}</button>
+      <button type="button" class="btn-page" [disabled]="items.length < pageSize" (click)="nextPage()">{{ 'common.next' | translate }}</button>
     </div>
+  </div>
 </div>

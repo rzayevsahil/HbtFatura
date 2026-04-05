@@ -90,10 +90,14 @@
       </div>
       <div class="row">
         <label>Tip</label>
-        <select [(ngModel)]="newMovement.type">
-          <option [ngValue]="1">Giriş</option>
-          <option [ngValue]="2">Çıkış</option>
-        </select>
+        <app-searchable-select
+          [(ngModel)]="newMovement.type"
+          [options]="movementTypeSearchableOptions"
+          [emitNumeric]="true"
+          placeholder="Seçin"
+          searchPlaceholder="Ara…"
+          noResultsLabel="Sonuç yok"
+        />
       </div>
       <div class="row">
         <label>Miktar</label>

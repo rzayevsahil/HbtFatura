@@ -13,20 +13,27 @@
       @if (auth.user()?.role === 'SuperAdmin' && !id) {
         <div class="row">
           <label>{{ 'common.firm' | translate }}</label>
-          <select formControlName="firmId" required>
-            <option [ngValue]="null">{{ 'common.selectFirm' | translate }}</option>
-            @for (f of firms; track f.id) {
-              <option [ngValue]="f.id">{{ f.name }}</option>
-            }
-          </select>
+          <app-searchable-select
+            formControlName="firmId"
+            [options]="firmSearchableOptions"
+            [showNoneOption]="true"
+            [noneOptionLabel]="'common.selectFirm' | translate"
+            [placeholder]="'common.selectFirm' | translate"
+            [searchPlaceholder]="'common.search' | translate"
+            [noResultsLabel]="'common.noResults' | translate"
+          />
         </div>
       }
       <div class="row">
         <label>{{ 'chequesPage.colType' | translate }}</label>
-        <select formControlName="type">
-          <option [ngValue]="1">{{ 'chequesPage.typeCheque' | translate }}</option>
-          <option [ngValue]="2">{{ 'chequesPage.typeNote' | translate }}</option>
-        </select>
+        <app-searchable-select
+          formControlName="type"
+          [options]="chequeTypeSearchableOptions"
+          [emitNumeric]="true"
+          [placeholder]="'common.selectShort' | translate"
+          [searchPlaceholder]="'common.search' | translate"
+          [noResultsLabel]="'common.noResults' | translate"
+        />
       </div>
       <div class="row">
         <label>{{ 'chequesPage.serialNo' | translate }}</label>
@@ -37,12 +44,15 @@
       }
       <div class="row">
         <label>{{ 'common.customer' | translate }}</label>
-        <select formControlName="customerId" required>
-          <option value="">{{ 'payments.selectCustomer' | translate }}</option>
-          @for (c of customers; track c.id) {
-            <option [ngValue]="c.id">{{ c.title }}</option>
-          }
-        </select>
+        <app-searchable-select
+          formControlName="customerId"
+          [options]="customerSearchableOptions"
+          [showNoneOption]="true"
+          [noneOptionLabel]="'payments.selectCustomer' | translate"
+          [placeholder]="'payments.selectCustomer' | translate"
+          [searchPlaceholder]="'common.customerSearchPh' | translate"
+          [noResultsLabel]="'common.noResults' | translate"
+        />
       </div>
       <div class="row">
         <label>{{ 'payments.amount' | translate }}</label>
@@ -58,12 +68,15 @@
       </div>
       <div class="row">
         <label>{{ 'chequesPage.bankAccount' | translate }}</label>
-        <select formControlName="bankAccountId">
-          <option [ngValue]="null">{{ 'chequesPage.noneDash' | translate }}</option>
-          @for (b of bankAccounts; track b.id) {
-            <option [ngValue]="b.id">{{ b.name }}</option>
-          }
-        </select>
+        <app-searchable-select
+          formControlName="bankAccountId"
+          [options]="bankAccountSearchableOptions"
+          [showNoneOption]="true"
+          [noneOptionLabel]="'common.selectPlease' | translate"
+          [placeholder]="'common.selectPlease' | translate"
+          [searchPlaceholder]="'common.search' | translate"
+          [noResultsLabel]="'common.noResults' | translate"
+        />
       </div>
       @if (error) { <p class="error-msg">{{ error }}</p> }
     </div>
