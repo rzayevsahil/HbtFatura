@@ -10,30 +10,30 @@
 <div class="card">
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <div class="form-grid">
-      <div class="row">
-        <label>Ana cari kodu</label>
-        <div class="input-with-link main-account-combo" (click)="$event.stopPropagation()">
-          <div class="combo-wrap">
-            @if (selectedMainAccount) {
-            <span class="selected-label">{{ selectedMainAccount.code }} — {{ selectedMainAccount.name }}</span>
-            <button type="button" class="btn-clear" (click)="clearMainAccountCode()" title="Seçimi temizle">×</button>
-            } @else {
-            <input type="text" [(ngModel)]="mainAccountCodeSearch" [ngModelOptions]="{standalone: true}"
-              placeholder="Kod veya ad ile ara, listeden seçin" (focus)="showMainAccountDropdown = true"
-              (keydown.escape)="showMainAccountDropdown = false" />
+      <div class="row full-width">
+        <label>{{ 'customers.mainAccountCode' | translate }}</label>
+        <div class="input-with-link main-account-picker">
+          <app-searchable-select
+            formControlName="mainAccountCode"
+            [options]="mainAccountSearchableOptions"
+            layout="dropdown"
+            [placeholder]="'customers.mainAccountCodeNone' | translate"
+            [searchPlaceholder]="'customers.mainAccountCodePickerSearch' | translate"
+            [noResultsLabel]="'customers.mainAccountCodePickerNoResults' | translate"
+            [listMaxHeight]="'min(320px, 55vh)'"
+            [showNoneOption]="true"
+            [noneOptionLabel]="'customers.mainAccountCodeNone' | translate"
+            [noneEmitsEmptyString]="true"
+          />
+          <div class="main-account-links">
+            @if (auth.hasPermission('MainAccountCodes.Edit')) {
+            <button type="button" class="link-as-button" (click)="openMainAccountCodeModal()">
+              {{ 'customers.addMainAccountCodeHere' | translate }}
+            </button>
+            <span class="link-sep" aria-hidden="true">·</span>
             }
+            <a routerLink="/main-account-codes" class="link-small">{{ 'customers.editMainAccountCodeList' | translate }}</a>
           </div>
-          @if (showMainAccountDropdown && !selectedMainAccount) {
-          <ul class="combo-dropdown" (click)="$event.stopPropagation()">
-            @for (item of filteredMainAccountCodes; track item.id) {
-            <li (click)="selectMainAccountCode(item)">{{ item.code }} — {{ item.name }}</li>
-            }
-            @if (filteredMainAccountCodes.length === 0) {
-            <li class="no-results">Sonuç yok. Kod listesinden ekleyebilirsiniz.</li>
-            }
-          </ul>
-          }
-          <a routerLink="/main-account-codes" class="link-small">Kod listesini düzenle</a>
         </div>
       </div>
       <div class="row">
@@ -181,5 +181,18 @@
       <a routerLink="/customers">İptal</a>
     </div>
   </form>
+</div>
+}
+
+@if (mainAccountCodeModalOpen) {
+<div class="modal-overlay" (click)="closeMainAccountCodeModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <app-main-account-code-form
+      [isModal]="true"
+      [existingCodes]="mainAccountCodes"
+      (saved)="onMainAccountCodeSaved($event)"
+      (cancel)="closeMainAccountCodeModal()"
+    />
+  </div>
 </div>
 }

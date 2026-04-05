@@ -13,19 +13,20 @@ import { ToastrService } from 'ngx-toastr';
 import { PhoneFormatter } from '../../core/utils/phone-formatter';
 
 import { SearchableSelectComponent, SearchableSelectOption } from '../../shared/searchable-select/searchable-select.component';
+import { MainAccountCodeFormComponent } from '../../main-account-codes/main-account-code-form/main-account-code-form.component';
+import { AuthService } from '../../core/services/auth.service';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-customer-form',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink, SearchableSelectComponent],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink, SearchableSelectComponent, MainAccountCodeFormComponent, TranslateModule],
   templateUrl: './customer-form.component.html',
   styleUrls: ['./customer-form.component.scss']
 })
 export class CustomerFormComponent implements OnInit {
   mainAccountCodes: MainAccountCodeDto[] = [];
-  mainAccountCodeSearch = '';
-  selectedMainAccount: MainAccountCodeDto | null = null;
-  showMainAccountDropdown = false;
+  mainAccountCodeModalOpen = false;
 
   cities: CityResponse[] = [];
   districts: DistrictResponse[] = [];
@@ -62,14 +63,35 @@ export class CustomerFormComponent implements OnInit {
     return this.taxOffices.filter(o => o.name.toLocaleLowerCase('tr').includes(t));
   }
 
-  get filteredMainAccountCodes(): MainAccountCodeDto[] {
-    const q = this.mainAccountCodeSearch.trim().toLowerCase();
-    if (!q) return this.mainAccountCodes;
-    return this.mainAccountCodes.filter(
-      (x) =>
-        (x.code ?? '').toLowerCase().includes(q) ||
-        (x.name ?? '').toLowerCase().includes(q)
-    );
+  /** sortOrder + kod; tetikleyicide kod — ad; aramada kod ve ad taranır. */
+  get mainAccountSearchableOptions(): SearchableSelectOption[] {
+    const sorted = [...this.mainAccountCodes].sort((a, b) => {
+      const o = (a.sortOrder ?? 0) - (b.sortOrder ?? 0);
+      if (o !== 0) return o;
+      return (a.code ?? '').localeCompare(b.code ?? '', 'tr', { sensitivity: 'base' });
+    });
+    const seen = new Set<string>();
+    const opts: SearchableSelectOption[] = [];
+    for (const x of sorted) {
+      const code = (x.code ?? '').trim();
+      if (!code || seen.has(code)) continue;
+      seen.add(code);
+      const name = (x.name ?? '').trim();
+      opts.push({
+        id: code,
+        primary: name ? `${code}` : code,
+        secondary: `${name}`.trim()
+      });
+    }
+    const raw = (this.form.get('mainAccountCode')?.value ?? '').toString().trim();
+    if (raw && !opts.some(o => o.id === raw)) {
+      opts.unshift({
+        id: raw,
+        primary: raw,
+        secondary: `${raw} ${this.translate.instant('customers.mainAccountOrphanHint')}`
+      });
+    }
+    return opts;
   }
 
   get taxPayerTypeSearchableOptions(): SearchableSelectOption[] {
@@ -116,6 +138,8 @@ export class CustomerFormComponent implements OnInit {
     private api: CustomerService,
     private mainAccountCodeApi: MainAccountCodeService,
     private taxOfficeApi: TaxOfficeService,
+    public auth: AuthService,
+    private translate: TranslateService,
     private toastr: ToastrService,
     private el: ElementRef,
     private taxNumberValidation: TaxNumberValidationService
@@ -183,7 +207,6 @@ export class CustomerFormComponent implements OnInit {
 
     this.mainAccountCodeApi.getByFirm().subscribe(list => {
       this.mainAccountCodes = list;
-      this.onMainAccountCodesLoaded();
     });
     this.taxOfficeApi.getCities().subscribe(res => this.cities = res);
     if (this.id) {
@@ -223,7 +246,6 @@ export class CustomerFormComponent implements OnInit {
               }
             });
           }
-          this.onMainAccountCodesLoaded();
           this.formInitialLoading = false;
         },
         error: () => {
@@ -259,26 +281,23 @@ export class CustomerFormComponent implements OnInit {
     }
   }
 
-  onMainAccountCodesLoaded(): void {
-    const code = this.form.getRawValue().mainAccountCode;
-    if (code) {
-      this.selectedMainAccount =
-        this.mainAccountCodes.find((x) => x.code === code) ?? null;
-    }
+  openMainAccountCodeModal(): void {
+    this.mainAccountCodeModalOpen = true;
   }
 
-  selectMainAccountCode(item: MainAccountCodeDto): void {
-    this.selectedMainAccount = item;
-    this.form.patchValue({ mainAccountCode: item.code ?? '' });
-    this.mainAccountCodeSearch = '';
-    this.showMainAccountDropdown = false;
+  closeMainAccountCodeModal(): void {
+    this.mainAccountCodeModalOpen = false;
   }
 
-  clearMainAccountCode(): void {
-    this.selectedMainAccount = null;
-    this.form.patchValue({ mainAccountCode: '' });
-    this.mainAccountCodeSearch = '';
-    this.showMainAccountDropdown = false;
+  onMainAccountCodeSaved(created?: MainAccountCodeDto): void {
+    this.closeMainAccountCodeModal();
+    this.mainAccountCodeApi.getByFirm().subscribe(list => {
+      this.mainAccountCodes = list;
+      if (created) {
+        const match = list.find(x => x.id === created.id) ?? created;
+        this.form.patchValue({ mainAccountCode: (match.code ?? '').trim() });
+      }
+    });
   }
 
   onPhoneInput(event: Event): void {

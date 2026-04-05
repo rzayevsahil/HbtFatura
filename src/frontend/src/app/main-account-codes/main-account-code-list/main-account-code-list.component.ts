@@ -100,7 +100,7 @@ export class MainAccountCodeListComponent implements OnInit {
     this.editingId = null;
   }
 
-  onFormSaved(): void {
+  onFormSaved(_created?: MainAccountCodeDto | undefined): void {
     this.closeModal();
     this.load();
   }

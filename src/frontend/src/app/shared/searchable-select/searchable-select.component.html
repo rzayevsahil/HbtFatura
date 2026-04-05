@@ -55,6 +55,11 @@
     (click)="$event.stopPropagation()"
   />
   <div class="searchable-select__list searchable-select__list--inline" [style.max-height]="listMaxHeight">
+    @if (showNoneOption) {
+    <button type="button" class="searchable-select__option searchable-select__option--none" [class.is-selected]="value === null" (click)="pick(null)">
+      <span class="searchable-select__primary">{{ noneOptionLabel }}</span>
+    </button>
+    }
     @for (opt of filteredOptions; track opt.id) {
     <button type="button" class="searchable-select__option" [class.is-selected]="value === opt.id" (click)="pick(opt.id)">
       <span class="searchable-select__primary">{{ opt.primary }}</span>

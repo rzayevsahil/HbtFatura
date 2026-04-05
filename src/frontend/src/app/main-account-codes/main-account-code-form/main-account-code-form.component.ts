@@ -22,7 +22,8 @@ export class MainAccountCodeFormComponent implements OnInit {
   @Input() editId: string | null = null;
   /** Mevcut kod listesi (modalda tekrar kontrol için). */
   @Input() existingCodes: MainAccountCodeDto[] = [];
-  @Output() saved = new EventEmitter<void>();
+  /** Oluşturmada yeni kayıt döner; güncellemede undefined. */
+  @Output() saved = new EventEmitter<MainAccountCodeDto | undefined>();
   @Output() cancel = new EventEmitter<void>();
 
   form = this.fb.nonNullable.group({
@@ -125,7 +126,7 @@ export class MainAccountCodeFormComponent implements OnInit {
       this.api.update(this.id, { code: req.code, name: req.name, sortOrder: req.sortOrder }).subscribe({
         next: () => {
           this.toastr.success(this.translate.instant('mainAccountCodes.updated'));
-          if (this.isModal) this.saved.emit(); else this.router.navigate(['/main-account-codes']);
+          if (this.isModal) this.saved.emit(undefined); else this.router.navigate(['/main-account-codes']);
         },
         error: e => {
           this.error = e.error?.message ?? 'Hata';
@@ -138,9 +139,9 @@ export class MainAccountCodeFormComponent implements OnInit {
       });
     } else {
       this.api.create(req).subscribe({
-        next: () => {
+        next: (created) => {
           this.toastr.success('Ana cari kodu oluşturuldu.');
-          if (this.isModal) this.saved.emit(); else this.router.navigate(['/main-account-codes']);
+          if (this.isModal) this.saved.emit(created); else this.router.navigate(['/main-account-codes']);
         },
         error: e => {
           this.error = e.error?.message ?? 'Hata';
