@@ -35,6 +35,11 @@ export class InvoiceDetailComponent implements OnInit {
     private translate: TranslateService
   ) { }
 
+  get invoiceCurrencyCode(): string {
+    const c = this.invoice?.currency?.trim();
+    return c ? c.toUpperCase() : 'TRY';
+  }
+
   @HostListener('document:keydown', ['$event'])
   onKeyDown(e: KeyboardEvent): void {
     const t = e.target as HTMLElement;

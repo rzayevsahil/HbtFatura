@@ -118,6 +118,13 @@ export class InvoiceListComponent implements OnInit {
     return this.lookups.getName('InvoiceType', t);
   }
 
+  /** Liste satırı: şablonda doğrudan `inv.currency` NG9 tetikleyebiliyor. */
+  listRowCurrency(inv: InvoiceListDto): string {
+    const raw = (inv as InvoiceListDto & { currency?: string | null }).currency;
+    const v = raw?.trim();
+    return v ? v.toUpperCase() : 'TRY';
+  }
+
   downloadPdf(id: string, invoiceNumber: string): void {
     this.api.getPdf(id).subscribe({
       next: blob => {

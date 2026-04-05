@@ -84,6 +84,13 @@ export class DeliveryNoteListComponent implements OnInit {
     return this.lookups.getName('DeliveryNoteType', t);
   }
 
+  /** Toplam sütunu: şablonda doğrudan `d.currency` NG9 tetikleyebiliyor. */
+  listRowCurrency(d: DeliveryNoteListDto): string {
+    const raw = (d as DeliveryNoteListDto & { currency?: string | null }).currency;
+    const v = raw?.trim();
+    return v ? v.toUpperCase() : 'TRY';
+  }
+
   /** Taslak ve faturaya aktarılmamışsa düzenlenebilir. */
   isEditable(d: DeliveryNoteListDto): boolean {
     const taslak = d.status === 0 || d.status === 'Taslak';

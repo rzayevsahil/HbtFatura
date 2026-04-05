@@ -70,6 +70,12 @@ public class DeliveryNoteService : IDeliveryNoteService
                 CustomerTitle = x.Customer != null ? x.Customer.Title : null,
                 OrderNumber = x.Order != null ? x.Order.OrderNumber : null,
                 InvoiceId = x.InvoiceId,
+                Currency = x.Items
+                    .OrderBy(i => i.SortOrder)
+                    .Where(i => i.Product != null)
+                    .Select(i => i.Product!.Currency)
+                    .FirstOrDefault() ?? "TRY",
+                TotalAmount = x.Items.Sum(i => i.Quantity * i.UnitPrice * (1 + i.VatRate / 100m)),
                 CreatedByUserId = x.UserId,
                 CreatedByUserName = x.User != null ? x.User.FullName : null
             })
@@ -387,22 +393,9 @@ public class DeliveryNoteService : IDeliveryNoteService
             otherPrefixes);
     }
 
-    private static DeliveryNoteDto MapToDto(DeliveryNote d) => new()
+    private static DeliveryNoteDto MapToDto(DeliveryNote d)
     {
-        Id = d.Id,
-        DeliveryNumber = d.DeliveryNumber,
-        CustomerId = d.CustomerId,
-        CustomerTitle = d.Customer?.Title,
-        OrderId = d.OrderId,
-        OrderNumber = d.Order?.OrderNumber,
-        InvoiceId = d.InvoiceId,
-        DeliveryDate = d.DeliveryDate,
-        Status = (int)d.Status,
-        DeliveryType = (int)d.DeliveryType,
-        CreatedAt = d.CreatedAt,
-        CreatedByUserId = d.CreatedBy ?? d.UserId,
-        CreatedByUserName = d.Creator?.FullName ?? d.User?.FullName,
-        Items = d.Items.OrderBy(x => x.SortOrder).Select(x => new DeliveryNoteItemDto
+        var items = d.Items.OrderBy(x => x.SortOrder).Select(x => new DeliveryNoteItemDto
         {
             Id = x.Id,
             ProductId = x.ProductId,
@@ -413,7 +406,31 @@ public class DeliveryNoteService : IDeliveryNoteService
             Quantity = x.Quantity,
             UnitPrice = x.UnitPrice,
             VatRate = x.VatRate,
-            SortOrder = x.SortOrder
-        }).ToList()
-    };
+            SortOrder = x.SortOrder,
+            Currency = x.Product != null && !string.IsNullOrWhiteSpace(x.Product.Currency)
+                ? x.Product.Currency.Trim().ToUpperInvariant()
+                : null
+        }).ToList();
+
+        var currency = items.FirstOrDefault(i => !string.IsNullOrWhiteSpace(i.Currency))?.Currency ?? "TRY";
+
+        return new DeliveryNoteDto
+        {
+            Id = d.Id,
+            DeliveryNumber = d.DeliveryNumber,
+            CustomerId = d.CustomerId,
+            CustomerTitle = d.Customer?.Title,
+            OrderId = d.OrderId,
+            OrderNumber = d.Order?.OrderNumber,
+            InvoiceId = d.InvoiceId,
+            DeliveryDate = d.DeliveryDate,
+            Status = (int)d.Status,
+            DeliveryType = (int)d.DeliveryType,
+            CreatedAt = d.CreatedAt,
+            CreatedByUserId = d.CreatedBy ?? d.UserId,
+            CreatedByUserName = d.Creator?.FullName ?? d.User?.FullName,
+            Currency = currency,
+            Items = items
+        };
+    }
 }

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { DeliveryNoteService } from '../../services/delivery-note.service';
-import { DeliveryNoteDto, DeliveryNoteStatus } from '../../core/models';
+import { DeliveryNoteDto, DeliveryNoteItemDto, DeliveryNoteStatus } from '../../core/models';
 import { InvoiceService } from '../../services/invoice.service';
 import { ToastrService } from 'ngx-toastr';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -66,6 +66,17 @@ export class DeliveryNoteDetailComponent implements OnInit {
 
   get totalGross(): number {
     return this.totalNet + this.totalVat;
+  }
+
+  get dnCurrencyCode(): string {
+    const c = this.deliveryNote?.currency?.trim();
+    return c ? c.toUpperCase() : 'TRY';
+  }
+
+  lineItemCurrency(it: DeliveryNoteItemDto): string {
+    const line = it.currency?.trim();
+    if (line) return line.toUpperCase();
+    return this.dnCurrencyCode;
   }
 
   isTaslak(s: DeliveryNoteStatus | string | undefined): boolean {

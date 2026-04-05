@@ -30,6 +30,8 @@ export class DeliveryNoteFormComponent implements OnInit {
   id: string | null = null;
   editLoading = false;
   deliveryNumber: string | null = null;
+  /** Düzenlemede API’den gelen özet para birimi; yoksa satırlardaki ürünlerden türetilir. */
+  loadedDnCurrency: string | null = null;
   deliveryStatus: string | number | undefined; // düzenlemede salt okunur göstermek için
   customers: CustomerDto[] = [];
   products: ProductDto[] = [];
@@ -151,8 +153,21 @@ export class DeliveryNoteFormComponent implements OnInit {
     return this.totalNet + this.totalVat;
   }
 
+  get dnCurrency(): string {
+    if (this.loadedDnCurrency) return this.loadedDnCurrency;
+    for (let i = 0; i < this.items.length; i++) {
+      const pid = this.items.at(i).get('productId')?.value as string | null | undefined;
+      if (pid) {
+        const p = this.products.find(x => x.id === pid);
+        if (p?.currency) return String(p.currency).toUpperCase();
+      }
+    }
+    return 'TRY';
+  }
+
   ngOnInit(): void {
     this.id = this.route.snapshot.paramMap.get('id');
+    if (!this.id) this.loadedDnCurrency = null;
     this.lookups.loadLookupsAndDefaultVat().subscribe(({ defaultVat }) => {
       if (!this.id) {
         this.items.controls.forEach(c => c.get('vatRate')?.patchValue(defaultVat, { emitEvent: false }));
@@ -176,6 +191,8 @@ export class DeliveryNoteFormComponent implements OnInit {
         next: dn => {
           this.deliveryNumber = dn.deliveryNumber ?? null;
           this.deliveryStatus = dn.status;
+          const cur = dn.currency?.trim();
+          this.loadedDnCurrency = cur ? cur.toUpperCase() : null;
           this.form.patchValue({
             customerId: dn.customerId ?? null,
             orderId: dn.orderId ?? null,

@@ -67,18 +67,18 @@
         <td>{{ item.description }}</td>
         <td class="amount">{{ item.quantity | number:'1.2-2' }}</td>
         <td>{{ item.unit || ('common.unitPiece' | translate) }}</td>
-        <td class="amount">{{ item.unitPrice | number:'1.2-2' }} {{ invoice.currency }}</td>
+        <td class="amount">{{ item.unitPrice | number:'1.2-2' }} {{ invoiceCurrencyCode }}</td>
         <td class="amount">{{ item.vatRate | number:'1.0-0' }}%</td>
-        <td class="amount">{{ item.lineVatAmount | number:'1.2-2' }} {{ invoice.currency }}</td>
-        <td class="amount">{{ item.lineTotalInclVat | number:'1.2-2' }} {{ invoice.currency }}</td>
+        <td class="amount">{{ item.lineVatAmount | number:'1.2-2' }} {{ invoiceCurrencyCode }}</td>
+        <td class="amount">{{ item.lineTotalInclVat | number:'1.2-2' }} {{ invoiceCurrencyCode }}</td>
       </tr>
       }
     </tbody>
   </table>
   <div class="totals">
-    <p><span>{{ 'common.totalsGoodsColon' | translate }}</span> <span>{{ invoice.subTotal | number:'1.2-2' }} {{ invoice.currency }}</span></p>
-    <p><span>{{ 'common.totalsVatColon' | translate }}</span> <span>{{ invoice.totalVat | number:'1.2-2' }} {{ invoice.currency }}</span></p>
-    <p class="grand-total"><span>{{ 'common.totalsGrandColon' | translate }}</span> <span>{{ invoice.grandTotal | number:'1.2-2' }} {{ invoice.currency }}</span></p>
+    <p><span>{{ 'common.totalsGoodsColon' | translate }}</span> <span>{{ invoice.subTotal | number:'1.2-2' }} {{ invoiceCurrencyCode }}</span></p>
+    <p><span>{{ 'common.totalsVatColon' | translate }}</span> <span>{{ invoice.totalVat | number:'1.2-2' }} {{ invoiceCurrencyCode }}</span></p>
+    <p class="grand-total"><span>{{ 'common.totalsGrandColon' | translate }}</span> <span>{{ invoice.grandTotal | number:'1.2-2' }} {{ invoiceCurrencyCode }}</span></p>
   </div>
 </div>
 <div class="actions">

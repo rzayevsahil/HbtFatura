@@ -12,6 +12,7 @@ export interface DeliveryNoteItemDto {
     unitPrice: number;
     vatRate: number;
     sortOrder: number;
+    currency?: string | null;
 }
 
 export interface DeliveryNoteDto {
@@ -28,6 +29,7 @@ export interface DeliveryNoteDto {
     createdAt: string;
     createdByUserId?: string;
     createdByUserName?: string | null;
+    currency?: string;
     items: DeliveryNoteItemDto[];
 }
 
@@ -43,6 +45,9 @@ export interface DeliveryNoteListDto {
     invoiceId?: string | null;
     createdByUserId: string;
     createdByUserName?: string | null;
+    currency?: string;
+    /** KDV dahil genel toplam (liste API). */
+    totalAmount?: number;
 }
 
 export interface CreateDeliveryNoteFromOrderRequest {

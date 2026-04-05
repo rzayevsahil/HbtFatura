@@ -14,6 +14,7 @@ public class DeliveryNoteItemDto
     public decimal UnitPrice { get; set; }
     public decimal VatRate { get; set; }
     public int SortOrder { get; set; }
+    public string? Currency { get; set; }
 }
 
 public class DeliveryNoteDto
@@ -31,6 +32,7 @@ public class DeliveryNoteDto
     public DateTime CreatedAt { get; set; }
     public Guid CreatedByUserId { get; set; }
     public string? CreatedByUserName { get; set; }
+    public string Currency { get; set; } = "TRY";
     public List<DeliveryNoteItemDto> Items { get; set; } = new();
 }
 
@@ -47,6 +49,9 @@ public class DeliveryNoteListDto
     public Guid? InvoiceId { get; set; }
     public Guid CreatedByUserId { get; set; }
     public string? CreatedByUserName { get; set; }
+    public string Currency { get; set; } = "TRY";
+    /// <summary>Kalemlerin KDV dahil genel toplamı (sipariş listesiyle aynı formül).</summary>
+    public decimal TotalAmount { get; set; }
 }
 
 public class DeliveryNoteItemInputDto

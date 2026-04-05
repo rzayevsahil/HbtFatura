@@ -147,9 +147,9 @@
       </div>
       <button type="button" class="add-item-btn" (click)="addItem()">{{ 'common.addLine' | translate }}</button>
       <div class="totals">
-        <p><span>{{ 'common.totalsGoodsColon' | translate }}</span> <span>{{ totalNet | number:'1.2-2' }} ₺</span></p>
-        <p><span>{{ 'common.totalsVatColon' | translate }}</span> <span>{{ totalVat | number:'1.2-2' }} ₺</span></p>
-        <p class="grand-total"><span>{{ 'common.totalsGrandColon' | translate }}</span> <span>{{ totalGross | number:'1.2-2' }} ₺</span></p>
+        <p><span>{{ 'common.totalsGoodsColon' | translate }}</span> <span>{{ totalNet | number:'1.2-2' }} {{ dnCurrency }}</span></p>
+        <p><span>{{ 'common.totalsVatColon' | translate }}</span> <span>{{ totalVat | number:'1.2-2' }} {{ dnCurrency }}</span></p>
+        <p class="grand-total"><span>{{ 'common.totalsGrandColon' | translate }}</span> <span>{{ totalGross | number:'1.2-2' }} {{ dnCurrency }}</span></p>
       </div>
     </div>
     @if (error) { <p class="error-msg">{{ error }}</p> }

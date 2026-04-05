@@ -113,7 +113,7 @@
                 {{ inv.customerTitle }}
               }
             </td>
-            <td>{{ inv.grandTotal | number: '1.2-2' }} {{ inv.currency }}</td>
+            <td>{{ inv.grandTotal | number: '1.2-2' }} {{ listRowCurrency(inv) }}</td>
             <td>
               <span
                 class="status-badge"
