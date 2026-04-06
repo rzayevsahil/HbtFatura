@@ -1,4 +1,5 @@
-import { Component, OnInit, HostListener, ViewChild, ElementRef } from '@angular/core';
+import { ChangeDetectorRef, Component, DestroyRef, HostListener, OnInit, ViewChild, ElementRef, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -24,6 +25,8 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
   styleUrls: ['./delivery-note-form.component.scss']
 })
 export class DeliveryNoteFormComponent implements OnInit {
+  private readonly destroyRef = inject(DestroyRef);
+
   @ViewChild('orderDropdownWrap') orderDropdownWrap?: ElementRef<HTMLElement>;
 
   form: FormGroup;
@@ -93,12 +96,15 @@ export class DeliveryNoteFormComponent implements OnInit {
       const id = ((l.name || l.code || '').trim() || 'Adet');
       return {
         id,
-        primary: this.lookups.displayLookupLabel(l) || id
+        primary: this.lookups.displayProductUnitLabel(l) || id,
       };
     });
     const current = (currentUnit ?? '').toString().trim();
     if (current && !opts.some(o => o.id === current)) {
-      opts.unshift({ id: current, primary: current });
+      opts.unshift({
+        id: current,
+        primary: this.lookups.getName('ProductUnit', current) || current,
+      });
     }
     return opts;
   }
@@ -118,7 +124,8 @@ export class DeliveryNoteFormComponent implements OnInit {
     private orderApi: OrderService,
     private toastr: ToastrService,
     public lookups: LookupService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private cdr: ChangeDetectorRef
   ) {
     this.form = this.fb.nonNullable.group({
       customerId: this.fb.control<string | null>(null, Validators.required),
@@ -166,6 +173,7 @@ export class DeliveryNoteFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.translate.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.cdr.markForCheck());
     this.id = this.route.snapshot.paramMap.get('id');
     if (!this.id) this.loadedDnCurrency = null;
     this.lookups.loadLookupsAndDefaultVat().subscribe(({ defaultVat }) => {

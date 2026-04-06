@@ -42,8 +42,9 @@ export class LookupListComponent implements OnInit {
     this.translate.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.cdr.markForCheck());
   }
 
-  /** Görünen tanım adı — metin veritabanında (Name / NameEn); JSON çevirisi yok. */
+  /** Görünen tanım adı; ProductUnit için `products.units.<code>`, diğer gruplar için Name/NameEn. */
   displayLookupName(item: LookupDto): string {
+    if (item.group?.name === 'ProductUnit') return this.service.displayProductUnitLabel(item);
     return this.service.displayLookupLabel(item);
   }
 

@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, DestroyRef, HostListener, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -10,7 +10,7 @@ import { AuthService } from '../../core/services/auth.service';
 import { FirmService } from '../../services/firm.service';
 import { ToastrService } from 'ngx-toastr';
 import { LookupService } from '../../core/services/lookup.service';
-import { LookupDto } from '../../core/models';
+import { LookupDto, ProductDto } from '../../core/models';
 import { SearchableSelectComponent, SearchableSelectOption } from '../../shared/searchable-select/searchable-select.component';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
@@ -46,6 +46,9 @@ export class ProductFormComponent implements OnInit {
   stockTypes: LookupDto[] = [];
   error = '';
   saving = false;
+  /** Yeni ürün: sipariş kalemi benzeri öneri listesi (firma kapsamı) */
+  productsForSuggest: ProductDto[] = [];
+  activeNewProductSuggest: 'code' | 'name' | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -56,7 +59,8 @@ export class ProductFormComponent implements OnInit {
     private firmApi: FirmService,
     private toastr: ToastrService,
     public lookups: LookupService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   get firmSearchableOptions(): SearchableSelectOption[] {
@@ -85,17 +89,21 @@ export class ProductFormComponent implements OnInit {
       const id = ((l.name || l.code || '').trim() || 'Adet');
       return {
         id,
-        primary: this.lookups.displayLookupLabel(l) || id,
+        primary: this.lookups.displayProductUnitLabel(l) || id,
       };
     });
     const current = (this.form.get('unit')?.value ?? '').toString().trim();
     if (current && !opts.some(o => o.id === current)) {
-      opts.unshift({ id: current, primary: current });
+      opts.unshift({
+        id: current,
+        primary: this.lookups.getName('ProductUnit', current) || current,
+      });
     }
     return opts;
   }
 
   ngOnInit(): void {
+    this.translate.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.cdr.markForCheck());
     if (this.auth.user()?.role === 'SuperAdmin') {
       this.firmApi.getAll().subscribe(f => (this.firms = f));
     }
@@ -122,6 +130,15 @@ export class ProductFormComponent implements OnInit {
       takeUntilDestroyed(this.destroyRef)
     ).subscribe(taken => this.setDuplicateCodeError(taken));
 
+    if (!this.id) {
+      this.refreshProductSuggestions();
+      if (this.auth.user()?.role === 'SuperAdmin') {
+        this.form.controls.firmId.valueChanges
+          .pipe(startWith(this.form.controls.firmId.getRawValue()), takeUntilDestroyed(this.destroyRef))
+          .subscribe(() => this.refreshProductSuggestions());
+      }
+    }
+
     if (this.id) {
       this.editLoading = true;
       this.api.getById(this.id).subscribe({
@@ -145,6 +162,69 @@ export class ProductFormComponent implements OnInit {
           this.editLoading = false;
         }
       });
+    }
+  }
+
+  private refreshProductSuggestions(): void {
+    if (this.id) return;
+    const firmId = this.getFirmIdForCodeCheck();
+    if (!firmId) {
+      this.productsForSuggest = [];
+      return;
+    }
+    this.api.getDropdown(firmId).subscribe({
+      next: list => (this.productsForSuggest = list),
+      error: () => (this.productsForSuggest = [])
+    });
+  }
+
+  getFilteredNewProductSuggestions(searchText: string | null | undefined): ProductDto[] {
+    const t = (searchText ?? '').trim().toLowerCase();
+    if (!t) return [];
+    return this.productsForSuggest
+      .filter(
+        p =>
+          (p.code?.toLowerCase().includes(t)) ||
+          (p.name?.toLowerCase().includes(t)) ||
+          (p.barcode != null && p.barcode.toLowerCase().includes(t))
+      )
+      .slice(0, 12);
+  }
+
+  onNewProductFieldFocus(field: 'code' | 'name'): void {
+    if (this.id) return;
+    this.activeNewProductSuggest = field;
+  }
+
+  onNewProductFieldInput(field: 'code' | 'name'): void {
+    if (this.id) return;
+    this.activeNewProductSuggest = field;
+  }
+
+  onNewProductSuggestSelect(p: ProductDto): void {
+    if (this.id) return;
+    const disc = p as unknown as { stockDiscountPercent?: number; stockDiscountAmount?: number };
+    this.form.patchValue({
+      code: p.code,
+      name: p.name,
+      barcode: p.barcode ?? '',
+      stockType: p.stockType ?? 'ticari mal',
+      unit: (p.unit || 'Adet').trim() || 'Adet',
+      stockQuantity: 0,
+      unitPrice: p.unitPrice ?? 0,
+      stockDiscountPercent: disc.stockDiscountPercent ?? 0,
+      stockDiscountAmount: disc.stockDiscountAmount ?? 0,
+      currency: (p.currency as string) || 'TRY'
+    });
+    this.activeNewProductSuggest = null;
+    this.toastr.info(this.translate.instant('products.suggestFilledFromExisting'));
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(e: MouseEvent): void {
+    const el = e.target as HTMLElement;
+    if (!el.closest('.autocomplete-container')) {
+      this.activeNewProductSuggest = null;
     }
   }
 
@@ -186,13 +266,13 @@ export class ProductFormComponent implements OnInit {
     if (this.id) {
       this.api.update(this.id, payload).subscribe({
         next: () => {
-          this.toastr.success('Ürün güncellendi.');
+          this.toastr.success(this.translate.instant('products.toastUpdated'));
           this.router.navigate(['/products']);
         },
         error: e => {
           this.error = e.error?.message ?? 'Hata';
           this.saving = false;
-          this.toastr.error(e.error?.message ?? 'Güncelleme sırasında hata oluştu.');
+          this.toastr.error(e.error?.message ?? this.translate.instant('products.toastUpdateError'));
         },
         complete: () => { this.saving = false; }
       });

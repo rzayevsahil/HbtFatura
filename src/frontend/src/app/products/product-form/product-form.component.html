@@ -26,14 +26,66 @@
       }
       <div class="row">
         <label>{{ 'products.colCode' | translate }}</label>
+        @if (id) {
         <input formControlName="code" [placeholder]="'products.placeholderCode' | translate" />
+        } @else {
+        <div class="autocomplete-container">
+          <input
+            formControlName="code"
+            [placeholder]="'products.placeholderCode' | translate"
+            autocomplete="off"
+            (focus)="onNewProductFieldFocus('code')"
+            (input)="onNewProductFieldInput('code')"
+          />
+          @if (activeNewProductSuggest === 'code') {
+          <div class="autocomplete-results" role="listbox">
+            @for (p of getFilteredNewProductSuggestions(form.controls.code.getRawValue()); track p.id) {
+            <div
+              class="autocomplete-item"
+              role="option"
+              (mousedown)="$event.preventDefault()"
+              (click)="onNewProductSuggestSelect(p)"
+            >
+              <strong>{{ p.code }}</strong> — {{ p.name }}
+            </div>
+            }
+          </div>
+          }
+        </div>
+        }
         @if (form.controls.code.errors?.['duplicateCode']) {
         <small class="error-msg">{{ 'products.duplicateCodeError' | translate }}</small>
         }
       </div>
       <div class="row">
         <label>{{ 'products.colName' | translate }}</label>
+        @if (id) {
         <input formControlName="name" [placeholder]="'products.placeholderName' | translate" />
+        } @else {
+        <div class="autocomplete-container">
+          <input
+            formControlName="name"
+            [placeholder]="'products.placeholderName' | translate"
+            autocomplete="off"
+            (focus)="onNewProductFieldFocus('name')"
+            (input)="onNewProductFieldInput('name')"
+          />
+          @if (activeNewProductSuggest === 'name') {
+          <div class="autocomplete-results" role="listbox">
+            @for (p of getFilteredNewProductSuggestions(form.controls.name.getRawValue()); track p.id) {
+            <div
+              class="autocomplete-item"
+              role="option"
+              (mousedown)="$event.preventDefault()"
+              (click)="onNewProductSuggestSelect(p)"
+            >
+              <strong>{{ p.code }}</strong> — {{ p.name }}
+            </div>
+            }
+          </div>
+          }
+        </div>
+        }
       </div>
       <div class="row">
         <label>{{ 'products.labelBarcode' | translate }}</label>
@@ -55,7 +107,7 @@
           formControlName="unit"
           [options]="unitSearchableOptions"
           [placeholder]="'products.selectPlaceholder' | translate"
-          [searchPlaceholder]="'products.searchPlaceholderDots' | translate"
+          [searchPlaceholder]="'common.unitSearchPh' | translate"
           [noResultsLabel]="'products.noResultsShort' | translate"
         />
       </div>

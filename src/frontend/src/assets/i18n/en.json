@@ -200,6 +200,19 @@
       "ticari mal": "Commercial good",
       "demirbaş": "Fixture/asset"
     },
+    "units": {
+      "Adet": "Piece",
+      "Kg": "Kg",
+      "gr": "g",
+      "lt": "L",
+      "m": "m",
+      "m²": "m²",
+      "m³": "m³",
+      "Paket": "Package",
+      "Kutu": "Box",
+      "Ton": "Ton",
+      "Saat": "Hour"
+    },
     "colPrice": "Price",
     "colStock": "Stock",
     "detail": "Detail",
@@ -263,7 +276,8 @@
     "tableOrderNo": "Order no.",
     "tableDnNo": "Delivery note no.",
     "tableInvoiceNo": "Invoice no.",
-    "manualMovementDesc": "Manual in/out"
+    "manualMovementDesc": "Manual in/out",
+    "suggestFilledFromExisting": "Form filled from the selected product. Change the code (and name if needed) for a new record."
   },
   "common": {
     "save": "Save",

@@ -21,7 +21,7 @@
   <p><strong>{{ 'products.labelStockQty' | translate }}:</strong> {{ product.stockQuantity | number:'1.2-2' }}</p>
   <p><strong>{{ 'products.stockDiscountPercent' | translate }}:</strong> {{ (product.stockDiscountPercent ?? 0) | number:'1.2-2' }}%</p>
   <p><strong>{{ 'products.stockDiscountAmountTl' | translate }}:</strong> {{ (product.stockDiscountAmount ?? 0) | number:'1.2-2' }} {{ product.currency || 'TRY' }}</p>
-  <p><strong>{{ 'products.labelUnit' | translate }}:</strong> {{ product.unit }}</p>
+  <p><strong>{{ 'products.labelUnit' | translate }}:</strong> {{ lookups.getName('ProductUnit', product.unit) }}</p>
   @if (product.barcode) { <p><strong>{{ 'products.labelBarcode' | translate }}:</strong> {{ product.barcode }}</p> }
 </div>
 <h2 class="section-title">{{ 'products.sectionStockMovements' | translate }}</h2>

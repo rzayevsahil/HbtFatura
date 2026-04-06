@@ -41,7 +41,7 @@
             <td>{{ ('products.stockTypes.' + p.stockType) | translate }}</td>
             <td class="amount">{{ p.unitPrice | number: '1.2-2' }} {{ formatCurrencyLabel(p.currency) }}</td>
             <td class="amount">{{ p.stockQuantity | number: '1.2-2' }}</td>
-            <td>{{ p.unit }}</td>
+            <td>{{ lookups.getName('ProductUnit', p.unit) }}</td>
             <td>
               <div class="actions-cell">
                 <a [routerLink]="['/products', p.id]">{{ 'products.detail' | translate }}</a>

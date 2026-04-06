@@ -50,6 +50,21 @@ export class LookupService {
         return item.name ?? '';
     }
 
+    /**
+     * Ürün birimi (ProductUnit): `products.units.<code>` çevirisi varsa kullanılır;
+     * yoksa tanımın Name/NameEn değeri (displayLookupLabel).
+     */
+    displayProductUnitLabel(item: LookupDto | undefined | null): string {
+        this.langRev();
+        if (!item) return '';
+        const code = (item.code ?? '').trim();
+        if (!code) return this.displayLookupLabel(item);
+        const key = 'products.units.' + code;
+        const t = this.translate.instant(key);
+        if (t && t !== key) return t;
+        return this.displayLookupLabel(item);
+    }
+
     load(): Observable<LookupDto[]> {
         return this.api.get<LookupDto[]>('/api/lookups').pipe(
             tap(list => this.lookups.set(list))
@@ -91,8 +106,15 @@ export class LookupService {
     getName(groupName: string, code: string | number | undefined): string {
         this.langRev();
         if (code === undefined || code === null) return '';
-        const c = String(code);
+        const c = String(code).trim();
         const item = this.lookups().find(x => x.group?.name === groupName && x.code === c);
+        if (groupName === 'ProductUnit') {
+            if (item) return this.displayProductUnitLabel(item);
+            const key = 'products.units.' + c;
+            const t = this.translate.instant(key);
+            if (t && t !== key) return t;
+            return c;
+        }
         if (!item) return c;
         return this.displayLookupLabel(item);
     }

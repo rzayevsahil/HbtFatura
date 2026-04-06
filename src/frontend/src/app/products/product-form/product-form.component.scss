@@ -7,6 +7,52 @@
   max-width: 100%;
 }
 
+.autocomplete-container {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+
+  > input {
+    width: 100%;
+    box-sizing: border-box;
+  }
+}
+
+.autocomplete-results {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  margin-top: 2px;
+  max-height: 220px;
+  overflow-y: auto;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-md);
+}
+
+.autocomplete-item {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  color: var(--color-text);
+  border-bottom: 1px solid var(--color-border);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover {
+    background: var(--color-background);
+    color: var(--color-primary);
+  }
+}
+
 .row {
   display: grid;
   grid-template-columns: 120px 1fr;

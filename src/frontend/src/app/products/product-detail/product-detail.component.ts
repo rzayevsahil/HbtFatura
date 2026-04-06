@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -6,6 +7,7 @@ import { ProductService } from '../../services/product.service';
 import { ProductDto, StockMovementDto, PagedResult, StockMovementType } from '../../core/models';
 import { ToastrService } from 'ngx-toastr';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { LookupService } from '../../core/services/lookup.service';
 import { SearchableSelectComponent, SearchableSelectOption } from '../../shared/searchable-select/searchable-select.component';
 
 @Component({
@@ -16,6 +18,8 @@ import { SearchableSelectComponent, SearchableSelectOption } from '../../shared/
   styleUrls: ['./product-detail.component.scss']
 })
 export class ProductDetailComponent implements OnInit {
+  private readonly destroyRef = inject(DestroyRef);
+
   product: ProductDto | null = null;
   loading = true;
   movements: StockMovementDto[] = [];
@@ -36,7 +40,9 @@ export class ProductDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private api: ProductService,
     private toastr: ToastrService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    public lookups: LookupService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   get movementTypeSearchableOptions(): SearchableSelectOption[] {
@@ -47,6 +53,7 @@ export class ProductDetailComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.translate.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.cdr.markForCheck());
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.api.getById(id).subscribe({

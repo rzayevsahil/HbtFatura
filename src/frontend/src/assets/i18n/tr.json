@@ -200,6 +200,19 @@
       "ticari mal": "Ticari mal",
       "demirbaş": "Demirbaş"
     },
+    "units": {
+      "Adet": "Adet",
+      "Kg": "Kg",
+      "gr": "gr",
+      "lt": "lt",
+      "m": "m",
+      "m²": "m²",
+      "m³": "m³",
+      "Paket": "Paket",
+      "Kutu": "Kutu",
+      "Ton": "Ton",
+      "Saat": "Saat"
+    },
     "colPrice": "Fiyat",
     "colStock": "Stok",
     "detail": "Detay",
@@ -263,7 +276,8 @@
     "tableOrderNo": "Sipariş No",
     "tableDnNo": "İrsaliye No",
     "tableInvoiceNo": "Fatura No",
-    "manualMovementDesc": "Manuel giriş/çıkış"
+    "manualMovementDesc": "Manuel giriş/çıkış",
+    "suggestFilledFromExisting": "Seçilen ürün bilgileri forma aktarıldı. Yeni kayıt için kodu (ve isteğe bağlı adı) değiştirin."
   },
   "common": {
     "save": "Kaydet",

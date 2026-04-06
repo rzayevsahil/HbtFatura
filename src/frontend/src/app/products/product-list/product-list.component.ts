@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ProductService } from '../../services/product.service';
 import { ProductListDto, PagedResult } from '../../core/models';
 import { AuthService } from '../../core/services/auth.service';
+import { LookupService } from '../../core/services/lookup.service';
 import { ToastrService } from 'ngx-toastr';
 
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -19,6 +21,8 @@ import { currencyDisplaySuffix } from '../../core/utils/currency-display';
   styleUrls: ['./product-list.component.scss']
 })
 export class ProductListComponent implements OnInit {
+  private readonly destroyRef = inject(DestroyRef);
+
   items: ProductListDto[] = [];
   totalCount = 0;
   page = 1;
@@ -33,10 +37,13 @@ export class ProductListComponent implements OnInit {
     private api: ProductService,
     public auth: AuthService,
     private toastr: ToastrService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    public lookups: LookupService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
+    this.translate.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.cdr.markForCheck());
     this.load();
   }
 

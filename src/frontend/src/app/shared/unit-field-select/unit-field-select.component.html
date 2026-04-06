@@ -4,7 +4,7 @@
   </button>
   @if (panelOpen) {
   <div class="customer-select-panel" (click)="$event.stopPropagation()">
-    <input type="text" class="customer-search" placeholder="Birim ara..." [value]="searchText"
+    <input type="text" class="customer-search" [attr.placeholder]="'common.unitSearchPh' | translate" [value]="searchText"
       (input)="searchText = $any($event.target).value" />
     <div class="customer-options-list">
       @for (l of filteredUnits; track l.id) {
